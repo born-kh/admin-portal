@@ -1,67 +1,33 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-
-// Externals
 import classNames from 'classnames';
 import compose from 'recompose/compose';
 import PropTypes from 'prop-types';
-
-// Material helpers
 import { withStyles } from '@material-ui/core';
-
-// Material components
 import {
   IconButton,
   Toolbar,
   Typography
 } from '@material-ui/core';
-
-// Material icons
 import {
   Menu as MenuIcon,
   Close as CloseIcon,
   Input as InputIcon
 } from '@material-ui/icons';
 
-
-
-
-
-// Component styles
 import styles from './styles';
+import { logout } from 'actions/authActions';
+import { connect } from 'react-redux'
 
 class Topbar extends Component {
-  signal = true;
-
-  state = {
-    notifications: [],
-    notificationsLimit: 4,
-    notificationsCount: 0,
-    notificationsEl: null
-  };
-
-  
-
-  componentDidMount() {
-    this.signal = true;
-  
-  }
-
-  componentWillUnmount() {
-    this.signal = false;
-  }
-
   handleSignOut = () => {
     const { history } = this.props;
-
     localStorage.setItem('isAuthenticated', false);
-    history.push('/sign-in');
+    localStorage.removeItem('profile');
+    localStorage.removeItem('session');
+    this.props.onLogout()
+    history.push('/login');
   };
-
-  
-
- 
-
   render() {
     const {
       classes,
@@ -70,8 +36,6 @@ class Topbar extends Component {
       isSidebarOpen,
       onToggleSidebar
     } = this.props;
-
-
     const rootClassName = classNames(classes.root, className);
 
     return (
@@ -94,8 +58,7 @@ class Topbar extends Component {
             <IconButton
               className={classes.notificationsButton}
               onClick={this.handleShowNotifications}
-            >
-              
+            >        
             </IconButton>
             <IconButton
               className={classes.signOutButton}
@@ -105,8 +68,6 @@ class Topbar extends Component {
             </IconButton>
           </Toolbar>
         </div>
-        
-       
       </Fragment>
     );
   }
@@ -125,7 +86,13 @@ Topbar.defaultProps = {
   onToggleSidebar: () => {}
 };
 
-export default compose(
-  withRouter,
-  withStyles(styles)
-)(Topbar);
+
+const mapDispatchToProps = dispatch => {
+ 
+    return { onLogout: () => dispatch(logout()) } 
+ 
+
+};
+
+export default  compose(withRouter, withStyles(styles))(connect( null, mapDispatchToProps)(Topbar));
+

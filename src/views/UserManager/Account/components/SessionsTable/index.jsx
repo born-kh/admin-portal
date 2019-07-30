@@ -1,6 +1,4 @@
 import React, { Component, Fragment } from 'react';
-
-
 import classNames from 'classnames';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
@@ -29,12 +27,12 @@ import {
   Portlet,
   PortletHeader,
   PortletLabel,
-  PortletToolbar,
   PortletContent,
   Status
 } from 'components';
 
 import styles from './styles';
+import { USER_MANAGER_IP } from 'constants/ActionType';
 
 const statusColors = {
   delivered: 'success',
@@ -43,8 +41,6 @@ const statusColors = {
 };
 
 class SessionsTable extends Component {
-  signal = false;
-
   state = {
     open: false,
     scroll: 'paper',
@@ -60,23 +56,18 @@ class SessionsTable extends Component {
   };
 
   handleSetTracing = (sessionID, tracer, index) => () => {
-
-    if (tracer == true){
+    if (tracer === true){
       tracer=false
     }else{
       tracer=true
-      }
-
-      console.log("sessionID",sessionID, "index", index)
-    
+      } 
+   var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': this.props.sessionID,
+     }
   
-    axios.get("http://10.7.8.129:9002/set/tracer?", {
-        params:{
-        sessionID: sessionID, 
-        tracing: tracer
-
-        }}).then((result) =>{  
-          
+    axios.get(USER_MANAGER_IP + "/set/tracer",{sessionID: sessionID, tracing: tracer},{headers: headers}
+    ).then((result) =>{      
         if (result.status === 200){
           if (result.data.result){
             let params = {
@@ -84,10 +75,8 @@ class SessionsTable extends Component {
               tracing: tracer
             }
             this.props.onChangeTracing(params)
-
           }
-        }
-                      
+        }              
           },
           (error) => {
             
@@ -96,20 +85,42 @@ class SessionsTable extends Component {
   };
 
   handleRemoveSession = (sessionID) => () => {
-    console.log("remove", sessionID)
-  
-    axios.get("http://10.7.8.129:9002/remove/session?", {
-        params:{
-        session_id: sessionID, 
-
-        }}).then((result) =>{  
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': this.props.sessionID,
+   }
+ 
+    axios.get(USER_MANAGER_IP + "/remove/session", {session_id: sessionID },{headers: headers}
+    ).then((result) =>{  
           
         if (result.status === 200){
           console.log("remove", result)
-        }
-             
-          
+        }  
+          },
+          (error) => {
             
+          }
+        )
+  };
+
+  handleDisconnectSession = (index) => () => { 
+    let data = this.props.metaArray[index]
+    axios.get(USER_MANAGER_IP + "/disconnect/session?", {
+        params:{
+        accountID: data.accountID, 
+        sessionID: data.sessionID,
+        endpointID: data.endpointID,
+        registerIP: data.registerIP,
+        appVersion: data.appVersion,
+        deviceID: data.deviceID,
+        lastRemoteIP: data.lastRemoteIP,
+        platform: data.platform,
+        deviceName: data.deviceName
+        }}).then((result) =>{  
+          
+        if (result.status === 200){
+          console.log("disconnect", result)
+        }      
           },
           (error) => {
             
@@ -120,21 +131,15 @@ class SessionsTable extends Component {
 
  
   componentDidMount() {
- 
-      console.log("paarsss")
+    
       let params = {
           accountID: this.props.accountID,
         }
-        this.props.fetchGetAccountSessions(params)
-      
-      
+      this.props.fetchGetAccountSessions(params, this.props.sessionID)
   }
 
   renderDialog() {
-    if(this.state.open) {
-  
-    
-      
+    if(this.state.open) {  
     return (
       <div>
         <Dialog
@@ -165,8 +170,6 @@ class SessionsTable extends Component {
     }
   }
 
-
-
   renderSesiionsTable() {
     const { classes, pending, metaArray } = this.props;
     const showSessions = !pending &&  metaArray !== undefined;
@@ -187,22 +190,17 @@ if (showSessions){
       );
     }
   }
-
     return (
       <Fragment>
             {showSessions && (
               <Table>
                 <TableHead>
-                  <TableRow>
-                  
+                  <TableRow>   
                     <TableCell align="left">Device Name</TableCell>
                     <TableCell
                       align="left"
-                      sortDirection="desc"
-                    >
-                     
-                          Platform
-                       
+                      sortDirection="desc">
+                         Platform               
                     </TableCell>
                     <TableCell align="left">IP</TableCell>
                     <TableCell>Session ID</TableCell>
@@ -216,9 +214,7 @@ if (showSessions){
                     <TableRow
                       className={classes.tableRow}
                       hover
-                      key={session.sessionID}
-                      // onClick={this.handleClickOpen ('paper', index)}
-                    >
+                      key={session.sessionID}>
                       <TableCell>{session.deviceName}</TableCell>
                       <TableCell className={classes.customerCell}>
                         {session.platform}
@@ -233,9 +229,7 @@ if (showSessions){
                             color={statusColors[session.status]}
                             size="sm"
                           />
-                         
-                          {session.sessionID}
-                          
+                          {session.sessionID}  
                         </div>
                       </TableCell>
                       <TableCell>
@@ -245,29 +239,23 @@ if (showSessions){
                           value={this.props.opts[index].tracing}
                           inputProps={{ 'aria-label': 'primary checkbox'  }}
                         >
-
                         </Switch>
-                 
-                
                       </TableCell>
                       <TableCell>
-                       <Button disabled variant="outlined" size="small" color="inherit" >
-                      Disconnect
-                  </Button> 
+                        <Button variant="outlined" size="small" color="inherit" onClick={this.handleDisconnectSession(index)} >
+                          Disconnect
+                        </Button>
                       </TableCell>
                       <TableCell>
-                       <Button disabled variant="outlined" size="small" color="secondary" onClick={this.handleRemoveSession(session.sessionId)}>
-                      Remove
-                  </Button>
+                        <Button disabled variant="outlined" size="small" color="secondary" onClick={this.handleDisconnectSession(session.sessionId)}>
+                          Remove
+                        </Button>
                       </TableCell>
-
-
-                     
                     </TableRow>
                   ))}
-                </TableBody>
-              </Table>
-            )}
+            </TableBody>
+          </Table>
+        )}
       </Fragment>
     );
   }
@@ -276,27 +264,15 @@ if (showSessions){
  
   render() {
     const { classes, className} = this.props;
-
     const rootClassName = classNames(classes.root, className);
-   
     return (
       <Portlet className={rootClassName}>
         <PortletHeader noDivider>
-          <PortletLabel
-           
-            title="Sessions"
-          />
-          <PortletToolbar>
-           
-          </PortletToolbar>
+          <PortletLabel title="Sessions"/>
         </PortletHeader>
         <PerfectScrollbar>
-          <PortletContent
-            className={classes.portletContent}
-         
-          >
-            {this.renderSesiionsTable()}
-            
+          <PortletContent className={classes.portletContent}>
+            {this.renderSesiionsTable()}   
           </PortletContent>
           {this.renderDialog()}
         </PerfectScrollbar>
@@ -312,24 +288,20 @@ SessionsTable.propTypes = {
 
 
 const mapStateToProps = (state) => {
-
   return {
     pending: state.session.pending,
     metaArray: state.session.metaArray,
-    opts: state.session.opts
+    opts: state.session.opts, 
   }
-
 };
 
 const mapDispatchToProps = dispatch =>{
   return{
-    fetchGetAccountSessions: params => dispatch(fetchAccountSessions(params)),
-     onChangeTracing: params => dispatch(updateTracing(params))
+    fetchGetAccountSessions: (params, accountID) => dispatch(fetchAccountSessions(params, accountID)),
+    onChangeTracing: params => dispatch(updateTracing(params))
   };
   
 };
-
-
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SessionsTable));
 

@@ -14,12 +14,16 @@ import userReducer from 'store/reducers/userReducer';
 import tracerReducer from 'store/reducers/tracerReducer';
 import searchReducer from 'store/reducers/searchReducer';
 import sessionReducer from 'store/reducers/sessionReducer';
+import authReducer from 'store/reducers/authReducer';
+import presenceInfoReducer from 'store/reducers/presenceInfoReducer';
 
 const rootReducer = combineReducers({
     user: userReducer,
     tracer: tracerReducer,
     search: searchReducer, 
-    session: sessionReducer
+    session: sessionReducer,
+    auth: authReducer,
+    presence: presenceInfoReducer
 });
 const store = createStore(
     rootReducer,

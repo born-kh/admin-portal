@@ -24,7 +24,6 @@ const styles = theme => ({
 class Footer extends Component {
   render() {
     const { classes, className } = this.props;
-
     const rootClassName = classNames(classes.root, className);
 
     return (

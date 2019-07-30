@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import userPhoto from "assets/images/user.png"
 import { withStyles } from '@material-ui/core';
@@ -18,7 +17,6 @@ import {
 } from '@material-ui/core';
 import { getInitials } from 'helpers';
 import { Portlet, PortletContent } from 'components';
-
 import styles from './styles';
 
 class UsersTable extends Component {
@@ -26,9 +24,6 @@ class UsersTable extends Component {
     rowsPerPage: 10,
     page: 0
   };
-
-
-
 
   handleChangePage = (event, page) => {
     this.setState({ page });
@@ -43,7 +38,6 @@ class UsersTable extends Component {
     const { activeTab, rowsPerPage, page } = this.state;
 
     const rootClassName = classNames(classes.root, className);
-    console.log(this.props.users)
     return (
       <Portlet className={rootClassName}>
         <PortletContent noPadding>
@@ -134,15 +128,6 @@ class UsersTable extends Component {
 UsersTable.propTypes = {
   className: PropTypes.string,
   classes: PropTypes.object.isRequired,
-  onSelect: PropTypes.func,
-  onShowDetails: PropTypes.func,
-  users: PropTypes.array.isRequired
-};
-
-UsersTable.defaultProps = {
-  users: [],
-  onSelect: () => { },
-  onShowDetails: () => { }
 };
 
 export default withStyles(styles)(UsersTable);

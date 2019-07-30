@@ -1,16 +1,9 @@
 import React, { Component } from 'react';
-
-// Externals
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-// Material helpers
 import { withStyles } from '@material-ui/core';
-
-// Material components
 import { Checkbox, Typography, Button } from '@material-ui/core';
-
-// Shared components
 import {
   Portlet,
   PortletHeader,
@@ -19,7 +12,6 @@ import {
   PortletFooter
 } from 'components';
 
-// Component styles
 import styles from './styles';
 
 class AccountNotifications extends Component {

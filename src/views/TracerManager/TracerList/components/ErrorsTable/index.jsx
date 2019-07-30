@@ -43,9 +43,6 @@ class ErrorsTable extends Component {
     errors: this.props.errors
   };
 
-
-
-
   handleChangePage = (event, page) => {
     this.setState({ page });
   };
@@ -77,9 +74,6 @@ class ErrorsTable extends Component {
 
   renderDialog() {
     if (this.state.open) {
-
-
-
       return (
         <div>
           <Dialog

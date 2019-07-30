@@ -17,7 +17,6 @@ import {
 import {
   Portlet, PortletContent, PortletHeader,
   PortletLabel,
-  PortletToolbar,
 } from 'components';
 import styles from './styles';
 
@@ -28,26 +27,21 @@ class BlockTable extends Component {
   };
 
 
-
   renderBlockList() {
     const { classes, blockList } = this.props;
-
     const { activeTab, rowsPerPage, page } = this.state;
-
 
     if (this.props.blockList.length === 0) {
       return <PortletContent><Typography variant="h6">There are no ...</Typography></PortletContent>;
     }
 
     return (
-
       <PortletContent noPadding>
         <PerfectScrollbar>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell align="left">Account ID</TableCell>
-
               </TableRow>
             </TableHead>
             <TableBody>
@@ -56,27 +50,19 @@ class BlockTable extends Component {
                   if (activeTab === 1) {
                     return !block.returning;
                   }
-
                   if (activeTab === 2) {
                     return block.returning;
                   }
-
                   return block;
                 })
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(block => (
                   <TableRow
                     className={classes.tableRow}
-
-                    key={block.accoun_id}
-                  >
-
+                    key={block.accoun_id}>
                     <TableCell className={classes.tableCell}>
                       {block.account_id}
                     </TableCell>
-
-
-
                   </TableRow>
                 ))}
             </TableBody>
@@ -112,21 +98,12 @@ class BlockTable extends Component {
 
   render() {
     const { classes, className } = this.props;
-
-
     const rootClassName = classNames(classes.root, className);
 
     return (
       <Portlet className={rootClassName}>
-
         <PortletHeader noDivider>
-          <PortletLabel
-
-            title="Block List"
-          />
-          <PortletToolbar>
-
-          </PortletToolbar>
+          <PortletLabel title="Black List"/>
         </PortletHeader>
         {this.renderBlockList()}
       </Portlet>
@@ -141,7 +118,6 @@ BlockTable.propTypes = {
 };
 
 const mapStateToProps = (state) => {
-
   return {
     blockList: state.session.blockList
   }

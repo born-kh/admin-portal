@@ -18,8 +18,8 @@ import {
 } from 'components';
 import styles from './styles';
 import generator from 'generate-password';
-import { CircularProgress } from 'material-ui';
 import AdornedButton from 'components/AdornedButton/AdornedButton';
+import { USER_MANAGER_IP } from 'constants/ActionType';
 class Auth extends Component {
   state = {
     password: "",
@@ -37,22 +37,20 @@ class Auth extends Component {
       })
     });
   };
-  handleSetPassword = event => {
-    this.setState({loading:true})
-    axios.get("http://10.7.8.129:9002/set/password?", {
-      params: {
-        password: this.state.password,
 
-      }
-    }).then((result) => {
+
+  handleSetPassword = event => {
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': this.props.sessionID ,
+   }
+    this.setState({loading:true})
+    axios.post(USER_MANAGER_IP + "/set/password",  {password: this.state.password,accountID: this.props.accountID}, {headers: headers}
+    ).then((result) => {
       this.setState({loading:false})
-      console.log("password", result)
       if (result.status === 200) {
 
-      }
-
-    },
-      (error) => {
+      }},(error) => {
         this.setState({loading:false})
         console.log(error)
 
@@ -149,5 +147,7 @@ Auth.propTypes = {
   className: PropTypes.string,
   classes: PropTypes.object.isRequired
 };
+
+
 
 export default withStyles(styles)(Auth);

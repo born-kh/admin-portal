@@ -24,7 +24,7 @@ const SearchInput = props => {
   const { classes, className, onChangeSearchValue, search, style, ...rest } = props;
 
   const rootClassName = classNames(classes.root, className);
-  console.log(props.search)
+
   return (
    
     <div

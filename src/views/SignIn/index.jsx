@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-
-// Externals
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import compose from 'recompose/compose';
 import validate from 'validate.js';
 import _ from 'underscore';
-
-// Material helpers
 import { withStyles } from '@material-ui/core';
-
-// Material components
 import {
   Grid,
   Button,
@@ -19,40 +13,27 @@ import {
   TextField,
   Typography
 } from '@material-ui/core';
-
-// Material icons
 import { ArrowBack as ArrowBackIcon } from '@material-ui/icons';
 
-// Shared components
-import { Facebook as FacebookIcon, Google as GoogleIcon } from 'icons';
-
-// Component styles
+import {connect} from 'react-redux'
 import styles from './styles';
-
-// Form validation schema
 import schema from './schema';
+import { login } from 'actions/authActions';
 
-// Service methods
-const signIn = () => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve(true);
-    }, 1500);
-  });
-};
+
 
 class SignIn extends Component {
   state = {
     values: {
-      email: '',
+      username: '',
       password: ''
     },
     touched: {
-      email: false,
+      username: false,
       password: false
     },
     errors: {
-      email: null,
+      username: null,
       password: null
     },
     isValid: false,
@@ -88,25 +69,16 @@ class SignIn extends Component {
     this.setState(newState, this.validateForm);
   };
 
-  handleSignIn = async () => {
-    try {
-      const { history } = this.props;
+  handleSignIn = () =>{
       const { values } = this.state;
-
-      this.setState({ isLoading: true });
-
-      await signIn(values.email, values.password);
-
+        let params = {
+          username: values.username,
+          password: values.password
+        }
+        this.props.handleLogin(params);
       localStorage.setItem('isAuthenticated', true);
-
-      history.push('/dashboard');
-    } catch (error) {
-      this.setState({
-        isLoading: false,
-        serviceError: error
-      });
-    }
   };
+
 
   render() {
     const { classes } = this.props;
@@ -115,13 +87,15 @@ class SignIn extends Component {
       touched,
       errors,
       isValid,
-      submitError,
-      isLoading
     } = this.state;
 
-    const showEmailError = touched.email && errors.email;
+    const {pending, error, profile, history} = this.props;
+    if(profile !== null){
+     history.push("/tracers")
+    }
+        
+    const showUsernameError = touched.username && errors.username;
     const showPasswordError = touched.password && errors.password;
-
     return (
       <div className={classes.root}>
         <Grid
@@ -135,27 +109,7 @@ class SignIn extends Component {
           >
             <div className={classes.quote}>
               <div className={classes.quoteInner}>
-                <Typography
-                  className={classes.quoteText}
-                  variant="h1"
-                >
-                  Hella narwhal Cosby sweater McSweeney's, salvia kitsch before
-                  they sold out High Life.
-                </Typography>
-                <div className={classes.person}>
-                  <Typography
-                    className={classes.name}
-                    variant="body1"
-                  >
-                    Takamaru Ayako
-                  </Typography>
-                  <Typography
-                    className={classes.bio}
-                    variant="body2"
-                  >
-                    Manager at inVision
-                  </Typography>
-                </div>
+               
               </div>
             </div>
           </Grid>
@@ -166,14 +120,7 @@ class SignIn extends Component {
             xs={12}
           >
             <div className={classes.content}>
-              <div className={classes.contentHeader}>
-                <IconButton
-                  className={classes.backButton}
-                  onClick={this.handleBack}
-                >
-                  <ArrowBackIcon />
-                </IconButton>
-              </div>
+              
               <div className={classes.contentBody}>
                 <form className={classes.form}>
                   <Typography
@@ -182,55 +129,28 @@ class SignIn extends Component {
                   >
                     Sign in
                   </Typography>
-                  <Typography
-                    className={classes.subtitle}
-                    variant="body1"
-                  >
-                    Sign in with social media
-                  </Typography>
-                  <Button
-                    className={classes.facebookButton}
-                    color="primary"
-                    onClick={this.handleSignIn}
-                    size="large"
-                    variant="contained"
-                  >
-                    <FacebookIcon className={classes.facebookIcon} />
-                    Login with Facebook
-                  </Button>
-                  <Button
-                    className={classes.googleButton}
-                    onClick={this.handleSignIn}
-                    size="large"
-                    variant="contained"
-                  >
-                    <GoogleIcon className={classes.googleIcon} />
-                    Login with Google
-                  </Button>
-                  <Typography
-                    className={classes.sugestion}
-                    variant="body1"
-                  >
-                    or login with email address
-                  </Typography>
+                 
+                  
+                  
+                  
                   <div className={classes.fields}>
                     <TextField
                       className={classes.textField}
-                      label="Email address"
-                      name="email"
+                      label="Username"
+                      name="username"
                       onChange={event =>
-                        this.handleFieldChange('email', event.target.value)
+                        this.handleFieldChange('username', event.target.value)
                       }
                       type="text"
-                      value={values.email}
+                      value={values.username}
                       variant="outlined"
                     />
-                    {showEmailError && (
+                    {showUsernameError && (
                       <Typography
                         className={classes.fieldError}
                         variant="body2"
                       >
-                        {errors.email[0]}
+                        {errors.username[0]}
                       </Typography>
                     )}
                     <TextField
@@ -253,15 +173,15 @@ class SignIn extends Component {
                       </Typography>
                     )}
                   </div>
-                  {submitError && (
+                  {error && (
                     <Typography
                       className={classes.submitError}
                       variant="body2"
                     >
-                      {submitError}
+                      {error}
                     </Typography>
                   )}
-                  {isLoading ? (
+                  {pending ? (
                     <CircularProgress className={classes.progress} />
                   ) : (
                     <Button
@@ -272,21 +192,10 @@ class SignIn extends Component {
                       size="large"
                       variant="contained"
                     >
-                      Sign in now
+                      Login
                     </Button>
                   )}
-                  <Typography
-                    className={classes.signUp}
-                    variant="body1"
-                  >
-                    Don't have an account?{' '}
-                    <Link
-                      className={classes.signUpUrl}
-                      to="/sign-up"
-                    >
-                      Sign up
-                    </Link>
-                  </Typography>
+                 
                 </form>
               </div>
             </div>
@@ -303,7 +212,23 @@ SignIn.propTypes = {
   history: PropTypes.object.isRequired
 };
 
-export default compose(
-  withRouter,
-  withStyles(styles)
-)(SignIn);
+
+
+
+const mapStateToProps = state => ({
+
+  error: state.auth.error,
+  profile: state.auth.profile,
+  pending: state.auth.pending,
+
+
+});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    handleLogin: params=> dispatch(login(params))
+  };
+
+};
+
+export default compose(withRouter,withStyles(styles))(connect(mapStateToProps, mapDispatchToProps)(SignIn));

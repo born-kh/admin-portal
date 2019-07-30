@@ -29,18 +29,12 @@ const types = [
 ];
 
 class UserList extends Component {
-
   constructor(props) {
     super(props);
-
     this.state = {
-      isLoading: false,
       searchType: "username",
-      error: null,
-      signal: true,
       fromDate: new Date(new Date().setDate(-1)),
       toDate: new Date(),
-
     }
     this.handleSearchTypeOnChange = this.handleSearchTypeOnChange.bind(this);
     this.handleOnSubmit = this.handleOnSubmit.bind(this);
@@ -48,58 +42,16 @@ class UserList extends Component {
 
   handleOnSubmit() {
 
-
-    this.setState({
-      isLoading: true,
-    })
-
-    console.log("search", this.props.search)
-    try {
-      let params = {
-        search: this.props.search,
-        type: this.state.searchType
-      }
-      this.props.fetchUsers(params);
-
-
-
-      this.setState({ isLoading: true });
-      if (this.state.signal) {
-        this.setState({
-          isLoading: false,
-        });
-      }
-    } catch (error) {
-      if (this.state.signal) {
-        this.setState({
-          isLoading: false,
-          error
-        });
-      }
+    let params = {
+      search: this.props.search,
+      type: this.state.searchType,
     }
+    this.props.fetchUsers(params, this.props.session.id);
   }
-
-
-  componentDidMount() {
-
-    this.setState({
-      signal: true
-    });
-
-  }
-
-  componentWillUnmount() {
-    this.setState({
-      signal: false
-    });
-  }
-
 
   handleSearchTypeOnChange(event) {
     this.setState({ searchType: event.target.value })
   }
-
-
 
   renderUsers() {
     const { classes, pending, error } = this.props;
@@ -113,26 +65,18 @@ class UserList extends Component {
     }
 
     if (error) {
-      console.log("sdsd", error)
-      return <Typography variant="h6">{JSON.stringify(error)}</Typography>;
+      return <Typography variant="h6">{error}</Typography>;
     }
 
     if (this.props.users.length === 0) {
       return <Typography variant="h6">There are no users</Typography>;
     }
 
-    return (
-
-      <UsersTable
-        users={this.props.users}
-      />
-
-    );
+    return (<UsersTable users={this.props.users} />);
   }
 
   render() {
     const { classes } = this.props;
-
     return (
       <DashboardLayout title="User  Manager">
         <div className={classes.root}>
@@ -188,13 +132,15 @@ const mapStateToProps = state => ({
   users: state.user.users,
   search: state.search.search,
   pending: state.user.pending,
-  error: state.user.error
+  error: state.user.error,
+  profile: state.auth.profile,
+  session: state.auth.session
 
 });
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchUsers: params => dispatch(fetchUsers(params))
+    fetchUsers: (params, sessionID) => dispatch(fetchUsers(params, sessionID))
   };
 
 };

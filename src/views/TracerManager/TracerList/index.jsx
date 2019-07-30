@@ -21,17 +21,13 @@ import {
   Delete as DeleteIcon
 } from '@material-ui/icons';
 import { MessagesTable } from './components';
-const API_DELETE = 'http://10.7.8.129:8008/delete?account_id=';
-var signal = true
+import { TRACER_MANAGER_IP } from 'constants/ActionType';
 class TracerList extends Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      isLoading: false,
-      searchType: "username",
-      error: null,
       fromDate: new Date(new Date().setDate(-1)),
       toDate: new Date(),
 
@@ -45,44 +41,15 @@ class TracerList extends Component {
   };
 
   handleOnSubmit() {
-    console.log("search", this.props.search)
-    try {
 
-      const query = this.props.search + "&from_ts=" + this.state.fromDate.toISOString() +
-        "&to_ts=" + this.state.toDate.toISOString();
-      console.log(query)
-      this.props.fetchTracers(query)
-
-
-
-
-      this.setState({ isLoading: true });
-      if (signal) {
-        this.setState({
-          isLoading: false,
-        });
-      }
-    } catch (error) {
-      if (signal) {
-        this.setState({
-          isLoading: false,
-          error
-        });
-      }
+    const params = {
+      search: this.props.search,
+      fromTS: this.state.fromDate.toISOString(),
+      toTS: this.state.toDate.toISOString()
     }
+      this.props.fetchTracers(params, this.props.session.id)
   }
 
-
-  componentDidMount() {
-    signal = true;
-
-  }
-
-  componentWillUnmount() {
-
-    signal = false
-
-  }
 
   handleChangeFromDate(date) {
     this.setState({ fromDate: date });
@@ -104,16 +71,18 @@ class TracerList extends Component {
   }
 
   handleDeleteTracers() {
-    const ACCOUNT_ID = this.props.accountId;
 
-    axios.get(API_DELETE + ACCOUNT_ID)
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': this.props.session.id,
+    }
+    const params = {
+      accountID: this.props.accountId
+    }
+    axios.post(TRACER_MANAGER_IP + "/remove/tracer", params, { headers: headers })
       .then(
         (result) => {
-          const array = result.data;
-          console.log(array);
           this.handleOnSubmit();
-
-
         },
         (error) => {
           this.setState({
@@ -127,7 +96,6 @@ class TracerList extends Component {
 
   renderTable() {
     const { classes, pending, error } = this.props;
-
     if (pending) {
       return (
         <div className={classes.progressWrapper}>
@@ -136,8 +104,6 @@ class TracerList extends Component {
       );
     }
     if (this.state.showTable) {
-
-
       if (error) {
         return <Typography variant="h6">{JSON.stringify(error)}</Typography>;
       }
@@ -153,21 +119,20 @@ class TracerList extends Component {
       );
 
     } else {
-
-
-
       if (error) {
         return <Typography variant="h6">{error}</Typography>;
       }
-
-      if (this.props.errors.length === 0) {
+      if (this.props.messages.length === 0) {
         return <Typography variant="h6">There are no messges</Typography>;
       }
-
       return (
+        <>
         <MessagesTable
           messages={this.props.messages}
         />
+        
+</>
+        
       );
     }
   }
@@ -189,7 +154,7 @@ class TracerList extends Component {
 
               <DateTimePicker label="From Date" value={this.state.fromDate} onChange={this.handleChangeFromDate} />
 
-              <DateTimePicker label="To Date" value={this.state.fromTo} onChange={this.handleChangeFromTo} />
+              <DateTimePicker label="To Date" value={this.state.toDate} onChange={this.handleChangeToDate} />
             </MuiPickersUtilsProvider>
 
             {errors.length + messages.length > 0 && (
@@ -249,7 +214,8 @@ class TracerList extends Component {
 
 
           </div>
-          <div className={classes.content}>{this.renderTable()}</div>
+          <div className={classes.content}>{this.renderTable()} </div>
+         
         </div>
 
       </DashboardLayout>
@@ -271,13 +237,14 @@ const mapStateToProps = state => ({
   accountId: state.tracer.accountId,
   search: state.search.search,
   pending: state.tracer.pending,
-  error: state.tracer.error
+  error: state.tracer.error, 
+  session: state.auth.session
 
 });
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchTracers: query => dispatch(fetchTracers(query))
+    fetchTracers: (params, sessionID) => dispatch(fetchTracers(params, sessionID))
   };
 
 };

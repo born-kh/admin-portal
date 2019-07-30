@@ -19,9 +19,6 @@ class EmailList extends Component {
   renderEmails() {
     const { classes, emails } = this.props;
 
-
-
-
     if (emails.length === 0) {
       return (
         <Typography variant="h6">There are no emails available</Typography>
@@ -31,25 +28,18 @@ class EmailList extends Component {
     return (
       <Fragment>
         {emails.map((email, i) => (
-
           <div className={classes.productDetails}>
-
             <Typography
               className={classes.productTitle}
-              variant="subtitle1"
-            >
+              variant="subtitle1">
               Number: {email.email}
             </Typography>
-
             <Typography
               className={classes.productTimestamp}
-              variant="subtitle1"
-            >
+              variant="subtitle1" >
               Type: {email.type}
             </Typography>
           </div>
-
-
         ))}
       </Fragment>
     );
@@ -57,20 +47,16 @@ class EmailList extends Component {
 
   render() {
     const { classes, className, ...rest } = this.props;
-
-
     const rootClassName = classNames(classes.root, className);
 
     return (
       <Portlet
         {...rest}
-        className={rootClassName}
-      >
+        className={rootClassName}>
         <PortletHeader noDivider>
           <PortletLabel
             subtitle={`${this.props.emails.length} in total`}
-            title="User emails"
-          />
+            title="User emails"/>
         </PortletHeader>
         <PortletContent className={classes.portletContent}>
           {this.renderEmails()}

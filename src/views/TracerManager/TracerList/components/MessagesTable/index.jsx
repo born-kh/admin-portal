@@ -44,10 +44,7 @@ class MessagesTable extends Component {
   };
 
 
-
-
   handleChangePage = (event, page) => {
-    console.log("page", page)
     this.setState({ page });
   };
 
@@ -74,14 +71,8 @@ class MessagesTable extends Component {
   };
 
 
-
-
-
   renderDialog() {
     if (this.state.open) {
-
-
-
       return (
         <div>
           <Dialog

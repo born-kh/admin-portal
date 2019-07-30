@@ -11,7 +11,6 @@ export default theme => ({
     display: 'flex',
     justifyContent: 'center'
   },
-
   row: {
     height: '42px',
     display: 'flex',
@@ -21,7 +20,6 @@ export default theme => ({
   spacer: {
     flexGrow: 1
   },
-  
   textField: {
     width: '180px',
     maxWidth: '100%',
