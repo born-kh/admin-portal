@@ -5,9 +5,9 @@ import ReactDOM from 'react-dom';
 import * as serviceWorker from './common/serviceWorker';
 
 import { Provider } from 'react-redux';
-import {createStore, applyMiddleware, combineReducers}  from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
-import {composeWithDevTools} from "redux-devtools-extension";
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 import App from './App';
 import userReducer from 'store/reducers/userReducer';
@@ -18,19 +18,23 @@ import authReducer from 'store/reducers/authReducer';
 import presenceInfoReducer from 'store/reducers/presenceInfoReducer';
 
 const rootReducer = combineReducers({
-    user: userReducer,
-    tracer: tracerReducer,
-    search: searchReducer, 
-    session: sessionReducer,
-    auth: authReducer,
-    presence: presenceInfoReducer
+  user: userReducer,
+  tracer: tracerReducer,
+  search: searchReducer,
+  session: sessionReducer,
+  auth: authReducer,
+  presence: presenceInfoReducer
 });
 const store = createStore(
-    rootReducer,
-    composeWithDevTools(applyMiddleware(thunk))
-    );
+  rootReducer,
+  composeWithDevTools(applyMiddleware(thunk))
+);
 
-    const app= <Provider store={store}><App/></Provider>;
+const app = (
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
 ReactDOM.render(app, document.getElementById('root'));
 
 serviceWorker.unregister();

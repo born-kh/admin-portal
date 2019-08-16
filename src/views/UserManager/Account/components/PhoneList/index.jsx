@@ -8,7 +8,7 @@ import {
   Portlet,
   PortletHeader,
   PortletLabel,
-  PortletContent,
+  PortletContent
 } from 'components';
 
 import styles from './styles';
@@ -25,20 +25,16 @@ class PhoneList extends Component {
     return (
       <Fragment>
         {phones.map((phone, i) => (
-            <div className={classes.productDetails}>  
-                <Typography
-                  className={classes.productTitle}
-                  variant="subtitle1">
-                Number: {phone.number}
-                </Typography>
-              <Typography
-                className={classes.productTimestamp}
-                variant="subtitle1">
-                Type: {phone.type}
-              </Typography>
-            </div>
-           
- 
+          <div className={classes.productDetails}>
+            <Typography className={classes.productTitle} variant="subtitle1">
+              Number: {phone.number}
+            </Typography>
+            <Typography
+              className={classes.productTimestamp}
+              variant="subtitle1">
+              Type: {phone.type}
+            </Typography>
+          </div>
         ))}
       </Fragment>
     );
@@ -48,13 +44,12 @@ class PhoneList extends Component {
     const { classes, className, ...rest } = this.props;
     const rootClassName = classNames(classes.root, className);
     return (
-      <Portlet
-        {...rest}
-        className={rootClassName}>
+      <Portlet {...rest} className={rootClassName}>
         <PortletHeader noDivider>
           <PortletLabel
             subtitle={`${this.props.phones.length} in total`}
-            title="User phones"/>
+            title="User phones"
+          />
         </PortletHeader>
         <PortletContent className={classes.portletContent}>
           {this.renderPhones()}

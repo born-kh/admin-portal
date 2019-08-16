@@ -15,7 +15,6 @@ import {
 import styles from './styles';
 
 class EmailList extends Component {
-
   renderEmails() {
     const { classes, emails } = this.props;
 
@@ -29,14 +28,12 @@ class EmailList extends Component {
       <Fragment>
         {emails.map((email, i) => (
           <div className={classes.productDetails}>
-            <Typography
-              className={classes.productTitle}
-              variant="subtitle1">
+            <Typography className={classes.productTitle} variant="subtitle1">
               Number: {email.email}
             </Typography>
             <Typography
               className={classes.productTimestamp}
-              variant="subtitle1" >
+              variant="subtitle1">
               Type: {email.type}
             </Typography>
           </div>
@@ -50,18 +47,16 @@ class EmailList extends Component {
     const rootClassName = classNames(classes.root, className);
 
     return (
-      <Portlet
-        {...rest}
-        className={rootClassName}>
+      <Portlet {...rest} className={rootClassName}>
         <PortletHeader noDivider>
           <PortletLabel
             subtitle={`${this.props.emails.length} in total`}
-            title="User emails"/>
+            title="User emails"
+          />
         </PortletHeader>
         <PortletContent className={classes.portletContent}>
           {this.renderEmails()}
         </PortletContent>
-
       </Portlet>
     );
   }

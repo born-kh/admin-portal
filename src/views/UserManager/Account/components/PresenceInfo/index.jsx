@@ -2,23 +2,19 @@ import React, { Component, Fragment } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import { Typography } from '@material-ui/core';
-import {
-  Portlet,
-} from 'components';
+import { Portlet } from 'components';
 
 import styles from './styles';
 import { fetchPresenceInfo } from 'actions/presenceInfoActions';
 
 class PresenceInfo extends Component {
-
-
-  componentDidMount(){
+  componentDidMount() {
     let params = {
-      accountID: this.props.accountID,
-    }
-    this.props.fetchGetPresenceInfo(params, this.props.sessionID)
+      accountID: this.props.accountID
+    };
+    this.props.fetchGetPresenceInfo(params, this.props.sessionID);
   }
 
   renderPresenceInfo() {
@@ -32,26 +28,17 @@ class PresenceInfo extends Component {
     return (
       <Fragment>
         {phones.map((phone, i) => (
-         
-           
-            <div className={classes.productDetails}>
-            
-                <Typography
-                  className={classes.productTitle}
-                  variant="subtitle1"
-                >
-                Number: {phone.number}
-                </Typography>
-          
-              <Typography
-                className={classes.productTimestamp}
-                variant="subtitle1"
-              >
-                Type: {phone.type}
-              </Typography>
-            </div>
-           
- 
+          <div className={classes.productDetails}>
+            <Typography className={classes.productTitle} variant="subtitle1">
+              Number: {phone.number}
+            </Typography>
+
+            <Typography
+              className={classes.productTimestamp}
+              variant="subtitle1">
+              Type: {phone.type}
+            </Typography>
+          </div>
         ))}
       </Fragment>
     );
@@ -60,14 +47,10 @@ class PresenceInfo extends Component {
   render() {
     const { classes, className, ...rest } = this.props;
 
-
     const rootClassName = classNames(classes.root, className);
 
     return (
-      <Portlet
-        {...rest}
-        className={rootClassName}
-      >
+      <Portlet {...rest} className={rootClassName}>
         {/* <PortletHeader noDivider>
           <PortletLabel
             subtitle={`${this.props.phones.length} in total`}
@@ -77,7 +60,6 @@ class PresenceInfo extends Component {
         <PortletContent className={classes.portletContent}>
           {this.renderPresenceInfo()}
         </PortletContent> */}
-       
       </Portlet>
     );
   }
@@ -88,21 +70,25 @@ PresenceInfo.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     pending: state.presence.pending,
     varStatus: state.presence.varStatus,
     permaStatus: state.presence.permaStatus,
-    activity: state.presence.activity, 
-  }
-
-};
-
-const mapDispatchToProps = dispatch =>{
-  return{
-    fetchGetPresenceInfo: (params, sessionID) => dispatch(fetchPresenceInfo(params, sessionID)),
+    activity: state.presence.activity
   };
-  
 };
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(PresenceInfo))
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchGetPresenceInfo: (params, sessionID) =>
+      dispatch(fetchPresenceInfo(params, sessionID))
+  };
+};
+
+export default withStyles(styles)(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(PresenceInfo)
+);

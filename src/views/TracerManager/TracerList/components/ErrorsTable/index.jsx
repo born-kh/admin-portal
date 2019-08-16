@@ -21,10 +21,7 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
-
-
-
+  DialogTitle
 } from '@material-ui/core';
 
 import { Portlet, PortletContent } from 'components';
@@ -59,18 +56,19 @@ class ErrorsTable extends Component {
     this.setState({ open: false });
   };
 
-
   handleChangeSearch = event => {
     this.setState({ search: event.target.value });
     const { search } = this.state;
     this.setState({
       errors: this.props.errors.filter(el => {
-        return String(el.request.method).toLowerCase().indexOf(search.toLowerCase()) > -1
+        return (
+          String(el.request.method)
+            .toLowerCase()
+            .indexOf(search.toLowerCase()) > -1
+        );
       })
     });
   };
-
-
 
   renderDialog() {
     if (this.state.open) {
@@ -81,38 +79,42 @@ class ErrorsTable extends Component {
             onClose={this.handleClose}
             scroll={this.state.scroll}
             aria-labelledby="scroll-dialog-title">
-            <DialogTitle id="scroll-dialog-title">{this.state.req ? 'Request' : 'Response'}</DialogTitle>
+            <DialogTitle id="scroll-dialog-title">
+              {this.state.req ? 'Request' : 'Response'}
+            </DialogTitle>
             <DialogContent>
               <DialogContentText>
-                <ReactJson src={this.state.req ? this.props.errors[this.state.rowIndex].request : this.props.errors[this.state.rowIndex].response} />
+                <ReactJson
+                  src={
+                    this.state.req
+                      ? this.props.errors[this.state.rowIndex].request
+                      : this.props.errors[this.state.rowIndex].response
+                  }
+                />
               </DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button onClick={this.handleClose} color="primary">
                 Cancel
-            </Button>
+              </Button>
               <Button onClick={this.handleClose} color="primary">
                 Ok
-            </Button>
+              </Button>
             </DialogActions>
           </Dialog>
         </div>
       );
-    }
-    else {
-      return "";
+    } else {
+      return '';
     }
   }
-
-
-
 
   render() {
     const { classes, className } = this.props;
     const { activeTab, rowsPerPage, page, errors } = this.state;
 
     const rootClassName = classNames(classes.root, className);
-    console.log(this.props.users)
+    console.log(this.props.users);
     return (
       <Portlet className={rootClassName}>
         <PortletContent noPadding>
@@ -121,18 +123,20 @@ class ErrorsTable extends Component {
               <TableHead>
                 <TableRow>
                   <TableCell align="left">ts</TableCell>
-                  <TableCell align="left"> <TextField
-                    onChange={this.handleChangeSearch}
-                    id="outlined-search"
-                    label="Method"
-                    type="search"
-                    margin="dense"
-                    variant="outlined"
-                  /></TableCell>
+                  <TableCell align="left">
+                    {' '}
+                    <TextField
+                      onChange={this.handleChangeSearch}
+                      id="outlined-search"
+                      label="Method"
+                      type="search"
+                      margin="dense"
+                      variant="outlined"
+                    />
+                  </TableCell>
                   <TableCell align="left"> Account ID</TableCell>
                   <TableCell align="left">Request</TableCell>
                   <TableCell align="left">Response</TableCell>
-
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -150,22 +154,14 @@ class ErrorsTable extends Component {
                   })
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => (
-                    <TableRow
-                      className={classes.tableRow}
-                      hover
-                      key={index}
-                    >
+                    <TableRow className={classes.tableRow} hover key={index}>
                       <TableCell className={classes.tableCell}>
                         <div className={classes.tableCellInner}>
-
-
                           <Typography
                             className={classes.nameText}
-                            variant="body1"
-                          >
+                            variant="body1">
                             {row.ts}
                           </Typography>
-
                         </div>
                       </TableCell>
                       <TableCell className={classes.tableCell}>
@@ -176,17 +172,23 @@ class ErrorsTable extends Component {
                       </TableCell>
 
                       <TableCell align="center">
-                        <Button variant="outlined" size="small" color="primary" onClick={this.handleClickOpen('paper', true, index)}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          color="primary"
+                          onClick={this.handleClickOpen('paper', true, index)}>
                           Show
-                  </Button>
+                        </Button>
                       </TableCell>
                       <TableCell align="center">
-                        <Button variant="outlined" size="small" color="primary" onClick={this.handleClickOpen('paper', false, index)}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          color="primary"
+                          onClick={this.handleClickOpen('paper', false, index)}>
                           Show
-                  </Button>
+                        </Button>
                       </TableCell>
-
-
                     </TableRow>
                   ))}
               </TableBody>
@@ -221,7 +223,5 @@ ErrorsTable.propTypes = {
   onShowDetails: PropTypes.func,
   errors: PropTypes.array.isRequired
 };
-
-
 
 export default withStyles(styles)(ErrorsTable);

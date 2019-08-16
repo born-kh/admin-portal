@@ -8,8 +8,6 @@ import './assets/scss/index.scss';
 import Routes from './Routes';
 const browserHistory = createBrowserHistory();
 
-
-
 export default class App extends Component {
   render() {
     return (

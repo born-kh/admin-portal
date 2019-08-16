@@ -4,11 +4,7 @@ import classNames from 'classnames';
 import compose from 'recompose/compose';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core';
-import {
-  IconButton,
-  Toolbar,
-  Typography
-} from '@material-ui/core';
+import { IconButton, Toolbar, Typography } from '@material-ui/core';
 import {
   Menu as MenuIcon,
   Close as CloseIcon,
@@ -17,7 +13,7 @@ import {
 
 import styles from './styles';
 import { logout } from 'actions/authActions';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
 class Topbar extends Component {
   handleSignOut = () => {
@@ -25,7 +21,7 @@ class Topbar extends Component {
     localStorage.setItem('isAuthenticated', false);
     localStorage.removeItem('profile');
     localStorage.removeItem('session');
-    this.props.onLogout()
+    this.props.onLogout();
     history.push('/login');
   };
   render() {
@@ -45,25 +41,19 @@ class Topbar extends Component {
             <IconButton
               className={classes.menuButton}
               onClick={onToggleSidebar}
-              variant="text"
-            >
+              variant="text">
               {isSidebarOpen ? <CloseIcon /> : <MenuIcon />}
             </IconButton>
-            <Typography
-              className={classes.title}
-              variant="h4"
-            >
+            <Typography className={classes.title} variant="h4">
               {title}
             </Typography>
             <IconButton
               className={classes.notificationsButton}
               onClick={this.handleShowNotifications}
-            >        
-            </IconButton>
+            />
             <IconButton
               className={classes.signOutButton}
-              onClick={this.handleSignOut}
-            >
+              onClick={this.handleSignOut}>
               <InputIcon />
             </IconButton>
           </Toolbar>
@@ -86,13 +76,16 @@ Topbar.defaultProps = {
   onToggleSidebar: () => {}
 };
 
-
 const mapDispatchToProps = dispatch => {
- 
-    return { onLogout: () => dispatch(logout()) } 
- 
-
+  return { onLogout: () => dispatch(logout()) };
 };
 
-export default  compose(withRouter, withStyles(styles))(connect( null, mapDispatchToProps)(Topbar));
-
+export default compose(
+  withRouter,
+  withStyles(styles)
+)(
+  connect(
+    null,
+    mapDispatchToProps
+  )(Topbar)
+);

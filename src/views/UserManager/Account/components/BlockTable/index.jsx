@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { withStyles } from '@material-ui/core';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
 import {
   Table,
@@ -15,8 +15,10 @@ import {
   TablePagination
 } from '@material-ui/core';
 import {
-  Portlet, PortletContent, PortletHeader,
-  PortletLabel,
+  Portlet,
+  PortletContent,
+  PortletHeader,
+  PortletLabel
 } from 'components';
 import styles from './styles';
 
@@ -26,13 +28,16 @@ class BlockTable extends Component {
     page: 0
   };
 
-
   renderBlockList() {
     const { classes, blockList } = this.props;
     const { activeTab, rowsPerPage, page } = this.state;
 
     if (this.props.blockList.length === 0) {
-      return <PortletContent><Typography variant="h6">There are no ...</Typography></PortletContent>;
+      return (
+        <PortletContent>
+          <Typography variant="h6">There are no ...</Typography>
+        </PortletContent>
+      );
     }
 
     return (
@@ -57,9 +62,7 @@ class BlockTable extends Component {
                 })
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(block => (
-                  <TableRow
-                    className={classes.tableRow}
-                    key={block.accoun_id}>
+                  <TableRow className={classes.tableRow} key={block.accoun_id}>
                     <TableCell className={classes.tableCell}>
                       {block.account_id}
                     </TableCell>
@@ -84,7 +87,6 @@ class BlockTable extends Component {
           rowsPerPageOptions={[5, 10, 25]}
         />
       </PortletContent>
-
     );
   }
 
@@ -103,7 +105,7 @@ class BlockTable extends Component {
     return (
       <Portlet className={rootClassName}>
         <PortletHeader noDivider>
-          <PortletLabel title="Black List"/>
+          <PortletLabel title="Black List" />
         </PortletHeader>
         {this.renderBlockList()}
       </Portlet>
@@ -113,18 +115,13 @@ class BlockTable extends Component {
 
 BlockTable.propTypes = {
   className: PropTypes.string,
-  classes: PropTypes.object.isRequired,
-
+  classes: PropTypes.object.isRequired
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     blockList: state.session.blockList
-  }
-
+  };
 };
 
-
-
 export default withStyles(styles)(connect(mapStateToProps)(BlockTable));
-

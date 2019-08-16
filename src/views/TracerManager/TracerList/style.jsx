@@ -1,9 +1,9 @@
 export default theme => ({
   root: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(1) * 3
   },
   content: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(1) * 2
   },
   progressWrapper: {
     paddingTop: '48px',
@@ -16,34 +16,34 @@ export default theme => ({
     height: '42px',
     display: 'flex',
     alignItems: 'center',
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   },
   spacer: {
     flexGrow: 1
   },
-  
+
   textField: {
     width: '180px',
     maxWidth: '100%',
-    marginRight: theme.spacing.unit * 2
+    marginRight: theme.spacing(1) * 2
   },
   searchInput: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   deleteButton: {
     color: theme.palette.danger.main,
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   importButton: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   importIcon: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   exportButton: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   exportIcon: {
-    marginRight: theme.spacing.unit
-  },
+    marginRight: theme.spacing(1)
+  }
 });

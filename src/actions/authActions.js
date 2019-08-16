@@ -1,10 +1,9 @@
-import * as types from "../constants/ActionType";
+import * as types from '../constants/ActionType';
 import axios from 'axios';
 
 export function loginPending() {
   return {
     type: types.LOGIN_PENDING
-
   };
 }
 
@@ -12,67 +11,51 @@ export function loginSuccess(result) {
   return {
     type: types.LOGIN_SUCCESS,
     result
-
   };
 }
 
 export function loginError(error) {
+  console.log(error);
   return {
     type: types.LOGIN_ERROR,
     error
-
   };
 }
 
 export function logout() {
   return {
-    type: types.LOGOUT,
-
+    type: types.LOGOUT
   };
 }
 
 export function login(params) {
-  return (dispatch) => {
+  return async dispatch => {
     dispatch(loginPending());
-    axios.post(types.USER_MANAGER_IP  + "/login", params).then((result) => {
-      
-      if (result.data.session !== undefined) {
+
+    try {
+      const res = await axios.post(types.USER_MANAGER_IP + '/login', params);
+      if (res.data.session !== undefined) {
         localStorage.setItem('isAuthenticated', true);
-        localStorage.setItem('profile', JSON.stringify(result.data.profile) );
-        localStorage.setItem('session', JSON.stringify(result.data.session) );
-        dispatch(loginSuccess(result.data))
+        localStorage.setItem('profile', JSON.stringify(res.data.profile));
+        localStorage.setItem('session', JSON.stringify(res.data.session));
+        dispatch(loginSuccess(res.data));
 
-      
-        axios.post(types.USER_MANAGER_IP  + "/get/permission", result.data.session).then((result) => {
-
-          if (result.status === 200) {
-        
-            
-    
-          }},(error) => {
-            console.log(error)
-    
+        try {
+          const permissionRes = await axios.post(
+            types.USER_MANAGER_IP + '/get/permission',
+            res.data.session
+          );
+          if (permissionRes.status === 200) {
+            console.log(permissionRes.data);
           }
-        )
-       
-       
-      } else if (result.data !== undefined) {
-         dispatch(loginError(result.data));
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (res.data !== undefined) {
+        dispatch(loginError(res.data));
       }
-    },
-      (error) => {
-        dispatch(loginError(error.message));
-      }
-    )
-
-  }
+    } catch (error) {
+      dispatch(loginError(error.message));
+    }
+  };
 }
-
-
-
-
-
-
-
-
-

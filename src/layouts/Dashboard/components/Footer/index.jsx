@@ -29,15 +29,10 @@ class Footer extends Component {
     return (
       <div className={rootClassName}>
         <Divider />
-        <Typography
-          className={classes.company}
-          variant="body1"
-        >
+        <Typography className={classes.company} variant="body1">
           &copy; Tamos Admin. 2019
         </Typography>
-        <Typography variant="caption">
-        
-        </Typography>
+        <Typography variant="caption" />
       </div>
     );
   }

@@ -3,7 +3,7 @@ import { Link, NavLink } from 'react-router-dom';
 
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux'
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core';
 import {
   Avatar,
@@ -24,21 +24,17 @@ import {
   AccountBoxOutlined as AccountBoxIcon,
   SettingsOutlined as SettingsIcon
 } from '@material-ui/icons';
-import userPhoto from "assets/images/user.png"
+import userPhoto from 'assets/images/user.png';
 import styles from './styles';
 
 class Sidebar extends Component {
-
   render() {
-    const { classes, className, profile} = this.props;
+    const { classes, className, profile } = this.props;
     const rootClassName = classNames(classes.root, className);
     return (
       <nav className={rootClassName}>
         <div className={classes.logoWrapper}>
-          <Link
-            className={classes.logoLink}
-            to="/"
-          >
+          <Link className={classes.logoLink} to="/">
             <img
               alt="Brainalytica logo"
               className={classes.logoImage}
@@ -46,41 +42,36 @@ class Sidebar extends Component {
             />
           </Link>
         </div>
-       
-        
+
         <Divider className={classes.logoDivider} />
         <div className={classes.profile}>
           <Link to="/account">
             <Avatar
               alt={profile.firstName}
               className={classes.avatar}
-              src={profile.avatar !== undefined ? `https://wssdev.nexustls.com/files/file/${profile.avatar}/medium` : userPhoto}
+              src={
+                profile.avatar !== undefined
+                  ? `https://wssdev.nexustls.com/files/file/${
+                      profile.avatar
+                    }/medium`
+                  : userPhoto
+              }
             />
           </Link>
-          <Typography
-            className={classes.nameText}
-            variant="h6"
-          >
-           {profile.firstName}
+          <Typography className={classes.nameText} variant="h6">
+            {profile.firstName}
           </Typography>
-          <Typography
-            className={classes.bioText}
-            variant="caption"
-          >
+          <Typography className={classes.bioText} variant="caption">
             {profile.lastName}
           </Typography>
         </div>
         <Divider className={classes.profileDivider} />
-        <List
-          component="div"
-          disablePadding
-        >
+        <List component="div" disablePadding>
           <ListItem
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={NavLink}
-            to="/tracers"
-          >
+            to="/tracers">
             <ListItemIcon className={classes.listItemIcon}>
               <DashboardIcon />
             </ListItemIcon>
@@ -93,8 +84,7 @@ class Sidebar extends Component {
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={NavLink}
-            to="/users"
-          >
+            to="/users">
             <ListItemIcon className={classes.listItemIcon}>
               <PeopleIcon />
             </ListItemIcon>
@@ -107,38 +97,33 @@ class Sidebar extends Component {
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={NavLink}
-            to="#"
-          >
+            to="/new-docs">
             <ListItemIcon className={classes.listItemIcon}>
               <ShoppingBasketIcon />
             </ListItemIcon>
             <ListItemText
               classes={{ primary: classes.listItemText }}
-              primary="Products"
+              primary="Passport Manager"
             />
           </ListItem>
           <ListItem
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={NavLink}
-            to="login"
-          >
+            to="login">
             <ListItemIcon className={classes.listItemIcon}>
               <LockOpenIcon />
             </ListItemIcon>
             <ListItemText
               classes={{ primary: classes.listItemText }}
               primary="Authentication"
-              
-              
             />
           </ListItem>
           <ListItem
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={NavLink}
-            to="#"
-          >
+            to="#">
             <ListItemIcon className={classes.listItemIcon}>
               <TextFieldsIcon />
             </ListItemIcon>
@@ -151,8 +136,7 @@ class Sidebar extends Component {
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={NavLink}
-            to="#"
-          >
+            to="#">
             <ListItemIcon className={classes.listItemIcon}>
               <ImageIcon />
             </ListItemIcon>
@@ -165,8 +149,7 @@ class Sidebar extends Component {
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={NavLink}
-            to="#"
-          >
+            to="#">
             <ListItemIcon className={classes.listItemIcon}>
               <AccountBoxIcon />
             </ListItemIcon>
@@ -179,8 +162,7 @@ class Sidebar extends Component {
             activeClassName={classes.activeListItem}
             className={classes.listItem}
             component={NavLink}
-            to="#"
-          >
+            to="#">
             <ListItemIcon className={classes.listItemIcon}>
               <SettingsIcon />
             </ListItemIcon>
@@ -191,7 +173,6 @@ class Sidebar extends Component {
           </ListItem>
         </List>
         <Divider className={classes.listDivider} />
-        
       </nav>
     );
   }
@@ -202,13 +183,7 @@ Sidebar.propTypes = {
   classes: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
-
-  profile: state.auth.profile,
-  
-
+  profile: state.auth.profile
 });
 
-
-
-export default withStyles(styles)(connect(mapStateToProps)(Sidebar))
-
+export default withStyles(styles)(connect(mapStateToProps)(Sidebar));

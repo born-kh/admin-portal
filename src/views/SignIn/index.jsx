@@ -8,19 +8,15 @@ import { withStyles } from '@material-ui/core';
 import {
   Grid,
   Button,
-  IconButton,
   CircularProgress,
   TextField,
   Typography
 } from '@material-ui/core';
-import { ArrowBack as ArrowBackIcon } from '@material-ui/icons';
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux';
 import styles from './styles';
 import schema from './schema';
 import { login } from 'actions/authActions';
-
-
 
 class SignIn extends Component {
   state = {
@@ -69,70 +65,42 @@ class SignIn extends Component {
     this.setState(newState, this.validateForm);
   };
 
-  handleSignIn = () =>{
-      const { values } = this.state;
-        let params = {
-          username: values.username,
-          password: values.password
-        }
-        this.props.handleLogin(params);
-      localStorage.setItem('isAuthenticated', true);
+  handleSignIn = () => {
+    const { values } = this.state;
+    let params = {
+      username: values.username,
+      password: values.password
+    };
+    this.props.handleLogin(params);
   };
-
 
   render() {
     const { classes } = this.props;
-    const {
-      values,
-      touched,
-      errors,
-      isValid,
-    } = this.state;
+    const { values, touched, errors, isValid } = this.state;
 
-    const {pending, error, profile, history} = this.props;
-    if(profile !== null){
-     history.push("/tracers")
+    const { pending, error, profile, history } = this.props;
+    if (profile !== null) {
+      history.push('/tracers');
     }
-        
+
     const showUsernameError = touched.username && errors.username;
     const showPasswordError = touched.password && errors.password;
     return (
       <div className={classes.root}>
-        <Grid
-          className={classes.grid}
-          container
-        >
-          <Grid
-            className={classes.quoteWrapper}
-            item
-            lg={5}
-          >
+        <Grid className={classes.grid} container>
+          <Grid className={classes.quoteWrapper} item lg={5}>
             <div className={classes.quote}>
-              <div className={classes.quoteInner}>
-               
-              </div>
+              <div className={classes.quoteInner} />
             </div>
           </Grid>
-          <Grid
-            className={classes.content}
-            item
-            lg={7}
-            xs={12}
-          >
+          <Grid className={classes.content} item lg={7} xs={12}>
             <div className={classes.content}>
-              
               <div className={classes.contentBody}>
                 <form className={classes.form}>
-                  <Typography
-                    className={classes.title}
-                    variant="h2"
-                  >
+                  <Typography className={classes.title} variant="h2">
                     Sign in
                   </Typography>
-                 
-                  
-                  
-                  
+
                   <div className={classes.fields}>
                     <TextField
                       className={classes.textField}
@@ -148,8 +116,7 @@ class SignIn extends Component {
                     {showUsernameError && (
                       <Typography
                         className={classes.fieldError}
-                        variant="body2"
-                      >
+                        variant="body2">
                         {errors.username[0]}
                       </Typography>
                     )}
@@ -167,17 +134,13 @@ class SignIn extends Component {
                     {showPasswordError && (
                       <Typography
                         className={classes.fieldError}
-                        variant="body2"
-                      >
+                        variant="body2">
                         {errors.password[0]}
                       </Typography>
                     )}
                   </div>
                   {error && (
-                    <Typography
-                      className={classes.submitError}
-                      variant="body2"
-                    >
+                    <Typography className={classes.submitError} variant="body2">
                       {error}
                     </Typography>
                   )}
@@ -190,12 +153,10 @@ class SignIn extends Component {
                       disabled={!isValid}
                       onClick={this.handleSignIn}
                       size="large"
-                      variant="contained"
-                    >
+                      variant="contained">
                       Login
                     </Button>
                   )}
-                 
                 </form>
               </div>
             </div>
@@ -212,23 +173,24 @@ SignIn.propTypes = {
   history: PropTypes.object.isRequired
 };
 
-
-
-
 const mapStateToProps = state => ({
-
   error: state.auth.error,
   profile: state.auth.profile,
-  pending: state.auth.pending,
-
-
+  pending: state.auth.pending
 });
 
 const mapDispatchToProps = dispatch => {
   return {
-    handleLogin: params=> dispatch(login(params))
+    handleLogin: params => dispatch(login(params))
   };
-
 };
 
-export default compose(withRouter,withStyles(styles))(connect(mapStateToProps, mapDispatchToProps)(SignIn));
+export default compose(
+  withRouter,
+  withStyles(styles)
+)(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(SignIn)
+);

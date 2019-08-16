@@ -1,55 +1,47 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { withStyles} from '@material-ui/core';
-import { CircularProgress, Typography, Button} from '@material-ui/core';
+import { withStyles } from '@material-ui/core';
+import { CircularProgress, Typography, Button } from '@material-ui/core';
 
 import { Dashboard as DashboardLayout } from 'layouts';
-import axios from 'axios'
-import DateFnsUtils from "@date-io/date-fns"; 
-import {
-
-  DateTimePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+import axios from 'axios';
+import DateFnsUtils from '@date-io/date-fns';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import styles from './style';
 import { SearchInput } from 'components';
-import { connect } from 'react-redux'
-import {fetchTracers } from 'actions/TracerActions';
+import { connect } from 'react-redux';
+import { fetchTracers } from 'actions/TracerActions';
 import { ErrorsTable } from './components';
 import { IconButton } from '@material-ui/core';
-import {
-  Delete as DeleteIcon
-} from '@material-ui/icons';
+import { Delete as DeleteIcon } from '@material-ui/icons';
 import { MessagesTable } from './components';
 import { TRACER_MANAGER_IP } from 'constants/ActionType';
-class TracerList extends Component {
 
+
+class TracerList extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       fromDate: new Date(new Date().setDate(-1)),
-      toDate: new Date(),
-
-    }
+      toDate: new Date()
+    };
     this.handleChangeFromDate = this.handleChangeFromDate.bind(this);
     this.handleChangeToDate = this.handleChangeToDate.bind(this);
     this.handleOnSubmit = this.handleOnSubmit.bind(this);
     this.showErrorTable = this.showErrorTable.bind(this);
     this.showMessageTable = this.showMessageTable.bind(this);
     this.handleDeleteTracers = this.handleDeleteTracers.bind(this);
-  };
+  }
 
   handleOnSubmit() {
-
     const params = {
       search: this.props.search,
       fromTS: this.state.fromDate.toISOString(),
       toTS: this.state.toDate.toISOString()
-    }
-      this.props.fetchTracers(params, this.props.session.id)
+    };
+    this.props.fetchTracers(params, this.props.session.id);
   }
-
 
   handleChangeFromDate(date) {
     this.setState({ fromDate: date });
@@ -61,38 +53,34 @@ class TracerList extends Component {
   showErrorTable(e) {
     e.preventDefault();
     this.setState({ showTable: true });
-
   }
 
   showMessageTable(e) {
     e.preventDefault();
     this.setState({ showTable: false });
-
   }
 
   handleDeleteTracers() {
-
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization': this.props.session.id,
-    }
+      Authorization: this.props.session.id
+    };
     const params = {
       accountID: this.props.accountId
-    }
-    axios.post(TRACER_MANAGER_IP + "/remove/tracer", params, { headers: headers })
+    };
+    axios
+      .post(TRACER_MANAGER_IP + '/remove/tracer', params, { headers: headers })
       .then(
-        (result) => {
+        result => {
           this.handleOnSubmit();
         },
-        (error) => {
+        error => {
           this.setState({
             error
           });
-
         }
-      )
+      );
   }
-
 
   renderTable() {
     const { classes, pending, error } = this.props;
@@ -112,12 +100,7 @@ class TracerList extends Component {
         return <Typography variant="h6">There are no errors</Typography>;
       }
 
-      return (
-        <ErrorsTable
-          errors={this.props.errors}
-        />
-      );
-
+      return <ErrorsTable errors={this.props.errors} />;
     } else {
       if (error) {
         return <Typography variant="h6">{error}</Typography>;
@@ -127,20 +110,11 @@ class TracerList extends Component {
       }
       return (
         <>
-        <MessagesTable
-          messages={this.props.messages}
-        />
-        
-</>
-        
+          <MessagesTable messages={this.props.messages} />
+        </>
       );
     }
   }
-
-
-
-
-
 
   render() {
     const { classes, errors, messages } = this.props;
@@ -151,17 +125,23 @@ class TracerList extends Component {
           <div className={classes.row}>
             <span className={classes.spacer} />
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <DateTimePicker
+                label="From Date"
+                value={this.state.fromDate}
+                onChange={this.handleChangeFromDate}
+              />
 
-              <DateTimePicker label="From Date" value={this.state.fromDate} onChange={this.handleChangeFromDate} />
-
-              <DateTimePicker label="To Date" value={this.state.toDate} onChange={this.handleChangeToDate} />
+              <DateTimePicker
+                label="To Date"
+                value={this.state.toDate}
+                onChange={this.handleChangeToDate}
+              />
             </MuiPickersUtilsProvider>
 
             {errors.length + messages.length > 0 && (
               <IconButton
                 className={classes.deleteButton}
-                onClick={this.handleDeleteTracers}
-              >
+                onClick={this.handleDeleteTracers}>
                 <DeleteIcon />
               </IconButton>
             )}
@@ -172,20 +152,18 @@ class TracerList extends Component {
               variant="outlined"
               color="secondary"
               disabled={this.state.showTable ? true : false}
-              onClick={this.showErrorTable}
-            >
+              onClick={this.showErrorTable}>
               {this.props.errors.length} Errors
-          </Button>
+            </Button>
             <Button
               className={classes.exportButton}
               size="small"
               variant="outlined"
               color="primary"
               disabled={this.state.showTable ? false : true}
-              onClick={this.showMessageTable}
-            >
+              onClick={this.showMessageTable}>
               {this.props.messages.length} Messages
-          </Button>
+            </Button>
           </div>
           <div className={classes.row}>
             <SearchInput
@@ -193,31 +171,20 @@ class TracerList extends Component {
               placeholder="Search tracer"
             />
 
-
-
             <Button
               color="primary"
               size="small"
               variant="outlined"
-              onClick={this.handleOnSubmit}
-
-            >
+              onClick={this.handleOnSubmit}>
               Search
             </Button>
-
-
           </div>
 
           <div className={classes.row}>
-            <h1>{this.state.showTable ? "Errors" : "Messages"}</h1>
-
-
-
+            <h1>{this.state.showTable ? 'Errors' : 'Messages'}</h1>
           </div>
           <div className={classes.content}>{this.renderTable()} </div>
-         
         </div>
-
       </DashboardLayout>
     );
   }
@@ -228,26 +195,26 @@ TracerList.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-
-
 const mapStateToProps = state => ({
-
   errors: state.tracer.errors,
   messages: state.tracer.messages,
   accountId: state.tracer.accountId,
   search: state.search.search,
   pending: state.tracer.pending,
-  error: state.tracer.error, 
+  error: state.tracer.error,
   session: state.auth.session
-
 });
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchTracers: (params, sessionID) => dispatch(fetchTracers(params, sessionID))
+    fetchTracers: (params, sessionID) =>
+      dispatch(fetchTracers(params, sessionID))
   };
-
 };
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(TracerList));
-
+export default withStyles(styles)(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(TracerList)
+);

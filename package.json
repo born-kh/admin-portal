@@ -47,6 +47,7 @@
     "react-date-range": "^0.9.4",
     "react-dom": "^16.8.6",
     "react-json-view": "^1.19.1",
+    "react-json-viewer": "^2.1.0",
     "react-perfect-scrollbar": "^1.4.4",
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.0",

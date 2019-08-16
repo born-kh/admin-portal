@@ -19,7 +19,7 @@ import { getInitials } from 'helpers';
 import { Portlet, PortletContent } from 'components';
 import styles from './styles';
 
-class UsersTable extends Component {
+class AccountTable extends Component {
   state = {
     rowsPerPage: 10,
     page: 0
@@ -124,9 +124,9 @@ class UsersTable extends Component {
   }
 }
 
-UsersTable.propTypes = {
+AccountTable.propTypes = {
   className: PropTypes.string,
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(UsersTable);
+export default withStyles(styles)(AccountTable);

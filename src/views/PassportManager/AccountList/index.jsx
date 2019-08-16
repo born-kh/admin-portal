@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles, Button, TextField } from '@material-ui/core';
 import { CircularProgress, Typography } from '@material-ui/core';
 import { Dashboard as DashboardLayout } from 'layouts';
-import { UsersTable } from './components';
+import { AccountTable } from './components';
 import styles from './style';
 import { SearchInput } from 'components';
 import { connect } from 'react-redux';
@@ -28,7 +28,7 @@ const types = [
   }
 ];
 
-class UserList extends Component {
+class AccountList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -68,21 +68,21 @@ class UserList extends Component {
     }
 
     if (this.props.users.length === 0) {
-      return <Typography variant="h6">There are no users</Typography>;
+      return <Typography variant="h6">There are no accounts</Typography>;
     }
 
-    return <UsersTable users={this.props.users} />;
+    return <AccountTable users={this.props.users} />;
   }
 
   render() {
     const { classes } = this.props;
     return (
-      <DashboardLayout title="User  Manager">
+      <DashboardLayout title="Passport  Manager">
         <div className={classes.root}>
           <div className={classes.row}>
             <SearchInput
               className={classes.searchInput}
-              placeholder="Search user"
+              placeholder="Search account"
             />
             <TextField
               className={classes.textField}
@@ -115,7 +115,7 @@ class UserList extends Component {
   }
 }
 
-UserList.propTypes = {
+AccountList.propTypes = {
   className: PropTypes.string,
   classes: PropTypes.object.isRequired
 };
@@ -139,5 +139,5 @@ export default withStyles(styles)(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(UserList)
+  )(AccountList)
 );
