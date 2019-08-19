@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import axios from 'axios';
+
 import { withStyles } from '@material-ui/core';
 import { Button, TextField, Typography } from '@material-ui/core';
 
@@ -15,7 +15,9 @@ import {
 import styles from './styles';
 import generator from 'generate-password';
 import AdornedButton from 'components/AdornedButton/AdornedButton';
-import { USER_MANAGER_IP } from 'constants/ActionType';
+
+import { instance } from 'helpers';
+
 class Auth extends Component {
   state = {
     password: '',
@@ -35,17 +37,12 @@ class Auth extends Component {
   };
 
   handleSetPassword = event => {
-    var headers = {
-      'Content-Type': 'application/json',
-      Authorization: this.props.sessionID
-    };
     this.setState({ loading: true });
-    axios
-      .post(
-        USER_MANAGER_IP + '/set/password',
-        { password: this.state.password, accountID: this.props.accountID },
-        { headers: headers }
-      )
+    instance
+      .post('/set/password', {
+        password: this.state.password,
+        accountID: this.props.accountID
+      })
       .then(
         result => {
           this.setState({ loading: false });

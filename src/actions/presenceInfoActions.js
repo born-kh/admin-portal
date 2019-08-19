@@ -1,5 +1,5 @@
-import * as types from '../constants/ActionType';
-import axios from 'axios';
+import * as types from '../constants/actionType';
+import { instance } from 'helpers';
 
 export function presenceInfoPending() {
   return {
@@ -22,26 +22,19 @@ export function presenceInfoError(error) {
   };
 }
 
-export function fetchPresenceInfo(params, sessionID) {
-  return async dispatch => {
-    var headers = {
-      Authorization: sessionID
-    };
-
-    try {
-      const res = await axios.post(
-        types.USER_MANAGER_IP + '/get/precense/info',
-        params,
-        { headers: headers }
-      );
-
-      if (res.data.result !== undefined) {
-        dispatch(presenceInfoSuccess(res.data.result));
-      } else if (res.data.error !== undefined) {
-        dispatch(presenceInfoSuccess(res.data.error.description));
+export function fetchPresenceInfo(params) {
+  return dispatch => {
+    instance.post('/get/precense/info', params).then(
+      resp => {
+        if (resp.data.result !== undefined) {
+          dispatch(presenceInfoSuccess(resp.data.result));
+        } else if (resp.data.error !== undefined) {
+          dispatch(presenceInfoSuccess(resp.data.error.description));
+        }
+      },
+      error => {
+        dispatch(presenceInfoError(error.message));
       }
-    } catch (error) {
-      dispatch(presenceInfoError(error.message));
-    }
+    );
   };
 }

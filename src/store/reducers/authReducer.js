@@ -1,4 +1,4 @@
-import * as types from '../../constants/ActionType';
+import * as types from '../../constants/actionType';
 
 let profil = JSON.parse(localStorage.getItem('profile'));
 let auth = localStorage.getItem('isAuthenticated');

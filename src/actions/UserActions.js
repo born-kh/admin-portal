@@ -1,5 +1,5 @@
-import * as types from '../constants/ActionType';
-import axios from 'axios';
+import * as types from '../constants/actionType';
+import { instance } from 'helpers';
 
 export function fetchUsersPending() {
   return {
@@ -21,26 +21,20 @@ export function fetchUsersError(error) {
   };
 }
 
-export function fetchUsers(params, sessionID) {
-  return async dispatch => {
-    var headers = {
-      Authorization: sessionID
-    };
-    dispatch(fetchUsersPending());
-
-    try {
-      const res = await axios.post(
-        types.USER_MANAGER_IP + '/search/user',
-        params,
-        { headers: headers }
-      );
-      if (res.data.result !== undefined) {
-        return dispatch(fetchUsersSuccess(res.data.result.accounts));
-      } else {
-        return dispatch(fetchUsersError(res.data.error.description));
+export function fetchUsers(params) {
+  return dispatch => {
+    instance.post('/search/user', params).then(
+      resp => {
+        if (resp.data.result !== undefined) {
+          console.log(resp);
+          return dispatch(fetchUsersSuccess(resp.data.result.accounts));
+        } else {
+          return dispatch(fetchUsersError(resp.data.error.description));
+        }
+      },
+      error => {
+        return dispatch(fetchUsersError(error.message));
       }
-    } catch (error) {
-      return dispatch(fetchUsersError(error.message));
-    }
+    );
   };
 }

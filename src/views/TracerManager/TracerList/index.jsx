@@ -10,13 +10,12 @@ import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import styles from './style';
 import { SearchInput } from 'components';
 import { connect } from 'react-redux';
-import { fetchTracers } from 'actions/TracerActions';
+import { fetchTracers } from 'actions/tracerActions';
 import { ErrorsTable } from './components';
 import { IconButton } from '@material-ui/core';
 import { Delete as DeleteIcon } from '@material-ui/icons';
 import { MessagesTable } from './components';
-import { TRACER_MANAGER_IP } from 'constants/ActionType';
-
+import { TRACER_MANAGER_IP } from 'constants/actionType';
 
 class TracerList extends Component {
   constructor(props) {
@@ -40,7 +39,7 @@ class TracerList extends Component {
       fromTS: this.state.fromDate.toISOString(),
       toTS: this.state.toDate.toISOString()
     };
-    this.props.fetchTracers(params, this.props.session.id);
+    this.props.fetchTracers(params);
   }
 
   handleChangeFromDate(date) {
@@ -199,7 +198,7 @@ const mapStateToProps = state => ({
   errors: state.tracer.errors,
   messages: state.tracer.messages,
   accountId: state.tracer.accountId,
-  search: state.search.search,
+  search: state.settings.search,
   pending: state.tracer.pending,
   error: state.tracer.error,
   session: state.auth.session
@@ -207,8 +206,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchTracers: (params, sessionID) =>
-      dispatch(fetchTracers(params, sessionID))
+    fetchTracers: params => dispatch(fetchTracers(params))
   };
 };
 

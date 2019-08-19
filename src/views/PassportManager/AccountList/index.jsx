@@ -7,7 +7,7 @@ import { AccountTable } from './components';
 import styles from './style';
 import { SearchInput } from 'components';
 import { connect } from 'react-redux';
-import { fetchUsers } from 'actions/UserActions';
+import { fetchUsers } from 'actions/userActions';
 
 const types = [
   {

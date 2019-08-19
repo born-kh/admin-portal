@@ -27,4 +27,4 @@ export const FETCH_PRESENCE_INFO_SUCCESS = 'FETCH_PRESENCE_INFO_SUCCESS';
 // export const USER_MANAGER_IP = 'http://localhost:8080';
 
 export const TRACER_MANAGER_IP = 'http://10.7.8.129:9002';
-export const USER_MANAGER_IP = 'http://10.7.8.129:9002';
+export const baseURL = 'http://10.7.8.129:9002';

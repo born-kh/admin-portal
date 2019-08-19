@@ -1,4 +1,4 @@
-import * as types from '../../constants/ActionType';
+import * as types from '../../constants/actionType';
 
 const initState = {
   metaArray: [],

@@ -1,4 +1,4 @@
-import * as types from '../../constants/ActionType';
+import * as types from '../../constants/actionType';
 
 const initState = {
   varStatus: null,
@@ -8,7 +8,7 @@ const initState = {
   pending: false
 };
 
-const prsenceInfoReducer = (state = initState, action) => {
+const presenceInfoReducer = (state = initState, action) => {
   switch (action.type) {
     case types.FETCH_PRESENCE_INFO_PENDING:
       return {
@@ -33,4 +33,4 @@ const prsenceInfoReducer = (state = initState, action) => {
   }
 };
 
-export default prsenceInfoReducer;
+export default presenceInfoReducer;

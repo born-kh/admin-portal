@@ -16,21 +16,23 @@ import { Search as SearchIcon } from '@material-ui/icons';
 // Component styles
 import styles from './styles';
 
-
-import {connect} from 'react-redux';
-import { changeSearch } from 'actions/actionChange';
+import { connect } from 'react-redux';
+import { changeSearch } from 'actions/settingsActions';
 
 const SearchInput = props => {
-  const { classes, className, onChangeSearchValue, search, style, ...rest } = props;
+  const {
+    classes,
+    className,
+    onChangeSearchValue,
+    search,
+    style,
+    ...rest
+  } = props;
 
   const rootClassName = classNames(classes.root, className);
 
   return (
-   
-    <div
-      className={rootClassName}
-      style={style}
-    >
+    <div className={rootClassName} style={style}>
       <SearchIcon className={classes.icon} />
       <Input
         {...rest}
@@ -48,11 +50,8 @@ SearchInput.propTypes = {
   style: PropTypes.object
 };
 
-
 const mapStateToProps = state => ({
-  search: state.search.search,
-
-
+  search: state.settings.search
 });
 
 const mapDispatchToProps = dispatch => {
@@ -62,8 +61,11 @@ const mapDispatchToProps = dispatch => {
       dispatch(changeSearch(e.target.value));
     }
   };
-
 };
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SearchInput))
-
+export default withStyles(styles)(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(SearchInput)
+);

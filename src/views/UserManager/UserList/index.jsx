@@ -7,7 +7,7 @@ import { UsersTable } from './components';
 import styles from './style';
 import { SearchInput } from 'components';
 import { connect } from 'react-redux';
-import { fetchUsers } from 'actions/UserActions';
+import { fetchUsers } from 'actions/userActions';
 
 const types = [
   {
@@ -45,7 +45,7 @@ class UserList extends Component {
       search: this.props.search,
       type: this.state.searchType
     };
-    this.props.fetchUsers(params, this.props.session.id);
+    this.props.fetchUsers(params);
   }
 
   handleSearchTypeOnChange(event) {
@@ -122,7 +122,7 @@ UserList.propTypes = {
 
 const mapStateToProps = state => ({
   users: state.user.users,
-  search: state.search.search,
+  search: state.settings.search,
   pending: state.user.pending,
   error: state.user.error,
   profile: state.auth.profile,
@@ -131,7 +131,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchUsers: (params, sessionID) => dispatch(fetchUsers(params, sessionID))
+    fetchUsers: params => dispatch(fetchUsers(params))
   };
 };
 

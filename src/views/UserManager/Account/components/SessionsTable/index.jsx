@@ -10,7 +10,7 @@ import {
 } from 'actions/sessionActions';
 import { withStyles, Switch } from '@material-ui/core';
 import ReactJson from 'react-json-view';
-import axios from 'axios';
+
 import {
   Button,
   CircularProgress,
@@ -36,7 +36,8 @@ import {
 } from 'components';
 
 import styles from './styles';
-import { USER_MANAGER_IP } from 'constants/ActionType';
+
+import { instance } from 'helpers';
 
 const statusColors = {
   delivered: 'success',
@@ -66,17 +67,9 @@ class SessionsTable extends Component {
     } else {
       tracer = true;
     }
-    var headers = {
-      'Content-Type': 'application/json',
-      Authorization: this.props.sessionID
-    };
 
-    axios
-      .post(
-        USER_MANAGER_IP + '/set/tracer',
-        { sessionID: sessionID, tracing: tracer },
-        { headers: headers }
-      )
+    instance
+      .post('/set/tracer', { sessionID: sessionID, tracing: tracer })
       .then(
         result => {
           if (result.status === 200) {
@@ -99,18 +92,9 @@ class SessionsTable extends Component {
     } else {
       suspended = true;
     }
-    console.log(suspended);
-    var headers = {
-      Authorization: this.props.sessionID
-    };
-    console.log(suspended);
 
-    axios
-      .post(
-        USER_MANAGER_IP + '/suspend/session',
-        { sessionID: sessionID, suspend: suspended },
-        { headers: headers }
-      )
+    instance
+      .post('/suspend/session', { sessionID: sessionID, suspend: suspended })
       .then(
         result => {
           if (result.status === 200) {
@@ -129,53 +113,21 @@ class SessionsTable extends Component {
   };
 
   handleRemoveSession = sessionID => () => {
-    var headers = {
-      'Content-Type': 'application/json',
-      Authorization: this.props.sessionID
-    };
-
-    axios
-      .post(
-        USER_MANAGER_IP + '/remove/session',
-        { sessionID: sessionID },
-        { headers: headers }
-      )
-      .then(
-        result => {
-          if (result.status === 200) {
-            console.log('remove', result);
-          }
-        },
-        error => {}
-      );
+    instance.post('/remove/session', { sessionID: sessionID }).then(
+      result => {
+        if (result.status === 200) {
+          console.log('remove', result);
+        }
+      },
+      error => {}
+    );
   };
-
-  // handleSessionSuspend = sessionID => () => {
-  //   const headers = {
-  //     Authorization: this.props.sessionID
-  //   };
-  //   console.log(headers);
-  //   axios
-  //     .post(
-  //       USER_MANAGER_IP + '/suspend/session',
-  //       { sessionID: sessionID },
-  //       { headers: headers }
-  //     )
-  //     .then(
-  //       result => {
-  //         if (result.status === 200) {
-  //           console.log('disconnect', result);
-  //         }
-  //       },
-  //       error => {}
-  //     );
-  // };
 
   componentDidMount() {
     let params = {
       accountID: this.props.accountID
     };
-    this.props.fetchGetAccountSessions(params, this.props.sessionID);
+    this.props.fetchGetAccountSessions(params);
   }
 
   renderDialog() {
@@ -364,8 +316,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchGetAccountSessions: (params, accountID) =>
-      dispatch(fetchAccountSessions(params, accountID)),
+    fetchGetAccountSessions: params => dispatch(fetchAccountSessions(params)),
     onChangeTracing: params => dispatch(updateTracing(params)),
     onChangeSuspended: params => dispatch(updateSuspended(params))
   };

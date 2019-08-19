@@ -14,7 +14,7 @@ class PresenceInfo extends Component {
     let params = {
       accountID: this.props.accountID
     };
-    this.props.fetchGetPresenceInfo(params, this.props.sessionID);
+    this.props.fetchGetPresenceInfo(params);
   }
 
   renderPresenceInfo() {
@@ -81,8 +81,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchGetPresenceInfo: (params, sessionID) =>
-      dispatch(fetchPresenceInfo(params, sessionID))
+    fetchGetPresenceInfo: params => dispatch(fetchPresenceInfo(params))
   };
 };
 

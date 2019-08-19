@@ -35,7 +35,6 @@ class Account extends Component {
                 className={classes.item}
                 auth={this.props.user.auth}
                 accountID={this.props.user.accountID}
-                sessionID={this.props.session.id}
               />
             </Grid>
             <Grid item lg={3} sm={6} xl={3} xs={12}>
@@ -51,10 +50,7 @@ class Account extends Component {
               />
             </Grid>
             <Grid item lg={8} md={12} xl={9} xs={12}>
-              <SessionsTable
-                accountID={this.props.user.accountID}
-                sessionID={this.props.session.id}
-              />
+              <SessionsTable accountID={this.props.user.accountID} />
             </Grid>
             <Grid item lg={3} sm={6} xl={3} xs={12}>
               <BlockTable
@@ -67,7 +63,6 @@ class Account extends Component {
               <PresenceInfo
                 className={classes.item}
                 accountID={this.props.user.accountID}
-                sessionID={this.props.session.id}
               />
             </Grid>
           </Grid>
@@ -84,8 +79,7 @@ Account.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   let id = ownProps.match.params.accountID;
   return {
-    user: state.user.users.find(user => user.accountID === id),
-    session: state.auth.session
+    user: state.user.users.find(user => user.accountID === id)
   };
 };
 

@@ -1,2 +1,2 @@
-export { default as chartjs } from './chartjs';
+export { instance } from './instance';
 export { default as getInitials } from './getInitials';

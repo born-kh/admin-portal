@@ -1,10 +1,10 @@
-import * as types from '../../constants/ActionType';
+import * as types from '../../constants/actionType';
 
 const initState = {
   search: '12312312323131'
 };
 
-const searchReducer = (state = initState, action) => {
+const settingsReducer = (state = initState, action) => {
   switch (action.type) {
     case types.CHANGE_SEARCH:
       return {
@@ -15,4 +15,4 @@ const searchReducer = (state = initState, action) => {
   }
 };
 
-export default searchReducer;
+export default settingsReducer;

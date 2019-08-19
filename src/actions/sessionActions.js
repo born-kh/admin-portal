@@ -1,5 +1,5 @@
-import * as types from '../constants/ActionType';
-import axios from 'axios';
+import * as types from '../constants/actionType';
+import { instance } from 'helpers';
 
 export function fetchAccountSessionsPending() {
   return {
@@ -36,25 +36,19 @@ export function updateSuspended(params) {
   };
 }
 
-export function fetchAccountSessions(params, sessionID) {
-  return async dispatch => {
-    var headers = {
-      Authorization: sessionID
-    };
-    try {
-      dispatch(fetchAccountSessionsPending());
-      const res = await axios.post(
-        types.USER_MANAGER_IP + '/search/user/get/account/sessions',
-        params,
-        { headers: headers }
-      );
-      if (res.data.result !== undefined) {
-        dispatch(fetchAccountSessionsSuccess(res.data.result));
-      } else if (res.data.error !== undefined) {
-        dispatch(fetchAccountSessionsError(res.data.error.description));
+export function fetchAccountSessions(params) {
+  return dispatch => {
+    instance.post('/search/user/get/account/sessions', params).then(
+      resp => {
+        if (resp.data.result !== undefined) {
+          dispatch(fetchAccountSessionsSuccess(resp.data.result));
+        } else if (resp.data.error !== undefined) {
+          dispatch(fetchAccountSessionsError(resp.data.error.description));
+        }
+      },
+      error => {
+        dispatch(fetchAccountSessionsError(error.message));
       }
-    } catch (error) {
-      dispatch(fetchAccountSessionsError(error.message));
-    }
+    );
   };
 }

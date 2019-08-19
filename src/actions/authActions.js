@@ -1,5 +1,5 @@
-import * as types from '../constants/ActionType';
-import axios from 'axios';
+import * as types from '../constants/actionType';
+import { instance } from 'helpers';
 
 export function loginPending() {
   return {
@@ -29,33 +29,26 @@ export function logout() {
 }
 
 export function login(params) {
-  return async dispatch => {
-    dispatch(loginPending());
+  return dispatch => {
+    instance.post('/login', params).then(
+      resp => {
+        if (resp.data.session !== undefined) {
+          localStorage.setItem('isAuthenticated', true);
+          localStorage.setItem('profile', JSON.stringify(resp.data.profile));
+          localStorage.setItem('session', JSON.stringify(resp.data.session));
+          dispatch(loginSuccess(resp.data));
 
-    try {
-      const res = await axios.post(types.USER_MANAGER_IP + '/login', params);
-      if (res.data.session !== undefined) {
-        localStorage.setItem('isAuthenticated', true);
-        localStorage.setItem('profile', JSON.stringify(res.data.profile));
-        localStorage.setItem('session', JSON.stringify(res.data.session));
-        dispatch(loginSuccess(res.data));
-
-        try {
-          const permissionRes = await axios.post(
-            types.USER_MANAGER_IP + '/get/permission',
-            res.data.session
+          instance.post('/get/permission', resp.data.session).then(
+            resp => {},
+            error => {
+              loginError(error.message);
+            }
           );
-          if (permissionRes.status === 200) {
-            console.log(permissionRes.data);
-          }
-        } catch (error) {
-          console.log(error);
         }
-      } else if (res.data !== undefined) {
-        dispatch(loginError(res.data));
+      },
+      error => {
+        dispatch(loginError(error.message));
       }
-    } catch (error) {
-      dispatch(loginError(error.message));
-    }
+    );
   };
 }
