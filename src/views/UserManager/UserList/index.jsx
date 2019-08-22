@@ -62,7 +62,7 @@ class UserList extends Component {
         </div>
       );
     }
-
+    console.log(error);
     if (error) {
       return <Typography variant="h6">{error}</Typography>;
     }

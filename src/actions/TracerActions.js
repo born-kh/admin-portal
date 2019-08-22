@@ -1,5 +1,6 @@
 import * as types from '../constants/actionType';
 import { instance } from 'helpers';
+import { SEARCH_TRACER } from 'constants/apiURL';
 
 export function fetchTracersPending() {
   return {
@@ -25,8 +26,10 @@ export function fetchTracersError(error) {
 
 export function fetchTracers(params) {
   return dispatch => {
-    instance.post('/get/precense/info', params).then(
+    dispatch(fetchTracersPending());
+    instance.post(SEARCH_TRACER, params).then(
       resp => {
+        console.log(resp);
         if (resp.data.error === undefined) {
           var array = resp.data;
           console.log('resp', resp);

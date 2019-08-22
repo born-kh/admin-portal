@@ -1,5 +1,6 @@
 import * as types from '../constants/actionType';
 import { instance } from 'helpers';
+import { SEARCH_USER_GET_ACCOUNT_SESSIONS } from 'constants/apiURL';
 
 export function fetchAccountSessionsPending() {
   return {
@@ -38,12 +39,13 @@ export function updateSuspended(params) {
 
 export function fetchAccountSessions(params) {
   return dispatch => {
-    instance.post('/search/user/get/account/sessions', params).then(
+    dispatch(fetchAccountSessionsPending());
+    instance.post(SEARCH_USER_GET_ACCOUNT_SESSIONS, params).then(
       resp => {
-        if (resp.data.result !== undefined) {
-          dispatch(fetchAccountSessionsSuccess(resp.data.result));
+        if (resp.data.meta !== undefined) {
+          dispatch(fetchAccountSessionsSuccess(resp.data));
         } else if (resp.data.error !== undefined) {
-          dispatch(fetchAccountSessionsError(resp.data.error.description));
+          dispatch(fetchAccountSessionsError(resp.data));
         }
       },
       error => {

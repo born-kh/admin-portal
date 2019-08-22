@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core';
 import { CircularProgress, Typography, Button } from '@material-ui/core';
 
 import { Dashboard as DashboardLayout } from 'layouts';
-import axios from 'axios';
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import styles from './style';
@@ -15,7 +14,8 @@ import { ErrorsTable } from './components';
 import { IconButton } from '@material-ui/core';
 import { Delete as DeleteIcon } from '@material-ui/icons';
 import { MessagesTable } from './components';
-import { TRACER_MANAGER_IP } from 'constants/actionType';
+import { REMOVE_TRACER } from 'constants/apiURL';
+import { instance } from 'helpers';
 
 class TracerList extends Component {
   constructor(props) {
@@ -60,25 +60,20 @@ class TracerList extends Component {
   }
 
   handleDeleteTracers() {
-    var headers = {
-      'Content-Type': 'application/json',
-      Authorization: this.props.session.id
-    };
     const params = {
       accountID: this.props.accountId
     };
-    axios
-      .post(TRACER_MANAGER_IP + '/remove/tracer', params, { headers: headers })
-      .then(
-        result => {
-          this.handleOnSubmit();
-        },
-        error => {
-          this.setState({
-            error
-          });
-        }
-      );
+
+    instance.post(REMOVE_TRACER, params).then(
+      resp => {
+        this.handleOnSubmit();
+      },
+      error => {
+        this.setState({
+          error
+        });
+      }
+    );
   }
 
   renderTable() {
@@ -91,6 +86,7 @@ class TracerList extends Component {
       );
     }
     if (this.state.showTable) {
+      console.log('cscsd');
       if (error) {
         return <Typography variant="h6">{JSON.stringify(error)}</Typography>;
       }
@@ -105,7 +101,7 @@ class TracerList extends Component {
         return <Typography variant="h6">{error}</Typography>;
       }
       if (this.props.messages.length === 0) {
-        return <Typography variant="h6">There are no messges</Typography>;
+        return <Typography variant="h6">There are no messages</Typography>;
       }
       return (
         <>
@@ -117,7 +113,6 @@ class TracerList extends Component {
 
   render() {
     const { classes, errors, messages } = this.props;
-
     return (
       <DashboardLayout title="Tracer Manager">
         <div className={classes.root}>

@@ -1,5 +1,6 @@
 import * as types from '../constants/actionType';
 import { instance } from 'helpers';
+import { LOGIN } from 'constants/apiURL';
 
 export function loginPending() {
   return {
@@ -30,7 +31,8 @@ export function logout() {
 
 export function login(params) {
   return dispatch => {
-    instance.post('/login', params).then(
+    dispatch(loginPending());
+    instance.post(LOGIN, params).then(
       resp => {
         if (resp.data.session !== undefined) {
           localStorage.setItem('isAuthenticated', true);

@@ -12,11 +12,13 @@ const presenceInfoReducer = (state = initState, action) => {
   switch (action.type) {
     case types.FETCH_PRESENCE_INFO_PENDING:
       return {
+        ...state,
         pending: true,
         error: null
       };
     case types.FETCH_ACCOUNT_SESSIONS_SUCCESS:
       return {
+        ...state,
         pending: false,
         varStatus: action.result.varStatus,
         permaStatus: action.result.permaStatus,
@@ -24,6 +26,7 @@ const presenceInfoReducer = (state = initState, action) => {
       };
     case types.FETCH_ACCOUNT_SESSIONS_ERROR:
       return {
+        ...state,
         pending: false,
         error: action.error
       };

@@ -1,5 +1,6 @@
 import * as types from '../constants/actionType';
 import { instance } from 'helpers';
+import { SEARCH_USER } from 'constants/apiURL';
 
 export function fetchUsersPending() {
   return {
@@ -23,13 +24,13 @@ export function fetchUsersError(error) {
 
 export function fetchUsers(params) {
   return dispatch => {
-    instance.post('/search/user', params).then(
+    dispatch(fetchUsersPending());
+    instance.post(SEARCH_USER, params).then(
       resp => {
-        if (resp.data.result !== undefined) {
-          console.log(resp);
-          return dispatch(fetchUsersSuccess(resp.data.result.accounts));
+        if (resp.data.accounts !== undefined) {
+          return dispatch(fetchUsersSuccess(resp.data.accounts));
         } else {
-          return dispatch(fetchUsersError(resp.data.error.description));
+          return dispatch(fetchUsersError(resp.data));
         }
       },
       error => {

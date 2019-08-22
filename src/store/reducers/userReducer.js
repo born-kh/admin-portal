@@ -14,11 +14,13 @@ const userReducer = (state = initState, action) => {
       };
     case types.FETCH_USERS_SUCCESS:
       return {
+        ...state,
         pending: false,
         users: action.payload
       };
     case types.FETCH_USERS_ERROR:
       return {
+        ...state,
         pending: false,
         error: action.error
       };

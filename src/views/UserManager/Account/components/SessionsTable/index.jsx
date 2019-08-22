@@ -38,6 +38,7 @@ import {
 import styles from './styles';
 
 import { instance } from 'helpers';
+import { SUSPEND_SESSION, REMOVE_SESSION, SET_TRACER } from 'constants/apiURL';
 
 const statusColors = {
   delivered: 'success',
@@ -68,22 +69,20 @@ class SessionsTable extends Component {
       tracer = true;
     }
 
-    instance
-      .post('/set/tracer', { sessionID: sessionID, tracing: tracer })
-      .then(
-        result => {
-          if (result.status === 200) {
-            if (result.data.result) {
-              let params = {
-                index: index,
-                tracing: tracer
-              };
-              this.props.onChangeTracing(params);
-            }
+    instance.post(SET_TRACER, { sessionID: sessionID, tracing: tracer }).then(
+      result => {
+        if (result.status === 200) {
+          if (result.data.result) {
+            let params = {
+              index: index,
+              tracing: tracer
+            };
+            this.props.onChangeTracing(params);
           }
-        },
-        error => {}
-      );
+        }
+      },
+      error => {}
+    );
   };
 
   handleSessionSuspended = (sessionID, suspended, index) => () => {
@@ -94,7 +93,7 @@ class SessionsTable extends Component {
     }
 
     instance
-      .post('/suspend/session', { sessionID: sessionID, suspend: suspended })
+      .post(SUSPEND_SESSION, { sessionID: sessionID, suspend: suspended })
       .then(
         result => {
           if (result.status === 200) {
@@ -113,7 +112,7 @@ class SessionsTable extends Component {
   };
 
   handleRemoveSession = sessionID => () => {
-    instance.post('/remove/session', { sessionID: sessionID }).then(
+    instance.post(REMOVE_SESSION, { sessionID: sessionID }).then(
       result => {
         if (result.status === 200) {
           console.log('remove', result);

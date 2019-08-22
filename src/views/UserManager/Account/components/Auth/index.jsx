@@ -17,6 +17,7 @@ import generator from 'generate-password';
 import AdornedButton from 'components/AdornedButton/AdornedButton';
 
 import { instance } from 'helpers';
+import { SET_PASSWORD } from 'constants/apiURL';
 
 class Auth extends Component {
   state = {
@@ -39,7 +40,7 @@ class Auth extends Component {
   handleSetPassword = event => {
     this.setState({ loading: true });
     instance
-      .post('/set/password', {
+      .post(SET_PASSWORD, {
         password: this.state.password,
         accountID: this.props.accountID
       })

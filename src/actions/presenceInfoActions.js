@@ -1,5 +1,6 @@
 import * as types from '../constants/actionType';
 import { instance } from 'helpers';
+import { GET_PRECENSE_INFO } from 'constants/apiURL';
 
 export function presenceInfoPending() {
   return {
@@ -24,12 +25,13 @@ export function presenceInfoError(error) {
 
 export function fetchPresenceInfo(params) {
   return dispatch => {
-    instance.post('/get/precense/info', params).then(
+    dispatch(presenceInfoPending());
+    instance.post(GET_PRECENSE_INFO, params).then(
       resp => {
-        if (resp.data.result !== undefined) {
-          dispatch(presenceInfoSuccess(resp.data.result));
+        if (resp.data.varStatus !== undefined) {
+          dispatch(presenceInfoSuccess(resp.data));
         } else if (resp.data.error !== undefined) {
-          dispatch(presenceInfoSuccess(resp.data.error.description));
+          dispatch(presenceInfoSuccess(resp.data.error));
         }
       },
       error => {

@@ -1,5 +1,5 @@
-import { baseURL } from 'constants/actionType';
 import axios from 'axios';
+import { baseURL } from 'constants/apiURL';
 let session = JSON.parse(localStorage.getItem('session'));
 export function authHeader() {
   if (session && session.id) {

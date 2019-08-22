@@ -23,6 +23,7 @@ const authReducer = (state = initState, action) => {
     case types.LOGIN_PENDING:
       return {
         ...state,
+        error: null,
         pending: true
       };
     case types.LOGIN_SUCCESS:
@@ -34,7 +35,6 @@ const authReducer = (state = initState, action) => {
       };
 
     case types.LOGIN_ERROR:
-      console.log(action);
       return {
         ...state,
         pending: false,
