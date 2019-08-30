@@ -29,8 +29,9 @@ import styles from './styles';
 
 class Sidebar extends Component {
   render() {
-    const { classes, className, profile } = this.props;
+    const { classes, className, profile_data } = this.props;
     const rootClassName = classNames(classes.root, className);
+
     return (
       <nav className={rootClassName}>
         <div className={classes.logoWrapper}>
@@ -47,22 +48,20 @@ class Sidebar extends Component {
         <div className={classes.profile}>
           <Link to="/account">
             <Avatar
-              alt={profile.firstName}
+              alt={profile_data.firstName}
               className={classes.avatar}
               src={
-                profile.avatar !== undefined
-                  ? `https://wssdev.nexustls.com/files/file/${
-                      profile.avatar
-                    }/medium`
+                profile_data.avatar !== undefined
+                  ? `https://wssdev.nexustls.com/files/file/${profile_data.avatar}/medium`
                   : userPhoto
               }
             />
           </Link>
           <Typography className={classes.nameText} variant="h6">
-            {profile.firstName}
+            {profile_data.firstName}
           </Typography>
           <Typography className={classes.bioText} variant="caption">
-            {profile.lastName}
+            {profile_data.lastName}
           </Typography>
         </div>
         <Divider className={classes.profileDivider} />
@@ -183,7 +182,7 @@ Sidebar.propTypes = {
   classes: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
-  profile: state.auth.profile
+  profile_data: state.auth.profile_data.accounts[0]
 });
 
 export default withStyles(styles)(connect(mapStateToProps)(Sidebar));

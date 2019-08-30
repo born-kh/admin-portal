@@ -1,6 +1,7 @@
 import * as types from '../constants/actionType';
 import { instance } from 'helpers';
 import { SEARCH_TRACER } from 'constants/apiURL';
+import { authHeader } from 'helpers/instance';
 
 export function fetchTracersPending() {
   return {
@@ -27,7 +28,7 @@ export function fetchTracersError(error) {
 export function fetchTracers(params) {
   return dispatch => {
     dispatch(fetchTracersPending());
-    instance.post(SEARCH_TRACER, params).then(
+    instance.post(SEARCH_TRACER, params, { headers: authHeader() }).then(
       resp => {
         console.log(resp);
         if (resp.data.error === undefined) {
@@ -88,6 +89,7 @@ export function fetchTracers(params) {
         }
       },
       error => {
+        console.log('123', error.message);
         dispatch(fetchTracersError(error.message));
       }
     );

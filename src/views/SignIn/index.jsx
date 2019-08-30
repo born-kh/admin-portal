@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import styles from './styles';
 import schema from './schema';
 import { login } from 'actions/authActions';
+import { SESSION_DATA } from 'constants/localStorage';
 
 class SignIn extends Component {
   state = {
@@ -78,8 +79,9 @@ class SignIn extends Component {
     const { classes } = this.props;
     const { values, touched, errors, isValid } = this.state;
 
-    const { pending, error, profile, history } = this.props;
-    if (profile !== null) {
+    const { pending, error, history } = this.props;
+    let session_data = JSON.parse(localStorage.getItem(SESSION_DATA));
+    if (session_data !== null) {
       history.push('/tracers');
     }
 
@@ -175,7 +177,7 @@ SignIn.propTypes = {
 
 const mapStateToProps = state => ({
   error: state.auth.error,
-  profile: state.auth.profile,
+  profile_data: state.auth.profile_data,
   pending: state.auth.pending
 });
 

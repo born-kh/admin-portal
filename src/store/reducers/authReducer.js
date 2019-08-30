@@ -1,19 +1,19 @@
 import * as types from '../../constants/actionType';
+import { PROFILE_DATA, SESSION_DATA } from 'constants/localStorage';
 
-let profil = JSON.parse(localStorage.getItem('profile'));
-let auth = localStorage.getItem('isAuthenticated');
-let session = JSON.parse(localStorage.getItem('session'));
+let profile_data = JSON.parse(localStorage.getItem(PROFILE_DATA));
+let session_data = JSON.parse(localStorage.getItem(SESSION_DATA));
 
-const initState = auth
+const initState = session_data
   ? {
-      profile: profil,
-      session: session,
+      profile_data: profile_data,
+      session_data: session_data,
       error: null,
       pending: false
     }
   : {
-      profile: null,
-      session: null,
+      profile_data: null,
+      session_data: null,
       error: null,
       pending: false
     };
@@ -30,8 +30,8 @@ const authReducer = (state = initState, action) => {
       return {
         ...state,
         pending: false,
-        profile: action.result.profile,
-        session: action.result.session
+        profile_data: action.data.profile_data,
+        session_data: action.data.session_data
       };
 
     case types.LOGIN_ERROR:
@@ -42,8 +42,8 @@ const authReducer = (state = initState, action) => {
       };
     case types.LOGOUT:
       return {
-        profile: null,
-        session: null,
+        profile_data: null,
+        session_data: null,
         error: null,
         pending: false
       };

@@ -85,21 +85,16 @@ class TracerList extends Component {
         </div>
       );
     }
+    if (error) {
+      return <Typography variant="h6">{JSON.stringify(error)}</Typography>;
+    }
     if (this.state.showTable) {
-      console.log('cscsd');
-      if (error) {
-        return <Typography variant="h6">{JSON.stringify(error)}</Typography>;
-      }
-
       if (this.props.errors.length === 0) {
         return <Typography variant="h6">There are no errors</Typography>;
       }
 
       return <ErrorsTable errors={this.props.errors} />;
     } else {
-      if (error) {
-        return <Typography variant="h6">{error}</Typography>;
-      }
       if (this.props.messages.length === 0) {
         return <Typography variant="h6">There are no messages</Typography>;
       }

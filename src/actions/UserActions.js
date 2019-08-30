@@ -1,6 +1,7 @@
 import * as types from '../constants/actionType';
 import { instance } from 'helpers';
 import { SEARCH_USER } from 'constants/apiURL';
+import { authHeader } from 'helpers/instance';
 
 export function fetchUsersPending() {
   return {
@@ -25,7 +26,7 @@ export function fetchUsersError(error) {
 export function fetchUsers(params) {
   return dispatch => {
     dispatch(fetchUsersPending());
-    instance.post(SEARCH_USER, params).then(
+    instance.post(SEARCH_USER, params, { headers: authHeader() }).then(
       resp => {
         if (resp.data.accounts !== undefined) {
           return dispatch(fetchUsersSuccess(resp.data.accounts));

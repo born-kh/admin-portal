@@ -18,10 +18,12 @@ import { connect } from 'react-redux';
 class Topbar extends Component {
   handleSignOut = () => {
     const { history } = this.props;
-    localStorage.setItem('isAuthenticated', false);
-    localStorage.removeItem('profile');
-    localStorage.removeItem('session');
-    this.props.onLogout();
+    localStorage.clear();
+
+    let params = {
+      reason_note: 'User request'
+    };
+    this.props.onLogout(params);
     history.push('/login');
   };
   render() {
@@ -77,7 +79,7 @@ Topbar.defaultProps = {
 };
 
 const mapDispatchToProps = dispatch => {
-  return { onLogout: () => dispatch(logout()) };
+  return { onLogout: params => dispatch(logout(params)) };
 };
 
 export default compose(

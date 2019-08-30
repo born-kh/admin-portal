@@ -1,6 +1,7 @@
 import * as types from '../constants/actionType';
 import { instance } from 'helpers';
 import { SEARCH_USER_GET_ACCOUNT_SESSIONS } from 'constants/apiURL';
+import { authHeader } from 'helpers/instance';
 
 export function fetchAccountSessionsPending() {
   return {
@@ -40,17 +41,19 @@ export function updateSuspended(params) {
 export function fetchAccountSessions(params) {
   return dispatch => {
     dispatch(fetchAccountSessionsPending());
-    instance.post(SEARCH_USER_GET_ACCOUNT_SESSIONS, params).then(
-      resp => {
-        if (resp.data.meta !== undefined) {
-          dispatch(fetchAccountSessionsSuccess(resp.data));
-        } else if (resp.data.error !== undefined) {
-          dispatch(fetchAccountSessionsError(resp.data));
+    instance
+      .post(SEARCH_USER_GET_ACCOUNT_SESSIONS, params, { headers: authHeader() })
+      .then(
+        resp => {
+          if (resp.data.meta !== undefined) {
+            dispatch(fetchAccountSessionsSuccess(resp.data));
+          } else if (resp.data.error !== undefined) {
+            dispatch(fetchAccountSessionsError(resp.data));
+          }
+        },
+        error => {
+          dispatch(fetchAccountSessionsError(error.message));
         }
-      },
-      error => {
-        dispatch(fetchAccountSessionsError(error.message));
-      }
-    );
+      );
   };
 }

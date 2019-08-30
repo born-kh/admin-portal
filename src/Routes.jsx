@@ -13,23 +13,25 @@ import PassportManager from 'views/PassportManager';
 import { PrivateRoute } from 'components/PrivateRouter';
 
 export default class Routes extends Component {
-  componentWillMount() {
-    const { history } = this.props;
-    let session = JSON.parse(localStorage.getItem('session'));
-    if (session) {
-      var newDate = new Date();
-      var lastDate = new Date(session.last_active);
+  // componentDidMount() {
+  //   console.log('primeerr');
+  //   const { history } = this.props;
+  //   let session_data = JSON.parse(localStorage.getItem('session_data'));
+  //   if (session_data) {
+  //     var newDate = new Date();
+  //     var lastDate = new Date(session_data.expire_ts);
 
-      var diff = (newDate.getTime() - lastDate.getTime()) / 1000;
-      if (diff > session.expiration) {
-        localStorage.setItem('isAuthenticated', false);
-        localStorage.removeItem('profile');
-        localStorage.removeItem('session');
-        history.push('/');
-      }
-    }
-  }
+  //     var diff = (lastDate.getTime() - newDate.getTime()) / 1000;
+  //     if (diff > session_data.expiration) {
+  //       localStorage.setItem('isAuthenticated', false);
+  //       localStorage.removeItem('profile');
+  //       localStorage.removeItem('session');
+  //       history.push('/');
+  //     }
+  //   }
+  // }
   render() {
+    console.log('primeerr');
     return (
       <MuiThemeProvider>
         <Switch>

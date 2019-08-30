@@ -1,6 +1,7 @@
 import * as types from '../constants/actionType';
 import { instance } from 'helpers';
 import { GET_PRECENSE_INFO } from 'constants/apiURL';
+import { authHeader } from 'helpers/instance';
 
 export function presenceInfoPending() {
   return {
@@ -26,7 +27,7 @@ export function presenceInfoError(error) {
 export function fetchPresenceInfo(params) {
   return dispatch => {
     dispatch(presenceInfoPending());
-    instance.post(GET_PRECENSE_INFO, params).then(
+    instance.post(GET_PRECENSE_INFO, params, { headers: authHeader() }).then(
       resp => {
         if (resp.data.varStatus !== undefined) {
           dispatch(presenceInfoSuccess(resp.data));
