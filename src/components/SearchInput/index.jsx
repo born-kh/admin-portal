@@ -39,6 +39,7 @@ const SearchInput = props => {
         className={classes.input}
         disableUnderline
         onChange={onChangeSearchValue}
+        onKeyPress={this.keyPressed}
       />
     </div>
   );

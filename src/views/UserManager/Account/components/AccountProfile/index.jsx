@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core';
 import { Avatar, Typography } from '@material-ui/core';
-import userPhoto from 'assets/images/user.png';
+
 import {
   Portlet,
   PortletContent,
@@ -41,10 +41,8 @@ class AccountProfile extends Component {
               className={classes.avatar}
               src={
                 this.props.user.avatar !== undefined
-                  ? `https://wssdev.nexustls.com/files/file/${
-                      this.props.user.avatar
-                    }/medium`
-                  : userPhoto
+                  ? `https://wssdev.nexustls.com/files/file/${this.props.user.avatar}/medium`
+                  : ''
               }
             />
           </div>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import userPhoto from 'assets/images/user.png';
+
 import { withStyles } from '@material-ui/core';
 import {
   Avatar,
@@ -75,10 +75,8 @@ class UsersTable extends Component {
                             className={classes.avatar}
                             src={
                               user.avatar !== undefined
-                                ? `https://wssdev.nexustls.com/files/file/${
-                                    user.avatar
-                                  }/medium`
-                                : userPhoto
+                                ? `https://wssdev.nexustls.com/files/file/${user.avatar}/medium`
+                                : ''
                             }>
                             {getInitials(user.firstName)}
                           </Avatar>

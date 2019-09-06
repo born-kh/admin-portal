@@ -24,7 +24,6 @@ import {
   AccountBoxOutlined as AccountBoxIcon,
   SettingsOutlined as SettingsIcon
 } from '@material-ui/icons';
-import userPhoto from 'assets/images/user.png';
 import styles from './styles';
 
 class Sidebar extends Component {
@@ -53,7 +52,7 @@ class Sidebar extends Component {
               src={
                 profile_data.avatar !== undefined
                   ? `https://wssdev.nexustls.com/files/file/${profile_data.avatar}/medium`
-                  : userPhoto
+                  : ''
               }
             />
           </Link>

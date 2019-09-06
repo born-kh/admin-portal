@@ -7,6 +7,8 @@ import tracerReducer from './reducers/tracerReducer';
 import userReducer from './reducers/userReducer';
 import sessionReducer from './reducers/sessionReducer';
 import presenceInfoReducer from './reducers/presenceInfoReducer';
+import themeOptionsReducer from './reducers/themeOptionsReducer';
+import { reducer as formReducer } from 'redux-form';
 
 const reducers = combineReducers({
   auth: authReducer,
@@ -14,7 +16,9 @@ const reducers = combineReducers({
   tracer: tracerReducer,
   user: userReducer,
   session: sessionReducer,
-  presence: presenceInfoReducer
+  presence: presenceInfoReducer,
+  themeOptions: themeOptionsReducer,
+  form: formReducer
 });
 
 const store = createStore(

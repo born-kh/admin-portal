@@ -6,7 +6,11 @@ import {
   GET_PROFILE_DATA,
   LOGOUT
 } from 'constants/apiURL';
-import { SESSION_DATA, PROFILE_DATA } from 'constants/localStorage';
+import {
+  SESSION_DATA,
+  PROFILE_DATA,
+  SESSION_TOKEN
+} from 'constants/localStorage';
 import { authHeader } from 'helpers/instance';
 
 export function loginPending() {
@@ -57,8 +61,13 @@ export function login() {
           const session_data = resp.data.session_data;
           const profile_data = resp.data.profile_data;
           const permissions = {};
-          localStorage.setItem(SESSION_DATA, JSON.stringify(session_data));
+          console.log(resp);
+          localStorage.setItem(
+            SESSION_TOKEN,
+            JSON.stringify(session_data.session_token)
+          );
           localStorage.setItem(PROFILE_DATA, JSON.stringify(profile_data));
+          localStorage.setItem('isAuth', true);
           dispatch(loginSuccess(resp.data));
 
           let permissionParams = {
@@ -75,7 +84,6 @@ export function login() {
             ]
           };
 
-        
           instance
             .post(GET_PERMISSIONS, permissionParams, { headers: authHeader() })
             .then(

@@ -1,4 +1,4 @@
-export const baseURL = 'http://http://10.7.8.129:9002';
+export const baseURL = 'http://localhost:8080';
 export const SEARCH_USER = '/search/user';
 export const SEARCH_USER_GET_ACCOUNT_SESSIONS = '/get/account/sessions';
 export const LOGIN = '/login';

@@ -25,6 +25,7 @@ export function fetchAccountSessionsError(error) {
 }
 
 export function updateTracing(params) {
+  console.log(params);
   return {
     type: types.UPDATE_TRACING,
     params

@@ -41,6 +41,8 @@ const sessionReducer = (state = initState, action) => {
       };
 
     case types.UPDATE_TRACING:
+      console.log('trae');
+
       let opts = [...state.opts];
 
       opts[action.params.index] = {

@@ -1,17 +1,23 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
-import UserList from './UserList';
-import Account from './Account';
+import { Route, Switch } from 'react-router-dom';
 
-class UserManager extends React.Component {
-  render() {
-    return (
-      <>
-        <Route exact path="/users" component={UserList} />
-        <Route path="/users/:accountID" component={Account} />
-      </>
-    );
-  }
-}
+import Dashboard from 'layout/Dashboard';
+import Users from './Users';
 
-export default UserManager;
+import { withRouter } from 'react-router-dom';
+import AccountInfo from './Users/components/AccountInfo';
+const UserManager = ({ match }) => {
+  console.log('ccccs');
+  return (
+    <Dashboard>
+      <Route exact path={`${match.url}/users`} component={Users} />
+      <Route
+        exact
+        path={`${match.url}/users/:accountID`}
+        component={AccountInfo}
+      />
+    </Dashboard>
+  );
+};
+
+export default withRouter(UserManager);

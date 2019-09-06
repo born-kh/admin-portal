@@ -42,11 +42,8 @@ export function fetchTracers(params) {
             let payload = JSON.parse(rawPayload);
 
             const newItem = {
-              ts: `${new Date(item.ts).getHours().toString()}:${new Date(
-                item.ts
-              )
-                .getMinutes()
-                .toString()}:${new Date(item.ts).getSeconds().toString()}`,
+              ts: item.ts,
+
               account_id: item.account_id,
               session_id: item.session_id,
               response: { id: null },
@@ -57,6 +54,7 @@ export function fetchTracers(params) {
                 .map(e => e.response.id)
                 .indexOf(payload.id);
               newItem.request = payload;
+              newItem.method = payload.method;
               if (index < 0) {
                 arrayObj.push(newItem);
               } else {
