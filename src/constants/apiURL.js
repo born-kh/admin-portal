@@ -1,6 +1,6 @@
-export const baseURL = 'http://localhost:8080';
+export const SERVICE_URL = 'http://localhost:8080';
 export const SEARCH_USER = '/search/user';
-export const SEARCH_USER_GET_ACCOUNT_SESSIONS = '/get/account/sessions';
+export const GET_ACCOUNT_SESSIONS = '/get/account/sessions';
 export const LOGIN = '/login';
 export const GET_PRECENSE_INFO = '/get/precense/info';
 export const SUSPEND_SESSION = '/suspend/session';

@@ -7,7 +7,7 @@ import { HashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { history } from 'helpers/history';
 import store from 'store/store';
-import Main from 'views/Main';
+import Main from 'components/views/Main';
 import './assets/base.scss';
 const rootElement = document.getElementById('root');
 
@@ -25,8 +25,8 @@ const renderApp = Component => {
 renderApp(Main);
 
 if (module.hot) {
-  module.hot.accept('views/Main', () => {
-    const NextApp = require('views/Main').default;
+  module.hot.accept('components/views/Main', () => {
+    const NextApp = require('components/views/Main').default;
     renderApp(NextApp);
   });
 }

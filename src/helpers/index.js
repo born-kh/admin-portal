@@ -1,5 +1,4 @@
-export { instance } from './instance';
-export { default as getInitials } from './getInitials';
+export { default as axios } from './instance';
 export { dateFormatter } from './dateTimeForamatter';
-
-export { default as axios } from './axios';
+export { history } from './history';
+export * from './validators';

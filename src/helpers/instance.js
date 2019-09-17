@@ -1,17 +1,19 @@
-import axios from 'axios';
-import { baseURL } from 'constants/apiURL';
-import { SESSION_DATA, SESSION_TOKEN } from 'constants/localStorage';
+import * as axios from 'axios';
+import { SERVICE_URL } from 'constants/apiURL';
+import { SESSION_TOKEN } from 'constants/localStorage';
 
-export function authHeader() {
-  let session_token = JSON.parse(localStorage.getItem(SESSION_TOKEN));
-  if (session_token) {
-    return { Authorization: session_token };
-  } else {
-    return {};
-  }
-}
-
-export const instance = axios.create({
-  baseURL: baseURL,
-  headers: authHeader()
+const instance = axios.create({
+  baseURL: SERVICE_URL
 });
+
+instance.interceptors.request.use(
+  function(config) {
+    config.headers['Authorization'] = localStorage.getItem(SESSION_TOKEN);
+    return config;
+  },
+  function(error) {
+    return Promise.reject(error);
+  }
+);
+
+export default instance;
