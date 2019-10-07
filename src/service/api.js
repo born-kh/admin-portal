@@ -9,7 +9,9 @@ import {
   SET_PASSWORD,
   REMOVE_SESSION,
   SUSPEND_SESSION,
-  SET_TRACER
+  SET_TRACER,
+  GET_DOCUMENTS,
+  GET_ACCOUNTS
 } from 'constants/apiURL';
 import { axios } from 'helpers';
 
@@ -80,6 +82,19 @@ export const sessionAPI = {
 export const presenceAPI = {
   getPresenceInfo(params) {
     return axios.post(GET_PRECENSE_INFO, params).then(response => {
+      return response;
+    });
+  }
+};
+
+export const passportAPI = {
+  getAccounts(params) {
+    return axios.post(GET_ACCOUNTS + params).then(response => {
+      return response;
+    });
+  },
+  getDocuments(params) {
+    return axios.post(GET_DOCUMENTS, params).then(response => {
       return response;
     });
   }

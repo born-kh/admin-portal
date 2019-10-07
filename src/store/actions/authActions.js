@@ -2,10 +2,12 @@ import * as types from '../../constants/actionType';
 import {
   PROFILE_DATA,
   SESSION_TOKEN,
-  permissionParams
+  permissionParams,
+  PERMISSIONS
 } from 'constants/localStorage';
 
 import { authAPI } from 'service/api';
+import { conditionalExpression } from '@babel/types';
 
 export function loginPending() {
   return {
@@ -34,16 +36,22 @@ export function logoutSuccess() {
   };
 }
 
-export function login() {
+export function permissionSuccess() {
+  return {
+    type: types.FETCH_PERMISSIONS_SUCCESS
+  };
+}
+
+export function login(loginParams) {
   const params = {
     app_uuid: '3dedf9e6-d08b-7cf6-c6e0-4b33e10d4197',
     domain: 'mgr.nexustls.com',
     force_session: false,
-    password: 'fua9ijeimaeYoogh',
+    password: loginParams.password,
     project_uuid: null,
     user_headers: {},
     user_ip: '1.2.3.4',
-    username: 'mgrtester'
+    username: loginParams.username
   };
 
   return dispatch => {
@@ -63,7 +71,12 @@ export function login() {
 
           authAPI.getPermissions(permissionParams).then(
             response => {
-              console.log('permission', response);
+              localStorage.setItem(
+                PERMISSIONS,
+                JSON.stringify(response.data.result.permissions)
+              );
+              console.log(JSON.parse(localStorage.getItem(PERMISSIONS)));
+              dispatch(permissionSuccess());
             },
             error => {
               dispatch(loginError(error.message));

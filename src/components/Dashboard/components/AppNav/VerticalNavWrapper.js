@@ -3,8 +3,7 @@ import { withRouter } from 'react-router-dom';
 
 import MetisMenu from 'react-metismenu';
 import RouterLink from 'react-metismenu-router-link';
-
-import { MainNav } from './NavItems';
+import MainNav from './NavItems';
 
 class Nav extends Component {
   state = {};

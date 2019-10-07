@@ -1,7 +1,7 @@
 import * as types from '../../constants/actionType';
 
 const initState = {
-  search: '12312312323131'
+  search: ''
 };
 
 const settingsReducer = (state = initState, action) => {

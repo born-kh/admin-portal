@@ -1,12 +1,8 @@
 import * as types from '../../constants/actionType';
 
 const initState = {
-  metaArray: [],
-  pushArray: [],
-  sockets: [],
+  sessionDataArray: [],
   blockList: [],
-  opts: [],
-  suspended: [],
   error: null,
   pending: false
 };
@@ -25,12 +21,8 @@ const sessionReducer = (state = initState, action) => {
         ...state,
 
         pending: false,
-        metaArray: action.result.meta,
-        blockList: action.result.blocklist,
-        pushArray: action.result.push,
-        sockets: action.result.sockets,
-        opts: action.result.opts,
-        suspended: action.result.suspended
+        sessionDataArray: action.result.sessionDataArray,
+        blockList: action.result.blocklist
       };
     case types.FETCH_ACCOUNT_SESSIONS_ERROR:
       return {
@@ -41,26 +33,26 @@ const sessionReducer = (state = initState, action) => {
       };
 
     case types.UPDATE_TRACING:
-      let opts = [...state.opts];
+      let sessionDataArray = [...state.sessionDataArray];
 
-      opts[action.params.index] = {
-        ...opts[action.params.index],
+      sessionDataArray[action.params.index].opts = {
+        ...sessionDataArray[action.params.index].opts,
         tracing: action.params.tracing
       };
 
       return {
         ...state,
-        opts
+        sessionDataArray
       };
 
     case types.UPDATE_SUSPENDED:
-      let suspended = [...state.suspended];
+      sessionDataArray = [...state.sessionDataArray];
 
-      suspended[action.params.index] = action.params.suspended;
+      sessionDataArray[action.params.index].suspended = action.params.suspended;
 
       return {
         ...state,
-        suspended
+        sessionDataArray
       };
 
     default:

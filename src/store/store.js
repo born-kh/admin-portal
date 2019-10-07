@@ -9,6 +9,7 @@ import sessionReducer from './reducers/sessionReducer';
 import presenceInfoReducer from './reducers/presenceInfoReducer';
 import themeOptionsReducer from './reducers/themeOptionsReducer';
 import { reducer as formReducer } from 'redux-form';
+import passportReducer from './reducers/passportReducer';
 
 const reducers = combineReducers({
   auth: authReducer,
@@ -18,6 +19,7 @@ const reducers = combineReducers({
   session: sessionReducer,
   presence: presenceInfoReducer,
   themeOptions: themeOptionsReducer,
+  passport: passportReducer,
   form: formReducer
 });
 

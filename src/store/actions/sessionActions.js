@@ -44,7 +44,7 @@ export function fetchAccountSessions(params) {
     sessionAPI
       .getAccountSessions(params)
       .then(response => {
-        if (response.data.meta !== undefined) {
+        if (response.data.sessionDataArray !== undefined) {
           dispatch(fetchAccountSessionsSuccess(response.data));
         } else if (response.data.error !== undefined) {
           dispatch(fetchAccountSessionsError(response.data));

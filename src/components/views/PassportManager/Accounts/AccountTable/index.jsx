@@ -1,13 +1,16 @@
 import React from 'react';
+
 import _ from 'lodash';
-
+import { Link, withRouter } from 'react-router-dom';
 import ReactJson from 'react-json-view';
-
+import avatar2 from 'assets/utils/images/avatars/2.jpg';
 import {
   Row,
   Col,
   Card,
   CardBody,
+  Table,
+  ButtonGroup,
   Button,
   Modal,
   ModalHeader,
@@ -18,7 +21,7 @@ import {
 import ReactTable from 'react-table';
 import { dateFormatter } from 'helpers';
 
-class MessageTable extends React.Component {
+class AccountTable extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -80,7 +83,8 @@ class MessageTable extends React.Component {
   }
 
   render() {
-    const { messagesData } = this.props;
+    const { accountData } = this.props;
+    console.log('props', this.props);
 
     return (
       <Row>
@@ -88,64 +92,40 @@ class MessageTable extends React.Component {
           <Card className="main-card mb-3">
             <CardBody>
               <ReactTable
-                data={messagesData}
+                data={accountData}
                 columns={[
                   {
                     columns: [
                       {
-                        Header: 'Ts',
+                        Header: 'Account ID',
+                        accessor: 'account_uuid'
+                      },
+
+                      {
+                        Header: 'First Name',
+                        accessor: 'first_name'
+                      },
+                      {
+                        Header: 'Last Name',
+                        accessor: 'last_name'
+                      },
+                      {
+                        Header: 'Data Time',
                         accessor: 'ts',
                         Cell: row => dateFormatter(row.value)
                       },
                       {
-                        Header: 'Method Name',
-                        accessor: 'method',
-                        filterable: true
-                      },
-                      {
-                        Header: 'Account ID',
-                        accessor: 'account_id'
-                      }
-                    ]
-                  },
-                  {
-                    columns: [
-                      {
-                        Header: 'Request',
+                        Header: 'Info',
 
                         Cell: row => (
                           <div className="d-block w-100 text-center">
-                            <Button
-                              className="mb-2 mr-2 btn-icon"
-                              color="info"
-                              onClick={() =>
-                                this.handleClickOpenDialog(row.index, true)
-                              }>
-                              <i className="pe-7s-science btn-icon-wrapper">
-                                {' '}
-                              </i>
-                              Info
-                            </Button>
-                          </div>
-                        )
-                      },
-                      {
-                        Header: 'Response',
-
-                        Cell: row => (
-                          <div className="d-block w-100 text-center">
-                            
-                            <Button
-                              className="mb-2 mr-2 btn-icon"
-                              color="info"
-                              onClick={() =>
-                                this.handleClickOpenDialog(row.index, false)
-                              }>
-                              <i className="pe-7s-science btn-icon-wrapper">
-                                {' '}
-                              </i>
-                              Info
-                            </Button>
+                            <Link to={''}>
+                              <Button
+                                className="mb-2 mr-2 btn-icon"
+                                color="info">
+                                Info
+                              </Button>
+                            </Link>
                           </div>
                         )
                       }
@@ -155,7 +135,6 @@ class MessageTable extends React.Component {
                 defaultPageSize={10}
                 className="-striped -highlight"
               />
-              {this.renderDialog()}
             </CardBody>
           </Card>
         </Col>
@@ -164,4 +143,4 @@ class MessageTable extends React.Component {
   }
 }
 
-export default MessageTable;
+export default withRouter(AccountTable);

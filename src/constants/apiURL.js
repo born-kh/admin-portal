@@ -12,3 +12,6 @@ export const REMOVE_TRACER = '/remove/tracer';
 export const GET_PERMISSIONS = '/get/permissions';
 export const GET_PROFILE_DATA = '/get/profile/data';
 export const LOGOUT = '/logout';
+
+export const GET_ACCOUNTS = '/all';
+export const GET_DOCUMENTS = '/get/documents';

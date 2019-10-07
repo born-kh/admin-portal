@@ -31,13 +31,11 @@ const authReducer = (state = initState, action) => {
         pending: true
       };
     case types.LOGIN_SUCCESS:
-      console.log(action);
       return {
         ...state,
-        pending: false,
+
         profile_data: action.data.profile_data,
-        session_data: action.data.session_data,
-        isAuth: true
+        session_data: action.data.session_data
       };
 
     case types.LOGIN_ERROR:
@@ -53,6 +51,12 @@ const authReducer = (state = initState, action) => {
         error: null,
         pending: false,
         isAuth: false
+      };
+
+    case types.FETCH_PERMISSIONS_SUCCESS:
+      return {
+        pending: false,
+        isAuth: true
       };
 
     default:

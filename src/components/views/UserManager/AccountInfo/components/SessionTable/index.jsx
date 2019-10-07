@@ -92,7 +92,7 @@ class SessionTable extends React.Component {
   };
 
   handleSetTracing = (index, tracer) => {
-    const sessionID = this.props.metaArray[index].sessionID;
+    const sessionID = this.props.sessionDataArray[index].metaArray.sessionID;
     sessionAPI
       .setTracer({ sessionID: sessionID, tracing: !tracer.tracing })
       .then(response => {
@@ -125,7 +125,7 @@ class SessionTable extends React.Component {
   };
 
   handleSessionSuspended = (suspended, index) => () => {
-    const sessionID = this.props.metaArray[index].sessionID;
+    const sessionID = this.props.sessionDataArray[index].metaArray.sessionID;
 
     sessionAPI
       .suspendSession({ sessionID: sessionID, suspend: !suspended })
@@ -192,11 +192,11 @@ class SessionTable extends React.Component {
   }
 
   renderDialog() {
-    const { metaArray, pushArray } = this.props;
+    const { sessionDataArray } = this.props;
 
     let sessionInfo = {
-      metaData: metaArray[this.state.rowIndex],
-      pus: pushArray[this.state.rowIndex]
+      metaData: sessionDataArray[this.state.rowIndex].metaArray,
+      push: sessionDataArray[this.state.rowIndex].pushArray
     };
 
     if (this.state.modalInfo) {
@@ -264,12 +264,12 @@ class SessionTable extends React.Component {
   }
 
   render() {
-    const { metaArray } = this.props;
+    const { sessionDataArray } = this.props;
 
     return (
       <CardBody>
         <ReactTable
-          data={metaArray}
+          data={sessionDataArray.metaArray}
           columns={[
             {
               columns: [
@@ -417,10 +417,7 @@ SessionTable.propTypes = {
 const mapStateToProps = state => {
   return {
     pending: state.session.pending,
-    metaArray: state.session.metaArray,
-    opts: state.session.opts,
-    pushArray: state.session.pushArray,
-    suspended: state.session.suspended
+    sessionDataArray: state.session.sessionDataArray
   };
 };
 

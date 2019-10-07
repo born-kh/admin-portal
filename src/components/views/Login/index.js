@@ -11,6 +11,7 @@ import bg3 from 'assets/utils/images/originals/citynights.jpg';
 import { Col, Row } from 'reactstrap';
 import { login } from 'store/actions/authActions';
 import LoginForm from '../../common/LoginForm/LoginForm';
+import PERMISSIONS from 'constants';
 
 class Login extends Component {
   handleOnSubmit = formData => {
@@ -123,7 +124,7 @@ const mapStateToProps = state => ({
   error: state.auth.error,
   profile_data: state.auth.profile_data,
   pending: state.auth.pending,
-  isAuth: state.auth.pending
+  isAuth: state.auth.isAuth
 });
 
 const mapDispatchToProps = dispatch => {

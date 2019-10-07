@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import ResizeDetector from 'react-resize-detector';
 
 import AppMain from '../../Dashboard/components/AppMain';
+import PERMISSIONS from 'constants';
 
 class Main extends React.Component {
   constructor(props) {
@@ -26,6 +27,7 @@ class Main extends React.Component {
       enableMobileMenu,
       enablePageTabsAlt
     } = this.props;
+    console.log(JSON.parse(localStorage.getItem(PERMISSIONS)));
 
     return (
       <ResizeDetector
