@@ -11,9 +11,19 @@ import {
   SUSPEND_SESSION,
   SET_TRACER,
   GET_DOCUMENTS,
-  GET_ACCOUNTS
+  GET_APPLICATIONS,
+  GET_APPLICATIONS_BY_NAME,
+  SET_DOCUMENT_STATUS,
+  SET_DOCUMENT_FIELDS,
+  SET_DOCUMENT_NOTE,
+  SET_DOCUMENT_TAGS,
+  SET_APPLICATION_STATUS,
+  GET_DOCUMENT_TYPES,
+  DELETE_DOCUMENT
 } from 'constants/apiURL';
 import { axios } from 'helpers';
+
+/* AUTH API */
 
 export const authAPI = {
   login(params) {
@@ -35,6 +45,8 @@ export const authAPI = {
   }
 };
 
+/* User  Manager API */
+
 export const userAPI = {
   searchUser(params) {
     return axios.post(SEARCH_USER, params).then(response => {
@@ -47,6 +59,7 @@ export const userAPI = {
     });
   }
 };
+/* Tracer Manager API */
 
 export const tracerAPI = {
   searchTracer(params) {
@@ -55,6 +68,7 @@ export const tracerAPI = {
     });
   }
 };
+/* Session Manager API */
 
 export const sessionAPI = {
   getAccountSessions(params) {
@@ -79,6 +93,8 @@ export const sessionAPI = {
   }
 };
 
+/* Prsence API */
+
 export const presenceAPI = {
   getPresenceInfo(params) {
     return axios.post(GET_PRECENSE_INFO, params).then(response => {
@@ -87,14 +103,59 @@ export const presenceAPI = {
   }
 };
 
+/* Passport Manager API */
+
 export const passportAPI = {
-  getAccounts(params) {
-    return axios.post(GET_ACCOUNTS + params).then(response => {
+  getApplications(params) {
+    return axios.post(GET_APPLICATIONS, params).then(response => {
+      console.log(response);
       return response;
     });
   },
   getDocuments(params) {
     return axios.post(GET_DOCUMENTS, params).then(response => {
+      return response;
+    });
+  },
+  getApplicationsByName(params) {
+    return axios.post(GET_APPLICATIONS_BY_NAME, params).then(response => {
+      return response;
+    });
+  },
+  setApplicationStatus(params) {
+    return axios.post(SET_APPLICATION_STATUS, params).then(response => {
+      return response;
+    });
+  },
+  setDocumentStatus(params) {
+    console.log(params);
+    return axios.post(SET_DOCUMENT_STATUS, params).then(response => {
+      return response;
+    });
+  },
+  setDocumentFields(params) {
+    console.log(params);
+    return axios.post(SET_DOCUMENT_FIELDS, params).then(response => {
+      return response;
+    });
+  },
+  setDocumentNote(params) {
+    return axios.post(SET_DOCUMENT_NOTE, params).then(response => {
+      return response;
+    });
+  },
+  setDocumentTags(params) {
+    return axios.post(SET_DOCUMENT_TAGS, params).then(response => {
+      return response;
+    });
+  },
+  getDocumentTypes(params) {
+    return axios.post(GET_DOCUMENT_TYPES, params).then(response => {
+      return response;
+    });
+  },
+  deleteDocument(params) {
+    return axios.post(DELETE_DOCUMENT, params).then(response => {
       return response;
     });
   }

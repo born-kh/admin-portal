@@ -29,7 +29,7 @@
       content: '';
       background: $gray-300;
       z-index: 5;
-      transition: all .2s;
+      transition: all 0.2s;
     }
 
     &::after {
@@ -67,7 +67,7 @@
       margin: 0 auto 0.5rem;
       position: relative;
       z-index: 7;
-      transition: all .2s;
+      transition: all 0.2s;
     }
 
     &.form-wizard-step-doing {
@@ -103,12 +103,33 @@
       }
     }
 
+    &.form-wizard-step-reject {
+      em {
+        font-family: 'Linearicons-Free';
+        @extend .lnr-cross-circle;
+        background: red;
+        overflow: hidden;
+        &::before {
+          width: 42px;
+          height: 42px;
+          font-size: 1.2rem;
+          line-height: 40px;
+          text-align: center;
+          display: block;
+        }
+      }
+
+      &::after,
+      &::before {
+        background: red;
+      }
+    }
+
     &:hover {
       color: $gray-600;
     }
   }
 }
-
 
 // Form Wizard Alternate
 
@@ -144,7 +165,7 @@
       padding: ($layout-spacer-x / 2);
       margin-bottom: ($layout-spacer-x / 3);
       @include border-radius($border-radius-lg);
-      transition: all .2s;
+      transition: all 0.2s;
 
       &::before,
       &::after {
@@ -164,7 +185,7 @@
         color: $white;
 
         em {
-          background: rgba(255,255,255,.2);
+          background: rgba(255, 255, 255, 0.2);
         }
       }
     }

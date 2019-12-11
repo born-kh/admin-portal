@@ -1,16 +1,10 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-
 import Hamburger from 'react-hamburgers';
-
 import cx from 'classnames';
-
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import { Button } from 'reactstrap';
-
 import {
   setEnableMobileMenu,
   setEnableMobileMenuSmall
@@ -54,17 +48,16 @@ class AppMobileMenu extends React.Component {
           <div onClick={this.toggleMobileSidebar}>
             <Hamburger
               active={enableMobileMenu}
-              type="elastic"
               onClick={() =>
                 this.setState({ activeMobile: !this.state.activeMobile })
               }
+              type="elastic"
             />
           </div>
         </div>
         <div className="app-header__menu">
           <span onClick={this.toggleMobileSmall}>
             <Button
-              size="sm"
               className={cx('btn-icon btn-icon-only', {
                 active: this.state.activeSecondaryMenuMobile
               })}
@@ -74,7 +67,9 @@ class AppMobileMenu extends React.Component {
                   activeSecondaryMenuMobile: !this.state
                     .activeSecondaryMenuMobile
                 })
-              }>
+              }
+              size="sm"
+            >
               <div className="btn-icon-wrapper">
                 <FontAwesomeIcon icon={faEllipsisV} />
               </div>

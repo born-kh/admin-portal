@@ -17,8 +17,6 @@ class Header extends React.Component {
     this.handleLogout = this.handleLogout.bind(this);
   }
   handleLogout = () => {
-    localStorage.clear();
-
     let params = {
       reason_note: 'User request'
     };
@@ -33,28 +31,30 @@ class Header extends React.Component {
     return (
       <Fragment>
         <ReactCSSTransitionGroup
-          component="div"
           className={cx('app-header', headerBackgroundColor, {
             'header-shadow': enableHeaderShadow
           })}
-          transitionName="HeaderAnimation"
-          transitionAppear={true}
+          component="div"
+          transitionAppear
           transitionAppearTimeout={1500}
           transitionEnter={false}
-          transitionLeave={false}>
+          transitionLeave={false}
+          transitionName="HeaderAnimation"
+        >
           <HeaderLogo />
 
           <div
             className={cx('app-header__content', {
               'header-mobile-open': enableMobileMenuSmall
-            })}>
+            })}
+          >
             <div className="app-header-left">
               <SearchBox />
             </div>
             <div className="app-header-right">
               <UserBox
-                profile_data={this.props.profile_data}
                 handleLogout={this.handleLogout}
+                profile_data={this.props.profile_data}
               />
             </div>
           </div>

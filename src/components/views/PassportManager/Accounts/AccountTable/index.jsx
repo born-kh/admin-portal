@@ -1,16 +1,12 @@
 import React from 'react';
-
 import _ from 'lodash';
 import { Link, withRouter } from 'react-router-dom';
 import ReactJson from 'react-json-view';
-import avatar2 from 'assets/utils/images/avatars/2.jpg';
 import {
   Row,
   Col,
   Card,
   CardBody,
-  Table,
-  ButtonGroup,
   Button,
   Modal,
   ModalHeader,
@@ -20,6 +16,7 @@ import {
 
 import ReactTable from 'react-table';
 import { dateFormatter } from 'helpers';
+import 'react-table/react-table.css';
 
 class AccountTable extends React.Component {
   constructor() {
@@ -27,7 +24,8 @@ class AccountTable extends React.Component {
     this.state = {
       rowIndex: 0,
       req: false,
-      modal: false
+      modal: false,
+      loading: false
     };
     this.handleClickOpenDialog = this.handleClickOpenDialog.bind(this);
     this.handleClickCloseDialog = this.handleClickCloseDialog.bind(this);
@@ -53,10 +51,11 @@ class AccountTable extends React.Component {
     if (this.state.modal) {
       return (
         <Modal
-          isOpen={this.state.modal}
+          className={this.props.className}
           fade={false}
+          isOpen={this.state.modal}
           toggle={this.handleClickCloseDialog}
-          className={this.props.className}>
+        >
           <ModalHeader toggle={this.handleClickCloseDialog}>
             {this.state.req ? 'Request' : 'Response'}
           </ModalHeader>
@@ -70,10 +69,16 @@ class AccountTable extends React.Component {
             />
           </ModalBody>
           <ModalFooter>
-            <Button color="link" onClick={this.handleClickCloseDialog}>
+            <Button
+              color="link"
+              onClick={this.handleClickCloseDialog}
+            >
               Cancel
             </Button>
-            <Button color="primary" onClick={this.handleClickCloseDialog}>
+            <Button
+              color="primary"
+              onClick={this.handleClickCloseDialog}
+            >
               Ok
             </Button>
           </ModalFooter>
@@ -83,8 +88,14 @@ class AccountTable extends React.Component {
   }
 
   render() {
-    const { accountData } = this.props;
-    console.log('props', this.props);
+    const {
+      applications,
+      pages,
+      handleOnPageChange,
+      handleOnPageSizeChange,
+      pageSize
+    } = this.props;
+    console.log(pageSize);
 
     return (
       <Row>
@@ -92,37 +103,57 @@ class AccountTable extends React.Component {
           <Card className="main-card mb-3">
             <CardBody>
               <ReactTable
-                data={accountData}
+                className="-striped -highlight"
                 columns={[
                   {
                     columns: [
                       {
-                        Header: 'Account ID',
-                        accessor: 'account_uuid'
+                        Header: '№',
+                        accessor: 'row',
+                        id: 'row',
+                        width: 50,
+
+                        Cell: row => (
+                          <div className="d-block w-100 text-center">
+                            {row.index + 1}
+                          </div>
+                        )
+                      },
+                      {
+                        Header: 'apllication ID',
+                        accessor: 'applicationID'
                       },
 
                       {
                         Header: 'First Name',
-                        accessor: 'first_name'
+                        accessor: 'firstName'
                       },
                       {
                         Header: 'Last Name',
-                        accessor: 'last_name'
+                        accessor: 'lastName'
                       },
                       {
                         Header: 'Data Time',
-                        accessor: 'ts',
+                        accessor: 'createdAt',
                         Cell: row => dateFormatter(row.value)
                       },
                       {
                         Header: 'Info',
+                        id: 'row',
+                        accessor: d => d,
 
                         Cell: row => (
                           <div className="d-block w-100 text-center">
-                            <Link to={''}>
+                            <Link
+                              to={
+                                this.props.location.pathname +
+                                `/${row.value.applicationID}`
+                              }
+                            >
                               <Button
                                 className="mb-2 mr-2 btn-icon"
-                                color="info">
+                                color="info"
+                              >
                                 Info
                               </Button>
                             </Link>
@@ -132,8 +163,17 @@ class AccountTable extends React.Component {
                     ]
                   }
                 ]}
-                defaultPageSize={10}
-                className="-striped -highlight"
+                data={applications}
+                defaultPageSize={pageSize}
+                enabled
+                loading={this.props.pending}
+                manual
+                onPageChange={handleOnPageChange}
+                onPageSizeChange={handleOnPageSizeChange}
+                pages={pages}
+                showPagination
+                showPaginationBottom // this would indicate that server side pagination has been
+                showPaginationTop={false}
               />
             </CardBody>
           </Card>

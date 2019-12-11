@@ -49,8 +49,8 @@ class HeaderLogo extends React.Component {
             <div onClick={this.toggleEnableClosedSidebar}>
               <Hamburger
                 active={enableClosedSidebar}
-                type="elastic"
                 onClick={() => this.setState({ active: !this.state.active })}
+                type="elastic"
               />
             </div>
           </div>

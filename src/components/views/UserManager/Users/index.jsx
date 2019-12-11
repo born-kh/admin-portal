@@ -10,12 +10,36 @@ import SearchInput from 'components/common/SearchInput';
 import { fetchUsers } from 'store/actions/userActions';
 import UsersTable from './components/UsersTable';
 import Loader from 'react-loaders';
-import { Col, Card, CardBody, CardHeader } from 'reactstrap';
+import {
+  Col,
+  Card,
+  CardBody,
+  CardHeader,
+  ListGroupItem,
+  ListGroup
+} from 'reactstrap';
 
 import { DropdownList } from 'react-widgets';
 import queryString from 'query-string';
 import PropTypes from 'prop-types';
 import LoaderOverlay from 'components/common/LoaderOverlay';
+
+const rejectMessages = [
+  'Фотография паспорта размытая, невозможно рассмотреть информацию',
+  'Отсутствует фотография паспорта',
+  'Отсутствует сэлфи пользователя',
+  'Отсутствует фотография второй стороны паспорта гражданина Республики Таджикистан',
+  'Отсутствует фотография лицевой стороны паспорта гражданина Республики Таджикистан',
+  'Загруженный документ не является паспортом гражданина Республики Таджикистан',
+  'Паспорт в кадре находится не полностью',
+  'Фото паспорта сделано в темном помещении, невозможно различить данные',
+  'Фото паспорта сделано не с реального документа а является фотографией скриншота с другого устройства',
+  'Фото паспорта является цветной или черно-белой копией',
+  'Фото гражданина на паспорте не совпадает с сэлфи пользователя.',
+  'Истек срок действия загруженного документа',
+  'На фотографии документа присутствуют блики',
+  'Сэлфи не является фотографией пользователя, а снимком с фотографии. '
+];
 
 const types = ['username', 'phone', 'email', 'accountID'];
 
@@ -93,15 +117,16 @@ class Users extends Component {
       <Fragment>
         <ReactCSSTransitionGroup
           component="div"
-          transitionName="TabsAnimation"
-          transitionAppear={true}
+          transitionAppear
           transitionAppearTimeout={0}
           transitionEnter={false}
-          transitionLeave={false}>
+          transitionLeave={false}
+          transitionName="TabsAnimation"
+        >
           <PageTitle
             heading="User Manager"
-            subheading=""
             icon="pe-7s-user icon-gradient bg-night-fade"
+            subheading=""
           />
 
           <Col md="12">
@@ -109,19 +134,19 @@ class Users extends Component {
               <CardHeader className="card-header-tab">
                 <div className="card-header-title font-size-lg text-capitalize font-weight-normal">
                   <SearchInput
-                    placeholder="Search user"
                     isActive={false}
                     keyPressed={this.handleOnSubmit}
+                    placeholder="Search user"
                   />
                 </div>
                 <Col md={2}>
                   <DropdownList
-                    data={types}
-                    value={this.state.searchType}
                     allowCreate="onFilter"
-                    onCreate={name => this.handleCreate(name)}
+                    data={types}
                     onChange={value => this.setState({ searchType: value })}
+                    onCreate={name => this.handleCreate(name)}
                     textField="name"
+                    value={this.state.searchType}
                     width="200"
                   />
                 </Col>

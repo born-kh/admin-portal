@@ -2,20 +2,35 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 
 import Dashboard from 'components/Dashboard';
-import Documents from './Accounts';
 
 import { withRouter } from 'react-router-dom';
-import AccountInfo from './AccountInfo';
+
 import Accounts from './Accounts';
+import DocumentInfo from './DocumentInfo';
+import SearchAccount from './SearchAccount';
 const PassportManager = ({ match }) => {
   return (
     <Dashboard>
-      <Route exact path={`${match.url}/accounts`} component={Accounts} />
-      {/* <Route
+      <Route
+        component={Accounts}
         exact
-        path={`${match.url}/documents/:accountID`}
+        path={`${match.url}/applications`}
+      />
+      <Route
+        component={SearchAccount}
+        exact
+        path={`${match.url}/search`}
+      />
+      <Route
         component={DocumentInfo}
-      /> */}
+        exact
+        path={`${match.url}/search/:applicationID`}
+      />
+      <Route
+        component={DocumentInfo}
+        exact
+        path={`${match.url}/applications/:applicationID/:procedure?`}
+      />
     </Dashboard>
   );
 };

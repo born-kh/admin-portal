@@ -1,7 +1,9 @@
 import * as types from '../../constants/actionType';
 
 const initState = {
-  accounts: [],
+  applications: [],
+  searchData: [],
+  pages: 0,
   documents: [],
   error: null,
   pending: false
@@ -20,7 +22,8 @@ const passportReducer = (state = initState, action) => {
         ...state,
         pending: false,
         error: null,
-        accounts: action.accounts
+        applications: action.applications,
+        pages: action.pages
       };
     case types.FETCH_ACCOUNTS_ERROR:
       return {
@@ -32,6 +35,7 @@ const passportReducer = (state = initState, action) => {
     case types.FETCH_DOCUMENTS_PENDING:
       return {
         ...state,
+        documents: [],
         pending: true,
         error: null
       };
@@ -40,14 +44,43 @@ const passportReducer = (state = initState, action) => {
         ...state,
         pending: false,
         error: null,
-        documents: action.documents
+        documents: action.payload
       };
     case types.FETCH_DOCUMNETS_ERROR:
       return {
         ...state,
         pending: false,
-        error: action.error,
-        documents: []
+        error: action.error
+      };
+
+    case types.FETCH_ACCOUNTS_SEARCH_PENDING:
+      return {
+        ...state,
+        pending: true,
+        error: null
+      };
+    case types.FETCH_ACCOUNTS_SEARCH_SUCCESS:
+      return {
+        ...state,
+        pending: false,
+        error: null,
+        searchData: action.payload
+      };
+    case types.FETCH_ACCOUNTS_SEARCH_ERROR:
+      return {
+        ...state,
+        pending: false,
+        error: action.error
+      };
+    case types.DELETE_DOCUMENT:
+      var documents = [...state.documents];
+      documents = documents.filter(
+        document => document.ID !== action.documentID
+      );
+
+      return {
+        ...state,
+        documents
       };
 
     default:

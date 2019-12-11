@@ -1,5 +1,5 @@
 import * as types from '../../constants/actionType';
-import { PROFILE_DATA, SESSION_DATA } from 'constants/localStorage';
+import { PROFILE_DATA } from 'constants/localStorage';
 
 let profile_data = JSON.parse(localStorage.getItem(PROFILE_DATA));
 // let session_data = JSON.parse(localStorage.getItem(SESSION_DATA));
@@ -8,19 +8,19 @@ let isAuth = localStorage.getItem('isAuth');
 
 const initState = profile_data
   ? {
-      profile_data: profile_data,
-      session_data: session_data,
-      error: null,
-      pending: false,
-      isAuth: isAuth
-    }
+    profile_data: profile_data,
+    session_data: session_data,
+    error: null,
+    pending: false,
+    isAuth: isAuth
+  }
   : {
-      profile_data: null,
-      session_data: null,
-      error: null,
-      pending: false,
-      isAuth: false
-    };
+    profile_data: null,
+    session_data: null,
+    error: null,
+    pending: false,
+    isAuth: false
+  };
 
 const authReducer = (state = initState, action) => {
   switch (action.type) {
@@ -35,7 +35,9 @@ const authReducer = (state = initState, action) => {
         ...state,
 
         profile_data: action.data.profile_data,
-        session_data: action.data.session_data
+        session_data: action.data.session_data,
+        isAuth: true,
+        pending: false
       };
 
     case types.LOGIN_ERROR:
@@ -51,12 +53,6 @@ const authReducer = (state = initState, action) => {
         error: null,
         pending: false,
         isAuth: false
-      };
-
-    case types.FETCH_PERMISSIONS_SUCCESS:
-      return {
-        pending: false,
-        isAuth: true
       };
 
     default:

@@ -16,17 +16,23 @@ const SearchInput = props => {
     <div className={searchWrapperClass}>
       <div className="input-holder">
         <input
-          onChange={props.onChangeSearchValue}
-          type="text"
           className="search-input"
+          onChange={props.onChangeSearchValue}
           onKeyPress={props.keyPressed}
           placeholder={props.placeholder}
+          type="text"
         />
-        <button className="search-icon" onClick={handleToggleSearch}>
+        <button
+          className="search-icon"
+          onClick={handleToggleSearch}
+        >
           <span />
         </button>
       </div>
-      <button className="close" onClick={handleToggleSearch} />
+      <button
+        className="close"
+        onClick={handleToggleSearch}
+      />
     </div>
   );
 };

@@ -2,11 +2,12 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import { withRouter } from 'react-router-dom';
-
+import ReactTimeout from 'react-timeout';
 import ResizeDetector from 'react-resize-detector';
 
 import AppMain from '../../Dashboard/components/AppMain';
-import PERMISSIONS from 'constants';
+import { SESSION_DATA, SESSION_TOKEN, PROFILE_DATA } from 'constants/index';
+import { logout } from 'store/actions/authActions';
 
 class Main extends React.Component {
   constructor(props) {
@@ -16,7 +17,35 @@ class Main extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.checkAuth();
+  }
+  handleLogout = () => {
+    console.log('logout');
+    let params = {
+      reason_note: 'User request'
+    };
+    this.props.onLogout(params);
+  };
+  checkAuth = session_data => {
+    if (session_data) {
+      var newDate = new Date();
+      var lastDate = new Date(session_data.expire_ts);
+      var diff = lastDate.getTime() - newDate.getTime();
+      console.log(diff);
+      if (diff > 0) {
+        this.props.setTimeout(this.handleLogout, diff);
+      } else {
+        this.handleLogout();
+      }
+    }
+  };
+
   render() {
+    let session_data = JSON.parse(localStorage.getItem(SESSION_DATA));
+    if (session_data) {
+      this.checkAuth(session_data);
+    }
     let {
       colorScheme,
       enableFixedHeader,
@@ -27,7 +56,6 @@ class Main extends React.Component {
       enableMobileMenu,
       enablePageTabsAlt
     } = this.props;
-    console.log(JSON.parse(localStorage.getItem(PERMISSIONS)));
 
     return (
       <ResizeDetector
@@ -46,7 +74,8 @@ class Main extends React.Component {
                 },
                 { 'sidebar-mobile-open': enableMobileMenu },
                 { 'body-tabs-shadow-btn': enablePageTabsAlt }
-              )}>
+              )}
+            >
               <AppMain />
             </div>
           </Fragment>
@@ -66,4 +95,14 @@ const mapStateToProp = state => ({
   enablePageTabsAlt: state.themeOptions.enablePageTabsAlt
 });
 
-export default withRouter(connect(mapStateToProp)(Main));
+const mapDispatchToProps = dispatch => {
+  return { onLogout: params => dispatch(logout(params)) };
+};
+
+const TimeOutMain = ReactTimeout(Main);
+export default withRouter(
+  connect(
+    mapStateToProp,
+    mapDispatchToProps
+  )(TimeOutMain)
+);

@@ -28,21 +28,22 @@ class HeaderRightDrawer extends React.Component {
     return (
       <Fragment>
         <Drawer
-          right
           className="drawer-content-wrapper p-0"
-          width={450}
-          open={openRight}
-          onChange={open => this.setState({ openRight: open })}
+          noTouchClose={false}
           noTouchOpen={false}
-          noTouchClose={false}>
+          onChange={open => this.setState({ openRight: open })}
+          open={openRight}
+          right
+          width={450}
+        >
           <PerfectScrollbar>
             <div className="drawer-nav-btn">
               <Hamburger
                 active={openRight}
-                type="elastic"
                 onClick={() =>
                   this.setState({ openRight: false, openLeft: false })
                 }
+                type="elastic"
               />
             </div>
             <DrawerBigExample />
@@ -52,10 +53,10 @@ class HeaderRightDrawer extends React.Component {
         <div className="header-btn-lg">
           <Hamburger
             active={openRight}
-            type="elastic"
             onClick={() =>
               this.setState({ openRight: !openRight, openLeft: false })
             }
+            type="elastic"
           />
         </div>
       </Fragment>

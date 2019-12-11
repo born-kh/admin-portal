@@ -4,7 +4,7 @@ import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import InputForm from 'components/common/Input';
 import { required, maxLengthCreator } from 'helpers';
 let LoginForm = props => {
-  const { handleSubmit, pristine, reset, submitting } = props;
+  const { handleSubmit, pristine, submitting } = props;
 
   const maxLength20 = maxLengthCreator(20);
   return (
@@ -15,10 +15,10 @@ let LoginForm = props => {
             <FormGroup>
               <Label for="exampleEmail">Username</Label>
               <Field
-                name="username"
                 component={InputForm}
-                type="text"
+                name="username"
                 placeholder="Username here..."
+                type="text"
                 validate={[required, maxLength20]}
               />
             </FormGroup>
@@ -27,28 +27,42 @@ let LoginForm = props => {
             <FormGroup>
               <Label for="examplePassword">Password</Label>
               <Field
-                name="password"
                 component={InputForm}
-                type="password"
+                name="password"
                 placeholder="Password here..."
+                type="password"
                 validate={[required]}
               />
             </FormGroup>
           </Col>
         </Row>
         <FormGroup check>
-          <Input type="checkbox" name="check" id="exampleCheck" />
-          <Label for="exampleCheck" check>
+          <Input
+            id="exampleCheck"
+            name="check"
+            type="checkbox"
+          />
+          <Label
+            check
+            for="exampleCheck"
+          >
             Keep me logged in
           </Label>
         </FormGroup>
         <Row className="divider" />
         <div className="d-flex align-items-center">
           <div className="ml-auto">
-            <a href="javascript:void(0);" className="btn-lg btn btn-link">
+            <a
+              className="btn-lg btn btn-link"
+              href="javascript:void(0);"
+            >
               Recover Password
             </a>{' '}
-            <Button color="primary" size="lg" disabled={pristine || submitting}>
+            <Button
+              color="primary"
+              disabled={pristine || submitting}
+              size="lg"
+            >
               Login to Dashboard
             </Button>
           </div>

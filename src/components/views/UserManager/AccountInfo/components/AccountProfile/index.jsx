@@ -131,7 +131,7 @@ class AccountProfile extends Component {
 
     return (
       <ReactTable
-        data={blockList}
+        className="-striped -highlight"
         columns={[
           {
             columns: [
@@ -142,8 +142,8 @@ class AccountProfile extends Component {
             ]
           }
         ]}
+        data={blockList}
         defaultPageSize={10}
-        className="-striped -highlight"
       />
     );
   }
@@ -153,22 +153,20 @@ class AccountProfile extends Component {
 
     return (
       <ListGroup flush>
-        {userInfo.auth.map(row => (
-          <div>
-            <ListGroupItem>
-              <b className="text-dark">Has Password: </b>
-              {row.hasPassword == true ? 'true' : 'false'}
-            </ListGroupItem>
-            <ListGroupItem>
-              <b className="text-dark">Type: </b>
-              {row.passwordType}
-            </ListGroupItem>
-            <ListGroupItem>
-              <b className="text-dark">Status: </b>
-              {row.status}
-            </ListGroupItem>
-          </div>
-        ))}
+        <div>
+          <ListGroupItem>
+            <b className="text-dark">Has Password: </b>
+            {userInfo.auth.hasPassword == true ? 'true' : 'false'}
+          </ListGroupItem>
+          <ListGroupItem>
+            <b className="text-dark">Type: </b>
+            {userInfo.auth.passwordType}
+          </ListGroupItem>
+          <ListGroupItem>
+            <b className="text-dark">Status: </b>
+            {userInfo.auth.status}
+          </ListGroupItem>
+        </div>
       </ListGroup>
     );
   }
@@ -190,12 +188,13 @@ class AccountProfile extends Component {
     this.setState({ loading: true });
     let params = {
       password: this.state.password,
-      accountID: this.props.userInfo.accountI
+      accountID: this.props.userInfo.accountID
     };
 
     userAPI
       .setPassword(params)
       .then(response => {
+        console.log(response);
         if (response.status === 200) {
           this.setState({ loading: false, password: '' });
           toast('success', {
@@ -225,14 +224,19 @@ class AccountProfile extends Component {
       <Fragment>
         <ReactCSSTransitionGroup
           component="div"
-          transitionName="TabsAnimation"
-          transitionAppear={true}
+          transitionAppear
           transitionAppearTimeout={0}
           transitionEnter={false}
-          transitionLeave={false}>
+          transitionLeave={false}
+          transitionName="TabsAnimation"
+        >
           <div>
             <Row>
-              <Col md="12" lg="6" xl="3">
+              <Col
+                lg="6"
+                md="12"
+                xl="3"
+              >
                 <Card className="card-shadow-primary profile-responsive card-border mb-3">
                   <CardHeader>Profile info</CardHeader>
                   <div className="dropdown-menu-header">
@@ -247,12 +251,12 @@ class AccountProfile extends Component {
                         <div className="avatar-icon-wrapper mr-2 avatar-icon-xl">
                           <div className="avatar-icon rounded">
                             <img
+                              alt="Avatar 5"
                               src={
                                 this.props.userInfo.avatar !== undefined
                                   ? `https://wssdev.nexustls.com/files/file/${this.props.userInfo.avatar}/medium`
                                   : avatar6
                               }
-                              alt="Avatar 5"
                             />
                           </div>
                         </div>
@@ -288,7 +292,11 @@ class AccountProfile extends Component {
                 </Card>
               </Col>
 
-              <Col md="12" lg="6" xl="3">
+              <Col
+                lg="6"
+                md="12"
+                xl="3"
+              >
                 <Card className="card-shadow-primary card-border mb-3">
                   <CardHeader> User Auth</CardHeader>
                   <CardBody className="p-0">{this.renderAuth()}</CardBody>
@@ -296,43 +304,57 @@ class AccountProfile extends Component {
                   <CardFooter className="text-center d-block">
                     <Input
                       className="mb-2"
+                      onChange={this.handleChangePassword}
                       placeholder="password"
                       value={this.state.password}
-                      onChange={this.handleChangePassword}
                     />
                     <Button
-                      outline
                       className="mr-2 border-0 btn-transition"
+                      color="primary"
                       onClick={this.handleGeneratePassword}
-                      color="primary">
+                      outline
+                    >
                       Generate Password
                     </Button>
 
                     <LaddaButton
                       className="btn btn-shadow btn-pill btn-focus"
-                      loading={this.state.loading}
+                      data-style={ZOOM_IN}
                       disabled={!this.state.password}
+                      loading={this.state.loading}
                       onClick={this.handleSetPassword}
-                      data-style={ZOOM_IN}>
+                    >
                       Change password
                     </LaddaButton>
                   </CardFooter>
                 </Card>
               </Col>
 
-              <Col md="12" lg="6" xl="3">
+              <Col
+                lg="6"
+                md="12"
+                xl="3"
+              >
                 <Card className="card-shadow-primary card-border mb-3">
                   <CardHeader> User Phones</CardHeader>
                   <CardBody className="p-0">{this.renderPhones()}</CardBody>
                 </Card>
               </Col>
-              <Col md="12" lg="6" xl="3">
+              <Col
+                lg="6"
+                md="12"
+                xl="3"
+              >
                 <Card className="card-shadow-primary card-border mb-3">
                   <CardHeader> User Emails</CardHeader>
                   <CardBody className="p-0">{this.renderEmails()}</CardBody>
                 </Card>
               </Col>
-              <Col md="12" lg="6" xl="9">
+              <Col
+                lg="6"
+                md="12"
+                xl="9"
+              >
                 <Card className="card-shadow-primary card-border mb-3">
                   <CardHeader> Session Table</CardHeader>
                   <CardBody className="p-0">
@@ -341,7 +363,11 @@ class AccountProfile extends Component {
                 </Card>
               </Col>
 
-              <Col md="12" lg="6" xl="3">
+              <Col
+                lg="6"
+                md="12"
+                xl="3"
+              >
                 <Card className="card-shadow-primary card-border mb-3">
                   <CardHeader> Black List</CardHeader>
                   <CardBody className="p-0">{this.renderBlockList()}</CardBody>

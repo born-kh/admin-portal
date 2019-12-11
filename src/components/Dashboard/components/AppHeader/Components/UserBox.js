@@ -1,19 +1,8 @@
 import React, { Fragment } from 'react';
-
-import Ionicon from 'react-ionicons';
-import { connect } from 'react-redux';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-
 import {
   DropdownToggle,
   DropdownMenu,
-  Nav,
-  Col,
-  Row,
   Button,
-  NavItem,
-  NavLink,
-  UncontrolledTooltip,
   UncontrolledButtonDropdown
 } from 'reactstrap';
 
@@ -24,7 +13,6 @@ import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import city3 from 'assets/utils/images/dropdown-header/city3.jpg';
-import avatar1 from 'assets/utils/images/avatars/1.jpg';
 
 class UserBox extends React.Component {
   constructor(props) {
@@ -36,7 +24,7 @@ class UserBox extends React.Component {
 
   notify2 = () =>
     (this.toastId = toast(
-      "You don't have any new items in your calendar for today! Go out and play!",
+      'You don\'t have any new items in your calendar for today! Go out and play!',
       {
         transition: Bounce,
         closeButton: true,
@@ -56,23 +44,29 @@ class UserBox extends React.Component {
             <div className="widget-content-wrapper">
               <div className="widget-content-left">
                 <UncontrolledButtonDropdown>
-                  <DropdownToggle color="link" className="p-0">
+                  <DropdownToggle
+                    className="p-0"
+                    color="link"
+                  >
                     <img
-                      width={42}
+                      alt=""
                       className="rounded-circle"
                       src={
                         profile_data.avatar !== undefined
                           ? `https://wssdev.nexustls.com/files/file/${profile_data.avatar}/medium`
                           : ''
                       }
-                      alt=""
+                      width={42}
                     />
                     <FontAwesomeIcon
                       className="ml-2 opacity-8"
                       icon={faAngleDown}
                     />
                   </DropdownToggle>
-                  <DropdownMenu right className="rm-pointers dropdown-menu-lg">
+                  <DropdownMenu
+                    className="rm-pointers dropdown-menu-lg"
+                    right
+                  >
                     <div className="dropdown-menu-header">
                       <div className="dropdown-menu-header-inner bg-info">
                         <div
@@ -86,14 +80,14 @@ class UserBox extends React.Component {
                             <div className="widget-content-wrapper">
                               <div className="widget-content-left mr-3">
                                 <img
-                                  width={42}
+                                  alt=""
                                   className="rounded-circle"
                                   src={
                                     profile_data.avatar !== undefined
                                       ? `https://wssdev.nexustls.com/files/file/${profile_data.avatar}/medium`
                                       : ''
                                   }
-                                  alt=""
+                                  width={42}
                                 />
                               </div>
                               <div className="widget-content-left">
@@ -109,7 +103,8 @@ class UserBox extends React.Component {
                                 <Button
                                   className="btn-pill btn-shadow btn-shine"
                                   color="focus"
-                                  onClick={this.props.handleLogout}>
+                                  onClick={this.props.handleLogout}
+                                >
                                   Logout
                                 </Button>
                               </div>

@@ -26,8 +26,9 @@ class TimelineEx extends Component {
               <div className="notifications-box">
                 <VerticalTimeline
                   animate={false}
+                  className="vertical-time-simple vertical-without-time"
                   layout="1-column"
-                  className="vertical-time-simple vertical-without-time">
+                >
                   <VerticalTimelineElement className="vertical-timeline-item dot-danger">
                     <h4 className="timeline-title">All Hands Meeting</h4>
                   </VerticalTimelineElement>
@@ -49,42 +50,66 @@ class TimelineEx extends Component {
                       <div className="avatar-wrapper mt-2 avatar-wrapper-overlap">
                         <div className="avatar-icon-wrapper avatar-icon-sm">
                           <div className="avatar-icon">
-                            <img src={avatar1} alt="" />
+                            <img
+                              alt=""
+                              src={avatar1}
+                            />
                           </div>
                         </div>
                         <div className="avatar-icon-wrapper avatar-icon-sm">
                           <div className="avatar-icon">
-                            <img src={avatar2} alt="" />
+                            <img
+                              alt=""
+                              src={avatar2}
+                            />
                           </div>
                         </div>
                         <div className="avatar-icon-wrapper avatar-icon-sm">
                           <div className="avatar-icon">
-                            <img src={avatar3} alt="" />
+                            <img
+                              alt=""
+                              src={avatar3}
+                            />
                           </div>
                         </div>
                         <div className="avatar-icon-wrapper avatar-icon-sm">
                           <div className="avatar-icon">
-                            <img src={avatar4} alt="" />
+                            <img
+                              alt=""
+                              src={avatar4}
+                            />
                           </div>
                         </div>
                         <div className="avatar-icon-wrapper avatar-icon-sm">
                           <div className="avatar-icon">
-                            <img src={avatar5} alt="" />
+                            <img
+                              alt=""
+                              src={avatar5}
+                            />
                           </div>
                         </div>
                         <div className="avatar-icon-wrapper avatar-icon-sm">
                           <div className="avatar-icon">
-                            <img src={avatar6} alt="" />
+                            <img
+                              alt=""
+                              src={avatar6}
+                            />
                           </div>
                         </div>
                         <div className="avatar-icon-wrapper avatar-icon-sm">
                           <div className="avatar-icon">
-                            <img src={avatar7} alt="" />
+                            <img
+                              alt=""
+                              src={avatar7}
+                            />
                           </div>
                         </div>
                         <div className="avatar-icon-wrapper avatar-icon-sm">
                           <div className="avatar-icon">
-                            <img src={avatar8} alt="" />
+                            <img
+                              alt=""
+                              src={avatar8}
+                            />
                           </div>
                         </div>
                         <div className="avatar-icon-wrapper avatar-icon-sm avatar-icon-add">

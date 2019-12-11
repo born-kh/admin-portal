@@ -41,36 +41,44 @@ class FooterMegaMenu extends React.Component {
           <NavItem>
             <NavLink
               href="javascript:void(0);"
+              id="PopoverMegaMenuFooter"
               onClick={this.toggle}
-              id="PopoverMegaMenuFooter">
+            >
               Footer Menu
-              <FontAwesomeIcon className="ml-2 opacity-8" icon={faAngleUp} />
+              <FontAwesomeIcon
+                className="ml-2 opacity-8"
+                icon={faAngleUp}
+              />
             </NavLink>
           </NavItem>
           <Popover
             className="rm-max-width"
-            placement="top-start"
             fade={false}
             hideArrow
-            trigger="legacy"
             isOpen={this.state.popoverOpen}
+            placement="top-start"
             target="PopoverMegaMenuFooter"
-            toggle={this.toggle}>
+            toggle={this.toggle}
+            trigger="legacy"
+          >
             <div className="dropdown-mega-menu dropdown-mega-menu-sm">
               <div className="grid-menu grid-menu-2col">
                 <Row className="no-gutters">
-                  <Col xl="6" sm="6">
+                  <Col
+                    sm="6"
+                    xl="6"
+                  >
                     <Nav vertical>
                       <NavItem className="nav-item-header">Overview</NavItem>
                       <NavItem>
                         <NavLink href="javascript:void(0);">
-                          <i className="nav-link-icon lnr-inbox"> </i>
+                          <i className="nav-link-icon lnr-inbox" />
                           <span>Contacts</span>
                         </NavLink>
                       </NavItem>
                       <NavItem>
                         <NavLink href="javascript:void(0);">
-                          <i className="nav-link-icon lnr-book"> </i>
+                          <i className="nav-link-icon lnr-book" />
                           <span>Incidents</span>
                           <div className="ml-auto badge badge-pill badge-danger">
                             5
@@ -79,19 +87,25 @@ class FooterMegaMenu extends React.Component {
                       </NavItem>
                       <NavItem>
                         <NavLink href="javascript:void(0);">
-                          <i className="nav-link-icon lnr-picture"> </i>
+                          <i className="nav-link-icon lnr-picture" />
                           <span>Companies</span>
                         </NavLink>
                       </NavItem>
                       <NavItem>
-                        <NavLink disabled href="javascript:void(0);">
-                          <i className="nav-link-icon lnr-file-empty"> </i>
+                        <NavLink
+                          disabled
+                          href="javascript:void(0);"
+                        >
+                          <i className="nav-link-icon lnr-file-empty" />
                           <span>Dashboards</span>
                         </NavLink>
                       </NavItem>
                     </Nav>
                   </Col>
-                  <Col xl="6" sm="6">
+                  <Col
+                    sm="6"
+                    xl="6"
+                  >
                     <Nav vertical>
                       <NavItem className="nav-item-header">
                         Sales &amp; Marketing
@@ -122,24 +136,29 @@ class FooterMegaMenu extends React.Component {
           <NavItem>
             <NavLink
               href="javascript:void(0);"
+              id="PopoverGridFooter"
               onClick={this.toggle2}
-              id="PopoverGridFooter">
+            >
               Grid Menu
               <div className="badge badge-dark ml-0 ml-1">
                 <small>NEW</small>
               </div>
-              <FontAwesomeIcon className="ml-2 opacity-8" icon={faAngleUp} />
+              <FontAwesomeIcon
+                className="ml-2 opacity-8"
+                icon={faAngleUp}
+              />
             </NavLink>
           </NavItem>
           <Popover
             className="rm-max-width popover-custom"
             fade={false}
             hideArrow
-            trigger="legacy"
-            placement="top-start"
             isOpen={this.state.popoverOpen2}
+            placement="top-start"
             target="PopoverGridFooter"
-            toggle={this.toggle2}>
+            toggle={this.toggle2}
+            trigger="legacy"
+          >
             <div className="dropdown-menu-header">
               <div className="dropdown-menu-header-inner bg-tempting-azure">
                 <div
@@ -161,8 +180,9 @@ class FooterMegaMenu extends React.Component {
                 <Col sm="6">
                   <Button
                     className="btn-icon-vertical btn-transition-text btn-transition btn-transition-alt pt-2 pb-2"
+                    color="dark"
                     outline
-                    color="dark">
+                  >
                     <i className="lnr-lighter text-dark opacity-7 btn-icon-wrapper mb-2">
                       {' '}
                     </i>
@@ -172,8 +192,9 @@ class FooterMegaMenu extends React.Component {
                 <Col sm="6">
                   <Button
                     className="btn-icon-vertical btn-transition-text btn-transition btn-transition-alt pt-2 pb-2"
+                    color="danger"
                     outline
-                    color="danger">
+                  >
                     <i className="lnr-construction text-danger opacity-7 btn-icon-wrapper mb-2">
                       {' '}
                     </i>
@@ -183,8 +204,9 @@ class FooterMegaMenu extends React.Component {
                 <Col sm="6">
                   <Button
                     className="btn-icon-vertical btn-transition-text btn-transition btn-transition-alt pt-2 pb-2"
+                    color="success"
                     outline
-                    color="success">
+                  >
                     <i className="lnr-bus text-success opacity-7 btn-icon-wrapper mb-2">
                       {' '}
                     </i>
@@ -194,8 +216,9 @@ class FooterMegaMenu extends React.Component {
                 <Col sm="6">
                   <Button
                     className="btn-icon-vertical btn-transition-text btn-transition btn-transition-alt pt-2 pb-2"
+                    color="focus"
                     outline
-                    color="focus">
+                  >
                     <i className="lnr-gift text-focus opacity-7 btn-icon-wrapper mb-2">
                       {' '}
                     </i>
@@ -208,12 +231,19 @@ class FooterMegaMenu extends React.Component {
               <NavItem className="nav-item-divider" />
               <NavItem className="nav-item-btn clearfix">
                 <div className="float-left">
-                  <Button size="sm" color="link">
+                  <Button
+                    color="link"
+                    size="sm"
+                  >
                     Link Button
                   </Button>
                 </div>
                 <div className="float-right">
-                  <Button size="sm" className="btn-shadow" color="info">
+                  <Button
+                    className="btn-shadow"
+                    color="info"
+                    size="sm"
+                  >
                     Info Button
                   </Button>
                 </div>

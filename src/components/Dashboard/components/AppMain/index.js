@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import React, { Suspense, lazy, Fragment } from 'react';
-import Loader from 'react-loaders';
-
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Loader from 'react-loaders';
 import PassportManager from 'components/views/PassportManager';
 const Login = lazy(() => import('components/views/Login'));
 const TracerManager = lazy(() => import('components/views/TracerManager'));
@@ -29,8 +29,12 @@ const AppMain = () => {
               </h6>
             </div>
           </div>
-        }>
-        <Route path="/login" component={Login} />
+        }
+      >
+        <Route
+          component={Login}
+          path="/login"
+        />
       </Suspense>
       {/* Tracer-manager */}
       <Suspense
@@ -49,8 +53,12 @@ const AppMain = () => {
               </h6>
             </div>
           </div>
-        }>
-        <Route path="/tracer-manager" component={TracerManager} />
+        }
+      >
+        <Route
+          component={TracerManager}
+          path="/tracer-manager"
+        />
       </Suspense>
 
       {/* Tracer-manager */}
@@ -70,8 +78,12 @@ const AppMain = () => {
               </h6>
             </div>
           </div>
-        }>
-        <Route path="/user-manager" component={UserManager} />
+        }
+      >
+        <Route
+          component={UserManager}
+          path="/user-manager"
+        />
       </Suspense>
 
       {/* Tracer-manager */}
@@ -91,11 +103,20 @@ const AppMain = () => {
               </h6>
             </div>
           </div>
-        }>
-        <Route path="/passport-manager" component={PassportManager} />
+        }
+      >
+        <Route
+          component={PassportManager}
+          path="/passport-manager"
+        />
       </Suspense>
 
-      <Route exact path="/" render={() => <Redirect to="/login" />} />
+      <Route
+        exact
+        path="/"
+        render={() => <Redirect to="/login" />}
+      />
+      <ToastContainer />
     </Fragment>
   );
 };

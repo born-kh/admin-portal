@@ -11,9 +11,17 @@ import bg3 from 'assets/utils/images/originals/citynights.jpg';
 import { Col, Row } from 'reactstrap';
 import { login } from 'store/actions/authActions';
 import LoginForm from '../../common/LoginForm/LoginForm';
-import PERMISSIONS from 'constants';
+import { PERMISSIONS } from 'constants/localStorage';
 
 class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+
+    this.handleOnSubmit = this.handleOnSubmit.bind(this);
+
+    this._isMounted = false;
+  }
   handleOnSubmit = formData => {
     let params = {
       username: formData.username,
@@ -22,6 +30,13 @@ class Login extends Component {
 
     this.props.handleLogin(params);
   };
+
+  componentDidMount() {
+    // console.log(this.props.isAuth);
+    // if (this.props.isAuth) {
+    //   return <Redirect to="/user-manager/users" />;
+    // }
+  }
 
   render() {
     let settings = {
@@ -37,7 +52,9 @@ class Login extends Component {
       adaptiveHeight: true
     };
 
-    if (this.props.profile_data) {
+    let permissions = JSON.parse(localStorage.getItem(PERMISSIONS));
+
+    if (this.props.isAuth) {
       return <Redirect to="/user-manager/users" />;
     }
 
@@ -45,7 +62,10 @@ class Login extends Component {
       <Fragment>
         <div className="h-100">
           <Row className="h-100 no-gutters">
-            <Col lg="4" className="d-none d-lg-block">
+            <Col
+              className="d-none d-lg-block"
+              lg="4"
+            >
               <div className="slider-light">
                 <Slider {...settings}>
                   <div className="h-100 d-flex justify-content-center align-items-center bg-plum-plate">
@@ -99,10 +119,16 @@ class Login extends Component {
               </div>
             </Col>
             <Col
+              className="h-100 d-flex bg-white justify-content-center align-items-center"
               lg="8"
               md="12"
-              className="h-100 d-flex bg-white justify-content-center align-items-center">
-              <Col lg="9" md="10" sm="12" className="mx-auto app-login-box">
+            >
+              <Col
+                className="mx-auto app-login-box"
+                lg="9"
+                md="10"
+                sm="12"
+              >
                 <div className="app-logo" />
                 <h4 className="mb-0">
                   <div>Welcome back,</div>

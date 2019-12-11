@@ -83,7 +83,7 @@ class UsersTable extends React.Component {
 
   render() {
     const { usersData } = this.props;
-    console.log('props', this.props);
+    console.log(usersData);
 
     return (
       <Row>

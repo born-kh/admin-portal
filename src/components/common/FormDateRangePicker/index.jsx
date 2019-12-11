@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-import { InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import { InputGroup, InputGroupAddon } from 'reactstrap';
 
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -58,17 +58,21 @@ class FormDateRangePicker extends React.Component {
     return (
       <Fragment>
         <DateTimeRangeContainer
-          selected={ranges}
-          ranges={ranges}
-          start={this.state.start}
+          applyCallback={this.applyCallback}
           end={this.state.end}
           local={local}
           maxDate={maxDate}
-          applyCallback={this.applyCallback}>
+          ranges={ranges}
+          selected={ranges}
+          start={this.state.start}
+        >
           <InputGroup>
             <InputGroupAddon addonType="prepend">
               <div className="input-group-text">
-                <FontAwesomeIcon icon={faCalendarAlt} hover={true} />
+                <FontAwesomeIcon
+                  hover
+                  icon={faCalendarAlt}
+                />
               </div>
             </InputGroupAddon>
           </InputGroup>

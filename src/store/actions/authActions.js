@@ -3,11 +3,11 @@ import {
   PROFILE_DATA,
   SESSION_TOKEN,
   permissionParams,
-  PERMISSIONS
+  PERMISSIONS,
+  SESSION_DATA
 } from 'constants/localStorage';
 
 import { authAPI } from 'service/api';
-import { conditionalExpression } from '@babel/types';
 
 export function loginPending() {
   return {
@@ -23,7 +23,6 @@ export function loginSuccess(data) {
 }
 
 export function loginError(error) {
-  console.log(error);
   return {
     type: types.LOGIN_ERROR,
     error
@@ -33,12 +32,6 @@ export function loginError(error) {
 export function logoutSuccess() {
   return {
     type: types.LOGOUT
-  };
-}
-
-export function permissionSuccess() {
-  return {
-    type: types.FETCH_PERMISSIONS_SUCCESS
   };
 }
 
@@ -53,35 +46,45 @@ export function login(loginParams) {
     user_ip: '1.2.3.4',
     username: loginParams.username
   };
+  console.log('response');
 
   return dispatch => {
     dispatch(loginPending());
     authAPI
       .login(params)
       .then(response => {
+        console.log(response);
         if (response !== undefined) {
           const session_data = response.data.session_data;
           const profile_data = response.data.profile_data;
-          const permissions = {};
-          dispatch(loginSuccess(response.data));
-
+          const auth_data = response.data;
           localStorage.setItem(SESSION_TOKEN, session_data.session_token);
+          localStorage.setItem(SESSION_DATA, JSON.stringify(session_data));
           localStorage.setItem(PROFILE_DATA, JSON.stringify(profile_data));
           localStorage.setItem('isAuth', true);
 
           authAPI.getPermissions(permissionParams).then(
             response => {
+              console.log(response);
+              console.log(response.data.result.data);
+
+              for (var type in response.data.result.data) {
+                console.log(type);
+              }
               localStorage.setItem(
                 PERMISSIONS,
-                JSON.stringify(response.data.result.permissions)
+                JSON.stringify(response.data.result.data)
               );
-              console.log(JSON.parse(localStorage.getItem(PERMISSIONS)));
-              dispatch(permissionSuccess());
+              if (response.data.result.data) {
+                dispatch(loginSuccess(auth_data));
+              }
             },
             error => {
               dispatch(loginError(error.message));
             }
           );
+        } else {
+          dispatch(loginError(''));
         }
       })
       .catch(error => {
@@ -95,10 +98,12 @@ export function logout(params) {
     authAPI
       .logout(params)
       .then(response => {
-        dispatch(logoutSuccess());
+        if (response.status) {
+          localStorage.clear();
+          dispatch(logoutSuccess());
+        }
       })
       .catch(error => {
-        console.log('error', error);
         dispatch(logoutSuccess());
       });
   };

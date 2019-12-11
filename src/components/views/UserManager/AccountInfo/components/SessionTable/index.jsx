@@ -193,35 +193,36 @@ class SessionTable extends React.Component {
 
   renderDialog() {
     const { sessionDataArray } = this.props;
+    if (!sessionDataArray) {
+      let sessionInfo = {
+        metaData: sessionDataArray[this.state.rowIndex].metaArray,
+        push: sessionDataArray[this.state.rowIndex].pushArray
+      };
 
-    let sessionInfo = {
-      metaData: sessionDataArray[this.state.rowIndex].metaArray,
-      push: sessionDataArray[this.state.rowIndex].pushArray
-    };
-
-    if (this.state.modalInfo) {
-      return (
-        <Modal
-          isOpen={this.state.modalInfo}
-          fade={false}
-          toggle={this.handleClickCloseDialog}
-          className={this.props.className}>
-          <ModalHeader toggle={this.handleClickCloseDialog}>
-            Session Info
-          </ModalHeader>
-          <ModalBody>
-            <ReactJson src={sessionInfo} />
-          </ModalBody>
-          <ModalFooter>
-            <Button color="link" onClick={this.handleClickCloseDialog}>
-              Cancel
-            </Button>
-            <Button color="primary" onClick={this.handleClickCloseDialog}>
-              Ok
-            </Button>
-          </ModalFooter>
-        </Modal>
-      );
+      if (this.state.modalInfo) {
+        return (
+          <Modal
+            isOpen={this.state.modalInfo}
+            fade={false}
+            toggle={this.handleClickCloseDialog}
+            className={this.props.className}>
+            <ModalHeader toggle={this.handleClickCloseDialog}>
+              Session Info
+            </ModalHeader>
+            <ModalBody>
+              <ReactJson src={sessionInfo} />
+            </ModalBody>
+            <ModalFooter>
+              <Button color="link" onClick={this.handleClickCloseDialog}>
+                Cancel
+              </Button>
+              <Button color="primary" onClick={this.handleClickCloseDialog}>
+                Ok
+              </Button>
+            </ModalFooter>
+          </Modal>
+        );
+      }
     }
   }
 
@@ -269,27 +270,26 @@ class SessionTable extends React.Component {
     return (
       <CardBody>
         <ReactTable
-          data={sessionDataArray.metaArray}
+          data={sessionDataArray}
           columns={[
             {
               columns: [
                 {
                   Header: 'Device Name',
-                  accessor: 'deviceName'
+                  accessor: 'meta.deviceName'
                 },
                 {
                   Header: 'Platform',
-                  accessor: 'platform'
+                  accessor: 'meta.platform'
                 },
                 {
                   Header: 'IP',
-                  accessor: 'ip'
+                  accessor: 'meta.ip'
                 },
                 {
                   Header: 'Session ID',
-                  accessor: 'sessionID'
+                  accessor: 'meta.sessionID'
                 },
-
                 {
                   Header: 'Set Tracing',
                   Cell: row => (
@@ -301,13 +301,16 @@ class SessionTable extends React.Component {
                         onClick={() =>
                           this.handleSetTracing(
                             row.index,
-                            this.props.opts[row.index]
+                            this.props.sessionDataArray[row.index].opts
                           )
                         }>
                         <div
                           className={cx('switch-animate', {
-                            'switch-on': this.props.opts[row.index].tracing,
-                            'switch-off': !this.props.opts[row.index].tracing
+                            'switch-on': this.props.sessionDataArray[row.index]
+                              .opts.tracing,
+                            'switch-off': !this.props.sessionDataArray[
+                              row.index
+                            ].opts.tracing
                           })}>
                           <input type="checkbox" />
                           <span className="switch-left bg-danger">ON</span>
@@ -328,13 +331,17 @@ class SessionTable extends React.Component {
                         data-on-label="ON"
                         data-off-label="OFF"
                         onClick={this.handleSessionSuspended(
-                          this.props.suspended[row.index],
+                          this.props.sessionDataArray[row.index].suspended,
+
                           row.index
                         )}>
                         <div
                           className={cx('switch-animate', {
-                            'switch-on': this.props.suspended[row.index],
-                            'switch-off': !this.props.suspended[row.index]
+                            'switch-on': this.props.sessionDataArray[row.index]
+                              .suspended,
+                            'switch-off': !this.props.sessionDataArray[
+                              row.index
+                            ].suspended
                           })}>
                           <input type="checkbox" />
                           <span className="switch-left bg-danger">ON</span>

@@ -1,20 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PageTitle from 'components/common/PageTitle';
-
-import SearchInput from 'components/common/SearchInput';
-
-import Loader from 'react-loaders';
 import { Col, Card, CardBody, CardHeader } from 'reactstrap';
-
-import { DropdownList } from 'react-widgets';
-import queryString from 'query-string';
 import PropTypes from 'prop-types';
 import LoaderOverlay from 'components/common/LoaderOverlay';
-import { fetchAccounts } from 'store/actions/passportActions';
+import { fetchApplications } from 'store/actions/passportActions';
 import AccountTable from './AccountTable';
 
 class Accounts extends Component {
@@ -22,24 +14,54 @@ class Accounts extends Component {
     super(props);
     this.state = {
       value: [],
-      searchType: 'username'
+      searchType: 'username',
+      page: 0,
+      pageSize: 10
     };
 
-    this.handleOnSubmit = this.handleOnSubmit.bind(this);
+    this.handleOnFetch = this.handleOnFetch.bind(this);
+    this.handleOnPageChange = this.handleOnPageChange.bind(this);
+    this.handleOnPageSizeChange = this.handleOnPageSizeChange.bind(this);
   }
 
   componentDidMount() {
-    this.props.fetchAccounts('/0/25');
+    this.handleOnFetch();
   }
 
-  handleOnSubmit(event) {
-    // if (event.key === 'Enter') {
-    //   this.props.fetchAccounts(params);
-    // }
+  handleOnFetch() {
+    const { page, pageSize } = this.state;
+
+    let params = {
+      start: page * 10,
+      count: page * 10 + pageSize
+    };
+    this.props.fetchApplications(params);
   }
+  handleOnPageChange = page => {
+    this.setState(
+      {
+        page
+      },
+      () => {
+        this.handleOnFetch();
+      }
+    );
+  };
+  handleOnPageSizeChange = pageSize => {
+    this.handleOnFetch();
+    this.setState(
+      {
+        pageSize
+      },
+      () => {
+        this.handleOnFetch();
+      }
+    );
+  };
 
   renderTable() {
     const { pending, error } = this.props;
+
     if (pending) {
       return <LoaderOverlay />;
     }
@@ -55,7 +77,7 @@ class Accounts extends Component {
       );
     }
 
-    if (this.props.accounts.length === 0) {
+    if (this.props.applications.length === 0) {
       return (
         <div className="widget-content">
           <div className="widget-content-wrapper">
@@ -66,7 +88,15 @@ class Accounts extends Component {
         </div>
       );
     } else {
-      return <AccountTable accountData={this.props.accounts} />;
+      return (
+        <AccountTable
+          applications={this.props.applications}
+          handleOnPageChange={this.handleOnPageChange}
+          handleOnPageSizeChange={this.handleOnPageSizeChange}
+          pages={this.props.pages}
+          pageSize={this.state.pageSize}
+        />
+      );
     }
   }
   render() {
@@ -74,20 +104,21 @@ class Accounts extends Component {
       <Fragment>
         <ReactCSSTransitionGroup
           component="div"
-          transitionName="TabsAnimation"
-          transitionAppear={true}
+          transitionAppear
           transitionAppearTimeout={0}
           transitionEnter={false}
-          transitionLeave={false}>
+          transitionLeave={false}
+          transitionName="TabsAnimation"
+        >
           <PageTitle
-            heading="Passport Manager"
-            subheading=""
+            heading="New Documents"
             icon="pe-7s-user icon-gradient bg-night-fade"
+            subheading=""
           />
 
           <Col md="12">
             <Card className="main-card mb-3">
-              <CardHeader className="card-header-tab"></CardHeader>
+              <CardHeader className="card-header-tab" />
 
               <CardBody>{this.renderTable()}</CardBody>
             </Card>
@@ -104,14 +135,15 @@ Accounts.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  accounts: state.passport.accounts,
+  applications: state.passport.applications,
   error: state.passport.error,
-  pending: state.user.pending
+  pending: state.passport.pending,
+  pages: state.passport.pages
 });
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchAccounts: params => dispatch(fetchAccounts(params))
+    fetchApplications: params => dispatch(fetchApplications(params))
   };
 };
 

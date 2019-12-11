@@ -1,4 +1,5 @@
 export const SERVICE_URL = 'http://localhost:8080';
+// export const SERVICE_URL = 'http://10.7.8.129:9002';
 export const SEARCH_USER = '/search/user';
 export const GET_ACCOUNT_SESSIONS = '/get/account/sessions';
 export const LOGIN = '/login';
@@ -13,5 +14,13 @@ export const GET_PERMISSIONS = '/get/permissions';
 export const GET_PROFILE_DATA = '/get/profile/data';
 export const LOGOUT = '/logout';
 
-export const GET_ACCOUNTS = '/all';
+export const GET_APPLICATIONS = '/get/applications';
 export const GET_DOCUMENTS = '/get/documents';
+export const GET_APPLICATIONS_BY_NAME = '/get/application/search';
+export const SET_APPLICATION_STATUS = 'set/application/status';
+export const SET_DOCUMENT_STATUS = 'set/document/status';
+export const SET_DOCUMENT_FIELDS = '/set/document/fields';
+export const SET_DOCUMENT_NOTE = '/set/document/note';
+export const SET_DOCUMENT_TAGS = '/set/document/tags';
+export const GET_DOCUMENT_TYPES = '/get/document/types';
+export const DELETE_DOCUMENT = '/delete/document';
