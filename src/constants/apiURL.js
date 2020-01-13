@@ -24,3 +24,4 @@ export const SET_DOCUMENT_NOTE = '/set/document/note';
 export const SET_DOCUMENT_TAGS = '/set/document/tags';
 export const GET_DOCUMENT_TYPES = '/get/document/types';
 export const DELETE_DOCUMENT = '/delete/document';
+export const GET_APPLICATIONS_BY_ACCOUNT = '/get/applications/by/account';

@@ -12,10 +12,12 @@ import {
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { fetchDocuments } from 'store/actions/passportActions';
-import Info from './components/Info';
-import DocumentList from './components/DocumentList';
-import DocumentProcedure from './components/DocumentProcedure';
+import Info from './Info';
+import DocumentList from './DocumentList';
+import DocumentProcedure from './DocumentProcedure';
 import { history } from 'helpers';
+import { fetchUsers } from 'store/actions/userActions';
+import AccountProfile from './AccountProfile';
 
 class DocumentInfo extends React.Component {
   constructor() {
@@ -25,12 +27,14 @@ class DocumentInfo extends React.Component {
     };
     this.handleStartProcedure = this.handleStartProcedure.bind(this);
     this.handleDoneProcedure = this.handleDoneProcedure.bind(this);
+    this.handleGetApplications = this.handleGetApplications.bind(this);
   }
   componentDidMount() {
-    let params = {
-      applicationID: this.props.application.applicationID
-    };
-    this.props.fetchDocuments(params);
+    const { fetchDocuments, application, fetchUsers } = this.props;
+
+    fetchDocuments({
+      applicationID: application.ID
+    });
   }
 
   handleStartProcedure() {
@@ -40,9 +44,19 @@ class DocumentInfo extends React.Component {
   handleDoneProcedure() {
     this.setState({ startProcedure: false });
   }
+
+  handleGetApplications() {
+    // if (this.props.applications || this.props.applications.length > 0) {
+    //   this.props.history.push(
+    //     '/passport-manager/applications/' + this.props.applications[0].ID
+    //   );
+    // } else {
+    this.props.history.push('/passport-manager/applications');
+  }
   render() {
     const { startProcedure } = this.state;
-    console.log(this.props.documents);
+    const { application, match, documents, pending } = this.props;
+    console.log(application.status, startProcedure, documents);
     if (startProcedure) {
       return (
         <Fragment>
@@ -55,11 +69,12 @@ class DocumentInfo extends React.Component {
             transitionName="TabsAnimation"
           >
             <DocumentProcedure
-              accountID={this.props.application.accountID}
-              applicationID={this.props.application.applicationID}
-              backUrl={this.props.match.url}
-              documents={this.props.documents}
+              accountID={application.accountID}
+              applicationID={application.ID}
+              backUrl={match.url}
+              documents={documents}
               handleDoneProcedure={this.handleDoneProcedure}
+              handleGetApplications={this.handleGetApplications}
             />
           </ReactCSSTransitionGroup>
         </Fragment>
@@ -86,7 +101,11 @@ class DocumentInfo extends React.Component {
                           'border-0 btn-pill btn-wide btn-transition active'
                         }
                         color="alternate"
-                        disabled={this.props.documents.length === 0}
+                        // disabled={
+                        //   documents.length === 0 ||
+                        //   application.status !== 'PENDING'
+                        // }
+                        disabled={documents.length === 0}
                         onClick={this.handleStartProcedure}
                         outline
                       >
@@ -101,16 +120,16 @@ class DocumentInfo extends React.Component {
                         disabled
                         outline
                       >
-                        {this.props.application.status}
+                        {application.status}
                       </Button>
                     </div>
                   </CardHeader>
                   <CardBody className="main-card mb-3">
                     <Row>
-                      <Info application={this.props.application} />
+                      <Info application={application} />
                       <DocumentList
-                        documents={this.props.documents}
-                        pending={this.props.pending}
+                        documents={documents}
+                        pending={pending}
                       />
                     </Row>
                   </CardBody>
@@ -131,14 +150,16 @@ const mapStateToProps = (state, ownProps) => {
     pending: state.passport.pending,
     documents: state.passport.documents,
     application: state.passport.applications.find(
-      application => application.applicationID === id
-    )
+      application => application.ID === id
+    ),
+    applications: state.passport.applications
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchDocuments: params => dispatch(fetchDocuments(params))
+    fetchDocuments: params => dispatch(fetchDocuments(params)),
+    fetchUsers: params => dispatch(fetchUsers(params))
   };
 };
 

@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import ReactTimeout from 'react-timeout';
 import ResizeDetector from 'react-resize-detector';
 
-import AppMain from '../../Dashboard/components/AppMain';
+import AppMain from '../../Layouts/components/AppMain';
 import { SESSION_DATA, SESSION_TOKEN, PROFILE_DATA } from 'constants/index';
 import { logout } from 'store/actions/authActions';
 

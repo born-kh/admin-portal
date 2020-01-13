@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import Dashboard from 'components/Dashboard';
+import Dashboard from 'components/Layouts';
 import Users from './Users';
 
 import { withRouter } from 'react-router-dom';
@@ -13,12 +13,22 @@ const UserManager = ({ match }) => {
   console.log(permissions);
   return (
     <Dashboard>
-      <Route exact path={`${match.url}/users`} component={Users} />
       <Route
+        component={Users}
+        exact
+        path={`${match.url}/users`}
+      />
+      <Route
+        component={AccountInfo}
         exact
         path={`${match.url}/users/:accountID`}
-        component={AccountInfo}
+        searchPassportManager={false}
       />
+      {/* <Route
+        component={AccountInfo}
+        exact
+        path={'passport-manager/applications/:accountID'}
+      /> */}
     </Dashboard>
   );
 };

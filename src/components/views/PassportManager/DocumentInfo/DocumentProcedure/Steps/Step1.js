@@ -14,9 +14,8 @@ import {
   Container,
   CardHeader
 } from 'reactstrap';
+import DemoImg from '../../../../../../assets/utils/images/originals/rejectMessage.png';
 
-import { Cropper } from 'react-image-cropper';
-import { passportAPI } from 'service/api';
 export default class WizardStep1 extends React.Component {
   constructor(props) {
     super(props);
@@ -24,7 +23,8 @@ export default class WizardStep1 extends React.Component {
       startDate: new Date(),
       isOpen: false,
       checked: false,
-      docID: undefined
+      docID: undefined,
+      documentID: null
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleCheckbox = this.handleCheckbox.bind(this);
@@ -52,7 +52,14 @@ export default class WizardStep1 extends React.Component {
     this.props.getDocumentID(selfieID);
   };
   componentDidMount() {
-    const { selfieDocuments, passportDocuments } = this.props;
+    const {
+      selfieDocuments,
+      passportDocuments,
+      selfieID,
+      passportID
+    } = this.props;
+    this.setState({ selfieID, passportID });
+
     if (selfieDocuments.length > 0) {
       this.handleChangeSelfieID(selfieDocuments[0].ID);
     }
@@ -64,12 +71,12 @@ export default class WizardStep1 extends React.Component {
   }
   render() {
     const { selfieDocuments, passportDocuments, deleteDocument } = this.props;
-
+    const { isOpen, selfieID, documentID, passportID } = this.state;
     return (
       <Fragment>
-        {this.state.isOpen && (
+        {isOpen && (
           <Lightbox
-            mainSrc={`http://10.7.8.129:9004/document/${this.state.documentID}`}
+            mainSrc={`http://10.7.8.129:9004/document/${documentID}`}
             onCloseRequest={() => this.setState({ isOpen: false })}
           />
         )}
@@ -86,26 +93,34 @@ export default class WizardStep1 extends React.Component {
                   <div className="btn-actions-pane-right">
                     <Button
                       color="danger"
-                      onClick={() => deleteDocument(this.state.selfieID)}
+                      onClick={() => deleteDocument(selfieID)}
                     >
                       Delete
                     </Button>
                   </div>
                 </CardHeader>
                 <CardBody>
-                  <div className="text-center">
+                  <div
+                    className="text-center"
+                    style={{
+                      height: 500,
+                      width: '100%'
+                    }}
+                  >
                     <img
                       alt=""
-                      height="500vh"
                       onClick={() =>
                         this.setState({
                           isOpen: true,
-                          documentID: this.state.selfieID
+                          documentID: selfieID
                         })
                       }
-                      src={`http://10.7.8.129:9004/document/${this.state.selfieID}`}
-                      style={{ cursor: 'pointer' }}
-                      width="60%"
+                      src={`http://10.7.8.129:9004/document/${selfieID}`}
+                      style={{
+                        cursor: 'pointer',
+                        'max-width': '100%',
+                        'max-height': '100%'
+                      }}
                     />
                   </div>
                 </CardBody>
@@ -123,26 +138,34 @@ export default class WizardStep1 extends React.Component {
                   <div className="btn-actions-pane-right">
                     <Button
                       color="danger"
-                      onClick={() => deleteDocument(this.state.passportID)}
+                      onClick={() => deleteDocument(passportID)}
                     >
                       Delete
                     </Button>
                   </div>
                 </CardHeader>
                 <CardBody>
-                  <div className="text-center">
+                  <div
+                    className="text-center"
+                    style={{
+                      height: 500,
+                      width: '100%'
+                    }}
+                  >
                     <img
                       alt=""
-                      height="500vh"
                       onClick={() =>
                         this.setState({
                           isOpen: true,
-                          documentID: this.state.passportID
+                          documentID: passportID
                         })
                       }
-                      src={`http://10.7.8.129:9004/document/${this.state.passportID}`}
-                      style={{ cursor: 'pointer' }}
-                      width="60%"
+                      src={`http://10.7.8.129:9004/document/${passportID}`}
+                      style={{
+                        cursor: 'pointer',
+                        'max-width': '100%',
+                        'max-height': '100%'
+                      }}
                     />
                   </div>
                 </CardBody>
@@ -164,17 +187,21 @@ export default class WizardStep1 extends React.Component {
                           <Button
                             className="btn-icon-vertical mb-3 btn-transition btn-block"
                             color="info"
-                            disabled={row.ID === this.state.selfieID}
+                            disabled={row.ID === selfieID}
                             onClick={() => this.handleChangeSelfieID(row.ID)}
                             outline
+                            style={{
+                              height: 80
+                            }}
                           >
                             <img
                               alt=""
                               className=""
-                              height={50}
                               src={`http://10.7.8.129:9004/document/${row.ID}`}
-                              style={{ cursor: 'pointer' }}
-                              width={80}
+                              style={{
+                                'max-width': '100%',
+                                'max-height': '100%'
+                              }}
                             />
                           </Button>
                         </Col>
@@ -199,21 +226,24 @@ export default class WizardStep1 extends React.Component {
                           <Button
                             className="btn-icon-vertical mb-3 btn-transition btn-block"
                             color="info"
-                            disabled={row.ID === this.state.passportID}
+                            disabled={row.ID === passportID}
                             onClick={() =>
                               this.setState({
                                 passportID: row.ID
                               })
                             }
                             outline
+                            style={{
+                              height: 80
+                            }}
                           >
                             <img
                               alt=""
-                              className=""
-                              height={50}
                               src={`http://10.7.8.129:9004/document/${row.ID}`}
-                              style={{ cursor: 'pointer' }}
-                              width={80}
+                              style={{
+                                'max-width': '100%',
+                                'max-height': '100%'
+                              }}
                             />
                           </Button>
                         </Col>

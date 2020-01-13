@@ -48,31 +48,39 @@ class UsersTable extends React.Component {
   };
 
   renderDialog() {
-    const { messagesData } = this.props;
-    if (this.state.modal) {
+    const { messagesData, className } = this.props;
+    const { modal, req } = this.state;
+    if (modal) {
       return (
         <Modal
-          isOpen={this.state.modal}
+          className={className}
           fade={false}
+          isOpen={modal}
           toggle={this.handleClickCloseDialog}
-          className={this.props.className}>
+        >
           <ModalHeader toggle={this.handleClickCloseDialog}>
-            {this.state.req ? 'Request' : 'Response'}
+            {req ? 'Request' : 'Response'}
           </ModalHeader>
           <ModalBody>
             <ReactJson
               src={
-                this.state.req
+                req
                   ? messagesData[this.state.rowIndex].request
                   : messagesData[this.state.rowIndex].response
               }
             />
           </ModalBody>
           <ModalFooter>
-            <Button color="link" onClick={this.handleClickCloseDialog}>
+            <Button
+              color="link"
+              onClick={this.handleClickCloseDialog}
+            >
               Cancel
             </Button>
-            <Button color="primary" onClick={this.handleClickCloseDialog}>
+            <Button
+              color="primary"
+              onClick={this.handleClickCloseDialog}
+            >
               Ok
             </Button>
           </ModalFooter>
@@ -82,16 +90,15 @@ class UsersTable extends React.Component {
   }
 
   render() {
-    const { usersData } = this.props;
-    console.log(usersData);
-
+    const { usersData, match } = this.props;
+    console.log(this.props);
     return (
       <Row>
         <Col md="12">
           <Card className="main-card mb-3">
             <CardBody>
               <ReactTable
-                data={usersData}
+                className="-striped -highlight"
                 columns={[
                   {
                     columns: [
@@ -102,24 +109,20 @@ class UsersTable extends React.Component {
 
                         Cell: row => (
                           <div>
-                            <Link
-                              to={
-                                this.props.location.pathname +
-                                `/${row.value.accountID}`
-                              }>
+                            <Link to={match.path + `/${row.value.accountID}`}>
                               <div className="widget-content p-0">
                                 <div className="widget-content-wrapper">
                                   <div className="widget-content-left mr-3">
                                     <div className="widget-content-left">
                                       <img
-                                        width={52}
+                                        alt=""
                                         className="rounded-circle"
                                         src={
-                                          row !== undefined
+                                          row.value.avatar !== undefined
                                             ? `https://wssdev.nexustls.com/files/file/${row.value.avatar}/medium`
                                             : avatar2
                                         }
-                                        alt=""
+                                        width={52}
                                       />
                                     </div>
                                   </div>
@@ -146,8 +149,8 @@ class UsersTable extends React.Component {
                     ]
                   }
                 ]}
-                defaultPageSize={10}
-                className="-striped -highlight"
+                data={usersData}
+                defaultPageSize={5}
               />
             </CardBody>
           </Card>

@@ -1,5 +1,6 @@
 import * as types from '../../constants/actionType';
 import { tracerAPI } from 'service/api';
+import { errorMessage } from 'helpers/errorMessage';
 
 export function fetchTracersPending() {
   return {
@@ -85,7 +86,7 @@ export function fetchTracers(params) {
         }
       })
       .catch(error => {
-        dispatch(fetchTracersError(error.message));
+        dispatch(fetchTracersError(errorMessage(error)));
       });
   };
 }

@@ -1,5 +1,6 @@
 import * as types from '../../constants/actionType';
 import { sessionAPI } from 'service/api';
+import { errorMessage } from 'helpers/errorMessage';
 
 export function fetchAccountSessionsPending() {
   return {
@@ -36,6 +37,12 @@ export function updateSuspended(params) {
   };
 }
 
+export function deleteSession(sessionID) {
+  return {
+    type: types.SESSION_DELETE,
+    sessionID
+  };
+}
 export function fetchAccountSessions(params) {
   return dispatch => {
     dispatch(fetchAccountSessionsPending());
@@ -43,14 +50,14 @@ export function fetchAccountSessions(params) {
     sessionAPI
       .getAccountSessions(params)
       .then(response => {
-        if (response.data.sessionDataArray !== undefined) {
+        if (response.data.sessions !== undefined) {
           dispatch(fetchAccountSessionsSuccess(response.data));
         } else if (response.data.error !== undefined) {
           dispatch(fetchAccountSessionsError(response.data));
         }
       })
       .catch(error => {
-        dispatch(fetchAccountSessionsError(error.message));
+        dispatch(fetchAccountSessionsError(errorMessage(error)));
       });
   };
 }

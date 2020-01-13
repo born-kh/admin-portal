@@ -1,5 +1,6 @@
 import * as types from '../../constants/actionType';
 import { passportAPI } from 'service/api';
+import { errorMessage } from 'helpers/errorMessage';
 
 export function fetchDocumentsPending() {
   return {
@@ -28,7 +29,6 @@ export function fetchApplicationsPending() {
 }
 
 export function fetchApplicationsSuccess(data, count) {
-  console.log(data, count);
   return {
     type: types.FETCH_ACCOUNTS_SUCCESS,
     applications: data.applications,
@@ -69,6 +69,14 @@ export function deleteDocument(documentID) {
   };
 }
 
+export function deleteApplication(applicationID) {
+  console.log(applicationID);
+  return {
+    type: types.APPLICATION_DELETE,
+    applicationID
+  };
+}
+
 export function fetchApplications(params) {
   console.log(params);
   return dispatch => {
@@ -86,33 +94,26 @@ export function fetchApplications(params) {
         }
       })
       .catch(error => {
-        // console.log('error', error.response);
-        // if (error.response.status === 401) {
-        //   localStorage.clear();
-        //   localStorage.setItem('isAuthenticated', false);
-        // }
-
-        return dispatch(fetchApplicationsError(error.message));
+        return dispatch(fetchApplicationsError(errorMessage(error)));
       });
   };
 }
 
 export function fetchApplicationSearch(params) {
+  console.log('fetchApplicationSearch');
   return dispatch => {
     dispatch(fetchApplicationSearchPending());
     passportAPI
       .getApplicationsByName(params)
       .then(response => {
         if (response.data.applications !== undefined) {
-          console.log('Search Applications', response.data.applications);
           return dispatch(fetchApplicationSearchSuccess(response.data));
         } else {
           return dispatch(fetchApplicationSearchError(response));
         }
       })
       .catch(error => {
-        console.log('error', error);
-        return dispatch(fetchApplicationSearchError(error.message));
+        return dispatch(fetchApplicationSearchError(errorMessage(error)));
       });
   };
 }
@@ -124,23 +125,13 @@ export function fetchDocuments(params) {
       .getDocuments(params)
       .then(response => {
         if (response.data !== undefined) {
-          console.log('documnets', response);
-
-          // var documents = Object.keys(response.data.accountData).map(function(
-          //   key
-          // ) {
-          //   return [Number(key), response.data.accountData[key]];
-          // });
-          return dispatch(
-            fetchDocumentsSuccess(response.data.result.documents)
-          );
+          return dispatch(fetchDocumentsSuccess(response.data.documents));
         } else {
           return dispatch(fetchDocumentsError(response.data));
         }
       })
       .catch(error => {
-        console.log('error', error);
-        return dispatch(fetchDocumentsError(error.message));
+        return dispatch(fetchDocumentsError(errorMessage(error)));
       });
   };
 }

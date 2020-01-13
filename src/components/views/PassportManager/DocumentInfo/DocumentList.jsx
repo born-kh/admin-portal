@@ -11,16 +11,8 @@ class DocumentList extends React.Component {
     };
   }
 
-  // componentDidMount() {
-  //   let params = {
-  //     accountID: this.props.account.accountID
-  //   };
-  //   this.props.fetchDocuments(params);
-  // }
-
   render() {
     const { documents, pending } = this.props;
-    console.log(documents);
     return (
       <Fragment>
         <Col
@@ -51,7 +43,6 @@ class DocumentList extends React.Component {
                   </thead>
 
                   {documents.map((document, index) => {
-                    console.log(document);
                     return (
                       <tbody>
                         <tr>
@@ -92,8 +83,11 @@ class DocumentList extends React.Component {
                                 })
                               }
                               src={`http://10.7.8.129:9004/document/${document.ID}`}
-                              style={{ cursor: 'pointer' }}
-                              width="80%"
+                              style={{
+                                cursor: 'pointer',
+                                'max-width': '100%',
+                                'max-height': '100%'
+                              }}
                             />
                           </td>
                         </tr>

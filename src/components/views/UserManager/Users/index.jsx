@@ -6,40 +6,26 @@ import { withRouter } from 'react-router-dom';
 import PageTitle from 'components/common/PageTitle';
 
 import SearchInput from 'components/common/SearchInput';
-
-import { fetchUsers } from 'store/actions/userActions';
-import UsersTable from './components/UsersTable';
 import Loader from 'react-loaders';
+import { fetchUsers, fetchUsersPending } from 'store/actions/userActions';
+import UsersTable from './UsersTable';
 import {
   Col,
   Card,
   CardBody,
   CardHeader,
-  ListGroupItem,
-  ListGroup
+  Row,
+  Input,
+  FormGroup,
+  Button
 } from 'reactstrap';
-
 import { DropdownList } from 'react-widgets';
 import queryString from 'query-string';
 import PropTypes from 'prop-types';
 import LoaderOverlay from 'components/common/LoaderOverlay';
-
-const rejectMessages = [
-  'Фотография паспорта размытая, невозможно рассмотреть информацию',
-  'Отсутствует фотография паспорта',
-  'Отсутствует сэлфи пользователя',
-  'Отсутствует фотография второй стороны паспорта гражданина Республики Таджикистан',
-  'Отсутствует фотография лицевой стороны паспорта гражданина Республики Таджикистан',
-  'Загруженный документ не является паспортом гражданина Республики Таджикистан',
-  'Паспорт в кадре находится не полностью',
-  'Фото паспорта сделано в темном помещении, невозможно различить данные',
-  'Фото паспорта сделано не с реального документа а является фотографией скриншота с другого устройства',
-  'Фото паспорта является цветной или черно-белой копией',
-  'Фото гражданина на паспорте не совпадает с сэлфи пользователя.',
-  'Истек срок действия загруженного документа',
-  'На фотографии документа присутствуют блики',
-  'Сэлфи не является фотографией пользователя, а снимком с фотографии. '
-];
+import ApplicationTable from '../../PassportManager/SearchAccount/SearchTable';
+import { fetchApplicationSearch } from 'store/actions/passportActions';
+import { passportAPI } from 'service/api';
 
 const types = ['username', 'phone', 'email', 'accountID'];
 
@@ -47,44 +33,151 @@ class Users extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: [],
-      searchType: 'username'
+      searchUserList: [],
+      firstName: '',
+      lastName: '',
+      phoneNumber: '',
+      params: {
+        search: '',
+        type: ''
+      }
     };
 
-    this.handleOnSubmit = this.handleOnSubmit.bind(this);
+    this.handleOnOnSubmit = this.handleOnOnSubmit.bind(this);
   }
 
-  componentDidMount() {
-    const values = queryString.parse(this.props.location.search);
+  async handleOnOnSubmit(event) {
+    const {
+      search,
+      match,
+      history,
+      fetchUsers,
+      fetchUsersPending
+    } = this.props;
+    const { searchUserList } = this.state;
+    const searchList = this.state.searchUserList;
 
-    if (values.q !== undefined) {
-      const params = {
-        search: values.q,
-        type: values.searchType
-      };
+    const { firstName, lastName, phoneNumber } = this.state;
+    let name = {
+      firstName: firstName,
+      lastName: lastName
+    };
+    let params = {
+      name: name,
+      phone: phoneNumber
+    };
 
-      this.props.fetchUsers(params);
+    if (firstName !== '' || lastName !== '' || phoneNumber !== '') {
+      try {
+        const response = await passportAPI.getApplicationsByName(params);
+        console.log(response);
+        await response.data.applications.map(application => {
+          searchUserList.push({
+            type: 'accountID',
+            search: application.accountID
+          });
+        });
+        this.props.fetchUsers(searchUserList);
+      } catch {
+        console.log('error in fetching posts');
+      }
+    } else {
+      if (searchUserList.length > 0) {
+        this.props.fetchUsers(searchUserList);
+      }
     }
   }
 
-  handleOnSubmit(event) {
-    if (event.key === 'Enter') {
-      let search = '?q=' + this.props.search;
-      let searchType = '&searchType=' + this.state.searchType;
+  handleChangeApplicationSearch = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  };
 
-      this.props.history.push(this.props.match.url + search + searchType);
-      let params = {
-        search: this.props.search,
-        type: this.state.searchType
+  handleChange = event => {
+    const value = event.target.value;
+    const name = event.target.name;
+    if (value.length === 0) {
+      this.setState({
+        params: { type: '', search: '' }
+      });
+    } else {
+      this.setState({
+        params: { type: name, search: value }
+      });
+    }
+  };
+
+  onBlurUserInput = event => {
+    var searchUserList = this.state.searchUserList;
+    const findIndex = this.state.searchUserList.findIndex(
+      obj => obj.type === event.target.name
+    );
+    if (findIndex === -1) {
+      searchUserList.push({
+        type: event.target.name,
+        search: event.target.value
+      });
+    } else {
+      searchUserList[findIndex] = {
+        type: event.target.name,
+        search: event.target.value
       };
-      this.props.fetchUsers(params);
+    }
+    searchUserList = searchUserList.filter(obj => obj.search !== '');
+    this.setState({ searchUserList });
+  };
+
+  renderApplicationTable() {
+    const { pendingApplication, errorApplication, applications } = this.props;
+    console.log(this.props);
+
+    if (pendingApplication) {
+      return (
+        <div className="text-center">
+          <Loader type="ball-scale" />
+        </div>
+      );
+    }
+    if (errorApplication) {
+      return (
+        <div className="widget-content">
+          <div className="widget-content-wrapper">
+            <div className="widget-content-right ml-0 mr-3">
+              <div className="widget-subheading">{errorApplication}</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (applications.length === 0) {
+      return (
+        <div className="widget-content">
+          <div className="widget-content-wrapper">
+            <div className="widget-content-right ml-0 mr-3">
+              <div className="widget-subheading">There are no applications</div>
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      return <ApplicationTable
+        applications={applications}
+        rows={5}
+             />;
     }
   }
 
-  renderTable() {
-    const { pending, error } = this.props;
+  renderUserTable() {
+    const { pending, error, users } = this.props;
+
     if (pending) {
-      return <LoaderOverlay />;
+      return (
+        <div className="text-center">
+          <Loader type="ball-scale" />
+        </div>
+      );
     }
     if (error) {
       return (
@@ -98,7 +191,7 @@ class Users extends Component {
       );
     }
 
-    if (this.props.users.length === 0) {
+    if (users.length === 0) {
       return (
         <div className="widget-content">
           <div className="widget-content-wrapper">
@@ -109,10 +202,12 @@ class Users extends Component {
         </div>
       );
     } else {
-      return <UsersTable usersData={this.props.users} />;
+      return <UsersTable usersData={users} />;
     }
   }
+
   render() {
+    console.log(this.state);
     return (
       <Fragment>
         <ReactCSSTransitionGroup
@@ -128,8 +223,106 @@ class Users extends Component {
             icon="pe-7s-user icon-gradient bg-night-fade"
             subheading=""
           />
-
           <Col md="12">
+            <Card className="main-card mb-3">
+              <CardHeader className="card-header-tab">
+                Advanced search
+              </CardHeader>
+              <CardBody>
+                <Row>
+                  <Col md={2}>
+                    <FormGroup>
+                      <Input
+                        id="usernameID"
+                        name="username"
+                        onBlur={this.onBlurUserInput}
+                        onChange={this.handleOnChange}
+                        placeholder="UserName"
+                        type="text"
+                      />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Input
+                        id="phoneID"
+                        name="phone"
+                        onBlur={this.onBlurUserInput}
+                        onChange={this.handleOnChange}
+                        placeholder="Phone Number"
+                        type="text"
+                      />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Input
+                        id="accountID"
+                        name="accountID"
+                        onBlur={this.onBlurUserInput}
+                        onChange={this.handleOnChange}
+                        placeholder="Account ID"
+                        type="text"
+                      />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Input
+                        id="emailID"
+                        name="email"
+                        onBlur={this.onBlurUserInput}
+                        onChange={this.handleOnChange}
+                        placeholder="Email"
+                        type="text"
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col md={2}>
+                    <FormGroup>
+                      <Input
+                        id="firstNameID"
+                        name="firstName"
+                        onChange={this.handleChangeApplicationSearch}
+                        placeholder="First Name"
+                        type="text"
+                      />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Input
+                        id="lastNameID"
+                        name="lastName"
+                        onChange={this.handleChangeApplicationSearch}
+                        placeholder="Last Name"
+                        type="text"
+                      />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <Input
+                        id="passportID"
+                        name="passportID"
+                        onChange={this.handleChangeApplicationSearch}
+                        placeholder="Passport ID"
+                        type="text"
+                      />
+                    </FormGroup>
+                    <Button
+                      className={
+                        'border-0 btn-pill btn-wide  btn-transition active'
+                      }
+                      color="alternate"
+                      onClick={this.handleOnOnSubmit}
+                      outline
+                    >
+                      Search
+                    </Button>
+                  </Col>
+                </Row>
+                {this.renderUserTable()}
+              </CardBody>
+            </Card>
+          </Col>
+
+          {/* <Col md="12">
             <Card className="main-card mb-3">
               <CardHeader className="card-header-tab">
                 <div className="card-header-title font-size-lg text-capitalize font-weight-normal">
@@ -146,15 +339,17 @@ class Users extends Component {
                     onChange={value => this.setState({ searchType: value })}
                     onCreate={name => this.handleCreate(name)}
                     textField="name"
-                    value={this.state.searchType}
+                    value={searchType}
                     width="200"
                   />
                 </Col>
+
+              
               </CardHeader>
 
-              <CardBody>{this.renderTable()}</CardBody>
+              <CardBody></CardBody>
             </Card>
-          </Col>
+          </Col> */}
         </ReactCSSTransitionGroup>
       </Fragment>
     );
@@ -169,14 +364,18 @@ Users.propTypes = {
 const mapStateToProps = state => ({
   users: state.user.users,
   search: state.settings.search,
-  pending: state.user.pending,
-  error: state.user.error,
+  pending: state.user.pendingUser,
+  error: state.user.errorUser,
+  applications: state.passport.applications,
+  errorApplication: state.passport.error,
+  pendingApplication: state.passport.pending,
   profile: state.auth.profile,
   session: state.auth.session
 });
 
 const mapDispatchToProps = dispatch => {
   return {
+    fetchApplicationSearch: params => dispatch(fetchApplicationSearch(params)),
     fetchUsers: params => dispatch(fetchUsers(params))
   };
 };

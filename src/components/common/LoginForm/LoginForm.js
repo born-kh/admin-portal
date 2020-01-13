@@ -1,12 +1,14 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { Col, Row, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import { connect } from 'react-redux';
+import { Col, Row, Button, Form, FormGroup, Label, Alert } from 'reactstrap';
 import InputForm from 'components/common/Input';
 import { required, maxLengthCreator } from 'helpers';
+import LaddaButton, { ZOOM_OUT } from 'react-ladda';
 let LoginForm = props => {
-  const { handleSubmit, pristine, submitting } = props;
+  const { handleSubmit, pristine, submitting, error } = props;
+  console.log('xaxasx', props.error);
 
-  const maxLength20 = maxLengthCreator(20);
   return (
     <div>
       <Form onSubmit={handleSubmit}>
@@ -19,7 +21,7 @@ let LoginForm = props => {
                 name="username"
                 placeholder="Username here..."
                 type="text"
-                validate={[required, maxLength20]}
+                validate={required}
               />
             </FormGroup>
           </Col>
@@ -31,42 +33,13 @@ let LoginForm = props => {
                 name="password"
                 placeholder="Password here..."
                 type="password"
-                validate={[required]}
+                validate={required}
               />
             </FormGroup>
           </Col>
         </Row>
-        <FormGroup check>
-          <Input
-            id="exampleCheck"
-            name="check"
-            type="checkbox"
-          />
-          <Label
-            check
-            for="exampleCheck"
-          >
-            Keep me logged in
-          </Label>
-        </FormGroup>
+
         <Row className="divider" />
-        <div className="d-flex align-items-center">
-          <div className="ml-auto">
-            <a
-              className="btn-lg btn btn-link"
-              href="javascript:void(0);"
-            >
-              Recover Password
-            </a>{' '}
-            <Button
-              color="primary"
-              disabled={pristine || submitting}
-              size="lg"
-            >
-              Login to Dashboard
-            </Button>
-          </div>
-        </div>
       </Form>
     </div>
   );
@@ -75,4 +48,9 @@ let LoginForm = props => {
 LoginForm = reduxForm({
   form: 'login'
 })(LoginForm);
-export default LoginForm;
+
+const mapStateToProps = state => ({
+  error: state.auth.error
+});
+
+export default connect(mapStateToProps)(LoginForm);

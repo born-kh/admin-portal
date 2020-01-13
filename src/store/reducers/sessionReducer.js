@@ -1,7 +1,7 @@
 import * as types from '../../constants/actionType';
 
 const initState = {
-  sessionDataArray: [],
+  sessions: [],
   blockList: [],
   error: null,
   pending: false
@@ -21,7 +21,7 @@ const sessionReducer = (state = initState, action) => {
         ...state,
 
         pending: false,
-        sessionDataArray: action.result.sessionDataArray,
+        sessions: action.result.sessions,
         blockList: action.result.blocklist
       };
     case types.FETCH_ACCOUNT_SESSIONS_ERROR:
@@ -33,26 +33,39 @@ const sessionReducer = (state = initState, action) => {
       };
 
     case types.UPDATE_TRACING:
-      let sessionDataArray = [...state.sessionDataArray];
+      var sessions = [...state.sessions];
 
-      sessionDataArray[action.params.index].opts = {
-        ...sessionDataArray[action.params.index].opts,
+      sessions[action.params.index].options = {
+        ...sessions[action.params.index].options,
         tracing: action.params.tracing
       };
 
       return {
         ...state,
-        sessionDataArray
+        sessions
       };
 
     case types.UPDATE_SUSPENDED:
-      sessionDataArray = [...state.sessionDataArray];
+      sessions = [...state.sessions];
+      console.log(action.params.isSuspended);
 
-      sessionDataArray[action.params.index].suspended = action.params.suspended;
+      sessions[action.params.index].isSuspended = action.params.isSuspended;
 
       return {
         ...state,
-        sessionDataArray
+        sessions
+      };
+
+    case types.SESSION_DELETE:
+      sessions = [...state.sessions];
+
+      sessions = sessions.filter(
+        session => session.meta.sessionID !== action.sessionID
+      );
+
+      return {
+        ...state,
+        sessions
       };
 
     default:

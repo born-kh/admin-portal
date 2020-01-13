@@ -20,10 +20,15 @@ import {
 
 import generator from 'generate-password';
 import { connect } from 'react-redux';
-import SessionTable from '../SessionTable';
+import SessionTable from './SessionTable';
 import ReactTable from 'react-table';
 import { userAPI } from 'service/api';
 import { toast, Bounce } from 'react-toastify';
+import LoaderOverlay from 'components/common/LoaderOverlay';
+import ApplicationTable from '../../PassportManager/SearchAccount/SearchTable';
+import { fetchApplicationsByAccount } from 'store/actions/userActions';
+
+import Loader from 'react-loaders';
 class AccountProfile extends Component {
   state = {
     password: '',
@@ -31,7 +36,7 @@ class AccountProfile extends Component {
   };
   renderPhones() {
     const { userInfo } = this.props;
-    if (userInfo.phones.length === 0) {
+    if (!userInfo.phones || userInfo.phones.length === 0) {
       return (
         <div className="dropdown-menu-header">
           <div className="dropdown-menu-header-inner bg-primary">
@@ -71,7 +76,7 @@ class AccountProfile extends Component {
 
   renderEmails() {
     const { userInfo } = this.props;
-    if (userInfo.emails.length === 0) {
+    if (!userInfo.emails || userInfo.emails.length === 0) {
       return (
         <div className="dropdown-menu-header">
           <div className="dropdown-menu-header-inner bg-primary">
@@ -113,7 +118,7 @@ class AccountProfile extends Component {
 
   renderBlockList() {
     const { blockList } = this.props;
-    if (blockList.length === 0) {
+    if (!blockList || blockList.length === 0) {
       return (
         <div className="dropdown-menu-header">
           <div className="dropdown-menu-header-inner bg-primary">
@@ -183,18 +188,25 @@ class AccountProfile extends Component {
       })
     });
   };
+  componentDidMount() {
+    this.props.fetchApllicationsByAccount({
+      accountID: this.props.userInfo.accountID
+    });
+  }
 
   handleSetPassword = event => {
+    const { userInfo } = this.props;
+    const { password } = this.state;
     this.setState({ loading: true });
     let params = {
-      password: this.state.password,
-      accountID: this.props.userInfo.accountID
+      password: password,
+      accountID: userInfo.accountID
     };
+    console.log(params);
 
     userAPI
       .setPassword(params)
       .then(response => {
-        console.log(response);
         if (response.status === 200) {
           this.setState({ loading: false, password: '' });
           toast('success', {
@@ -218,8 +230,54 @@ class AccountProfile extends Component {
       });
   };
 
-  render() {
+  renderTable() {
+    const { pending, error, applications } = this.props;
     console.log(this.props);
+
+    if (pending) {
+      return (
+        <div className="text-center">
+          <Loader type="ball-scale" />
+        </div>
+      );
+    }
+    if (error) {
+      return (
+        <div className="widget-content">
+          <div className="widget-content-wrapper">
+            <div className="widget-content-right ml-0 mr-3">
+              <div className="widget-subheading">{error}</div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (applications.length === 0) {
+      return (
+        <div className="widget-content">
+          <div className="widget-content-wrapper">
+            <div className="widget-content-right ml-0 mr-3">
+              <div className="widget-subheading">There are no applications</div>
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      return <ApplicationTable
+        applications={applications}
+        rows={5}
+             />;
+    }
+  }
+
+  render() {
+    const { userInfo } = this.props;
+    const { password, loading } = this.state;
+    console.log(userInfo);
+    if (!userInfo) {
+      return <LoaderOverlay />;
+    }
     return (
       <Fragment>
         <ReactCSSTransitionGroup
@@ -253,8 +311,8 @@ class AccountProfile extends Component {
                             <img
                               alt="Avatar 5"
                               src={
-                                this.props.userInfo.avatar !== undefined
-                                  ? `https://wssdev.nexustls.com/files/file/${this.props.userInfo.avatar}/medium`
+                                userInfo && userInfo.avatar !== undefined
+                                  ? `https://wssdev.nexustls.com/files/file/${userInfo.avatar}/medium`
                                   : avatar6
                               }
                             />
@@ -262,8 +320,7 @@ class AccountProfile extends Component {
                         </div>
                         <div>
                           <h5 className="menu-header-title">
-                            {this.props.userInfo.firstName}{' '}
-                            {this.props.userInfo.lastName}
+                            {userInfo.firstName} {userInfo.lastName}
                           </h5>
                         </div>
                       </div>
@@ -273,19 +330,19 @@ class AccountProfile extends Component {
                     <ListGroup flush>
                       <ListGroupItem>
                         <b className="text-dark">First Name: </b>
-                        {this.props.userInfo.firstName}
+                        {userInfo.firstName}
                       </ListGroupItem>
                       <ListGroupItem>
                         <b className="text-dark">Last Name: </b>
-                        {this.props.userInfo.lastName}
+                        {userInfo.lastName}
                       </ListGroupItem>
                       <ListGroupItem>
                         <b className="text-dark">User Name: </b>
-                        {this.props.userInfo.username}
+                        {userInfo.username}
                       </ListGroupItem>
                       <ListGroupItem>
                         <b className="text-dark">Account ID: </b>
-                        {this.props.userInfo.accountID}
+                        {userInfo.accountID}
                       </ListGroupItem>
                     </ListGroup>
                   </CardBody>
@@ -306,7 +363,7 @@ class AccountProfile extends Component {
                       className="mb-2"
                       onChange={this.handleChangePassword}
                       placeholder="password"
-                      value={this.state.password}
+                      value={password}
                     />
                     <Button
                       className="mr-2 border-0 btn-transition"
@@ -320,8 +377,8 @@ class AccountProfile extends Component {
                     <LaddaButton
                       className="btn btn-shadow btn-pill btn-focus"
                       data-style={ZOOM_IN}
-                      disabled={!this.state.password}
-                      loading={this.state.loading}
+                      disabled={!password}
+                      loading={loading}
                       onClick={this.handleSetPassword}
                     >
                       Change password
@@ -358,7 +415,7 @@ class AccountProfile extends Component {
                 <Card className="card-shadow-primary card-border mb-3">
                   <CardHeader> Session Table</CardHeader>
                   <CardBody className="p-0">
-                    <SessionTable accountID={this.props.userInfo.accountID} />
+                    <SessionTable accountID={userInfo.accountID} />
                   </CardBody>
                 </Card>
               </Col>
@@ -371,6 +428,16 @@ class AccountProfile extends Component {
                 <Card className="card-shadow-primary card-border mb-3">
                   <CardHeader> Black List</CardHeader>
                   <CardBody className="p-0">{this.renderBlockList()}</CardBody>
+                </Card>
+              </Col>
+              <Col
+                lg="6"
+                md="12"
+                xl="9"
+              >
+                <Card className="card-shadow-primary card-border mb-3">
+                  <CardHeader> Application Table</CardHeader>
+                  <CardBody className="p-0">{this.renderTable()}</CardBody>
                 </Card>
               </Col>
             </Row>
@@ -388,8 +455,20 @@ AccountProfile.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    blockList: state.session.blockList
+    blockList: state.session.blockList,
+    applications: state.user.applications,
+    pending: state.user.pendingApplication,
+    error: state.user.errorApplication
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchApllicationsByAccount: params =>
+      dispatch(fetchApplicationsByAccount(params))
   };
 };
 
-export default connect(mapStateToProps)(AccountProfile);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AccountProfile);

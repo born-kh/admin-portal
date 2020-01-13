@@ -4,17 +4,20 @@ import PageTitle from 'components/common/PageTitle';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import AccountProfile from './components/AccountProfile';
+import AccountProfile from './AccountProfile';
+import {
+  fetchUsers,
+  fetchApplicationsByAccount
+} from 'store/actions/userActions';
 
 class AccountInfo extends React.Component {
   render() {
-    // console.log(this.props.ownProps.match.params.accountID);
     return (
       <Fragment>
         <PageTitle
           heading=""
-          subheading=""
           icon="pe-7s-science icon-gradient bg-happy-itmeo"
+          subheading=""
         />
 
         <AccountProfile userInfo={this.props.user} />
@@ -31,5 +34,15 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchApllicationsByAccount: params =>
+      dispatch(fetchApplicationsByAccount(params))
+  };
+};
+
 const WithRouterAccountInfo = withRouter(AccountInfo);
-export default connect(mapStateToProps)(WithRouterAccountInfo);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WithRouterAccountInfo);

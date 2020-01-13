@@ -22,8 +22,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DateTimeRangeContainer from 'react-advanced-datetimerange-picker';
 import moment from 'moment';
 import SearchInput from 'components/common/SearchInput';
-import MessageTable from './components/MessageTable';
-import ErrorTable from './components/ErrorTable';
+import MessageTable from './MessageTable';
+import ErrorTable from './ErrorTable';
 import Loader from 'react-loaders';
 
 class Tracers extends Component {
@@ -68,7 +68,10 @@ class Tracers extends Component {
         <div className="loader-container">
           <div className="loader-container-inner">
             <div className="text-center">
-              <Loader type="ball-clip-rotate-multiple" active />
+              <Loader
+                active
+                type="ball-clip-rotate-multiple"
+              />
             </div>
             <h6 className="mt-5">
               Please wait while we load all the Components examples
@@ -97,8 +100,12 @@ class Tracers extends Component {
       <Tabs
         defaultActiveKey="1"
         renderTabBar={() => <ScrollableInkTabBar />}
-        renderTabContent={() => <TabContent />}>
-        <TabPane tab="Messages" key="1">
+        renderTabContent={() => <TabContent />}
+      >
+        <TabPane
+          key="1"
+          tab="Messages"
+        >
           {this.props.messages.length === 0 ? (
             <div className="widget-content">
               <div className="widget-content-wrapper">
@@ -111,7 +118,10 @@ class Tracers extends Component {
             <MessageTable messagesData={this.props.messages} />
           )}
         </TabPane>
-        <TabPane tab="Errors" key="2">
+        <TabPane
+          key="2"
+          tab="Errors"
+        >
           {this.props.errors.length === 0 ? (
             <div className="widget-content">
               <div className="widget-content-wrapper">
@@ -177,15 +187,16 @@ class Tracers extends Component {
       <Fragment>
         <ReactCSSTransitionGroup
           component="div"
-          transitionName="TabsAnimation"
-          transitionAppear={true}
+          transitionAppear
           transitionAppearTimeout={0}
           transitionEnter={false}
-          transitionLeave={false}>
+          transitionLeave={false}
+          transitionName="TabsAnimation"
+        >
           <PageTitle
             heading="Tracers"
-            subheading=""
             icon="pe-7s-server icon-gradient bg-night-fade"
+            subheading=""
           />
 
           <Col md="12">
@@ -193,25 +204,29 @@ class Tracers extends Component {
               <CardHeader>
                 <div className="card-header-title font-size-lg text-capitalize font-weight-normal">
                   <SearchInput
-                    placeholder="Search tracer"
                     isActive={false}
                     keyPressed={this.handleOnSubmit}
+                    placeholder="Search tracer"
                   />
                 </div>
 
                 <DateTimeRangeContainer
-                  selected={ranges}
-                  ranges={ranges}
-                  start={this.state.start}
+                  applyCallback={this.applyCallback}
+                  center
                   end={this.state.end}
                   local={local}
                   maxDate={maxDate}
-                  center={true}
-                  applyCallback={this.applyCallback}>
+                  ranges={ranges}
+                  selected={ranges}
+                  start={this.state.start}
+                >
                   <InputGroup>
                     <InputGroupAddon addonType="prepend">
                       <div className="input-group-text">
-                        <FontAwesomeIcon icon={faCalendarAlt} hover={true} />
+                        <FontAwesomeIcon
+                          hover
+                          icon={faCalendarAlt}
+                        />
                       </div>
                     </InputGroupAddon>
                   </InputGroup>

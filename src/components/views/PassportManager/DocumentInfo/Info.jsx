@@ -9,13 +9,6 @@ import {
 import { dateFormatter } from 'helpers';
 
 class Info extends React.Component {
-  // componentDidMount() {
-  //   let params = {
-  //     accountID: this.props.account.accountID
-  //   };
-  //   this.props.fetchDocuments(params);
-  // }
-
   render() {
     const { application } = this.props;
 

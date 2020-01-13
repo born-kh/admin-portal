@@ -8,7 +8,7 @@ import {
   CardBody,
   CardTitle
 } from 'reactstrap';
-import DemoImg from '../../../../../../../assets/utils/images/originals/fence-small.jpg';
+
 import { Table } from 'reactstrap';
 import {
   InputGroup,
@@ -25,9 +25,7 @@ import {
   AvForm,
   AvGroup,
   AvInput,
-  AvFeedback,
-  AvRadioGroup,
-  AvRadio
+  AvFeedback
 } from 'availity-reactstrap-validation';
 
 import DatePicker from 'react-datepicker';
@@ -56,7 +54,7 @@ export default class WizardStep1 extends React.Component {
   };
 
   editDocument = () => {
-    const { editFieldsDocument, handleChangeFields } = this.props;
+    const { editFieldsDocument } = this.props;
 
     const document = editFieldsDocument;
     if (document !== undefined) {
@@ -91,10 +89,12 @@ export default class WizardStep1 extends React.Component {
     const {
       passportDocuments,
       handleChangeFields,
-      editFieldsDocument
+      editFieldsDocument,
+      types
     } = this.props;
 
-    const { types } = this.props;
+    const { documentID } = this.state;
+
     const pageTypes = types[1].pageFields;
     var pageFields = [];
     for (let key in pageTypes) {
@@ -117,7 +117,7 @@ export default class WizardStep1 extends React.Component {
       <Fragment>
         {this.state.isOpen && (
           <Lightbox
-            mainSrc={`http://10.7.8.129:9004/document/${this.state.documentID}`}
+            mainSrc={`http://10.7.8.129:9004/document/${documentID}`}
             onCloseRequest={() => this.setState({ isOpen: false })}
           />
         )}
@@ -148,7 +148,10 @@ export default class WizardStep1 extends React.Component {
                                 className="form-control"
                                 name="issueDate"
                                 onChange={val =>
-                                  handleChangeFields(val, 'issue_date')
+                                  handleChangeFields(
+                                    val.toISOString().split('.')[0] + 'Z',
+                                    'issue_date'
+                                  )
                                 }
                                 selected={
                                   new Date(editFieldsDocument.fields.issue_date)
@@ -170,7 +173,10 @@ export default class WizardStep1 extends React.Component {
                               <DatePicker
                                 className="form-control"
                                 onChange={val =>
-                                  handleChangeFields(val, 'expiration_date')
+                                  handleChangeFields(
+                                    val.toISOString().split('.')[0] + 'Z',
+                                    'expiration_date'
+                                  )
                                 }
                                 selected={
                                   new Date(
@@ -193,7 +199,10 @@ export default class WizardStep1 extends React.Component {
                               <DatePicker
                                 className="form-control"
                                 onChange={val =>
-                                  handleChangeFields(val, 'date_of_birth')
+                                  handleChangeFields(
+                                    val.toISOString().split('.')[0] + 'Z',
+                                    'date_of_birth'
+                                  )
                                 }
                                 selected={
                                   new Date(
@@ -360,10 +369,15 @@ export default class WizardStep1 extends React.Component {
                   </div>
                 </CardHeader>
                 <CardBody>
-                  <div className="text-center">
+                  <div
+                    className="text-center"
+                    style={{
+                      height: 500,
+                      width: '100%'
+                    }}
+                  >
                     <img
                       alt=""
-                      height="500vh"
                       onClick={() =>
                         this.setState({
                           isOpen: true,
@@ -371,8 +385,11 @@ export default class WizardStep1 extends React.Component {
                         })
                       }
                       src={`http://10.7.8.129:9004/document/${passportDocuments[0].ID}`}
-                      style={{ cursor: 'pointer' }}
-                      width="60%"
+                      style={{
+                        cursor: 'pointer',
+                        'max-width': '100%',
+                        'max-height': '100%'
+                      }}
                     />
                   </div>
                 </CardBody>

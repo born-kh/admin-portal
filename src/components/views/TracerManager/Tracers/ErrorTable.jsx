@@ -18,7 +18,7 @@ import {
 import ReactTable from 'react-table';
 import { dateFormatter } from 'helpers';
 
-class MessageTable extends React.Component {
+class ErrorTable extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -46,31 +46,39 @@ class MessageTable extends React.Component {
   };
 
   renderDialog() {
-    const { messagesData } = this.props;
-    if (this.state.modal) {
+    const { errorsData, className } = this.props;
+    const { modal, req, rowIndex } = this.state;
+    if (modal) {
       return (
         <Modal
-          isOpen={this.state.modal}
+          className={className}
           fade={false}
+          isOpen={modal}
           toggle={this.handleClickCloseDialog}
-          className={this.props.className}>
+        >
           <ModalHeader toggle={this.handleClickCloseDialog}>
-            {this.state.req ? 'Request' : 'Response'}
+            {req ? 'Request' : 'Response'}
           </ModalHeader>
           <ModalBody>
             <ReactJson
               src={
-                this.state.req
-                  ? messagesData[this.state.rowIndex].request
-                  : messagesData[this.state.rowIndex].response
+                req
+                  ? errorsData[rowIndex].request
+                  : errorsData[rowIndex].response
               }
             />
           </ModalBody>
           <ModalFooter>
-            <Button color="link" onClick={this.handleClickCloseDialog}>
+            <Button
+              color="link"
+              onClick={this.handleClickCloseDialog}
+            >
               Cancel
             </Button>
-            <Button color="primary" onClick={this.handleClickCloseDialog}>
+            <Button
+              color="primary"
+              onClick={this.handleClickCloseDialog}
+            >
               Ok
             </Button>
           </ModalFooter>
@@ -80,7 +88,7 @@ class MessageTable extends React.Component {
   }
 
   render() {
-    const { messagesData } = this.props;
+    const { errorsData } = this.props;
 
     return (
       <Row>
@@ -88,7 +96,7 @@ class MessageTable extends React.Component {
           <Card className="main-card mb-3">
             <CardBody>
               <ReactTable
-                data={messagesData}
+                className="-striped -highlight"
                 columns={[
                   {
                     columns: [
@@ -120,7 +128,8 @@ class MessageTable extends React.Component {
                               color="info"
                               onClick={() =>
                                 this.handleClickOpenDialog(row.index, true)
-                              }>
+                              }
+                            >
                               <i className="pe-7s-science btn-icon-wrapper">
                                 {' '}
                               </i>
@@ -134,13 +143,13 @@ class MessageTable extends React.Component {
 
                         Cell: row => (
                           <div className="d-block w-100 text-center">
-                            
                             <Button
                               className="mb-2 mr-2 btn-icon"
                               color="info"
                               onClick={() =>
                                 this.handleClickOpenDialog(row.index, false)
-                              }>
+                              }
+                            >
                               <i className="pe-7s-science btn-icon-wrapper">
                                 {' '}
                               </i>
@@ -152,8 +161,8 @@ class MessageTable extends React.Component {
                     ]
                   }
                 ]}
+                data={errorsData}
                 defaultPageSize={10}
-                className="-striped -highlight"
               />
               {this.renderDialog()}
             </CardBody>
@@ -164,4 +173,4 @@ class MessageTable extends React.Component {
   }
 }
 
-export default MessageTable;
+export default ErrorTable;

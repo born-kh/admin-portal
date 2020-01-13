@@ -5,14 +5,14 @@ import { Row, Col, Card, CardBody, Button } from 'reactstrap';
 import ReactTable from 'react-table';
 import { dateFormatter } from 'helpers';
 
-class SearchTable extends React.Component {
+class ApplicationTable extends React.Component {
   constructor() {
     super();
     this.state = {};
   }
 
   render() {
-    const { searchData } = this.props;
+    const { applications, rows } = this.props;
 
     return (
       <Row>
@@ -73,12 +73,34 @@ class SearchTable extends React.Component {
                         Header: 'Submitted At',
                         accessor: 'submittedAt',
                         Cell: row => dateFormatter(row.value)
+                      },
+                      {
+                        Header: 'Info',
+                        id: 'row',
+                        accessor: d => d,
+
+                        Cell: row => (
+                          <div className="d-block w-100 text-center">
+                            <Link
+                              to={
+                                '/passport-manager/search' + `/${row.value.ID}`
+                              }
+                            >
+                              <Button
+                                className="mb-2 mr-2 btn-icon"
+                                color="info"
+                              >
+                                Info
+                              </Button>
+                            </Link>
+                          </div>
+                        )
                       }
                     ]
                   }
                 ]}
-                data={searchData}
-                defaultPageSize={10}
+                data={applications}
+                defaultPageSize={rows}
                 enabled
                 manual
                 showPagination
@@ -93,4 +115,4 @@ class SearchTable extends React.Component {
   }
 }
 
-export default withRouter(SearchTable);
+export default withRouter(ApplicationTable);

@@ -121,7 +121,7 @@ class AccountTable extends React.Component {
                       },
                       {
                         Header: 'apllication ID',
-                        accessor: 'applicationID'
+                        accessor: 'ID'
                       },
 
                       {
@@ -147,7 +147,7 @@ class AccountTable extends React.Component {
                             <Link
                               to={
                                 this.props.location.pathname +
-                                `/${row.value.applicationID}`
+                                `/${row.value.ID}`
                               }
                             >
                               <Button
@@ -155,6 +155,24 @@ class AccountTable extends React.Component {
                                 color="info"
                               >
                                 Info
+                              </Button>
+                            </Link>
+                          </div>
+                        )
+                      },
+                      {
+                        Header: 'Profile Info',
+                        id: 'row',
+                        accessor: d => d,
+
+                        Cell: row => (
+                          <div className="d-block w-100 text-center">
+                            <Link to={'user' + `/${row.value.accountID}`}>
+                              <Button
+                                className="mb-2 mr-2 btn-icon"
+                                color="info"
+                              >
+                                Profile Info
                               </Button>
                             </Link>
                           </div>

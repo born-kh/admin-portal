@@ -8,7 +8,7 @@ import {
   CardBody,
   CardTitle
 } from 'reactstrap';
-import DemoImg from '../../../../../../../assets/utils/images/originals/fence-small.jpg';
+
 import { Table } from 'reactstrap';
 import {
   InputGroup,
@@ -23,14 +23,7 @@ import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  AvForm,
-  AvGroup,
-  AvInput,
-  AvFeedback,
-  AvRadioGroup,
-  AvRadio
-} from 'availity-reactstrap-validation';
+
 import { Scrollbars } from 'react-custom-scrollbars';
 import DatePicker from 'react-datepicker';
 import { dateFormatter } from 'helpers';
@@ -86,11 +79,8 @@ export default class WizardStep4 extends React.Component {
   };
 
   render() {
-    const {
-      passportDocuments,
-      selfieDocuments,
-      editFieldsDocument
-    } = this.props;
+    const { editFieldsDocument, selfieID, passportID } = this.props;
+    const { docID, isOpen } = this.state;
 
     return (
       <Fragment>
@@ -205,19 +195,27 @@ export default class WizardStep4 extends React.Component {
                 </div>
               </CardHeader>
               <CardBody>
-                <div className="text-center">
+                <div
+                  className="text-center"
+                  style={{
+                    height: 400,
+                    width: '100%'
+                  }}
+                >
                   <img
                     alt=""
-                    height="400vh"
                     onClick={() =>
                       this.setState({
                         isOpen: true,
-                        documentID: this.props.selfieID
+                        documentID: selfieID
                       })
                     }
-                    src={`http://10.7.8.129:9004/document/${this.props.selfieID}`}
-                    style={{ cursor: 'pointer' }}
-                    width="60%"
+                    src={`http://10.7.8.129:9004/document/${selfieID}`}
+                    style={{
+                      cursor: 'pointer',
+                      'max-width': '100%',
+                      'max-height': '100%'
+                    }}
                   />
                 </div>
               </CardBody>
@@ -230,19 +228,27 @@ export default class WizardStep4 extends React.Component {
                 </div>
               </CardHeader>
               <CardBody>
-                <div className="text-center">
+                <div
+                  className="text-center"
+                  style={{
+                    height: 400,
+                    width: '100%'
+                  }}
+                >
                   <img
                     alt=""
-                    height="400vh"
                     onClick={() =>
                       this.setState({
                         isOpen: true,
-                        documentID: this.props.passportID
+                        documentID: passportID
                       })
                     }
-                    src={`http://10.7.8.129:9004/document/${this.props.passportID}`}
-                    style={{ cursor: 'pointer' }}
-                    width="60%"
+                    src={`http://10.7.8.129:9004/document/${passportID}`}
+                    style={{
+                      cursor: 'pointer',
+                      'max-width': '100%',
+                      'max-height': '100%'
+                    }}
                   />
                 </div>
               </CardBody>
@@ -250,9 +256,9 @@ export default class WizardStep4 extends React.Component {
           </Col>
         </Row>
 
-        {this.state.isOpen && (
+        {isOpen && (
           <Lightbox
-            mainSrc={`http://10.7.8.129:9004/document/${this.state.docID}`}
+            mainSrc={`http://10.7.8.129:9004/document/${docID}`}
             onCloseRequest={() => this.setState({ isOpen: false })}
           />
         )}

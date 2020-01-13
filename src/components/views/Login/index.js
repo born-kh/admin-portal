@@ -7,8 +7,8 @@ import Slider from 'react-slick';
 import bg1 from 'assets/utils/images/originals/city.jpg';
 import bg2 from 'assets/utils/images/originals/citydark.jpg';
 import bg3 from 'assets/utils/images/originals/citynights.jpg';
-
-import { Col, Row } from 'reactstrap';
+import LaddaButton, { ZOOM_OUT } from 'react-ladda';
+import { Col, Row, Alert } from 'reactstrap';
 import { login } from 'store/actions/authActions';
 import LoginForm from '../../common/LoginForm/LoginForm';
 import { PERMISSIONS } from 'constants/localStorage';
@@ -22,21 +22,15 @@ class Login extends Component {
 
     this._isMounted = false;
   }
-  handleOnSubmit = formData => {
+  handleOnSubmit = () => {
+    const { formData } = this.props;
     let params = {
-      username: formData.username,
-      password: formData.password
+      username: formData.login.values.username,
+      password: formData.login.values.password
     };
 
     this.props.handleLogin(params);
   };
-
-  componentDidMount() {
-    // console.log(this.props.isAuth);
-    // if (this.props.isAuth) {
-    //   return <Redirect to="/user-manager/users" />;
-    // }
-  }
 
   render() {
     let settings = {
@@ -51,10 +45,10 @@ class Login extends Component {
       autoplay: true,
       adaptiveHeight: true
     };
+    const { error, isAuth, pending } = this.props;
+    console.log(pending);
 
-    let permissions = JSON.parse(localStorage.getItem(PERMISSIONS));
-
-    if (this.props.isAuth) {
+    if (isAuth) {
       return <Redirect to="/user-manager/users" />;
     }
 
@@ -136,7 +130,29 @@ class Login extends Component {
                 </h4>
 
                 <Row className="divider" />
-                <LoginForm onSubmit={this.handleOnSubmit} />
+
+                <LoginForm />
+                {error && <Alert color="danger">{error}</Alert>}
+
+                <div className="d-flex align-items-center">
+                  <div className="ml-auto">
+                    <a
+                      className="btn-lg btn btn-link"
+                      href="javascript:void(0);"
+                    >
+                      Recover Password
+                    </a>{' '}
+                    <LaddaButton
+                      className="mb-2 mr-2 btn btn-alternate"
+                      data-style={ZOOM_OUT}
+                      loading={pending}
+                      onClick={this.handleOnSubmit}
+                      type={'submit'}
+                    >
+                      Login to Dashboard
+                    </LaddaButton>
+                  </div>
+                </div>
               </Col>
             </Col>
           </Row>
@@ -150,7 +166,8 @@ const mapStateToProps = state => ({
   error: state.auth.error,
   profile_data: state.auth.profile_data,
   pending: state.auth.pending,
-  isAuth: state.auth.isAuth
+  isAuth: state.auth.isAuth,
+  formData: state.form
 });
 
 const mapDispatchToProps = dispatch => {

@@ -26,12 +26,13 @@ export default class WizardStepSet extends React.Component {
     });
   }
   handleCheckbox = (e, docID) => {
+    const { getDocumentID } = this.props;
     if (e.target.checked === true) {
       this.setState({ docID });
-      this.props.getDocumentID(docID);
+      getDocumentID(docID);
     } else {
       this.setState({ docID: undefined });
-      this.props.getDocumentID(undefined);
+      getDocumentID(undefined);
     }
   };
   render() {

@@ -56,16 +56,19 @@ const passportReducer = (state = initState, action) => {
     case types.FETCH_ACCOUNTS_SEARCH_PENDING:
       return {
         ...state,
+        applications: [],
         pending: true,
         error: null
       };
     case types.FETCH_ACCOUNTS_SEARCH_SUCCESS:
+      let applicationss = [...state.applications];
+
       return {
         ...state,
         pending: false,
-        error: null,
-        searchData: action.payload
+        applications: applicationss.concat(action.payload)
       };
+
     case types.FETCH_ACCOUNTS_SEARCH_ERROR:
       return {
         ...state,
@@ -81,6 +84,17 @@ const passportReducer = (state = initState, action) => {
       return {
         ...state,
         documents
+      };
+
+    case types.APPLICATION_DELETE:
+      var applications = [...state.applications];
+      applications = applications.filter(
+        application => application.ID !== action.applicationID
+      );
+
+      return {
+        ...state,
+        applications
       };
 
     default:

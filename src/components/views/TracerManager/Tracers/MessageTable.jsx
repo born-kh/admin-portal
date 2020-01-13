@@ -18,7 +18,7 @@ import {
 import ReactTable from 'react-table';
 import { dateFormatter } from 'helpers';
 
-class ErrorTable extends React.Component {
+class MessageTable extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -46,31 +46,39 @@ class ErrorTable extends React.Component {
   };
 
   renderDialog() {
-    const { errorsData } = this.props;
-    if (this.state.modal) {
+    const { messagesData, className } = this.props;
+    const { modal, req, rowIndex } = this.state;
+    if (modal) {
       return (
         <Modal
-          isOpen={this.state.modal}
+          className={className}
           fade={false}
+          isOpen={modal}
           toggle={this.handleClickCloseDialog}
-          className={this.props.className}>
+        >
           <ModalHeader toggle={this.handleClickCloseDialog}>
-            {this.state.req ? 'Request' : 'Response'}
+            {req ? 'Request' : 'Response'}
           </ModalHeader>
           <ModalBody>
             <ReactJson
               src={
-                this.state.req
-                  ? errorsData[this.state.rowIndex].request
-                  : errorsData[this.state.rowIndex].response
+                req
+                  ? messagesData[rowIndex].request
+                  : messagesData[rowIndex].response
               }
             />
           </ModalBody>
           <ModalFooter>
-            <Button color="link" onClick={this.handleClickCloseDialog}>
+            <Button
+              color="link"
+              onClick={this.handleClickCloseDialog}
+            >
               Cancel
             </Button>
-            <Button color="primary" onClick={this.handleClickCloseDialog}>
+            <Button
+              color="primary"
+              onClick={this.handleClickCloseDialog}
+            >
               Ok
             </Button>
           </ModalFooter>
@@ -80,7 +88,7 @@ class ErrorTable extends React.Component {
   }
 
   render() {
-    const { errorsData } = this.props;
+    const { messagesData } = this.props;
 
     return (
       <Row>
@@ -88,7 +96,7 @@ class ErrorTable extends React.Component {
           <Card className="main-card mb-3">
             <CardBody>
               <ReactTable
-                data={errorsData}
+                className="-striped -highlight"
                 columns={[
                   {
                     columns: [
@@ -120,7 +128,8 @@ class ErrorTable extends React.Component {
                               color="info"
                               onClick={() =>
                                 this.handleClickOpenDialog(row.index, true)
-                              }>
+                              }
+                            >
                               <i className="pe-7s-science btn-icon-wrapper">
                                 {' '}
                               </i>
@@ -139,7 +148,8 @@ class ErrorTable extends React.Component {
                               color="info"
                               onClick={() =>
                                 this.handleClickOpenDialog(row.index, false)
-                              }>
+                              }
+                            >
                               <i className="pe-7s-science btn-icon-wrapper">
                                 {' '}
                               </i>
@@ -151,8 +161,8 @@ class ErrorTable extends React.Component {
                     ]
                   }
                 ]}
+                data={messagesData}
                 defaultPageSize={10}
-                className="-striped -highlight"
               />
               {this.renderDialog()}
             </CardBody>
@@ -163,4 +173,4 @@ class ErrorTable extends React.Component {
   }
 }
 
-export default ErrorTable;
+export default MessageTable;

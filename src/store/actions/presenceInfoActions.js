@@ -1,5 +1,6 @@
 import * as types from '../../constants/actionType';
 import { presenceAPI } from 'service/api';
+import { errorMessage } from 'helpers/errorMessage';
 
 export function presenceInfoPending() {
   return {
@@ -35,7 +36,7 @@ export function fetchPresenceInfo(params) {
         }
       })
       .catch(error => {
-        dispatch(presenceInfoError(error.message));
+        dispatch(presenceInfoError(errorMessage(error)));
       });
   };
 }

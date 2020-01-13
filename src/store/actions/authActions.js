@@ -46,13 +46,12 @@ export function login(loginParams) {
     user_ip: '1.2.3.4',
     username: loginParams.username
   };
-  console.log('response');
-
   return dispatch => {
     dispatch(loginPending());
     authAPI
       .login(params)
       .then(response => {
+        console.log(response);
         console.log(response);
         if (response !== undefined) {
           const session_data = response.data.session_data;
@@ -63,32 +62,40 @@ export function login(loginParams) {
           localStorage.setItem(PROFILE_DATA, JSON.stringify(profile_data));
           localStorage.setItem('isAuth', true);
 
-          authAPI.getPermissions(permissionParams).then(
-            response => {
-              console.log(response);
-              console.log(response.data.result.data);
+          authAPI
+            .getPermissions({
+              permissions: permissionParams.permissions,
+              metadata: {
+                headers: { 'X-Auth-Token': session_data.session_token }
+              }
+            })
+            .then(
+              response => {
+                console.log(response);
+                console.log(response.data.result.data);
 
-              for (var type in response.data.result.data) {
-                console.log(type);
+                for (var type in response.data.result.data) {
+                  console.log(type);
+                }
+                localStorage.setItem(
+                  PERMISSIONS,
+                  JSON.stringify(response.data.result.data)
+                );
+                if (response.data.result.data) {
+                  dispatch(loginSuccess(auth_data));
+                }
+              },
+              error => {
+                dispatch(loginError(error.message));
               }
-              localStorage.setItem(
-                PERMISSIONS,
-                JSON.stringify(response.data.result.data)
-              );
-              if (response.data.result.data) {
-                dispatch(loginSuccess(auth_data));
-              }
-            },
-            error => {
-              dispatch(loginError(error.message));
-            }
-          );
+            );
         } else {
           dispatch(loginError(''));
         }
       })
       .catch(error => {
-        dispatch(loginError(error.message));
+        console.log(JSON.stringify(error));
+        dispatch(loginError('Wrong login or password.'));
       });
   };
 }

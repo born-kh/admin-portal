@@ -9,7 +9,7 @@ import { Col, Card, CardBody, CardHeader } from 'reactstrap';
 import PropTypes from 'prop-types';
 import LoaderOverlay from 'components/common/LoaderOverlay';
 import { fetchApplicationSearch } from 'store/actions/passportActions';
-import SearchTable from './SearchTable';
+import ApplicationTable from './SearchTable';
 
 class SearchAccount extends Component {
   constructor(props) {
@@ -25,10 +25,6 @@ class SearchAccount extends Component {
     this.handleOnSubmit = this.handleOnSubmit.bind(this);
     this.handleOnPageChange = this.handleOnPageChange.bind(this);
     this.handleOnPageSizeChange = this.handleOnPageSizeChange.bind(this);
-  }
-
-  componentDidMount() {
-    // this.handleOnFetch();
   }
 
   handleOnSubmit = () => {
@@ -86,8 +82,7 @@ class SearchAccount extends Component {
   };
 
   renderTable() {
-    const { pending, error, searchData } = this.props;
-    console.log(searchData);
+    const { pending, error, applications } = this.props;
 
     if (pending) {
       return <LoaderOverlay />;
@@ -104,7 +99,7 @@ class SearchAccount extends Component {
       );
     }
 
-    if (this.props.searchData.length === 0) {
+    if (applications.length === 0) {
       return (
         <div className="widget-content">
           <div className="widget-content-wrapper">
@@ -115,11 +110,13 @@ class SearchAccount extends Component {
         </div>
       );
     } else {
-      return <SearchTable searchData={searchData} />;
+      return <ApplicationTable
+        applications={applications}
+        rows={10}
+             />;
     }
   }
   render() {
-    console.log(this.state);
     return (
       <Fragment>
         <ReactCSSTransitionGroup
@@ -204,7 +201,7 @@ SearchAccount.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  searchData: state.passport.searchData,
+  applications: state.passport.applications,
   error: state.passport.error,
   pending: state.passport.pending
 });

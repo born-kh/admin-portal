@@ -2,12 +2,16 @@ import React from 'react';
 import { Route, withRouter } from 'react-router-dom';
 
 import Tracers from './Tracers';
-import Dashboard from 'components/Dashboard';
+import Dashboard from 'components/Layouts';
 
 const TracerManager = ({ match }) => {
   return (
     <Dashboard>
-      <Route exact path={`${match.url}/tracers`} component={Tracers} />
+      <Route
+        component={Tracers}
+        exact
+        path={`${match.url}/tracers`}
+      />
     </Dashboard>
   );
 };

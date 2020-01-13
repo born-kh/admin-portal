@@ -19,7 +19,8 @@ import {
   SET_DOCUMENT_TAGS,
   SET_APPLICATION_STATUS,
   GET_DOCUMENT_TYPES,
-  DELETE_DOCUMENT
+  DELETE_DOCUMENT,
+  GET_APPLICATIONS_BY_ACCOUNT
 } from 'constants/apiURL';
 import { axios } from 'helpers';
 
@@ -156,6 +157,11 @@ export const passportAPI = {
   },
   deleteDocument(params) {
     return axios.post(DELETE_DOCUMENT, params).then(response => {
+      return response;
+    });
+  },
+  getApplicationByAccount(params) {
+    return axios.post(GET_APPLICATIONS_BY_ACCOUNT, params).then(response => {
       return response;
     });
   }
