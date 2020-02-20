@@ -35,15 +35,16 @@ class AppSidebar extends Component {
           onClick={this.toggleMobileSidebar}
         />
         <ReactCSSTransitionGroup
-          component="div"
           className={cx('app-sidebar', backgroundColor, {
             'sidebar-shadow': enableSidebarShadow
           })}
-          transitionName="SidebarAnimation"
-          transitionAppear={true}
+          component="div"
+          transitionAppear
           transitionAppearTimeout={1500}
           transitionEnter={false}
-          transitionLeave={false}>
+          transitionLeave={false}
+          transitionName="SidebarAnimation"
+        >
           <HeaderLogo />
           <PerfectScrollbar>
             <div className="app-sidebar__inner">
@@ -56,7 +57,8 @@ class AppSidebar extends Component {
               backgroundImage: enableBackgroundImage
                 ? 'url(' + backgroundImage + ')'
                 : null
-            }}></div>
+            }}
+          />
         </ReactCSSTransitionGroup>
       </Fragment>
     );

@@ -1,26 +1,11 @@
 import * as types from '../../constants/actionType';
-import { PROFILE_DATA } from 'constants/localStorage';
 
-let profile_data = JSON.parse(localStorage.getItem(PROFILE_DATA));
-// let session_data = JSON.parse(localStorage.getItem(SESSION_DATA));
-let session_data = null;
-let isAuth = localStorage.getItem('isAuth');
-
-const initState = profile_data
-  ? {
-    profile_data: profile_data,
-    session_data: session_data,
-    error: null,
-    pending: false,
-    isAuth: isAuth
-  }
-  : {
-    profile_data: null,
-    session_data: null,
-    error: null,
-    pending: false,
-    isAuth: false
-  };
+const initState = {
+  userData: null,
+  error: null,
+  pending: false,
+  isAuth: false
+};
 
 const authReducer = (state = initState, action) => {
   switch (action.type) {
@@ -34,10 +19,29 @@ const authReducer = (state = initState, action) => {
       return {
         ...state,
 
-        profile_data: action.data.profile_data,
-        session_data: action.data.session_data,
+        userData: action.user_data,
         isAuth: true,
         pending: false
+      };
+
+    case types.CHECK_SESSION_TOKEN_REQUEST:
+      return {
+        ...state,
+        pending: true
+      };
+
+    case types.CHECK_SESSION_TOKEN_FAILURE:
+      return {
+        ...state,
+        pending: false
+      };
+
+    case types.CHECK_SESSION_TOKEN_SUCCESS:
+      return {
+        ...state,
+        pending: false,
+        isAuth: true,
+        userData: action.user_data
       };
 
     case types.LOGIN_ERROR:
@@ -47,13 +51,7 @@ const authReducer = (state = initState, action) => {
         error: action.error
       };
     case types.LOGOUT:
-      return {
-        profile_data: null,
-        session_data: null,
-        error: null,
-        pending: false,
-        isAuth: false
-      };
+      return initState;
 
     default:
       return state;

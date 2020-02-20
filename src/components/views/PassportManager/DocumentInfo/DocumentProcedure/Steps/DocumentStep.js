@@ -27,11 +27,12 @@ import {
   AvInput,
   AvFeedback
 } from 'availity-reactstrap-validation';
-
+import { RViewerTrigger, RViewer } from 'react-viewerjs';
+import { imageOptions } from 'constants/actionType';
 import DatePicker from 'react-datepicker';
 import { dateFormatter } from 'helpers';
 
-export default class WizardStep1 extends React.Component {
+export default class DocumentStep extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -90,6 +91,7 @@ export default class WizardStep1 extends React.Component {
       passportDocuments,
       handleChangeFields,
       editFieldsDocument,
+      checkedPassportStep,
       types
     } = this.props;
 
@@ -133,8 +135,49 @@ export default class WizardStep1 extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <AvForm>
-                    {editFieldsDocument && (
+                    {editFieldsDocument.fields.issue_date && (
                       <Row>
+                        <Col md={6}>
+                          <FormGroup>
+                            <AvGroup>
+                              <Label for="firstName">First Name</Label>
+                              <AvInput
+                                id="firstName"
+                                name="firstName"
+                                onChange={e =>
+                                  handleChangeFields(
+                                    e.target.value,
+                                    'first_name'
+                                  )
+                                }
+                                required
+                                value={editFieldsDocument.fields.first_name}
+                              />
+                              <AvFeedback>This is an error!</AvFeedback>
+                            </AvGroup>
+                          </FormGroup>
+                        </Col>
+
+                        <Col md={6}>
+                          <FormGroup>
+                            <AvGroup>
+                              <Label for="lastName">Last Name</Label>
+                              <AvInput
+                                id="lastName"
+                                name="lastName"
+                                onChange={e =>
+                                  handleChangeFields(
+                                    e.target.value,
+                                    'last_name'
+                                  )
+                                }
+                                required
+                                value={editFieldsDocument.fields.last_name}
+                              />
+                              <AvFeedback>This is an error!</AvFeedback>
+                            </AvGroup>
+                          </FormGroup>
+                        </Col>
                         <Col md={6}>
                           <FormGroup>
                             <Label for="examplePassword">Issue Date</Label>
@@ -211,47 +254,6 @@ export default class WizardStep1 extends React.Component {
                                 }
                               />
                             </InputGroup>
-                          </FormGroup>
-                        </Col>
-                        <Col md={6}>
-                          <FormGroup>
-                            <AvGroup>
-                              <Label for="firstName">First Name</Label>
-                              <AvInput
-                                id="firstName"
-                                name="firstName"
-                                onChange={e =>
-                                  handleChangeFields(
-                                    e.target.value,
-                                    'first_name'
-                                  )
-                                }
-                                required
-                                value={editFieldsDocument.fields.first_name}
-                              />
-                              <AvFeedback>This is an error!</AvFeedback>
-                            </AvGroup>
-                          </FormGroup>
-                        </Col>
-
-                        <Col md={6}>
-                          <FormGroup>
-                            <AvGroup>
-                              <Label for="lastName">Last Name</Label>
-                              <AvInput
-                                id="lastName"
-                                name="lastName"
-                                onChange={e =>
-                                  handleChangeFields(
-                                    e.target.value,
-                                    'last_name'
-                                  )
-                                }
-                                required
-                                value={editFieldsDocument.fields.last_name}
-                              />
-                              <AvFeedback>This is an error!</AvFeedback>
-                            </AvGroup>
                           </FormGroup>
                         </Col>
 
@@ -360,41 +362,44 @@ export default class WizardStep1 extends React.Component {
               </Card>
             </Col>
 
-            <Col lg="6">
-              <Card className="main-card mb-3">
-                <CardHeader className="card-header-tab">
-                  <div className="card-header-title font-size-lg text-capitalize font-weight-normal">
-                    <i className="header-icon lnr-picture mr-3 text-muted opacity-6" />
-                    Document Photo
-                  </div>
-                </CardHeader>
-                <CardBody>
-                  <div
-                    className="text-center"
-                    style={{
-                      height: 500,
-                      width: '100%'
-                    }}
-                  >
-                    <img
-                      alt=""
-                      onClick={() =>
-                        this.setState({
-                          isOpen: true,
-                          documentID: passportDocuments[0].ID
-                        })
-                      }
-                      src={`http://10.7.8.129:9004/document/${passportDocuments[0].ID}`}
+            {checkedPassportStep.ID && (
+              <Col lg="6">
+                <Card className="main-card mb-3">
+                  <CardHeader className="card-header-tab">
+                    <div className="card-header-title font-size-lg text-capitalize font-weight-normal">
+                      <i className="header-icon lnr-picture mr-3 text-muted opacity-6" />
+                      Document Photo
+                    </div>
+                  </CardHeader>
+                  <CardBody>
+                    <div
+                      className="text-center"
                       style={{
-                        cursor: 'pointer',
-                        'max-width': '100%',
-                        'max-height': '100%'
+                        height: 500,
+                        width: '100%'
                       }}
-                    />
-                  </div>
-                </CardBody>
-              </Card>
-            </Col>
+                    >
+                      <RViewer
+                        imageUrls={`http://10.7.8.129:9004/document/${checkedPassportStep.ID}`}
+                        options={imageOptions}
+                      >
+                        <RViewerTrigger>
+                          <img
+                            src={`http://10.7.8.129:9004/document/${checkedPassportStep.ID}`}
+                            style={{
+                              cursor: 'pointer',
+                              'max-width': '100%',
+                              'max-height': '100%',
+                              verticalAlign: 'middle'
+                            }}
+                          />
+                        </RViewerTrigger>
+                      </RViewer>
+                    </div>
+                  </CardBody>
+                </Card>
+              </Col>
+            )}
           </Row>
         </Container>
       </Fragment>

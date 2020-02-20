@@ -1,5 +1,5 @@
-export const SERVICE_URL = 'http://localhost:8080';
-// export const SERVICE_URL = 'http://10.7.8.129:9002';
+// export const SERVICE_URL = 'http://localhost:8080';
+export const SERVICE_URL = 'http://10.7.8.129:9002';
 export const SEARCH_USER = '/search/user';
 export const GET_ACCOUNT_SESSIONS = '/get/account/sessions';
 export const LOGIN = '/login';

@@ -18,14 +18,12 @@ import {
 } from 'store/actions/passportActions';
 import Info from './Info';
 import DocumentList from './DocumentList';
-import DocumentProcedure from './DocumentProcedure';
+
 import { history } from 'helpers';
 import { fetchUsers } from 'store/actions/userActions';
-import AccountProfile from '../../UserManager/AccountInfo/AccountProfile';
-import Loader from 'react-loaders';
-import ProfileInfo from './ProfileInfo';
+import DocumentProcedure from 'components/views/PassportManager/DocumentInfo/DocumentProcedure';
 
-class DocumentInfo extends React.Component {
+class ApplicationInfo extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -36,18 +34,15 @@ class DocumentInfo extends React.Component {
     this.handleStartProcedure = this.handleStartProcedure.bind(this);
     this.handleDoneProcedure = this.handleDoneProcedure.bind(this);
     this.handleGetApplications = this.handleGetApplications.bind(this);
-    this.handleNextApplication = this.handleNextApplication.bind(this);
   }
   componentDidMount() {
     const { fetchDocuments, application, fetchUsers } = this.props;
     if (!application) {
-      this.props.history.push('/passport-manager/applications');
+      this.props.history.goBack();
     } else {
       fetchDocuments({
         applicationID: application.ID
       });
-
-      fetchUsers([{ type: 'accountID', search: application.accountID }]);
     }
   }
 
@@ -57,32 +52,6 @@ class DocumentInfo extends React.Component {
 
   handleDoneProcedure() {
     this.setState({ startProcedure: false });
-  }
-
-  componentDidUpdate(oldProps) {
-    const { fetchDocuments, application, fetchUsers } = this.props;
-    const newProps = this.props;
-    if (
-      oldProps.match.params.applicationID !==
-      newProps.match.params.applicationID
-    ) {
-      this.handleDoneProcedure();
-      fetchDocuments({
-        applicationID: application.ID
-      });
-
-      fetchUsers([{ type: 'accountID', search: application.accountID }]);
-    }
-  }
-
-  handleOnFetchApplications() {
-    const { page, pageSize } = this.state;
-
-    let params = {
-      start: page * 10,
-      count: page * 10 + pageSize
-    };
-    this.props.fetchApplications(params);
   }
 
   handleGetApplications() {
@@ -95,58 +64,6 @@ class DocumentInfo extends React.Component {
         `/passport-manager/applications/${filterApplications[0].ID}`
       );
     } else {
-      this.handleOnFetchApplications();
-    }
-  }
-
-  handleNextApplication() {
-    var filterApplications = this.props.applications.filter(
-      application => application.ID !== this.props.application.ID
-    );
-
-    if (filterApplications.length > 0) {
-      this.props.deleteApplication(this.props.application.ID);
-      this.props.history.push(
-        `/passport-manager/applications/${filterApplications[0].ID}`
-      );
-    } else {
-      this.handleOnFetchApplications();
-    }
-  }
-
-  rederProfileInfo() {
-    let { users, error, pending } = this.props;
-    if (pending) {
-      return (
-        <div className="text-center">
-          <Loader type="ball-scale" />
-        </div>
-      );
-    }
-    if (error) {
-      return (
-        <div className="widget-content">
-          <div className="widget-content-wrapper">
-            <div className="widget-content-right ml-0 mr-3">
-              <div className="widget-subheading">{error}</div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    if (users.length === 0) {
-      return (
-        <div className="widget-content">
-          <div className="widget-content-wrapper">
-            <div className="widget-content-right ml-0 mr-3">
-              <div className="widget-subheading">There are no user</div>
-            </div>
-          </div>
-        </div>
-      );
-    } else {
-      return <ProfileInfo userInfo={users[0]} />;
     }
   }
 
@@ -203,7 +120,10 @@ class DocumentInfo extends React.Component {
                           //   documents.length === 0 ||
                           //   application.status !== 'PENDING'
                           // }
-                          disabled={documents.length === 0}
+                          disabled={
+                            documents.length === 0 ||
+                            application.status !== 'PENDING'
+                          }
                           onClick={this.handleStartProcedure}
                           outline
                         >
@@ -219,15 +139,6 @@ class DocumentInfo extends React.Component {
                           outline
                         >
                           {application.status}
-                        </Button>
-                        <Button
-                          className={
-                            'border-0 btn-pill btn-wide btn-transition active'
-                          }
-                          color="alternate"
-                          onClick={this.handleNextApplication}
-                        >
-                          Next Application
                         </Button>
                       </div>
                     </CardHeader>
@@ -265,10 +176,10 @@ const mapStateToProps = (state, ownProps) => {
     pending: state.user.pending,
     error: state.user.error,
     documents: state.passport.documents,
-    application: state.passport.applications.find(
+    application: state.user.applications.find(
       application => application.ID === id
     ),
-    applications: state.passport.applications
+    applications: state.user.applications
   };
 };
 
@@ -282,8 +193,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const WithRouterDocumentInfo = withRouter(DocumentInfo);
+const WithRouterApplicationInfo = withRouter(ApplicationInfo);
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(WithRouterDocumentInfo);
+)(WithRouterApplicationInfo);

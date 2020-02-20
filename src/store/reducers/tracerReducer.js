@@ -17,13 +17,13 @@ const tracerReducer = (state = initState, action) => {
         error: null
       };
     case types.FETCH_TRACERS_SUCCESS:
-      console.log(action);
       return {
         ...state,
         errors: action.errors,
         messages: action.messages,
         accountId: action.accountId,
-        pending: false
+        pending: false,
+        error: null
       };
     case types.FETCH_TRACERS_ERROR:
       return {

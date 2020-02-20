@@ -6,46 +6,32 @@ import ReactTimeout from 'react-timeout';
 import ResizeDetector from 'react-resize-detector';
 
 import AppMain from '../../Layouts/components/AppMain';
-import { SESSION_DATA, SESSION_TOKEN, PROFILE_DATA } from 'constants/index';
-import { logout } from 'store/actions/authActions';
+import { logout, checkSessionToken } from 'store/actions/authActions';
+import LoaderOverlay from 'components/common/LoaderOverlay';
+import Login from '../Login';
 
 class Main extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      closedSmallerSidebar: false
+      closedSmallerSidebar: false,
+      checkingToken: true
     };
   }
+
+  handleLogout = () => {
+    this.props.onLogout({
+      reason_note: 'User request'
+    });
+  };
 
   componentDidMount() {
-    this.checkAuth();
+    this.props.checkSessionToken().then(() => {
+      this.setState({ checkingToken: false });
+    });
   }
-  handleLogout = () => {
-    console.log('logout');
-    let params = {
-      reason_note: 'User request'
-    };
-    this.props.onLogout(params);
-  };
-  checkAuth = session_data => {
-    if (session_data) {
-      var newDate = new Date();
-      var lastDate = new Date(session_data.expire_ts);
-      var diff = lastDate.getTime() - newDate.getTime();
-      console.log(diff);
-      if (diff > 0) {
-        this.props.setTimeout(this.handleLogout, diff);
-      } else {
-        this.handleLogout();
-      }
-    }
-  };
 
   render() {
-    let session_data = JSON.parse(localStorage.getItem(SESSION_DATA));
-    if (session_data) {
-      this.checkAuth(session_data);
-    }
     let {
       colorScheme,
       enableFixedHeader,
@@ -56,6 +42,10 @@ class Main extends React.Component {
       enableMobileMenu,
       enablePageTabsAlt
     } = this.props;
+
+    if (this.state.checkingToken) {
+      return <LoaderOverlay />;
+    }
 
     return (
       <ResizeDetector
@@ -76,7 +66,7 @@ class Main extends React.Component {
                 { 'body-tabs-shadow-btn': enablePageTabsAlt }
               )}
             >
-              <AppMain />
+              {this.props.isAuth ? <AppMain /> : <Login />}
             </div>
           </Fragment>
         )}
@@ -86,6 +76,7 @@ class Main extends React.Component {
 }
 
 const mapStateToProp = state => ({
+  isAuth: state.auth.isAuth,
   colorScheme: state.themeOptions.colorScheme,
   enableFixedHeader: state.themeOptions.enableFixedHeader,
   enableMobileMenu: state.themeOptions.enableMobileMenu,
@@ -96,7 +87,10 @@ const mapStateToProp = state => ({
 });
 
 const mapDispatchToProps = dispatch => {
-  return { onLogout: params => dispatch(logout(params)) };
+  return {
+    onLogout: params => dispatch(logout(params)),
+    checkSessionToken: () => dispatch(checkSessionToken())
+  };
 };
 
 const TimeOutMain = ReactTimeout(Main);

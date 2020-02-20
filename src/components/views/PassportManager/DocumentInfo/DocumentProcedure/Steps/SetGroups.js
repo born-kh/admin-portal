@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 
-export default class WizardStepSet extends React.Component {
+export default class SetGroups extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

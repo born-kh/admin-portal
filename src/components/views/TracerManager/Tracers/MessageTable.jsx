@@ -91,84 +91,80 @@ class MessageTable extends React.Component {
     const { messagesData } = this.props;
 
     return (
-      <Row>
-        <Col md="12">
-          <Card className="main-card mb-3">
-            <CardBody>
-              <ReactTable
-                className="-striped -highlight"
-                columns={[
-                  {
-                    columns: [
-                      {
-                        Header: 'Ts',
-                        accessor: 'ts',
-                        Cell: row => dateFormatter(row.value)
-                      },
-                      {
-                        Header: 'Method Name',
-                        accessor: 'method',
-                        filterable: true
-                      },
-                      {
-                        Header: 'Account ID',
-                        accessor: 'account_id'
-                      }
-                    ]
-                  },
-                  {
-                    columns: [
-                      {
-                        Header: 'Request',
-
-                        Cell: row => (
-                          <div className="d-block w-100 text-center">
-                            <Button
-                              className="mb-2 mr-2 btn-icon"
-                              color="info"
-                              onClick={() =>
-                                this.handleClickOpenDialog(row.index, true)
-                              }
-                            >
-                              <i className="pe-7s-science btn-icon-wrapper">
-                                {' '}
-                              </i>
-                              Info
-                            </Button>
-                          </div>
-                        )
-                      },
-                      {
-                        Header: 'Response',
-
-                        Cell: row => (
-                          <div className="d-block w-100 text-center">
-                            <Button
-                              className="mb-2 mr-2 btn-icon"
-                              color="info"
-                              onClick={() =>
-                                this.handleClickOpenDialog(row.index, false)
-                              }
-                            >
-                              <i className="pe-7s-science btn-icon-wrapper">
-                                {' '}
-                              </i>
-                              Info
-                            </Button>
-                          </div>
-                        )
-                      }
-                    ]
+      <div>
+        <ReactTable
+          columns={[
+            {
+              columns: [
+                {
+                  Header: 'Ts',
+                  accessor: 'ts',
+                  Cell: row => dateFormatter(row.value)
+                },
+                {
+                  Header: 'Method Name',
+                  id: 'method',
+                  filterable: true,
+                  accessor: d => {
+                    if (d.method) {
+                      return d.method;
+                    } else {
+                      return '';
+                    }
                   }
-                ]}
-                data={messagesData}
-                defaultPageSize={10}
-              />
-              {this.renderDialog()}
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
+                },
+                {
+                  Header: 'Account ID',
+                  accessor: 'account_id'
+                }
+              ]
+            },
+            {
+              columns: [
+                {
+                  Header: 'Request',
+
+                  Cell: row => (
+                    <div className="d-block w-100 text-center">
+                      <Button
+                        className="mb-2 mr-2 btn-icon"
+                        color="info"
+                        onClick={() =>
+                          this.handleClickOpenDialog(row.index, true)
+                        }
+                      >
+                        <i className="pe-7s-science btn-icon-wrapper" />
+                        Info
+                      </Button>
+                    </div>
+                  )
+                },
+                {
+                  Header: 'Response',
+
+                  Cell: row => (
+                    <div className="d-block w-100 text-center">
+                      <Button
+                        className="mb-2 mr-2 btn-icon"
+                        color="info"
+                        onClick={() =>
+                          this.handleClickOpenDialog(row.index, false)
+                        }
+                      >
+                        <i className="pe-7s-science btn-icon-wrapper" />
+                        Info
+                      </Button>
+                    </div>
+                  )
+                }
+              ]
+            }
+          ]}
+          data={messagesData}
+          defaultPageSize={10}
+        />
+        {this.renderDialog()}
+      </div>
     );
   }
 }

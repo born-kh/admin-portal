@@ -8,12 +8,12 @@ export function fetchTracersPending() {
   };
 }
 
-export function fetchTracersSuccess(messages, errors, accountId) {
+export function fetchTracersSuccess(messages, errors, accountID) {
   return {
     type: types.FETCH_TRACERS_SUCCESS,
     messages,
     errors,
-    accountId
+    accountID
   };
 }
 
@@ -60,6 +60,7 @@ export function fetchTracers(params) {
                 arrayObj[index].request = payload;
               }
             } else {
+              console.log(response);
               const index = arrayObj.map(e => e.request.id).indexOf(payload.id);
               newItem.response = payload;
               if (index < 0) {
@@ -68,17 +69,16 @@ export function fetchTracers(params) {
                 arrayObj[index].response = payload;
               }
             }
-            return true;
           });
+          console.log(arrayObj);
           var accountId = '';
-          arrayObj.map((val, key) => {
+          arrayObj.map(val => {
             if (val.response.error !== undefined) {
               errors.push(val);
               accountId = val.account_id;
             } else if (val.response.result !== undefined) {
               messages.push(val);
             }
-            return true;
           });
           dispatch(fetchTracersSuccess(messages, errors, accountId));
         } else {
@@ -86,7 +86,7 @@ export function fetchTracers(params) {
         }
       })
       .catch(error => {
-        dispatch(fetchTracersError(errorMessage(error)));
+        dispatch(fetchTracersError(''));
       });
   };
 }

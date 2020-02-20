@@ -1,18 +1,101 @@
 import React from 'react';
 import _ from 'lodash';
 import { Link, withRouter } from 'react-router-dom';
-import { Row, Col, Card, CardBody, Button } from 'reactstrap';
+import ReactJson from 'react-json-view';
+import {
+  Row,
+  Col,
+  Card,
+  CardBody,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
+} from 'reactstrap';
+
 import ReactTable from 'react-table';
 import { dateFormatter } from 'helpers';
+import 'react-table/react-table.css';
 
 class ApplicationTable extends React.Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      rowIndex: 0,
+      req: false,
+      modal: false,
+      loading: false
+    };
+    this.handleClickOpenDialog = this.handleClickOpenDialog.bind(this);
+    this.handleClickCloseDialog = this.handleClickCloseDialog.bind(this);
+  }
+
+  handleClickOpenDialog = (rowIndex, req) => {
+    this.setState({
+      modal: !this.state.modal,
+      req: req,
+      rowIndex
+    });
+  };
+  handleClickCloseDialog = () => {
+    this.setState({
+      modal: !this.state.modal,
+      req: false,
+      rowIndex: 0
+    });
+  };
+
+  renderDialog() {
+    const { messagesData } = this.props;
+    if (this.state.modal) {
+      return (
+        <Modal
+          className={this.props.className}
+          fade={false}
+          isOpen={this.state.modal}
+          toggle={this.handleClickCloseDialog}
+        >
+          <ModalHeader toggle={this.handleClickCloseDialog}>
+            {this.state.req ? 'Request' : 'Response'}
+          </ModalHeader>
+          <ModalBody>
+            <ReactJson
+              src={
+                this.state.req
+                  ? messagesData[this.state.rowIndex].request
+                  : messagesData[this.state.rowIndex].response
+              }
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              color="link"
+              onClick={this.handleClickCloseDialog}
+            >
+              Cancel
+            </Button>
+            <Button
+              color="primary"
+              onClick={this.handleClickCloseDialog}
+            >
+              Ok
+            </Button>
+          </ModalFooter>
+        </Modal>
+      );
+    }
   }
 
   render() {
-    const { applications, rows } = this.props;
+    const {
+      applications,
+      pages,
+      handleOnPageChange,
+      handleOnPageSizeChange,
+      pageSize
+    } = this.props;
+    console.log(pageSize);
 
     return (
       <Row>
@@ -83,7 +166,8 @@ class ApplicationTable extends React.Component {
                           <div className="d-block w-100 text-center">
                             <Link
                               to={
-                                '/passport-manager/search' + `/${row.value.ID}`
+                                this.props.location.pathname +
+                                `/${row.value.ID}`
                               }
                             >
                               <Button
@@ -100,9 +184,13 @@ class ApplicationTable extends React.Component {
                   }
                 ]}
                 data={applications}
-                defaultPageSize={rows}
+                defaultPageSize={pageSize}
                 enabled
+                loading={this.props.pending}
                 manual
+                onPageChange={handleOnPageChange}
+                onPageSizeChange={handleOnPageSizeChange}
+                pages={pages}
                 showPagination
                 showPaginationBottom // this would indicate that server side pagination has been
                 showPaginationTop={false}

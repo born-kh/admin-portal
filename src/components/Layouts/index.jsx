@@ -20,9 +20,9 @@ class Dashboard extends React.Component {
           <AppSidebar />
           <div className="app-main__outer">
             <div className="app-main__inner">{this.props.children}</div>
-            <div className="app-wrapper-footer">
+            {/* <div className="app-wrapper-footer">
               <AppFooter />
-            </div>
+            </div> */}
           </div>
         </div>
       </Fragment>

@@ -23,8 +23,7 @@ import { DropdownList } from 'react-widgets';
 import queryString from 'query-string';
 import PropTypes from 'prop-types';
 import LoaderOverlay from 'components/common/LoaderOverlay';
-import ApplicationTable from '../../PassportManager/SearchAccount/SearchTable';
-import { fetchApplicationSearch } from 'store/actions/passportActions';
+
 import { passportAPI } from 'service/api';
 
 const types = ['username', 'phone', 'email', 'accountID'];
@@ -34,8 +33,9 @@ class Users extends Component {
     super(props);
     this.state = {
       searchUserList: [],
-      firstName: '',
-      lastName: '',
+
+      firstname: '',
+      lastname: '',
       phoneNumber: '',
       params: {
         search: '',
@@ -43,43 +43,36 @@ class Users extends Component {
       }
     };
 
-    this.handleOnOnSubmit = this.handleOnOnSubmit.bind(this);
+    this.handleOnSubmit = this.handleOnSubmit.bind(this);
   }
 
-  async handleOnOnSubmit(event) {
-    const {
-      search,
-      match,
-      history,
-      fetchUsers,
-      fetchUsersPending
-    } = this.props;
+  async handleOnSubmit(event) {
     const { searchUserList } = this.state;
-    const searchList = this.state.searchUserList;
+    var searchAccoountsList = [];
 
-    const { firstName, lastName, phoneNumber } = this.state;
+    const { firstname, lastname, phoneNumber } = this.state;
     let name = {
-      firstName: firstName,
-      lastName: lastName
+      firstName: firstname,
+      lastName: lastname
     };
     let params = {
       name: name,
       phone: phoneNumber
     };
 
-    if (firstName !== '' || lastName !== '' || phoneNumber !== '') {
-      try {
-        const response = await passportAPI.getApplicationsByName(params);
-        console.log(response);
-        await response.data.applications.map(application => {
-          searchUserList.push({
-            type: 'accountID',
-            search: application.accountID
-          });
-        });
-        this.props.fetchUsers(searchUserList);
-      } catch {
-        console.log('error in fetching posts');
+    if (firstname !== '' || lastname !== '' || phoneNumber !== '') {
+      const response = await passportAPI.getApplicationsByName(params);
+      if ((response.status = 200)) {
+        await Promise.all(
+          response.data.applications.map(async application => {
+            searchAccoountsList.push({
+              type: 'accountID',
+              search: application.accountID
+            });
+          })
+        );
+        searchAccoountsList = searchAccoountsList.concat(searchUserList);
+        this.props.fetchUsers(searchAccoountsList);
       }
     } else {
       if (searchUserList.length > 0) {
@@ -113,6 +106,7 @@ class Users extends Component {
     const findIndex = this.state.searchUserList.findIndex(
       obj => obj.type === event.target.name
     );
+    // if (event.target.value.length > 0) {
     if (findIndex === -1) {
       searchUserList.push({
         type: event.target.name,
@@ -125,49 +119,9 @@ class Users extends Component {
       };
     }
     searchUserList = searchUserList.filter(obj => obj.search !== '');
+    console.log(searchUserList);
     this.setState({ searchUserList });
   };
-
-  renderApplicationTable() {
-    const { pendingApplication, errorApplication, applications } = this.props;
-    console.log(this.props);
-
-    if (pendingApplication) {
-      return (
-        <div className="text-center">
-          <Loader type="ball-scale" />
-        </div>
-      );
-    }
-    if (errorApplication) {
-      return (
-        <div className="widget-content">
-          <div className="widget-content-wrapper">
-            <div className="widget-content-right ml-0 mr-3">
-              <div className="widget-subheading">{errorApplication}</div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    if (applications.length === 0) {
-      return (
-        <div className="widget-content">
-          <div className="widget-content-wrapper">
-            <div className="widget-content-right ml-0 mr-3">
-              <div className="widget-subheading">There are no applications</div>
-            </div>
-          </div>
-        </div>
-      );
-    } else {
-      return <ApplicationTable
-        applications={applications}
-        rows={5}
-             />;
-    }
-  }
 
   renderUserTable() {
     const { pending, error, users } = this.props;
@@ -279,7 +233,8 @@ class Users extends Component {
                     <FormGroup>
                       <Input
                         id="firstNameID"
-                        name="firstName"
+                        name="firstname"
+                        onBlur={this.onBlurUserInput}
                         onChange={this.handleChangeApplicationSearch}
                         placeholder="First Name"
                         type="text"
@@ -289,7 +244,8 @@ class Users extends Component {
                     <FormGroup>
                       <Input
                         id="lastNameID"
-                        name="lastName"
+                        name="lastname"
+                        onBlur={this.onBlurUserInput}
                         onChange={this.handleChangeApplicationSearch}
                         placeholder="Last Name"
                         type="text"
@@ -310,7 +266,7 @@ class Users extends Component {
                         'border-0 btn-pill btn-wide  btn-transition active'
                       }
                       color="alternate"
-                      onClick={this.handleOnOnSubmit}
+                      onClick={this.handleOnSubmit}
                       outline
                     >
                       Search
@@ -321,35 +277,6 @@ class Users extends Component {
               </CardBody>
             </Card>
           </Col>
-
-          {/* <Col md="12">
-            <Card className="main-card mb-3">
-              <CardHeader className="card-header-tab">
-                <div className="card-header-title font-size-lg text-capitalize font-weight-normal">
-                  <SearchInput
-                    isActive={false}
-                    keyPressed={this.handleOnSubmit}
-                    placeholder="Search user"
-                  />
-                </div>
-                <Col md={2}>
-                  <DropdownList
-                    allowCreate="onFilter"
-                    data={types}
-                    onChange={value => this.setState({ searchType: value })}
-                    onCreate={name => this.handleCreate(name)}
-                    textField="name"
-                    value={searchType}
-                    width="200"
-                  />
-                </Col>
-
-              
-              </CardHeader>
-
-              <CardBody></CardBody>
-            </Card>
-          </Col> */}
         </ReactCSSTransitionGroup>
       </Fragment>
     );
@@ -357,25 +284,20 @@ class Users extends Component {
 }
 
 Users.propTypes = {
-  className: PropTypes.string,
-  classes: PropTypes.object.isRequired
+  className: PropTypes.string
 };
 
 const mapStateToProps = state => ({
   users: state.user.users,
   search: state.settings.search,
-  pending: state.user.pendingUser,
-  error: state.user.errorUser,
-  applications: state.passport.applications,
-  errorApplication: state.passport.error,
-  pendingApplication: state.passport.pending,
+  pending: state.user.pending,
+  error: state.user.error,
   profile: state.auth.profile,
   session: state.auth.session
 });
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchApplicationSearch: params => dispatch(fetchApplicationSearch(params)),
     fetchUsers: params => dispatch(fetchUsers(params))
   };
 };

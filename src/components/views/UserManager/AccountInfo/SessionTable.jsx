@@ -469,8 +469,7 @@ class SessionTable extends React.Component {
 }
 
 SessionTable.propTypes = {
-  className: PropTypes.string,
-  classes: PropTypes.object.isRequired
+  className: PropTypes.string
 };
 
 const mapStateToProps = state => {

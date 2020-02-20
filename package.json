@@ -2,6 +2,7 @@
   "name": "react-material-dashboard",
   "version": "0.2.0",
   "private": true,
+  "proxy": "http://localhost:8080",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -51,6 +52,7 @@
     "draft-js": "^0.10.5",
     "draftjs-to-html": "^0.8.4",
     "dropzone": "^5.5.1",
+    "express": "^4.17.1",
     "generate-password": "^1.4.2",
     "google-map-react": "^1.1.4",
     "google-maps-react": "^2.0.2",
@@ -163,6 +165,7 @@
     "react-toastify": "^5.0.1",
     "react-transition-group": "^3.0.0",
     "react-vertical-timeline-component": "^2.3.1",
+    "react-viewerjs": "^0.1.9",
     "react-visibility-sensor": "^5.0.2",
     "react-widgets": "^4.4.10",
     "react-widgets-globalize": "^5.0.19",

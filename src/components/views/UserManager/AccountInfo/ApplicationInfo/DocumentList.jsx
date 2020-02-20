@@ -19,6 +19,7 @@ import { getDocumentStatusText } from 'helpers';
 class DocumentList extends React.Component {
   renderTable() {
     const { documents, pending, error } = this.props;
+    console.log(pending, error);
 
     if (pending) {
       return (
@@ -173,6 +174,7 @@ class DocumentList extends React.Component {
 
   render() {
     const { documents, pending, error } = this.props;
+    console.log(error);
 
     return (
       <Fragment>

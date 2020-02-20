@@ -14,9 +14,11 @@ import {
   Container,
   CardHeader
 } from 'reactstrap';
-import DemoImg from '../../../../../../assets/utils/images/originals/rejectMessage.png';
 
-export default class WizardStep1 extends React.Component {
+import { RViewerTrigger, RViewer } from 'react-viewerjs';
+import { imageOptions } from 'constants/actionType';
+
+export default class SelfieStep extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -45,23 +47,44 @@ export default class WizardStep1 extends React.Component {
     }
   };
 
-  handleChangeSelfieID = selfieID => {
+  handleChangeSelfieID = data => {
     this.setState({
-      selfieID
+      selfieID: data.ID
     });
-    this.props.getDocumentID(selfieID);
+    if (
+      this.props.checkedSelfieStep.status !== 'HUMAN_APPROVED' &&
+      this.props.checkedSelfieStep.status !== 'HUMAN_REJECTED'
+    ) {
+      this.props.setCheckedDocument({
+        status: data.status,
+        docID: data.ID,
+        selfie: true
+      });
+    }
   };
+  componentDidUpdate(oldProps, oldState) {
+    const newProps = this.props;
+    if (oldProps.passportDocuments !== newProps.passportDocuments) {
+      this.setState({
+        passportID: newProps.passportDocuments[0].ID
+      });
+    }
+  }
+
   componentDidMount() {
     const {
       selfieDocuments,
       passportDocuments,
-      selfieID,
-      passportID
+      checkedSelfieStep,
+      checkedPassportStep
     } = this.props;
-    this.setState({ selfieID, passportID });
+    this.setState({
+      selfieID: checkedSelfieStep.ID,
+      passportID: checkedPassportStep.ID
+    });
 
     if (selfieDocuments.length > 0) {
-      this.handleChangeSelfieID(selfieDocuments[0].ID);
+      this.handleChangeSelfieID(selfieDocuments[0]);
     }
     if (passportDocuments.length > 0) {
       this.setState({
@@ -69,9 +92,30 @@ export default class WizardStep1 extends React.Component {
       });
     }
   }
+
   render() {
-    const { selfieDocuments, passportDocuments, deleteDocument } = this.props;
+    console.log(this.state.selfieID);
+    const {
+      selfieDocuments,
+      passportDocuments,
+      deleteDocument,
+      checkedPassportStep,
+      checkedSelfieStep
+    } = this.props;
     const { isOpen, selfieID, documentID, passportID } = this.state;
+    var deletePassportDocument = false;
+    var deleteSelfieDocument = false;
+    if (checkedPassportStep.ID) {
+      deletePassportDocument =
+        checkedPassportStep.status === 'HUMAN_APPROVED' ||
+        checkedPassportStep.status === 'HUMAN_REJECTED';
+    }
+
+    if (checkedSelfieStep) {
+      deleteSelfieDocument =
+        checkedSelfieStep.status === 'HUMAN_APPROVED' ||
+        checkedSelfieStep.status === 'HUMAN_REJECTED';
+    }
     return (
       <Fragment>
         {isOpen && (
@@ -93,6 +137,7 @@ export default class WizardStep1 extends React.Component {
                   <div className="btn-actions-pane-right">
                     <Button
                       color="danger"
+                      disabled={deleteSelfieDocument}
                       onClick={() => deleteDocument(selfieID)}
                     >
                       Delete
@@ -107,21 +152,22 @@ export default class WizardStep1 extends React.Component {
                       width: '100%'
                     }}
                   >
-                    <img
-                      alt=""
-                      onClick={() =>
-                        this.setState({
-                          isOpen: true,
-                          documentID: selfieID
-                        })
-                      }
-                      src={`http://10.7.8.129:9004/document/${selfieID}`}
-                      style={{
-                        cursor: 'pointer',
-                        'max-width': '100%',
-                        'max-height': '100%'
-                      }}
-                    />
+                    <RViewer
+                      imageUrls={`http://10.7.8.129:9004/document/${selfieID}`}
+                      options={imageOptions}
+                    >
+                      <RViewerTrigger>
+                        <img
+                          src={`http://10.7.8.129:9004/document/${selfieID}`}
+                          style={{
+                            cursor: 'pointer',
+                            'max-width': '100%',
+                            'max-height': '100%',
+                            verticalAlign: 'middle'
+                          }}
+                        />
+                      </RViewerTrigger>
+                    </RViewer>
                   </div>
                 </CardBody>
               </Card>
@@ -138,6 +184,7 @@ export default class WizardStep1 extends React.Component {
                   <div className="btn-actions-pane-right">
                     <Button
                       color="danger"
+                      disabled={deletePassportDocument}
                       onClick={() => deleteDocument(passportID)}
                     >
                       Delete
@@ -152,21 +199,22 @@ export default class WizardStep1 extends React.Component {
                       width: '100%'
                     }}
                   >
-                    <img
-                      alt=""
-                      onClick={() =>
-                        this.setState({
-                          isOpen: true,
-                          documentID: passportID
-                        })
-                      }
-                      src={`http://10.7.8.129:9004/document/${passportID}`}
-                      style={{
-                        cursor: 'pointer',
-                        'max-width': '100%',
-                        'max-height': '100%'
-                      }}
-                    />
+                    <RViewer
+                      imageUrls={`http://10.7.8.129:9004/document/${passportID}`}
+                      options={imageOptions}
+                    >
+                      <RViewerTrigger>
+                        <img
+                          src={`http://10.7.8.129:9004/document/${passportID}`}
+                          style={{
+                            cursor: 'pointer',
+                            'max-width': '100%',
+                            'max-height': '100%',
+                            verticalAlign: 'middle'
+                          }}
+                        />
+                      </RViewerTrigger>
+                    </RViewer>
                   </div>
                 </CardBody>
               </Card>
@@ -188,10 +236,11 @@ export default class WizardStep1 extends React.Component {
                             className="btn-icon-vertical mb-3 btn-transition btn-block"
                             color="info"
                             disabled={row.ID === selfieID}
-                            onClick={() => this.handleChangeSelfieID(row.ID)}
+                            onClick={() => this.handleChangeSelfieID(row)}
                             outline
                             style={{
-                              height: 80
+                              height: 80,
+                              margin: 1
                             }}
                           >
                             <img

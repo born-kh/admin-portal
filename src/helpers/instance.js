@@ -1,6 +1,6 @@
 import * as axios from 'axios';
+import { USER_SESSION } from 'constants/actionType';
 import { SERVICE_URL } from 'constants/apiURL';
-import { SESSION_TOKEN } from 'constants/localStorage';
 
 const instance = axios.create({
   baseURL: SERVICE_URL
@@ -8,7 +8,11 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
   function(config) {
-    config.headers['Authorization'] = localStorage.getItem(SESSION_TOKEN);
+    const userSession = JSON.parse(localStorage.getItem(USER_SESSION));
+
+    if (userSession) {
+      config.headers['Authorization'] = userSession.session_data.session_token;
+    }
     return config;
   },
   function(error) {

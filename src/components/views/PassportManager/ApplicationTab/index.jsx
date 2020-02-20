@@ -2,11 +2,11 @@ import React, { Component, Fragment } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import PageTitle from 'components/common/PageTitle';
+import PageTitle from './node_modules/components/common/PageTitle';
 import { Col, Card, CardBody, CardHeader } from 'reactstrap';
 import PropTypes from 'prop-types';
-import LoaderOverlay from 'components/common/LoaderOverlay';
-import { fetchApplications } from 'store/actions/passportActions';
+import LoaderOverlay from './node_modules/components/common/LoaderOverlay';
+import { fetchApplications } from './node_modules/store/actions/passportActions';
 import AccountTable from './AccountTable';
 
 class Accounts extends Component {
@@ -25,7 +25,9 @@ class Accounts extends Component {
   }
 
   componentDidMount() {
-    this.handleOnFetch();
+    if (this.props.applications.length === 0) {
+      this.handleOnFetch();
+    }
   }
 
   handleOnFetch() {

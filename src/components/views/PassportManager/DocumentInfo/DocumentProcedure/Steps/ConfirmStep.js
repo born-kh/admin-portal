@@ -27,8 +27,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Scrollbars } from 'react-custom-scrollbars';
 import DatePicker from 'react-datepicker';
 import { dateFormatter } from 'helpers';
-
-export default class WizardStep4 extends React.Component {
+import { RViewerTrigger, RViewer } from 'react-viewerjs';
+import { imageOptions } from 'constants/actionType';
+export default class ConfirmStep extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -79,8 +80,11 @@ export default class WizardStep4 extends React.Component {
   };
 
   render() {
-    const { editFieldsDocument, selfieID, passportID } = this.props;
-    const { docID, isOpen } = this.state;
+    const {
+      editFieldsDocument,
+      checkedSelfieStep,
+      checkedPassportStep
+    } = this.props;
 
     return (
       <Fragment>
@@ -93,43 +97,41 @@ export default class WizardStep4 extends React.Component {
                   <Col md={6}>
                     <ListGroup>
                       <ListGroupItem>
+                        <ListGroupItemText>First Name</ListGroupItemText>
                         <ListGroupItemHeading>
-                          Date Of Birth
+                          {' '}
+                          {editFieldsDocument.fields.first_name}
                         </ListGroupItemHeading>
-                        <ListGroupItemText>
+                      </ListGroupItem>
+                      <ListGroupItem>
+                        <ListGroupItemText>Last Name</ListGroupItemText>
+                        <ListGroupItemHeading>
+                          {' '}
+                          {editFieldsDocument.fields.last_name}
+                        </ListGroupItemHeading>
+                      </ListGroupItem>
+                      <ListGroupItem>
+                        <ListGroupItemText>Date Of Birth</ListGroupItemText>
+                        <ListGroupItemHeading>
                           {dateFormatter(
                             editFieldsDocument.fields.date_of_birth
                           )}
-                        </ListGroupItemText>
+                        </ListGroupItemHeading>
                       </ListGroupItem>
                       <ListGroupItem>
+                        <ListGroupItemText>Expiration Date</ListGroupItemText>
                         <ListGroupItemHeading>
-                          Expiration Date
-                        </ListGroupItemHeading>
-                        <ListGroupItemText>
                           {dateFormatter(
                             editFieldsDocument.fields.expiration_date
                           )}
-                        </ListGroupItemText>
+                        </ListGroupItemHeading>
                       </ListGroupItem>
                       <ListGroupItem>
-                        <ListGroupItemHeading>Issue Date</ListGroupItemHeading>
-                        <ListGroupItemText>
-                          {dateFormatter(editFieldsDocument.fields.issue_date)}
-                        </ListGroupItemText>
-                      </ListGroupItem>
-                      <ListGroupItem>
-                        <ListGroupItemHeading>First Name</ListGroupItemHeading>
-                        <ListGroupItemText>
-                          {editFieldsDocument.fields.first_name}
-                        </ListGroupItemText>
-                      </ListGroupItem>
-                      <ListGroupItem>
-                        <ListGroupItemHeading>Last Name</ListGroupItemHeading>
-                        <ListGroupItemText>
+                        <ListGroupItemText>Issue Date</ListGroupItemText>
+                        <ListGroupItemHeading>
                           {' '}
-                          {editFieldsDocument.fields.last_name}
-                        </ListGroupItemText>
+                          {dateFormatter(editFieldsDocument.fields.issue_date)}
+                        </ListGroupItemHeading>
                       </ListGroupItem>
                     </ListGroup>
                   </Col>
@@ -137,47 +139,46 @@ export default class WizardStep4 extends React.Component {
                     <ListGroup>
                       {' '}
                       <ListGroupItem>
-                        <ListGroupItemHeading>Nationality</ListGroupItemHeading>
-                        <ListGroupItemText>
-                          {editFieldsDocument.fields.nationality}
-                        </ListGroupItemText>
-                      </ListGroupItem>
-                      <ListGroupItem>
-                        <ListGroupItemHeading>Country</ListGroupItemHeading>
-                        <ListGroupItemText>
-                          {editFieldsDocument.fields.country}
-                        </ListGroupItemText>
-                      </ListGroupItem>
-                      <ListGroupItem>
-                        <ListGroupItemHeading> Number</ListGroupItemHeading>
-                        <ListGroupItemText>
-                          {' '}
-                          {editFieldsDocument.fields.number}
-                        </ListGroupItemText>
-                      </ListGroupItem>
-                      <ListGroupItem>
+                        <ListGroupItemText>Nationality</ListGroupItemText>
                         <ListGroupItemHeading>
                           {' '}
-                          Personal Number
+                          {editFieldsDocument.fields.nationality}
                         </ListGroupItemHeading>
-                        <ListGroupItemText>
-                          {' '}
-                          {editFieldsDocument.fields.personal_number}
-                        </ListGroupItemText>
                       </ListGroupItem>
                       <ListGroupItem>
-                        <ListGroupItemHeading>Gender</ListGroupItemHeading>
-                        <ListGroupItemText>
+                        <ListGroupItemText>Country</ListGroupItemText>
+                        <ListGroupItemHeading>
+                          {' '}
+                          {editFieldsDocument.fields.country}
+                        </ListGroupItemHeading>
+                      </ListGroupItem>
+                      <ListGroupItem>
+                        <ListGroupItemText> Number</ListGroupItemText>
+                        <ListGroupItemHeading>
+                          {' '}
+                          {editFieldsDocument.fields.number}
+                        </ListGroupItemHeading>
+                      </ListGroupItem>
+                      <ListGroupItem>
+                        <ListGroupItemText>Personal Number</ListGroupItemText>
+                        <ListGroupItemHeading>
+                          {editFieldsDocument.fields.personal_number}
+                        </ListGroupItemHeading>
+                      </ListGroupItem>
+                      <ListGroupItem>
+                        <ListGroupItemText> Gender</ListGroupItemText>
+                        <ListGroupItemHeading>
                           {' '}
                           {editFieldsDocument.fields.sex}
-                        </ListGroupItemText>
+                        </ListGroupItemHeading>
                       </ListGroupItem>
                       <ListGroupItem>
-                        <ListGroupItemHeading>Type</ListGroupItemHeading>
-                        <ListGroupItemText>
+                        {' '}
+                        <ListGroupItemText>Type</ListGroupItemText>
+                        <ListGroupItemHeading>
                           {' '}
                           {editFieldsDocument.fields.type}
-                        </ListGroupItemText>
+                        </ListGroupItemHeading>
                       </ListGroupItem>
                     </ListGroup>
                   </Col>
@@ -202,21 +203,22 @@ export default class WizardStep4 extends React.Component {
                     width: '100%'
                   }}
                 >
-                  <img
-                    alt=""
-                    onClick={() =>
-                      this.setState({
-                        isOpen: true,
-                        documentID: selfieID
-                      })
-                    }
-                    src={`http://10.7.8.129:9004/document/${selfieID}`}
-                    style={{
-                      cursor: 'pointer',
-                      'max-width': '100%',
-                      'max-height': '100%'
-                    }}
-                  />
+                  <RViewer
+                    imageUrls={`http://10.7.8.129:9004/document/${checkedSelfieStep.ID}`}
+                    options={imageOptions}
+                  >
+                    <RViewerTrigger>
+                      <img
+                        src={`http://10.7.8.129:9004/document/${checkedSelfieStep.ID}`}
+                        style={{
+                          cursor: 'pointer',
+                          'max-width': '100%',
+                          'max-height': '100%',
+                          verticalAlign: 'middle'
+                        }}
+                      />
+                    </RViewerTrigger>
+                  </RViewer>
                 </div>
               </CardBody>
             </Card>
@@ -235,33 +237,27 @@ export default class WizardStep4 extends React.Component {
                     width: '100%'
                   }}
                 >
-                  <img
-                    alt=""
-                    onClick={() =>
-                      this.setState({
-                        isOpen: true,
-                        documentID: passportID
-                      })
-                    }
-                    src={`http://10.7.8.129:9004/document/${passportID}`}
-                    style={{
-                      cursor: 'pointer',
-                      'max-width': '100%',
-                      'max-height': '100%'
-                    }}
-                  />
+                  <RViewer
+                    imageUrls={`http://10.7.8.129:9004/document/${checkedPassportStep.ID}`}
+                    options={imageOptions}
+                  >
+                    <RViewerTrigger>
+                      <img
+                        src={`http://10.7.8.129:9004/document/${checkedPassportStep.ID}`}
+                        style={{
+                          cursor: 'pointer',
+                          'max-width': '100%',
+                          'max-height': '100%',
+                          verticalAlign: 'middle'
+                        }}
+                      />
+                    </RViewerTrigger>
+                  </RViewer>
                 </div>
               </CardBody>
             </Card>
           </Col>
         </Row>
-
-        {isOpen && (
-          <Lightbox
-            mainSrc={`http://10.7.8.129:9004/document/${docID}`}
-            onCloseRequest={() => this.setState({ isOpen: false })}
-          />
-        )}
       </Fragment>
     );
   }

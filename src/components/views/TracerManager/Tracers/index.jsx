@@ -182,7 +182,7 @@ class Tracers extends Component {
       sundayFirst: false
     };
     let maxDate = moment(start).add(24, 'hour');
-    console.log(this.props);
+
     return (
       <Fragment>
         <ReactCSSTransitionGroup

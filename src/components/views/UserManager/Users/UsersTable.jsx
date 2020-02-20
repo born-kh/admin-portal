@@ -9,8 +9,6 @@ import {
   Col,
   Card,
   CardBody,
-  Table,
-  ButtonGroup,
   Button,
   Modal,
   ModalHeader,
@@ -53,7 +51,6 @@ class UsersTable extends React.Component {
     if (modal) {
       return (
         <Modal
-          className={className}
           fade={false}
           isOpen={modal}
           toggle={this.handleClickCloseDialog}
@@ -91,7 +88,6 @@ class UsersTable extends React.Component {
 
   render() {
     const { usersData, match } = this.props;
-    console.log(this.props);
     return (
       <Row>
         <Col md="12">

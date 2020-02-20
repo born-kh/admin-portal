@@ -41,22 +41,26 @@ const checkNavState = (currentStep, stepsLength) => {
 var styles = [];
 
 const getNavStates = (indx, steps, approve) => {
-  for (let i = 0; i < steps.length; i++) {
-    if (i === indx && approve === 1) {
-      styles.pop();
-      styles.push('done');
-      styles.push('doing');
-    } else if (i === indx && approve === 2) {
-      styles.pop();
-      styles.push('done');
-      styles.push('doing');
-    } else if (i === indx && approve === 3) {
-      styles.pop();
-      styles.push('reject');
-      styles.push('doing');
-    } else if (i === indx && approve === 0) {
-      styles = [];
-      styles.push('doing');
+  if (0 === indx && approve === 0) {
+    styles = [];
+    styles.push('doing');
+  } else {
+    if (styles.length < 4) {
+      for (let i = 0; i < steps.length; i++) {
+        if (i === indx && approve === 1) {
+          styles.pop();
+          styles.push('done');
+          styles.push('doing');
+        } else if (i === indx && approve === 2) {
+          styles.pop();
+          styles.push('done');
+          styles.push('doing');
+        } else if (i === indx && approve === 3) {
+          styles.pop();
+          styles.push('reject');
+          styles.push('doing');
+        }
+      }
     }
   }
 
@@ -118,11 +122,12 @@ export default class MultiStep extends React.Component {
       modal: false,
       compState: 0,
       checkedStep: 1,
-      application:false ,
+      application: false,
       rejectMessage: 'Отсутствует сэлфи пользователя',
       rejectMessageIndex: 0,
       navState: getNavStates(0, this.props.steps, 0)
     };
+    this. onClickStep=this. onClickStep.bind(this)
   }
 
   setNavState = (next, approve) => {
@@ -158,74 +163,67 @@ export default class MultiStep extends React.Component {
   componentDidUpdate(oldProps, oldState) {
     const newProps = this.props;
     const newState = this.state;
-    console.log(newProps)
 
-    if (oldProps.currentID !== newProps.currentID) {
-      if (newProps.currentID === 0) {
-        this.setNavState(newProps.currentID, 0);
-      } else if (newProps.currentID === 1) {
-        this.setNavState(newProps.currentID, 1);
-        if (newProps.selfie.status === 'HUMAN_APPROVED') {
-          console.log(newProps.selfie.status);
-          this.setNavState(this.state.compState + 1, 2);
-          this.setState({ checkedStep: 2 });
-        } else if (newProps.selfie.status === 'HUMAN_CORRECTED') {
-          console.log(newProps.selfie.status);
-          this.setNavState(this.state.compState + 1, 3);
-          this.setState({ checkedStep: 2 });
-        } else if (newProps.selfie.status === 'HUMAN_REJECTED') {
-          console.log(newProps.selfie.status);
-          this.setNavState(this.state.compState + 1, 3);
-          this.setState({ checkedStep:2 });
+    if (oldProps.checkedGroupStep !== newProps.checkedGroupStep) {
+      if (!newProps.checkedGroupStep) {
+        this.setNavState(0, 0);
+      } else {
+  
+        this.setNavState(1, 1);
+      }
+
+      if (oldState.navState !== newState.navState) {
+        if (this.state.navState.current === this.props.steps.length - 1) {
+          this.setState({ showFinishBtn: true });
         }
+      }
+    }
 
-        if (newProps.passport.status === 'HUMAN_APPROVED') {
-          console.log(newProps.selfie.status);
+    if (oldProps.checkedSelfieStep !== newProps.checkedSelfieStep) {
+      if (newProps.checkedSelfieStep.status) {
+        if (newProps.checkedSelfieStep.status === 'HUMAN_APPROVED') {
           this.setNavState(this.state.compState + 1, 2);
-          this.setState({ checkedStep: 3});
-        } else if (newProps.passport.status === 'HUMAN_CORRECTED') {
-          console.log(newProps.selfie.status);
+          if (this.statecheckedStep !== 3) {
+            this.setState({ checkedStep: 2 });
+          }
+        } else if (newProps.checkedSelfieStep.status === 'HUMAN_REJECTED') {
           this.setNavState(this.state.compState + 1, 3);
-          this.setState({ checkedStep: 3});
-        } else if (newProps.passport.status === 'HUMAN_REJECTED') {
-          console.log(newProps.selfie.status);
+          if (this.statecheckedStep !== 3) {
+            this.setState({ checkedStep: 2 });
+          }
+        }
+      }
+    }
+    if (oldProps.checkedPassportStep !== newProps.checkedPassportStep) {
+      if (newProps.checkedPassportStep.status) {
+        if (newProps.checkedPassportStep.status === 'HUMAN_APPROVED') {
+          this.setNavState(this.state.compState + 1, 2);
+          this.setState({ checkedStep: 3 });
+        } else if (newProps.checkedPassportStep.status === 'HUMAN_REJECTED') {
           this.setNavState(this.state.compState + 1, 3);
           this.setState({ checkedStep: 3 });
         }
       }
     }
-
-    if (oldState.navState !== newState.navState) {
-      if (this.state.navState.current === this.props.steps.length - 1) {
-        this.setState({ showFinishBtn: true });
-      }
-    }
-  }
-
-  componentDidMount() {
-    const { selfie, passport } = this.props;
-    console.log(selfie, passport);
   }
 
   setAccountStatus = status => {
-    const { applicationID } = this.props;
-    console.log(applicationID);
+    const { applicationID, accountID } = this.props;
     const params = {
+      user: accountID,
       applicationID: applicationID,
-      status: status, 
-    
+      status: status
     };
 
-    if (status !== "APPROVED") {
+    if (status !== 'APPROVED') {
       params.reason = this.state.rejectMessage;
     }
+
     this.setState({ blocking: true });
     passportAPI
       .setApplicationStatus(params)
       .then(res => {
-        console.log(res);
         if (res.status === 200) {
-          
           this.setState({ blocking: false });
           toast('Application set status ' + 'success', {
             transition: Bounce,
@@ -236,7 +234,6 @@ export default class MultiStep extends React.Component {
           });
           this.props.handleGetApplications();
         }
-      
       })
       .catch(error => {
         this.setState({ blocking: false });
@@ -345,48 +342,41 @@ export default class MultiStep extends React.Component {
             >
               Cancel
             </Button>
-            {this.state.application?(
+            {this.state.application ? (
               <Button
-              color="primary"
-              onClick={ () => this.setAccountStatus('REJECTED')}
-            >
-              Ok
-            </Button>
-            
-            ): (
+                color="primary"
+                onClick={() => this.setAccountStatus('REJECTED')}
+              >
+                Ok
+              </Button>
+            ) : (
               <Button
-              color="primary"
-              onClick={() => this._setDocumentStatus('HUMAN_REJECTED', 3)}
-            >
-              Ok
-            </Button>
-            )
-              
-            }
-
-            
-            
-           
+                color="primary"
+                onClick={() => this._setDocumentStatus('HUMAN_REJECTED', 3)}
+              >
+                Ok
+              </Button>
+            )}
           </ModalFooter>
         </Modal>
       );
     }
   }
 
-  _setDocumentStatus = (status, styleDocument) => {
+  _setDocumentStatus = status => {
     const {
       accountID,
-      documentID,
+      checkedSelfieStep,
+      checkedPassportStep,
       editFieldsDocument,
       applicationID,
-      selfie
+      setCheckedDocument
     } = this.props;
-    var setFields= false
+    let approved = status === 'HUMAN_APPROVED';
 
-    this.setState({ blocking: true });
-    var docID = documentID;
+    var docID = checkedPassportStep.ID;
     if (this.state.checkedStep === 1) {
-      docID = selfie.ID;
+      docID = checkedSelfieStep.ID;
     }
 
     var params = {
@@ -395,64 +385,65 @@ export default class MultiStep extends React.Component {
       status: status,
       applicationID: applicationID
     };
-    if (styleDocument === 3) {
+    if (approved) {
       params.reason = this.state.rejectMessage;
     }
-    if (this.state.checkedStep === 2 && styleDocument === 2) {
-      console.log('csdcsd');
+
+    if (this.state.checkedStep === 2 && approved) {
       passportAPI
         .setDocumentFields({
           documentID: editFieldsDocument.documentID,
           fields: { passport: editFieldsDocument.fields }
         })
         .then(res => {
-          console.log('setDocumentFie', res);
+ 
           if (res.status === 200) {
             passportAPI
-  .setDocumentStatus(params)
-  .then(res => {
-    console.log(res);
-    if (res.status === 200) {
-      console.log('setDocument', res);
-     
-        this.setState({
-          blocking: false,
-          checkedStep: this.state.checkedStep + 1
-        });
-        this.handleClickCloseDialog();
-        toast('Document set status ' + 'success', {
-          transition: Bounce,
-          closeButton: true,
-          autoClose: 5000,
-          position: 'top-right',
-          type: 'success'
-        });
-        this.setNavState(this.state.compState + 1, styleDocument);
-     
-    } else {
-      this.handleClickCloseDialog();
-      this.setState({ blocking: false });
-    }
-  })
-  .catch(error => {
-    this.setState({ blocking: false });
+              .setDocumentStatus(params)
+              .then(res => {
+    
+                if (res.status === 200) {
+         
 
-    toast('Document set status ' + error.message, {
-      transition: Bounce,
-      closeButton: true,
-      autoClose: 5000,
-      position: 'top-right',
-      type: 'error'
-    });
-  });
-          }else {
+                  this.setState({
+                    blocking: false
+                  });
+                  setCheckedDocument({
+                    status: status,
+                    docID: docID,
+                    selfie: false
+                  });
+
+                  toast('Document set status ' + 'success', {
+                    transition: Bounce,
+                    closeButton: true,
+                    autoClose: 5000,
+                    position: 'top-right',
+                    type: 'success'
+                  });
+                } else {
+                  this.setState({ blocking: false });
+                }
+              })
+              .catch(error => {
+                this.setState({ blocking: false });
+
+                toast('Document set status ' + error.message, {
+                  transition: Bounce,
+                  closeButton: true,
+                  autoClose: 5000,
+                  position: 'top-right',
+                  type: 'error'
+                });
+              });
+          } else {
             this.handleClickCloseDialog();
             this.setState({ blocking: false });
           }
         })
         .catch(error => {
           this.setState({ bloking: false });
-          console.log(error);
+  
           this.handleClickCloseDialog();
           toast('Document set status ' + error.message, {
             transition: Bounce,
@@ -462,18 +453,30 @@ export default class MultiStep extends React.Component {
             type: 'error'
           });
         });
-    } else{
+    } else {
       passportAPI
-      .setDocumentStatus(params)
-      .then(res => {
-        console.log(res);
-        if (res.status === 200) {
-          console.log('setDocument', res);
-         
+        .setDocumentStatus(params)
+        .then(res => {
+        
+          if (res.status === 200) {
+  
+
             this.setState({
-              blocking: false,
-              checkedStep: this.state.checkedStep + 1
+              blocking: false
             });
+            if (this.state.checkedStep === 1) {
+              setCheckedDocument({
+                status: status,
+                docID: docID,
+                selfie: true
+              });
+            } else {
+              setCheckedDocument({
+                status: status,
+                docID: docID,
+                selfie: false
+              });
+            }
             this.handleClickCloseDialog();
             toast('Document set status ' + 'success', {
               transition: Bounce,
@@ -482,30 +485,23 @@ export default class MultiStep extends React.Component {
               position: 'top-right',
               type: 'success'
             });
-            this.setNavState(this.state.compState + 1, styleDocument);
-         
-        } else {
-          this.handleClickCloseDialog();
+          } else {
+            this.handleClickCloseDialog();
+            this.setState({ blocking: false });
+          }
+        })
+        .catch(error => {
           this.setState({ blocking: false });
-        }
-      })
-      .catch(error => {
-        this.setState({ blocking: false });
 
-        toast('Document set status ' + error.message, {
-          transition: Bounce,
-          closeButton: true,
-          autoClose: 5000,
-          position: 'top-right',
-          type: 'error'
+          toast('Document set status ' + error.message, {
+            transition: Bounce,
+            closeButton: true,
+            autoClose: 5000,
+            position: 'top-right',
+            type: 'error'
+          });
         });
-      });
     }
-
-   
-
-
-  
   };
 
   previous = () => {
@@ -520,12 +516,28 @@ export default class MultiStep extends React.Component {
     }
   };
 
+
+  onClickStep= (step) => {
+    const { compState } = this.state;
+
+    const { getDocumentSetID } = this.props;
+   if(compState!==0){
+    if (step=== 0) {
+      this.setNavState(step);
+      getDocumentSetID('');
+    }else{
+      this.setNavState(step);
+    }
+   }
+   
+  };
+
   next = () => {
     this.setNavState(this.state.compState + 1);
-    
   };
 
   getClassName = (className, i) => {
+  
     return className + '-' + this.state.navState.styles[i];
   };
 
@@ -534,7 +546,9 @@ export default class MultiStep extends React.Component {
     return steps.map((s, i) => (
       <li
         className={this.getClassName('form-wizard-step', i)}
+        style={i === this.state.navState.current ?{}: {opacity: 0.3}}
         key={i}
+        onClick={()=>this.onClickStep(i)}
         value={i}
       >
         <em>{i + 1}</em>
@@ -555,27 +569,39 @@ export default class MultiStep extends React.Component {
       showNextBtn,
       showPreviousBtn
     } = this.state;
-    console.log(checkedStep, navState.current);
 
-    const documentButton =
-      checkedStep <= navState.current &&
-      navState.current + 1 !== steps.length &&
-      checkedStep !== 3;
-    console.log(documentButton);
+  const documentApprovedButton = 
+  checkedStep === navState.current &&
+  navState.current + 1 !== steps.length &&
+  checkedStep !== 3 &&
+  styles.indexOf('reject') === -1;
 
+const documentRejectedButton =
+  checkedStep === navState.current &&
+  navState.current + 1 !== steps.length &&
+  checkedStep !== 3;
+
+   
+    const applicationApprovedButton =
+      checkedStep === 3 &&
+      styles.indexOf('reject') === -1 &&
+      navState.current === steps.length - 1;
+    const applicationRejectedButton =
+      checkedStep === 3 && navState.current === steps.length - 1;
+   
     return (
       <div onKeyDown={this.handleKeyDown}>
-       <Col>
-        <Button
-          className="btn-shadow float-left btn-wide btn-pill mr-2"
-          color="alternate"
-          onClick={handleDoneProcedure}
-        >
-          Previous page
-        </Button>
+        <Col>
+          <Button
+            className="btn-shadow float-left btn-wide btn-pill mr-2"
+            color="alternate"
+            onClick={handleDoneProcedure}
+          >
+            Overview
+          </Button>
         </Col>
         <Col>
-        <div style={showNavigation ? {} : { display: 'none' }}>
+          <div style={showNavigation ? {} : { display: 'none' }}>
             <FormGroup>
               <Button
                 className="btn-shadow float-left btn-wide btn-pill mr-2"
@@ -596,11 +622,8 @@ export default class MultiStep extends React.Component {
                 Next
               </Button>
             </FormGroup>
-            </div>
+          </div>
         </Col>
-
-
-       
 
         <ol className="forms-wizard">{this.renderSteps()}</ol>
         <BlockUi
@@ -615,50 +638,45 @@ export default class MultiStep extends React.Component {
         </BlockUi>
         <div className="divider" />
         <div className="clearfix">
-        <FormGroup>
-          <Button
-            className="btn-shadow btn-wide float-right btn-pill  mr-2"
-            color="success"
-            onClick={() => this.setAccountStatus('APPROVED')}
-            size="lg"
-            style={
-              navState.current + 1 === steps.length && this.state.checkedStep === 3? {} : { display: 'none' }
-            }
-          >
-            Confirmed
-          </Button>
+          <FormGroup>
+            <Button
+              className="btn-shadow btn-wide float-right btn-pill  mr-2"
+              color="success"
+              onClick={() => this.setAccountStatus('APPROVED')}
+              size="lg"
+              style={applicationApprovedButton ? {} : { display: 'none' }}
+            >
+              Confirmed Application
+            </Button>
 
-        
-          <Button
-            className="btn-shadow btn-wide float-right btn-pill  mr-2"
-            color="danger"
-            onClick={() => this.setState({ modal: true, application: true })   }
-            size="lg"
-            style={
-              navState.current + 1 === steps.length && this.state.checkedStep === 3? {} : { display: 'none' }
-            }
-          >
-            Rejected
-          </Button>
-          <Button
-            className="btn btn-shadow float-right btn-pill  mr-2"
-            color="success"
-            onClick={() => this._setDocumentStatus('HUMAN_APPROVED', 2)}
-            style={documentButton ? {} : { display: 'none' }}
-          >
-            Approve
-          </Button>
-          
-          <Button
-            className="btn btn-shadow float-right btn-pill  mr-2"
-            color="danger"
-            onClick={() => this.setState({ modal: true })}
-            style={documentButton ? {} : { display: 'none' }}
-          >
-            Reject
-          </Button>
-        </FormGroup>
-        
+            <Button
+              className="btn-shadow btn-wide float-right btn-pill  mr-2"
+              color="danger"
+              onClick={() => this.setState({ modal: true, application: true })}
+              size="lg"
+              style={applicationRejectedButton ? {} : { display: 'none' }}
+            >
+              Rejected Application
+            </Button>
+
+            <Button
+              className="btn btn-shadow float-right btn-pill  mr-2"
+              color="success"
+              onClick={() => this._setDocumentStatus('HUMAN_APPROVED')}
+              style={documentApprovedButton ? {} : { display: 'none' }}
+            >
+              Approve
+            </Button>
+
+            <Button
+              className="btn btn-shadow float-right btn-pill  mr-2"
+              color="danger"
+              onClick={() => this.setState({ modal: true })}
+              style={documentRejectedButton ? {} : { display: 'none' }}
+            >
+              Reject
+            </Button>
+          </FormGroup>
         </div>
         {this.renderDialog()}
       </div>
