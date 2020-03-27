@@ -143,34 +143,36 @@ class DocumentProcedure extends React.Component {
       });
 
       if (passportDocuments.length > 0) {
-        var document = passportDocuments[0];
+        const filterPassport = passportDocuments.filter(item => {
+          return item.recognized;
+        });
+
+        var document =
+          filterPassport.length > 0 ? filterPassport[0] : passportDocuments[0];
         var fields;
         if (checkedPassportIndex !== -1) {
           document = passportDocuments[checkedPassportIndex];
         }
-
-        if (document.recognized) {
+        var passport = null;
+        if (document.recognized && document.recognized.mrz.passport) {
+          passport = document.recognized.mrz.passport;
+        } else if (document.recognized && document.recognized.mrz.idcard) {
+          passport = document.recognized.mrz.idcard;
+        }
+        console.log(passport, document);
+        if (passport) {
           fields = {
-            country: document.recognized.mrz.country,
-            expiration_date: convertMRZDate(
-              document.recognized.mrz.expiration_date,
-              'expiry'
-            ),
-            date_of_birth: convertMRZDate(
-              document.recognized.mrz.date_of_birth,
-              'dob'
-            ),
-            sex: document.recognized.mrz.sex,
-            type: document.recognized.mrz.type,
-            issue_date: convertMRZDate(
-              document.recognized.mrz.expiration_date,
-              'issue'
-            ),
-            last_name: document.recognized.mrz.surname,
-            first_name: document.recognized.mrz.names,
-            nationality: document.recognized.mrz.nationality,
-            number: document.recognized.mrz.number,
-            personal_number: document.recognized.mrz.personal_number
+            country: passport.country,
+            expiration_date: convertMRZDate(passport.expiration_date, 'expiry'),
+            date_of_birth: convertMRZDate(passport.date_of_birth, 'dob'),
+            sex: passport.sex,
+            type: passport.type,
+            issue_date: convertMRZDate(passport.expiration_date, 'issue'),
+            last_name: passport.surname,
+            first_name: passport.names,
+            nationality: passport.nationality,
+            number: passport.number,
+            personal_number: passport.personal_number
           };
         } else {
           fields = this.state.editFieldsDocument.fields;

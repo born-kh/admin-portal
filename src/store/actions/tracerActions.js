@@ -53,14 +53,13 @@ export function fetchTracers(params) {
                 .map(e => e.response.id)
                 .indexOf(payload.id);
               newItem.request = payload;
-              newItem.method = payload.method;
+
               if (index < 0) {
                 arrayObj.push(newItem);
               } else {
                 arrayObj[index].request = payload;
               }
             } else {
-              console.log(response);
               const index = arrayObj.map(e => e.request.id).indexOf(payload.id);
               newItem.response = payload;
               if (index < 0) {
@@ -70,7 +69,7 @@ export function fetchTracers(params) {
               }
             }
           });
-          console.log(arrayObj);
+
           var accountId = '';
           arrayObj.map(val => {
             if (val.response.error !== undefined) {
@@ -80,6 +79,7 @@ export function fetchTracers(params) {
               messages.push(val);
             }
           });
+          console.log(messages);
           dispatch(fetchTracersSuccess(messages, errors, accountId));
         } else {
           dispatch(fetchTracersError(response.data.reason));

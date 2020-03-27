@@ -49,6 +49,7 @@ class Login extends Component {
     if (isAuth) {
       return <Redirect to="/user-manager/users" />;
     }
+   
 
     return (
       <Fragment>

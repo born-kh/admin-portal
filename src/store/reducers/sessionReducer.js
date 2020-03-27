@@ -21,8 +21,8 @@ const sessionReducer = (state = initState, action) => {
 
         pending: false,
         error: null,
-        sessions: action.sessions,
-        blockList: action.blocklist
+        sessions: action.sessions
+        // blockList: action.blocklist
       };
     case types.FETCH_ACCOUNT_SESSIONS_ERROR:
       return {
@@ -36,11 +36,7 @@ const sessionReducer = (state = initState, action) => {
 
     case types.UPDATE_TRACING:
       var sessions = [...state.sessions];
-      sessions[action.params.index].options = {
-        ...sessions[action.params.index].options,
-        tracing: action.params.tracing
-      };
-
+      sessions[action.params.index].isTracing = action.params.isTracing;
       return {
         ...state,
         sessions

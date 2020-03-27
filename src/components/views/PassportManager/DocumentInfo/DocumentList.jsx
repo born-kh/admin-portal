@@ -147,6 +147,7 @@ class DocumentList extends React.Component {
                   >
                     <RViewer
                       imageUrls={`http://10.7.8.129:9004/document/${document.ID}`}
+                      onClick={() => console.log('click')}
                       options={imageOptions}
                     >
                       <RViewerTrigger>
@@ -173,7 +174,7 @@ class DocumentList extends React.Component {
 
   render() {
     const { documents, pending, error } = this.props;
-
+    console.log(documents);
     return (
       <Fragment>
         <Col
