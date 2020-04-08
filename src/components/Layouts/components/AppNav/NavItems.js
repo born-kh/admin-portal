@@ -81,5 +81,15 @@ export const MainNav = [
         to: '/tracer-manager/tracers'
       }
     ]
+  },
+  {
+    icon: 'pe-7s-rocket',
+    label: 'ApiKey-Manager',
+    content: [
+      {
+        label: 'ApiKey List',
+        to: '/apikey-manager/apikeys'
+      }
+    ]
   }
 ];

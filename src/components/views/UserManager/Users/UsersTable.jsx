@@ -26,8 +26,6 @@ class UsersTable extends React.Component {
       req: false,
       modal: false
     };
-    this.handleClickOpenDialog = this.handleClickOpenDialog.bind(this);
-    this.handleClickCloseDialog = this.handleClickCloseDialog.bind(this);
   }
 
   handleClickOpenDialog = (rowIndex, req) => {

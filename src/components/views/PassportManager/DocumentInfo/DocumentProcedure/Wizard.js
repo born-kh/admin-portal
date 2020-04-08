@@ -127,7 +127,7 @@ export default class MultiStep extends React.Component {
       rejectMessageIndex: 0,
       navState: getNavStates(0, this.props.steps, 0)
     };
-    this. onClickStep=this. onClickStep.bind(this)
+    this.onClickStep = this.onClickStep.bind(this);
   }
 
   setNavState = (next, approve) => {
@@ -168,7 +168,6 @@ export default class MultiStep extends React.Component {
       if (!newProps.checkedGroupStep) {
         this.setNavState(0, 0);
       } else {
-  
         this.setNavState(1, 1);
       }
 
@@ -396,15 +395,11 @@ export default class MultiStep extends React.Component {
           fields: { passport: editFieldsDocument.fields }
         })
         .then(res => {
- 
           if (res.status === 200) {
             passportAPI
               .setDocumentStatus(params)
               .then(res => {
-    
                 if (res.status === 200) {
-         
-
                   this.setState({
                     blocking: false
                   });
@@ -443,7 +438,7 @@ export default class MultiStep extends React.Component {
         })
         .catch(error => {
           this.setState({ bloking: false });
-  
+
           this.handleClickCloseDialog();
           toast('Document set status ' + error.message, {
             transition: Bounce,
@@ -457,10 +452,7 @@ export default class MultiStep extends React.Component {
       passportAPI
         .setDocumentStatus(params)
         .then(res => {
-        
           if (res.status === 200) {
-  
-
             this.setState({
               blocking: false
             });
@@ -516,20 +508,18 @@ export default class MultiStep extends React.Component {
     }
   };
 
-
-  onClickStep= (step) => {
+  onClickStep = step => {
     const { compState } = this.state;
 
     const { getDocumentSetID } = this.props;
-   if(compState!==0){
-    if (step=== 0) {
-      this.setNavState(step);
-      getDocumentSetID('');
-    }else{
-      this.setNavState(step);
+    if (compState !== 0) {
+      if (step === 0) {
+        this.setNavState(step);
+        getDocumentSetID('');
+      } else {
+        this.setNavState(step);
+      }
     }
-   }
-   
   };
 
   next = () => {
@@ -537,7 +527,6 @@ export default class MultiStep extends React.Component {
   };
 
   getClassName = (className, i) => {
-  
     return className + '-' + this.state.navState.styles[i];
   };
 
@@ -546,9 +535,9 @@ export default class MultiStep extends React.Component {
     return steps.map((s, i) => (
       <li
         className={this.getClassName('form-wizard-step', i)}
-        style={i === this.state.navState.current ?{}: {opacity: 0.3}}
         key={i}
-        onClick={()=>this.onClickStep(i)}
+        onClick={() => this.onClickStep(i)}
+        style={i === this.state.navState.current ? {} : { opacity: 0.3 }}
         value={i}
       >
         <em>{i + 1}</em>
@@ -570,25 +559,24 @@ export default class MultiStep extends React.Component {
       showPreviousBtn
     } = this.state;
 
-  const documentApprovedButton = 
-  checkedStep === navState.current &&
-  navState.current + 1 !== steps.length &&
-  checkedStep !== 3 &&
-  styles.indexOf('reject') === -1;
+    const documentApprovedButton =
+      checkedStep === navState.current &&
+      navState.current + 1 !== steps.length &&
+      checkedStep !== 3 &&
+      styles.indexOf('reject') === -1;
 
-const documentRejectedButton =
-  checkedStep === navState.current &&
-  navState.current + 1 !== steps.length &&
-  checkedStep !== 3;
+    const documentRejectedButton =
+      checkedStep === navState.current &&
+      navState.current + 1 !== steps.length &&
+      checkedStep !== 3;
 
-   
     const applicationApprovedButton =
       checkedStep === 3 &&
       styles.indexOf('reject') === -1 &&
       navState.current === steps.length - 1;
     const applicationRejectedButton =
       checkedStep === 3 && navState.current === steps.length - 1;
-   
+
     return (
       <div onKeyDown={this.handleKeyDown}>
         <Col>

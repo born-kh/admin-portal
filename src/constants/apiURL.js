@@ -25,3 +25,7 @@ export const SET_DOCUMENT_TAGS = '/set/document/tags';
 export const GET_DOCUMENT_TYPES = '/get/document/types';
 export const DELETE_DOCUMENT = '/delete/document';
 export const GET_APPLICATIONS_BY_ACCOUNT = '/get/applications/by/account';
+
+export const GET_APIKEYS = 'get/apikeys';
+export const CREATE_APIKEY = 'create/apikey';
+export const UPDATE_APIKEY_URL = 'update/apikey';

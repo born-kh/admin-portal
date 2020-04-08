@@ -20,7 +20,9 @@ import {
   SET_APPLICATION_STATUS,
   GET_DOCUMENT_TYPES,
   DELETE_DOCUMENT,
-  GET_APPLICATIONS_BY_ACCOUNT
+  GET_APPLICATIONS_BY_ACCOUNT,
+  GET_APIKEYS,
+  CREATE_APIKEY
 } from 'constants/apiURL';
 import { axios } from 'helpers';
 
@@ -162,6 +164,20 @@ export const passportAPI = {
   },
   getApplicationByAccount(params) {
     return axios.post(GET_APPLICATIONS_BY_ACCOUNT, params).then(response => {
+      return response;
+    });
+  }
+};
+
+export const apiKeyAPI = {
+  getApiKeys() {
+    return axios.post(GET_APIKEYS, {}).then(response => {
+      return response;
+    });
+  },
+
+  createApiKey(params) {
+    return axios.post(CREATE_APIKEY, params).then(response => {
       return response;
     });
   }
