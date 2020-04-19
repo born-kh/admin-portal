@@ -109,7 +109,7 @@ export function logout(params) {
 export const checkSessionToken = () => async dispatch => {
   dispatch({ type: types.CHECK_SESSION_TOKEN_REQUEST });
   try {
-    const response = await axios.post('/refresh/session');
+    const response = await axios.post('/refreshsession');
     console.log(response);
     if (response.data.result.data.authorization) {
       const user_session = localStorage.getItem(types.USER_SESSION);

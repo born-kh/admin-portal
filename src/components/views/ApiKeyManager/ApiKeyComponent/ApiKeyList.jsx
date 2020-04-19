@@ -19,7 +19,7 @@ const ApiKeyList = props => {
       enabled: !apiKey.enabled,
       cacheExpiration: apiKey.cacheExpiration
     };
-    console.log(index, params);
+
     props.updateApiKey(params, index);
   };
 
