@@ -3,26 +3,17 @@ import _ from 'lodash';
 
 import ReactJson from 'react-json-view';
 
-import {
-  Row,
-  Col,
-  Card,
-  CardBody,
-  Button,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter
-} from 'reactstrap';
-
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Row, Col, Card, CardBody } from 'reactstrap';
 import ReactTable from 'react-table';
 import { dateFormatter } from 'helpers';
-
+import matchSorter from 'match-sorter';
 class MessageTable extends React.Component {
   constructor() {
     super();
     this.state = {
       rowIndex: 0,
+      filtered: [],
       req: false,
       modal: false
     };
@@ -103,68 +94,113 @@ class MessageTable extends React.Component {
                       {
                         Header: 'Ts',
                         accessor: 'ts',
+                        filterable: false,
                         Cell: row => dateFormatter(row.value)
                       },
                       {
                         Header: 'Method Name',
-                        accessor: 'method',
-                        filterable: true
+                        id: 'method',
+
+                        accessor: d => {
+                          if (d.request) {
+                            return d.request.method;
+                          } else {
+                            return '';
+                          }
+                        }
                       },
                       {
                         Header: 'Account ID',
-                        accessor: 'account_id'
-                      }
-                    ]
-                  },
-                  {
-                    columns: [
-                      {
-                        Header: 'Request',
-
-                        Cell: row => (
-                          <div className="d-block w-100 text-center">
-                            <Button
-                              className="mb-2 mr-2 btn-icon"
-                              color="info"
-                              onClick={() =>
-                                this.handleClickOpenDialog(row.index, true)
-                              }
-                            >
-                              <i className="pe-7s-science btn-icon-wrapper">
-                                {' '}
-                              </i>
-                              Info
-                            </Button>
-                          </div>
-                        )
-                      },
-                      {
-                        Header: 'Response',
-
-                        Cell: row => (
-                          <div className="d-block w-100 text-center">
-                            <Button
-                              className="mb-2 mr-2 btn-icon"
-                              color="info"
-                              onClick={() =>
-                                this.handleClickOpenDialog(row.index, false)
-                              }
-                            >
-                              <i className="pe-7s-science btn-icon-wrapper">
-                                {' '}
-                              </i>
-                              Info
-                            </Button>
-                          </div>
-                        )
+                        accessor: 'account_id',
+                        filterable: true
                       }
                     ]
                   }
                 ]}
                 data={messagesData}
-                defaultPageSize={10}
+                defaultFilterMethod={(filter, row, column) => {
+                  const id = filter.pivotId || filter.id;
+                  if (typeof filter.value === 'object') {
+                    return row[id] !== undefined
+                      ? filter.value.indexOf(row[id]) > -1
+                      : true;
+                  } else {
+                    return row[id] !== undefined
+                      ? String(row[id]).indexOf(filter.value) > -1
+                      : true;
+                  }
+                }}
+                defaultPageSize={15}
+                filterable
+                SubComponent={row => {
+                  let d = row.original;
+                  if (d.request) {
+                    return (
+                      <div style={{ background: '#F0F5F5' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            'flex-direction': 'column',
+                            'margin-left': '100px'
+                          }}>
+                          <div className="widget-content-right ml-0 mr-3">
+                            <div className="widget-subheading text-bold">
+                              <b className="text-dark"> method </b>
+                            </div>
+                            {d.request.method}
+
+                            <div className="divider" />
+                          </div>
+
+                          <div className="widget-content-right ml-0 mr-3">
+                            <div className="widget-subheading text-bold">
+                              <b className="text-dark">id </b>
+                            </div>
+                            {d.request.id}
+
+                            <div className="divider" />
+                          </div>
+                          <div className="widget-content-right ml-0 mr-3">
+                            <div className="widget-subheading text-bold">
+                              <b className="text-dark">version</b>
+                            </div>
+                            {d.request.version}
+
+                            <div className="divider" />
+                          </div>
+
+                          <div className="widget-content-right ml-0 mr-3">
+                            <div className="widget-subheading text-bold">
+                              <b className="text-dark">metadata</b>
+                            </div>
+                            {JSON.stringify(d.request.metadata)}
+
+                            <div className="divider" />
+                          </div>
+                          <div className="widget-content-right ml-0 mr-3">
+                            <div className="widget-subheading text-bold">
+                              <b className="text-dark">params </b>
+                            </div>
+                            {JSON.stringify(d.request.params)}
+
+                            <div className="divider" />
+                          </div>
+                          <div className="widget-content-right ml-0 mr-3">
+                            <div className="widget-subheading text-bold">
+                              <b className="text-dark">result </b>
+                            </div>
+                            {JSON.stringify(d.response.result)}
+
+                            <div className="divider" />
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  } else {
+                    return '';
+                  }
+                }}
               />
-              {this.renderDialog()}
             </CardBody>
           </Card>
         </Col>

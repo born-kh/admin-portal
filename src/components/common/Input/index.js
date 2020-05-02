@@ -11,8 +11,6 @@ let InputForm = ({ input, meta, ...props }) => {
         invalid={hasError ? true : null}
       />
       {hasError && <FormFeedback>{meta.error}</FormFeedback>}
-
-      <FormText>Example help text that remains unchanged.</FormText>
     </FormGroup>
   );
 };

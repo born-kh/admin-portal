@@ -21,6 +21,7 @@ const SearchInput = props => {
           onKeyPress={props.keyPressed}
           placeholder={props.placeholder}
           type="text"
+          value={props.search}
         />
         <button
           className="search-icon"

@@ -25,7 +25,7 @@ import ReactTable from 'react-table';
 import { userAPI } from 'service/api';
 import { toast, Bounce } from 'react-toastify';
 import LoaderOverlay from 'components/common/LoaderOverlay';
-import ApplicationTable from '../../PassportManager/SearchAccount/SearchTable';
+import ApplicationTable from './ApplicationTable';
 import { fetchApplicationsByAccount } from 'store/actions/userActions';
 
 import Loader from 'react-loaders';
@@ -159,15 +159,15 @@ class AccountProfile extends Component {
     return (
       <ListGroup flush>
         <div>
-          <ListGroupItem>
+          <ListGroupItem key={userInfo.auth.hasPassword}>
             <b className="text-dark">Has Password: </b>
             {userInfo.auth.hasPassword == true ? 'true' : 'false'}
           </ListGroupItem>
-          <ListGroupItem>
+          <ListGroupItem key ={userInfo.auth.passwordType}>
             <b className="text-dark">Type: </b>
             {userInfo.auth.passwordType}
           </ListGroupItem>
-          <ListGroupItem>
+          <ListGroupItem key={userInfo.auth.status}>
             <b className="text-dark">Status: </b>
             {userInfo.auth.status}
           </ListGroupItem>
@@ -202,7 +202,6 @@ class AccountProfile extends Component {
       password: password,
       accountID: userInfo.accountID
     };
-    console.log(params);
 
     userAPI
       .setPassword(params)
@@ -328,19 +327,19 @@ class AccountProfile extends Component {
                   </div>
                   <CardBody className="p-0">
                     <ListGroup flush>
-                      <ListGroupItem>
+                      <ListGroupItem key={userInfo.firstName}>
                         <b className="text-dark">First Name: </b>
                         {userInfo.firstName}
                       </ListGroupItem>
-                      <ListGroupItem>
+                      <ListGroupItem key={userInfo.lastName}>
                         <b className="text-dark">Last Name: </b>
                         {userInfo.lastName}
                       </ListGroupItem>
-                      <ListGroupItem>
+                      <ListGroupItem key={userInfo.username}>
                         <b className="text-dark">User Name: </b>
                         {userInfo.username}
                       </ListGroupItem>
-                      <ListGroupItem>
+                      <ListGroupItem key={userInfo.accountID}>
                         <b className="text-dark">Account ID: </b>
                         {userInfo.accountID}
                       </ListGroupItem>
@@ -450,7 +449,7 @@ class AccountProfile extends Component {
 
 AccountProfile.propTypes = {
   className: PropTypes.string,
-  classes: PropTypes.object.isRequired
+
 };
 
 const mapStateToProps = state => {

@@ -10,6 +10,7 @@ import presenceInfoReducer from './reducers/presenceInfoReducer';
 import themeOptionsReducer from './reducers/themeOptionsReducer';
 import { reducer as formReducer } from 'redux-form';
 import passportReducer from './reducers/passportReducer';
+import apiKeyReducer from './reducers/apiKeyReducer';
 
 const reducers = combineReducers({
   auth: authReducer,
@@ -20,7 +21,8 @@ const reducers = combineReducers({
   presence: presenceInfoReducer,
   themeOptions: themeOptionsReducer,
   passport: passportReducer,
-  form: formReducer
+  form: formReducer,
+  apiKey: apiKeyReducer
 });
 
 const store = createStore(

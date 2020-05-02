@@ -2,7 +2,6 @@ import * as types from '../../constants/actionType';
 
 const initState = {
   applications: [],
-  searchData: [],
   pages: 0,
   documents: [],
   error: null,
@@ -11,13 +10,13 @@ const initState = {
 
 const passportReducer = (state = initState, action) => {
   switch (action.type) {
-    case types.FETCH_ACCOUNTS_PENDING:
+    case types.FETCH_APPLICATIONS_PENDING:
       return {
         ...state,
         pending: true,
         error: null
       };
-    case types.FETCH_ACCOUNTS_SUCCESS:
+    case types.FETCH_APPLICATIONS_SUCCESS:
       return {
         ...state,
         pending: false,
@@ -25,7 +24,7 @@ const passportReducer = (state = initState, action) => {
         applications: action.applications,
         pages: action.pages
       };
-    case types.FETCH_ACCOUNTS_ERROR:
+    case types.FETCH_APPLICATIONS_ERROR:
       return {
         ...state,
         pending: false,
@@ -44,37 +43,16 @@ const passportReducer = (state = initState, action) => {
         ...state,
         pending: false,
         error: null,
-        documents: action.payload
+        documents: action.documents
       };
     case types.FETCH_DOCUMNETS_ERROR:
       return {
         ...state,
         pending: false,
+        documents: [],
         error: action.error
       };
 
-    case types.FETCH_ACCOUNTS_SEARCH_PENDING:
-      return {
-        ...state,
-        applications: [],
-        pending: true,
-        error: null
-      };
-    case types.FETCH_ACCOUNTS_SEARCH_SUCCESS:
-      let applicationss = [...state.applications];
-
-      return {
-        ...state,
-        pending: false,
-        applications: applicationss.concat(action.payload)
-      };
-
-    case types.FETCH_ACCOUNTS_SEARCH_ERROR:
-      return {
-        ...state,
-        pending: false,
-        error: action.error
-      };
     case types.DELETE_DOCUMENT:
       var documents = [...state.documents];
       documents = documents.filter(

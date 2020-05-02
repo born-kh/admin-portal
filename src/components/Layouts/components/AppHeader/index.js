@@ -69,7 +69,7 @@ const mapStateToProps = state => ({
   closedSmallerSidebar: state.themeOptions.closedSmallerSidebar,
   headerBackgroundColor: state.themeOptions.headerBackgroundColor,
   enableMobileMenuSmall: state.themeOptions.enableMobileMenuSmall,
-  profile_data: state.auth.profile_data.accounts[0]
+  profile_data: state.auth.userData.profile_data.accounts[0]
 });
 const mapDispatchToProps = dispatch => {
   return { onLogout: params => dispatch(logout(params)) };

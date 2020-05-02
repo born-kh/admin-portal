@@ -8,12 +8,12 @@ export function fetchTracersPending() {
   };
 }
 
-export function fetchTracersSuccess(messages, errors, accountId) {
+export function fetchTracersSuccess(messages, errors, accountID) {
   return {
     type: types.FETCH_TRACERS_SUCCESS,
     messages,
     errors,
-    accountId
+    accountID
   };
 }
 
@@ -31,15 +31,19 @@ export function fetchTracers(params) {
     tracerAPI
       .searchTracer(params)
       .then(response => {
+        console.log(response);
         if (response.data.error === undefined) {
           var array = response.data;
           var arrayObj = [];
           var errors = [];
+          console.log(array);
           var messages = [];
           array.map(item => {
-            let rawPayload = item.payload.replace('', '');
+            console.log(item);
+            let rawPayload = item.payload.string.replace('', '');
             let payload = JSON.parse(rawPayload);
 
+            console.log(payload);
             const newItem = {
               ts: item.ts,
 
@@ -53,7 +57,7 @@ export function fetchTracers(params) {
                 .map(e => e.response.id)
                 .indexOf(payload.id);
               newItem.request = payload;
-              newItem.method = payload.method;
+
               if (index < 0) {
                 arrayObj.push(newItem);
               } else {
@@ -68,25 +72,26 @@ export function fetchTracers(params) {
                 arrayObj[index].response = payload;
               }
             }
-            return true;
           });
+
           var accountId = '';
-          arrayObj.map((val, key) => {
+          arrayObj.map(val => {
             if (val.response.error !== undefined) {
               errors.push(val);
               accountId = val.account_id;
             } else if (val.response.result !== undefined) {
               messages.push(val);
             }
-            return true;
           });
+          console.log(messages);
           dispatch(fetchTracersSuccess(messages, errors, accountId));
         } else {
+          console.log(123);
           dispatch(fetchTracersError(response.data.reason));
         }
       })
       .catch(error => {
-        dispatch(fetchTracersError(errorMessage(error)));
+        dispatch(fetchTracersError(''));
       });
   };
 }

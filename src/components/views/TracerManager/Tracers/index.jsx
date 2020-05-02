@@ -12,9 +12,11 @@ import {
   InputGroupAddon,
   CardHeader,
   Card,
-  CardBody
+  CardBody,
+  Input,
+  Row
 } from 'reactstrap';
-
+import { Button, Container, ButtonGroup } from 'reactstrap';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import queryString from 'query-string';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -25,6 +27,8 @@ import SearchInput from 'components/common/SearchInput';
 import MessageTable from './MessageTable';
 import ErrorTable from './ErrorTable';
 import Loader from 'react-loaders';
+import { changeSearch } from 'store/actions/settingsActions';
+import './style.scss';
 
 class Tracers extends Component {
   constructor(props) {
@@ -49,7 +53,7 @@ class Tracers extends Component {
 
   componentDidMount() {
     const values = queryString.parse(this.props.location.search);
-
+    console.log(values);
     if (values.q !== undefined) {
       const params = {
         search: values.q,
@@ -57,11 +61,13 @@ class Tracers extends Component {
         toTS: values.end
       };
 
+      this.props.onChangeSearchValue(params.search);
+
       this.props.fetchTracers(params);
     }
   }
 
-  renderTable() {
+  renderTable = () => {
     const { pending, error } = this.props;
     if (pending) {
       return (
@@ -98,13 +104,15 @@ class Tracers extends Component {
 
     return (
       <Tabs
+        className="tabs"
         defaultActiveKey="1"
         renderTabBar={() => <ScrollableInkTabBar />}
         renderTabContent={() => <TabContent />}
       >
         <TabPane
+          className="tabs"
           key="1"
-          tab="Messages"
+          tab={`Messages ${this.props.messages.length}`}
         >
           {this.props.messages.length === 0 ? (
             <div className="widget-content">
@@ -119,8 +127,9 @@ class Tracers extends Component {
           )}
         </TabPane>
         <TabPane
+          className="tabs"
           key="2"
-          tab="Errors"
+          tab={`Errors ${this.props.errors.length}`}
         >
           {this.props.errors.length === 0 ? (
             <div className="widget-content">
@@ -136,23 +145,22 @@ class Tracers extends Component {
         </TabPane>
       </Tabs>
     );
-  }
+  };
 
   handleOnSubmit(event) {
-    if (event.key === 'Enter') {
-      let search = '?q=' + this.props.search;
-      let fromTs = '&start=' + this.state.start.toISOString();
-      let toTs = '&end=' + this.state.end.toISOString();
+    event.preventDefault();
+    let search = '?q=' + this.props.search;
+    let fromTs = '&start=' + this.state.start.toISOString().split('.')[0] + 'Z';
+    let toTs = '&end=' + this.state.end.toISOString().split('.')[0] + 'Z';
 
-      this.props.history.push(this.props.match.url + search + fromTs + toTs);
-      const params = {
-        search: this.props.search,
-        fromTS: this.state.start.toISOString(),
-        toTS: this.state.end.toISOString()
-      };
+    this.props.history.push(this.props.match.url + search + fromTs + toTs);
+    const params = {
+      search: this.props.search,
+      fromTS: this.state.start.toISOString().split('.')[0] + 'Z',
+      toTS: this.state.end.toISOString().split('.')[0] + 'Z'
+    };
 
-      this.props.fetchTracers(params);
-    }
+    this.props.fetchTracers(params);
   }
 
   applyCallback(startDate, endDate) {
@@ -182,7 +190,7 @@ class Tracers extends Component {
       sundayFirst: false
     };
     let maxDate = moment(start).add(24, 'hour');
-    console.log(this.props);
+
     return (
       <Fragment>
         <ReactCSSTransitionGroup
@@ -201,40 +209,48 @@ class Tracers extends Component {
 
           <Col md="12">
             <Card className="card-border he-100">
-              <CardHeader>
-                <div className="card-header-title font-size-lg text-capitalize font-weight-normal">
-                  <SearchInput
-                    isActive={false}
-                    keyPressed={this.handleOnSubmit}
-                    placeholder="Search tracer"
-                  />
-                </div>
-
-                <DateTimeRangeContainer
-                  applyCallback={this.applyCallback}
-                  center
-                  end={this.state.end}
-                  local={local}
-                  maxDate={maxDate}
-                  ranges={ranges}
-                  selected={ranges}
-                  start={this.state.start}
-                >
-                  <InputGroup>
-                    <InputGroupAddon addonType="prepend">
-                      <div className="input-group-text">
-                        <FontAwesomeIcon
-                          hover
-                          icon={faCalendarAlt}
-                        />
-                      </div>
-                    </InputGroupAddon>
-                  </InputGroup>
-                </DateTimeRangeContainer>
-              </CardHeader>
-              <CardBody>{this.renderTable()}</CardBody>
+              <CardBody>
+                <Row>
+                  <div className="card-header-title font-size-lg text-capitalize font-weight-normal">
+                    <SearchInput
+                      isActive
+                      placeholder="Search tracer"
+                    />
+                  </div>
+                  <DateTimeRangeContainer
+                    applyCallback={this.applyCallback}
+                    center
+                    end={this.state.end}
+                    local={local}
+                    maxDate={maxDate}
+                    ranges={ranges}
+                    selected={ranges}
+                    start={this.state.start}
+                  >
+                    <InputGroup>
+                      <InputGroupAddon addonType="prepend">
+                        <div className="input-group-text">
+                          <FontAwesomeIcon
+                            hover
+                            icon={faCalendarAlt}
+                          />
+                        </div>
+                      </InputGroupAddon>
+                    </InputGroup>
+                  </DateTimeRangeContainer>
+                  <Col sm={1}>
+                    <Button
+                      color="primary"
+                      onClick={this.handleOnSubmit}
+                    >
+                      Search
+                    </Button>
+                  </Col>
+                </Row>
+              </CardBody>
             </Card>
           </Col>
+          {this.renderTable()}
         </ReactCSSTransitionGroup>
       </Fragment>
     );
@@ -253,7 +269,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchTracers: params => dispatch(fetchTracers(params))
+    fetchTracers: params => dispatch(fetchTracers(params)),
+    onChangeSearchValue: searchText => {
+      dispatch(changeSearch(searchText));
+    }
   };
 };
 

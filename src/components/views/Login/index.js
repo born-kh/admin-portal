@@ -11,7 +11,6 @@ import LaddaButton, { ZOOM_OUT } from 'react-ladda';
 import { Col, Row, Alert } from 'reactstrap';
 import { login } from 'store/actions/authActions';
 import LoginForm from '../../common/LoginForm/LoginForm';
-import { PERMISSIONS } from 'constants/localStorage';
 
 class Login extends Component {
   constructor(props) {
@@ -46,11 +45,11 @@ class Login extends Component {
       adaptiveHeight: true
     };
     const { error, isAuth, pending } = this.props;
-    console.log(pending);
 
     if (isAuth) {
       return <Redirect to="/user-manager/users" />;
     }
+   
 
     return (
       <Fragment>
@@ -69,14 +68,14 @@ class Login extends Component {
                         backgroundImage: 'url(' + bg1 + ')'
                       }}
                     />
-                    <div className="slider-content">
+                    {/* <div className="slider-content">
                       <h3>Perfect Balance</h3>
                       <p>
                         ArchitectUI is like a dream. Some think it's too good to
                         be true! Extensive collection of unified React Boostrap
                         Components and Elements.
                       </p>
-                    </div>
+                    </div> */}
                   </div>
                   <div className="h-100 d-flex justify-content-center align-items-center bg-premium-dark">
                     <div
@@ -85,14 +84,14 @@ class Login extends Component {
                         backgroundImage: 'url(' + bg3 + ')'
                       }}
                     />
-                    <div className="slider-content">
+                    {/* <div className="slider-content">
                       <h3>Scalable, Modular, Consistent</h3>
                       <p>
                         Easily exclude the components you don't require.
                         Lightweight, consistent Bootstrap based styles across
                         all elements and components
                       </p>
-                    </div>
+                    </div> */}
                   </div>
                   <div className="h-100 d-flex justify-content-center align-items-center bg-sunny-morning">
                     <div
@@ -101,13 +100,13 @@ class Login extends Component {
                         backgroundImage: 'url(' + bg2 + ')'
                       }}
                     />
-                    <div className="slider-content">
+                    {/* <div className="slider-content">
                       <h3>Complex, but lightweight</h3>
                       <p>
                         We've included a lot of components that cover almost all
                         use cases for any type of application.
                       </p>
-                    </div>
+                    </div> */}
                   </div>
                 </Slider>
               </div>
@@ -164,7 +163,6 @@ class Login extends Component {
 
 const mapStateToProps = state => ({
   error: state.auth.error,
-  profile_data: state.auth.profile_data,
   pending: state.auth.pending,
   isAuth: state.auth.isAuth,
   formData: state.form

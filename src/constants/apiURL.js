@@ -1,27 +1,32 @@
-export const SERVICE_URL = 'http://localhost:8080';
-// export const SERVICE_URL = 'http://10.7.8.129:9002';
-export const SEARCH_USER = '/search/user';
-export const GET_ACCOUNT_SESSIONS = '/get/account/sessions';
+export const SERVICE_URL =
+  process.env.REACT_APP_API_GATEWAY_URL || 'http://localhost:8080';
+
+export const SEARCH_USER = '/searchuser';
+export const GET_ACCOUNT_SESSIONS = '/getaccountsessions';
 export const LOGIN = '/login';
-export const GET_PRECENSE_INFO = '/get/precense/info';
-export const SUSPEND_SESSION = '/suspend/session';
-export const REMOVE_SESSION = '/remove/session';
-export const SET_TRACER = '/set/tracer';
-export const SET_PASSWORD = '/set/password';
-export const SEARCH_TRACER = '/search/tracer';
-export const REMOVE_TRACER = '/remove/tracer';
-export const GET_PERMISSIONS = '/get/permissions';
-export const GET_PROFILE_DATA = '/get/profile/data';
+export const GET_PRECENSE_INFO = '/getprecenseinfo';
+export const SUSPEND_SESSION = '/suspendsession';
+export const REMOVE_SESSION = '/removesession';
+export const SET_TRACER = '/settracer';
+export const SET_PASSWORD = '/setpassword';
+export const SEARCH_TRACER = '/searchtracer';
+export const REMOVE_TRACER = '/removetracer';
+export const GET_PERMISSIONS = '/getpermissions';
+export const GET_PROFILE_DATA = '/getprofiledata';
 export const LOGOUT = '/logout';
 
-export const GET_APPLICATIONS = '/get/applications';
-export const GET_DOCUMENTS = '/get/documents';
-export const GET_APPLICATIONS_BY_NAME = '/get/application/search';
-export const SET_APPLICATION_STATUS = 'set/application/status';
-export const SET_DOCUMENT_STATUS = 'set/document/status';
-export const SET_DOCUMENT_FIELDS = '/set/document/fields';
-export const SET_DOCUMENT_NOTE = '/set/document/note';
-export const SET_DOCUMENT_TAGS = '/set/document/tags';
-export const GET_DOCUMENT_TYPES = '/get/document/types';
-export const DELETE_DOCUMENT = '/delete/document';
-export const GET_APPLICATIONS_BY_ACCOUNT = '/get/applications/by/account';
+export const GET_APPLICATIONS = '/getapplications';
+export const GET_DOCUMENTS = '/getdocuments';
+export const GET_APPLICATIONS_BY_NAME = '/getapplicationsearch';
+export const SET_APPLICATION_STATUS = 'setapplicationstatus';
+export const SET_DOCUMENT_STATUS = 'setdocumentstatus';
+export const SET_DOCUMENT_FIELDS = '/setdocumentfields';
+export const SET_DOCUMENT_NOTE = '/setdocumentnote';
+export const SET_DOCUMENT_TAGS = '/setdocumenttags';
+export const GET_DOCUMENT_TYPES = '/getdocumenttypes';
+export const DELETE_DOCUMENT = '/deletedocument';
+export const GET_APPLICATIONS_BY_ACCOUNT = '/getapplicationsbyaccount';
+
+export const GET_APIKEYS = 'getapikeys';
+export const CREATE_APIKEY = 'createapikey';
+export const UPDATE_APIKEY_URL = 'updateapikey';

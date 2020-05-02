@@ -9,20 +9,33 @@ import {
   fetchUsers,
   fetchApplicationsByAccount
 } from 'store/actions/userActions';
+import { fetchPresenceInfo } from 'store/actions/presenceInfoActions';
 
 class AccountInfo extends React.Component {
+  componentDidMount() {
+    const { user } = this.props;
+    if (!user) {
+      this.props.history.push('/user-manager/users');
+    } else {
+      this.props.fetchPresenceInfo({ accountID: user.accountID });
+    }
+  }
   render() {
-    return (
-      <Fragment>
-        <PageTitle
-          heading=""
-          icon="pe-7s-science icon-gradient bg-happy-itmeo"
-          subheading=""
-        />
+    if (this.props.user) {
+      return (
+        <Fragment>
+          <PageTitle
+            heading=""
+            icon="pe-7s-science icon-gradient bg-happy-itmeo"
+            subheading=""
+          />
 
-        <AccountProfile userInfo={this.props.user} />
-      </Fragment>
-    );
+          <AccountProfile userInfo={this.props.user} />
+        </Fragment>
+      );
+    } else {
+      return <div />;
+    }
   }
 }
 
@@ -37,7 +50,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchApllicationsByAccount: params =>
-      dispatch(fetchApplicationsByAccount(params))
+      dispatch(fetchApplicationsByAccount(params)),
+    fetchPresenceInfo: params => dispatch(fetchPresenceInfo(params))
   };
 };
 

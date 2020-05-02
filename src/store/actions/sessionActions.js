@@ -1,6 +1,5 @@
 import * as types from '../../constants/actionType';
 import { sessionAPI } from 'service/api';
-import { errorMessage } from 'helpers/errorMessage';
 
 export function fetchAccountSessionsPending() {
   return {
@@ -8,11 +7,11 @@ export function fetchAccountSessionsPending() {
   };
 }
 
-export function fetchAccountSessionsSuccess(result) {
-  console.log(result);
+export function fetchAccountSessionsSuccess(data) {
   return {
     type: types.FETCH_ACCOUNT_SESSIONS_SUCCESS,
-    result
+    sessions: data.sessions,
+    blockList: data.blocklist
   };
 }
 
@@ -50,14 +49,17 @@ export function fetchAccountSessions(params) {
     sessionAPI
       .getAccountSessions(params)
       .then(response => {
+        console.log(response);
         if (response.data.sessions !== undefined) {
           dispatch(fetchAccountSessionsSuccess(response.data));
         } else if (response.data.error !== undefined) {
-          dispatch(fetchAccountSessionsError(response.data));
+          dispatch(fetchAccountSessionsError(response.data.error));
         }
       })
       .catch(error => {
-        dispatch(fetchAccountSessionsError(errorMessage(error)));
+        console.log(error);
+
+        dispatch(fetchAccountSessionsError(''));
       });
   };
 }

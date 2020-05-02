@@ -13,7 +13,7 @@ import {
   ModalFooter
 } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { axios } from 'helpers';
+import { axios, history } from 'helpers';
 import { toast, Bounce } from 'react-toastify';
 import ReactTable from 'react-table';
 import {
@@ -27,7 +27,7 @@ import cx from 'classnames';
 import { connect } from 'react-redux';
 import GoogleMapsExample from 'components/common/GoogleMaps';
 import { sessionAPI } from 'service/api';
-
+import OpenMaps from './OpenMaps';
 class SessionTable extends React.Component {
   constructor() {
     super();
@@ -37,7 +37,9 @@ class SessionTable extends React.Component {
       modalMap: false,
       modalInfo: false,
       userIP: '',
-      center: null
+      center: null,
+      position: null,
+      loadingMap: false
     };
 
     this.handleClickCloseDialog = this.handleClickCloseDialog.bind(this);
@@ -52,30 +54,41 @@ class SessionTable extends React.Component {
     });
   };
 
-  handleClickOpenMap = userIP => {
-    axios
-      .get(
-        'https://api.ipdata.co/' +
-          '81.95.133.111' +
-          '?api-key=496d90eb53d940c03f6e80a2a2bd80719cd21216b3f29e799fb1ab6d'
-      )
-      .then(resp => {
-        console.log(resp.data);
-        if (resp.status === 200) {
+  handleClickOpenMap = sessionIP => {
+    this.setState({
+      loadingMap: true,
+      position: null
+    });
+    fetch(
+      `http://api.ipstack.com/${sessionIP}?access_key=98b92bffbfd727524f6027db62913163`
+    )
+      .then(response => {
+        return response.json();
+      })
+      .then(myJson => {
+        if (myJson.latitude) {
+          let position = [];
+          position.push(myJson.latitude);
+          position.push(myJson.longitude);
+
           this.setState({
-            center: {
-              lat: resp.data.latitude,
-              lng: resp.data.longitude
-            }
+            position
           });
         }
+
+        this.setState({
+          loadingMap: false
+        });
       })
       .catch(error => {
-        console.log(error.message);
+        this.setState({
+          loadingMap: false
+        });
       });
+
     this.setState({
       modalMap: !this.state.modalMap,
-      userIP
+      userIP: sessionIP
     });
   };
   handleClickCloseDialog = () => {
@@ -92,17 +105,17 @@ class SessionTable extends React.Component {
     });
   };
 
-  handleSetTracing = (index, tracer) => {
+  handleSetTracing = (index, isTracing) => {
     const sessionID = this.props.sessions[index].meta.sessionID;
     sessionAPI
-      .setTracer({ sessionID: sessionID, tracing: !tracer.tracing })
+      .setTracer({ sessionID: sessionID, isTracing: !isTracing })
       .then(response => {
-        console.log(response);
+        console.log('tracer', response);
         if (response.status === 200) {
           if (response.data) {
             let params = {
               index: index,
-              tracing: !tracer.tracing
+              isTracing: !isTracing
             };
             this.props.onChangeTracing(params);
             toast('success', {
@@ -128,14 +141,14 @@ class SessionTable extends React.Component {
 
   handleSessionSuspended = (index, suspended) => {
     const sessionID = this.props.sessions[index].meta.sessionID;
-    console.log(!suspended);
+
     sessionAPI
       .suspendSession({
         sessionID: sessionID,
         isSuspended: !suspended
       })
       .then(response => {
-        console.log(response);
+        console.log('suspend', response);
         if (response.status === 200) {
           this.props.onChangeSuspended({
             index: index,
@@ -187,6 +200,15 @@ class SessionTable extends React.Component {
         });
       });
   };
+  goToTracer = sessionID => {
+    const date = new Date();
+    date.setDate(date.getDate() - 30);
+    let search = '?q=' + sessionID;
+    let fromTs = '&start=' + date.toISOString();
+    let toTs = '&end=' + new Date().toISOString();
+
+    history.push('/tracer-manager/tracers' + search + fromTs + toTs);
+  };
 
   componentDidMount() {
     const { accountID, fetchGetAccountSessions } = this.props;
@@ -235,7 +257,7 @@ class SessionTable extends React.Component {
   }
 
   renderMap() {
-    const { modalMap, center } = this.state;
+    const { modalMap, position, loadingMap } = this.state;
 
     if (modalMap) {
       return (
@@ -243,23 +265,32 @@ class SessionTable extends React.Component {
           fade={false}
           isOpen={modalMap}
           size="lg"
-          style={{ maxWidth: '1600px', width: '80%' }}
           toggle={this.handleClickOpenMap}
         >
           <ModalHeader toggle={this.handleClickCloseMap}>Location</ModalHeader>
           <ModalBody>
-            {center ? (
-              <GoogleMapsExample center={center} />
+            {loadingMap ? (
+              <div className=" d-flex justify-content-center align-items-center leaflet-container">
+                <Loader type="ball-spin-fade-loader" />
+              </div>
             ) : (
-              <div className="dropdown-menu-header">
-                <div className="dropdown-menu-header-inner bg-primary">
-                  <div className="menu-header-content">
-                    <div>
-                      <h5 className="menu-header-title">Private IP address</h5>
+              <>
+                {position ? (
+                  <OpenMaps position={position} />
+                ) : (
+                  <div className="dropdown-menu-header">
+                    <div className="dropdown-menu-header-inner bg-primary">
+                      <div className="menu-header-content">
+                        <div>
+                          <h5 className="menu-header-title">
+                            Private IP address
+                          </h5>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                )}
+              </>
             )}
           </ModalBody>
           <ModalFooter>
@@ -349,14 +380,14 @@ class SessionTable extends React.Component {
                           onClick={() =>
                             this.handleSetTracing(
                               row.index,
-                              sessions[row.index].options
+                              sessions[row.index].isTracing
                             )
                           }
                         >
                           <div
                             className={cx('switch-animate', {
-                              'switch-on': sessions[row.index].options.tracing,
-                              'switch-off': !sessions[row.index].options.tracing
+                              'switch-on': sessions[row.index].isTracing,
+                              'switch-off': !sessions[row.index].isTracing
                             })}
                           >
                             <input type="checkbox" />
@@ -444,10 +475,30 @@ class SessionTable extends React.Component {
                         <Button
                           className="mb-2 mr-2 btn-icon"
                           color="danger"
-                          onClick={() => this.handleClickOpenMap(row.value)}
+                          onClick={() =>
+                            this.handleClickOpenMap(sessions[row.index].meta.ip)
+                          }
                         >
                           <i className="pe-7s-science btn-icon-wrapper" />
                           Location
+                        </Button>
+                      </div>
+                    )
+                  },
+                  {
+                    Header: 'Tracer',
+                    accessor: 'ip',
+                    Cell: row => (
+                      <div className="d-block w-100 text-center">
+                        <Button
+                          className="mb-2 mr-2 btn-icon"
+                          color="danger"
+                          onClick={() =>
+                            this.goToTracer(sessions[row.index].meta.sessionID)
+                          }
+                        >
+                          <i className="pe-7s-science btn-icon-wrapper" />
+                          Tracer
                         </Button>
                       </div>
                     )
@@ -469,8 +520,7 @@ class SessionTable extends React.Component {
 }
 
 SessionTable.propTypes = {
-  className: PropTypes.string,
-  classes: PropTypes.object.isRequired
+  className: PropTypes.string
 };
 
 const mapStateToProps = state => {

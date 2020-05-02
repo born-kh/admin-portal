@@ -12,7 +12,6 @@ const sessionReducer = (state = initState, action) => {
     case types.FETCH_ACCOUNT_SESSIONS_PENDING:
       return {
         ...state,
-
         pending: true,
         error: null
       };
@@ -21,25 +20,23 @@ const sessionReducer = (state = initState, action) => {
         ...state,
 
         pending: false,
-        sessions: action.result.sessions,
-        blockList: action.result.blocklist
+        error: null,
+        sessions: action.sessions
+        // blockList: action.blocklist
       };
     case types.FETCH_ACCOUNT_SESSIONS_ERROR:
       return {
         ...state,
 
         pending: false,
-        error: action.error
+        error: action.error,
+        sessions: [],
+        blockList: []
       };
 
     case types.UPDATE_TRACING:
       var sessions = [...state.sessions];
-
-      sessions[action.params.index].options = {
-        ...sessions[action.params.index].options,
-        tracing: action.params.tracing
-      };
-
+      sessions[action.params.index].isTracing = action.params.isTracing;
       return {
         ...state,
         sessions
@@ -47,10 +44,7 @@ const sessionReducer = (state = initState, action) => {
 
     case types.UPDATE_SUSPENDED:
       sessions = [...state.sessions];
-      console.log(action.params.isSuspended);
-
       sessions[action.params.index].isSuspended = action.params.isSuspended;
-
       return {
         ...state,
         sessions
@@ -58,7 +52,6 @@ const sessionReducer = (state = initState, action) => {
 
     case types.SESSION_DELETE:
       sessions = [...state.sessions];
-
       sessions = sessions.filter(
         session => session.meta.sessionID !== action.sessionID
       );

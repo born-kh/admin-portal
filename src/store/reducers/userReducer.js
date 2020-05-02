@@ -3,11 +3,10 @@ import * as types from '../../constants/actionType';
 const initState = {
   users: [],
   applications: [],
-  searchApplications: [],
-  errorUser: null,
-  pendingUser: false,
-  errorApplication: null,
-  pendingApplication: false
+  error: null,
+  pending: false,
+  pendingApplication: false,
+  errorApplication: null
 };
 
 const userReducer = (state = initState, action) => {
@@ -16,33 +15,31 @@ const userReducer = (state = initState, action) => {
       return {
         ...state,
         users: [],
-
-        errorUser: null,
-        pendingUser: true
+        error: null,
+        pending: true
       };
     case types.FETCH_USERS_SUCCESS:
-      console.log(action.payload);
-      let users = action.payload.filter(
-        (elem, index, self) =>
-          self.findIndex(t => {
-            console.log(elem);
-            if (elem !== undefined || t !== undefined) {
-              return t.accountID === elem.accountID;
-            }
-          }) === index
-      );
-
+      console.log(action.users);
+      let users = action.users.reduce((unique, o) => {
+        if (!unique.some(obj => obj.accountID === o.accountID)) {
+          unique.push(o);
+        }
+        return unique;
+      }, []);
+      console.log(users);
       return {
         ...state,
-        pendingUser: false,
+        pending: false,
+        error: null,
         users: users
       };
     case types.FETCH_USERS_ERROR:
       return {
         ...state,
-        pendingUser: false,
-        errorUser: action.error
+        pending: false,
+        error: action.error
       };
+
     case types.FETCH_APPLICATIONS_BY_ACCOUNT_PENDING:
       return {
         ...state,
@@ -54,7 +51,7 @@ const userReducer = (state = initState, action) => {
       return {
         ...state,
         pendingApplication: false,
-        applications: action.payload
+        applications: action.applications
       };
     case types.FETCH_APPLICATIONS_BY_ACCOUNT_ERROR:
       return {

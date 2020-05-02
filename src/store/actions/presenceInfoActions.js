@@ -16,7 +16,6 @@ export function presenceInfoSuccess(result) {
 }
 
 export function presenceInfoError(error) {
-  console.log(error);
   return {
     type: types.FETCH_PRESENCE_INFO_ERROR,
     error
@@ -30,13 +29,13 @@ export function fetchPresenceInfo(params) {
       .getPresenceInfo(params)
       .then(response => {
         if (response.data.varStatus !== undefined) {
-          dispatch(presenceInfoSuccess(response.data.response));
+          dispatch(presenceInfoSuccess(response.data));
         } else if (response.data.error !== undefined) {
           dispatch(presenceInfoSuccess(response.data.error));
         }
       })
       .catch(error => {
-        dispatch(presenceInfoError(errorMessage(error)));
+        dispatch(presenceInfoError(''));
       });
   };
 }

@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
 import { Col, Card, CardBody } from 'reactstrap';
 import MultiStep from './Wizard';
-import Step1 from './Steps/Step1';
-import Step2 from './Steps/Step2';
-import Step4 from './Steps/Step4';
+import SelfieStep from './Steps/SelfieStep';
+import DocumentStep from './Steps/DocumentStep';
+import ConfirmStep from './Steps/ConfirmStep';
 import { passportAPI } from 'service/api';
-import WizardStepSet from './Steps/Step3';
+import SetGroups from './Steps/SetGroups';
 import { connect } from 'react-redux';
 import {
   deleteDocument,
@@ -15,18 +15,11 @@ import { convertMRZDate } from 'helpers/convertMRZDate';
 
 class DocumentProcedure extends React.Component {
   state = {
-    documentID: undefined,
-    setID: undefined,
-    currentID: 0,
-    selfieID: null,
-    selfie: {
-      ID: null,
-      status: null
-    },
-    passport: {
-      ID: null,
-      status: null
-    },
+    documentID: null,
+    setID: null,
+    checkedGroupStep: false,
+    checkedSelfieStep: {},
+    checkedPassportStep: {},
     selfieDocuments: [],
     passportDocuments: [],
     setDocuments: [],
@@ -48,32 +41,35 @@ class DocumentProcedure extends React.Component {
       }
     }
   };
-  componentDidMount() {
-    const { documents } = this.props;
-    this.getSetDocuments(documents);
-  }
 
   deleteDocument = documentID => {
     passportAPI.deleteDocument({ documentID: documentID }).then(res => {
-      console.log(res);
       if (res.status === 200) {
         this.props.deleteDocument(documentID);
+
+        var passportDocuments = this.state.passportDocuments.filter(
+          document => {
+            return document.ID !== documentID;
+          }
+        );
+
+        var selfieDocuments = this.state.selfieDocuments.filter(document => {
+          return document.ID !== documentID;
+        });
+        this.setState({ selfieDocuments, passportDocuments });
       }
     });
   };
 
   setDocumentSetID = setID => {
     if (setID === '') {
-      this.setState({ currentID: 0 });
+      this.setState({ checkedGroupStep: false });
     } else {
       passportAPI.getDocumentTypes({ setID: setID }).then(response => {
         this.setState({ setID, types: response.data.types });
-
-        this.setState({ currentID: 1 });
+        this.getSetDocuments(this.props.documents);
       });
     }
-
-    console.log('setDocument');
   };
 
   setDocumentSelfieID = selfieID => {
@@ -86,14 +82,7 @@ class DocumentProcedure extends React.Component {
 
   getSetDocuments = documents => {
     if (this.state.setID) {
-      var selfie = {
-        ID: null,
-        status: null
-      };
-      var passport = {
-        ID: null,
-        status: null
-      };
+      var checkedPassportIndex = -1;
       var setDocuments = documents.filter(document => {
         return document.documenSet.ID === this.state.setID;
       });
@@ -105,138 +94,103 @@ class DocumentProcedure extends React.Component {
       var selfieDocuments = setDocuments.filter(document => {
         return document.documentType.typeName === 'SELFIE_PHOTO';
       });
-      console.log('documents', documents);
+      if (selfieDocuments.length > 0) {
+        this.setState({
+          checkedSelfieStep: {
+            ID: selfieDocuments[0].ID,
+            status: selfieDocuments[0].status
+          }
+        });
+      }
 
-      selfieDocuments.map(document => {
-        console.log(document);
-        if (document.status !== 'NEW' && document.status !== 'ML_DONE') {
-          selfie.ID = document.ID;
-          selfie.status = document.status;
+      if (passportDocuments.length > 0) {
+        this.setState({
+          checkedPassportStep: {
+            ID: passportDocuments[0].ID,
+            status: passportDocuments[0].status
+          }
+        });
+      }
+
+      selfieDocuments.forEach(document => {
+        if (
+          document.status === 'HUMAN_APPROVED' &&
+          document.status === 'HUMAN_REJECTED'
+        ) {
+          this.setState({
+            checkedSelfieStep: { ID: document.ID, status: document.status }
+          });
         }
       });
 
-      passportDocuments.map(document => {
-        console.log('passport', passport);
-        if (document.status !== 'NEW' && document.status !== 'ML_DONE') {
-          console.log('passport', document);
-          passport.ID = document.ID;
-          passport.status = document.status;
+      passportDocuments.forEach((document, index) => {
+        if (
+          document.status === 'HUMAN_APPROVED' &&
+          document.status === 'HUMAN_REJECTED'
+        ) {
+          checkedPassportIndex = index;
+          this.setState({
+            checkedPassportStep: { ID: document.ID, status: document.status }
+          });
         }
       });
-
-      if (!selfie.ID) {
-        console.log('selfie');
-        if (selfieDocuments.length > 0) {
-          selfie.ID = selfieDocuments[0].ID;
-          selfie.status = selfieDocuments[0].status;
-        }
-      }
-
-      if (!passport.ID) {
-        if (passportDocuments.length > 0) {
-          passport.ID = passportDocuments[0].ID;
-          passport.status = passportDocuments[0].status;
-        }
-      }
 
       this.setState({
         passportDocuments,
         selfieDocuments,
         setDocuments,
-        selfie,
-        passport
+        checkedGroupStep: true
       });
 
       if (passportDocuments.length > 0) {
-        const document = passportDocuments[0];
+        const filterPassport = passportDocuments.filter(item => {
+          return item.recognized;
+        });
+
+        var document =
+          filterPassport.length > 0 ? filterPassport[0] : passportDocuments[0];
         var fields;
-        // if (document.fields) {
-        //   // fields = {
-        //   //   country: document.fields.passport.country,
-        //   //   date_of_birth:
-        //   //     new Date(document.fields.passport.date_of_birth)
-        //   //       .toISOString()
-        //   //       .slice(0, -5) + 'Z',
-        //   //   expiration_date:
-        //   //     new Date(document.fields.passport.expiration_date)
-        //   //       .toISOString()
-        //   //       .slice(0, -5) + 'Z',
-        //   //   sex: document.fields.passport.sex,
-        //   //   type: document.fields.passport.type,
-        //   //   issue_date:
-        //   //     new Date(document.fields.passport.issue_date)
-        //   //       .toISOString()
-        //   //       .slice(0, -5) + 'Z',
-        //   //   last_name: document.fields.passport.last_name,
-        //   //   first_name: document.fields.passport.first_name,
-        //   //   nationality: document.fields.passport.nationality,
-        //   //   number: document.fields.passport.number,
-        //   //   personal_number: document.fields.passport.personal_number
-        //   // };
-        // } else
-        if (document.recognized) {
-          console.log(
-            convertMRZDate(document.recognized.mrz.expiration_date, 'dob')
-          );
+        if (checkedPassportIndex !== -1) {
+          document = passportDocuments[checkedPassportIndex];
+        }
+        var passport = null;
+        if (document.recognized && document.recognized.mrz.passport) {
+          passport = document.recognized.mrz.passport;
+        } else if (document.recognized && document.recognized.mrz.idcard) {
+          passport = document.recognized.mrz.idcard;
+        }
+        console.log(passport, document);
+        if (passport) {
           fields = {
-            country: document.recognized.mrz.country,
-            expiration_date: convertMRZDate(
-              document.recognized.mrz.expiration_date,
-              'expiry'
-            ),
-            date_of_birth: convertMRZDate(
-              document.recognized.mrz.date_of_birth,
-              'dob'
-            ),
-            sex: document.recognized.mrz.sex,
-            type: document.recognized.mrz.type,
-            issue_date: convertMRZDate(
-              document.recognized.mrz.expiration_date,
-              'issue'
-            ),
-            last_name: document.recognized.mrz.surname,
-            first_name: document.recognized.mrz.names,
-            nationality: document.recognized.mrz.nationality,
-            number: document.recognized.mrz.number,
-            personal_number: document.recognized.mrz.personal_number
+            country: passport.country,
+            expiration_date: convertMRZDate(passport.expiration_date, 'expiry'),
+            date_of_birth: convertMRZDate(passport.date_of_birth, 'dob'),
+            sex: passport.sex,
+            type: passport.type,
+            issue_date: convertMRZDate(passport.expiration_date, 'issue'),
+            last_name: passport.surname,
+            first_name: passport.names,
+            nationality: passport.nationality,
+            number: passport.number,
+            personal_number: passport.personal_number
           };
         } else {
-          fields = {
-            country: null,
-            date_of_birth: null,
-            expiration_date: null,
-            sex: null,
-            type: null,
-            issue_date: null,
-            last_name: null,
-            first_name: null,
-            nationality: null,
-            number: null,
-            personal_number: null
-          };
+          fields = this.state.editFieldsDocument.fields;
         }
         this.setState({
           editFieldsDocument: {
             documentID: document.ID,
             fields
+          },
+
+          checkedPassportStep: {
+            ID: document.ID,
+            status: document.status
           }
         });
       }
     }
   };
-
-  componentDidUpdate(oldProps, oldState) {
-    const { setID } = this.state;
-    const newProps = this.props;
-    const newState = this.state;
-    if (oldProps.documents !== newProps.documents) {
-      this.getSetDocuments(newProps.documents);
-    }
-
-    if (oldState.setID !== newState.setID) {
-      this.getSetDocuments(oldProps.documents);
-    }
-  }
 
   handleChangeFields = (val, name) => {
     this.setState({
@@ -252,8 +206,8 @@ class DocumentProcedure extends React.Component {
 
   renderSteps = documents => {
     const {
-      passport,
-      selfie,
+      checkedPassportStep,
+      checkedSelfieStep,
       passportDocuments,
       selfieDocuments,
       editFieldsDocument,
@@ -263,7 +217,7 @@ class DocumentProcedure extends React.Component {
       {
         name: 'Group Set',
         component: (
-          <WizardStepSet
+          <SetGroups
             documents={documents}
             getDocumentSetID={setID => this.setDocumentSetID(setID)}
           />
@@ -271,25 +225,24 @@ class DocumentProcedure extends React.Component {
       },
       {
         name: 'Selfie',
-        status: { ...selfie },
+        status: { ...checkedSelfieStep },
         component: (
-          <Step1
+          <SelfieStep
+            checkedPassportStep={checkedPassportStep}
+            checkedSelfieStep={checkedSelfieStep}
             deleteDocument={documentID => this.deleteDocument(documentID)}
-            getDocumentID={selfieID => {
-              this.setState({ selfieID });
-            }}
-            passport={passport}
             passportDocuments={passportDocuments}
-            selfie={selfie}
             selfieDocuments={selfieDocuments}
+            setCheckedDocument={params => this.setCheckedDocument(params)}
           />
         )
       },
       {
         name: 'Passport',
-        status: { ...passport },
+        status: { ...checkedPassportStep },
         component: (
-          <Step2
+          <DocumentStep
+            checkedPassportStep={checkedPassportStep}
             editFieldsDocument={editFieldsDocument}
             handleChangeFields={this.handleChangeFields}
             handleChangePageFields={this.handleChangePageFields}
@@ -302,15 +255,33 @@ class DocumentProcedure extends React.Component {
       {
         name: 'Confirmed Document',
         component: (
-          <Step4
+          <ConfirmStep
+            checkedPassportStep={checkedPassportStep}
+            checkedSelfieStep={checkedSelfieStep}
             editFieldsDocument={editFieldsDocument}
-            passportID={editFieldsDocument.documentID}
-            selfieID={selfie.ID}
           />
         )
       }
     ];
     return steps;
+  };
+
+  setCheckedDocument = params => {
+    if (params.selfie) {
+      this.setState({
+        checkedSelfieStep: {
+          ID: params.docID,
+          status: params.status
+        }
+      });
+    } else {
+      this.setState({
+        checkedPassportStep: {
+          ID: params.docID,
+          status: params.status
+        }
+      });
+    }
   };
 
   render() {
@@ -321,13 +292,12 @@ class DocumentProcedure extends React.Component {
       handleGetApplications
     } = this.props;
     const {
-      currentID,
+      checkedGroupStep,
       documentID,
       editFieldsDocument,
-      passport,
-      selfie
+      checkedPassportStep,
+      checkedSelfieStep
     } = this.state;
-    console.log(editFieldsDocument);
 
     return (
       <Fragment>
@@ -337,18 +307,18 @@ class DocumentProcedure extends React.Component {
               <MultiStep
                 accountID={this.props.accountID}
                 applicationID={applicationID}
-                currentID={currentID}
+                checkedGroupStep={checkedGroupStep}
+                checkedPassportStep={checkedPassportStep}
+                checkedSelfieStep={checkedSelfieStep}
                 deleteApplication={applicationID =>
                   this.props.deleteApplication(applicationID)
                 }
                 documentID={editFieldsDocument.documentID}
-                // steps={this.renderStep(this.props.documents)}
                 editFieldsDocument={editFieldsDocument}
                 getDocumentSetID={setID => this.setDocumentSetID(setID)}
                 handleDoneProcedure={handleDoneProcedure}
                 handleGetApplications={handleGetApplications}
-                passport={passport}
-                selfie={selfie}
+                setCheckedDocument={params => this.setCheckedDocument(params)}
                 showNavigation
                 steps={this.renderSteps(documents)}
               />

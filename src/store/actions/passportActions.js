@@ -1,6 +1,5 @@
 import * as types from '../../constants/actionType';
 import { passportAPI } from 'service/api';
-import { errorMessage } from 'helpers/errorMessage';
 
 export function fetchDocumentsPending() {
   return {
@@ -11,7 +10,7 @@ export function fetchDocumentsPending() {
 export function fetchDocumentsSuccess(documents) {
   return {
     type: types.FETCH_DOCUMENTS_SUCCESS,
-    payload: documents
+    documents
   };
 }
 
@@ -24,13 +23,13 @@ export function fetchDocumentsError(error) {
 
 export function fetchApplicationsPending() {
   return {
-    type: types.FETCH_ACCOUNTS_PENDING
+    type: types.FETCH_APPLICATIONS_PENDING
   };
 }
 
 export function fetchApplicationsSuccess(data, count) {
   return {
-    type: types.FETCH_ACCOUNTS_SUCCESS,
+    type: types.FETCH_APPLICATIONS_SUCCESS,
     applications: data.applications,
     pages: Math.ceil(data.totalCount / count)
   };
@@ -38,26 +37,7 @@ export function fetchApplicationsSuccess(data, count) {
 
 export function fetchApplicationsError(error) {
   return {
-    type: types.FETCH_ACCOUNTS_ERROR,
-    error
-  };
-}
-export function fetchApplicationSearchPending() {
-  return {
-    type: types.FETCH_ACCOUNTS_SEARCH_PENDING
-  };
-}
-
-export function fetchApplicationSearchSuccess(data) {
-  return {
-    type: types.FETCH_ACCOUNTS_SEARCH_SUCCESS,
-    payload: data.applications
-  };
-}
-
-export function fetchApplicationSearchError(error) {
-  return {
-    type: types.FETCH_ACCOUNTS_SEARCH_ERROR,
+    type: types.FETCH_APPLICATIONS_ERROR,
     error
   };
 }
@@ -70,7 +50,6 @@ export function deleteDocument(documentID) {
 }
 
 export function deleteApplication(applicationID) {
-  console.log(applicationID);
   return {
     type: types.APPLICATION_DELETE,
     applicationID
@@ -78,42 +57,21 @@ export function deleteApplication(applicationID) {
 }
 
 export function fetchApplications(params) {
-  console.log(params);
   return dispatch => {
     dispatch(fetchApplicationsPending());
     passportAPI
       .getApplications(params)
       .then(response => {
-        console.log('Applications', response.status);
         if (response.data !== undefined) {
           return dispatch(
             fetchApplicationsSuccess(response.data, params.count)
           );
         } else {
-          return dispatch(fetchApplicationsError(response));
+          return dispatch(fetchApplicationsError('response data is undefined'));
         }
       })
       .catch(error => {
-        return dispatch(fetchApplicationsError(errorMessage(error)));
-      });
-  };
-}
-
-export function fetchApplicationSearch(params) {
-  console.log('fetchApplicationSearch');
-  return dispatch => {
-    dispatch(fetchApplicationSearchPending());
-    passportAPI
-      .getApplicationsByName(params)
-      .then(response => {
-        if (response.data.applications !== undefined) {
-          return dispatch(fetchApplicationSearchSuccess(response.data));
-        } else {
-          return dispatch(fetchApplicationSearchError(response));
-        }
-      })
-      .catch(error => {
-        return dispatch(fetchApplicationSearchError(errorMessage(error)));
+        return dispatch(fetchApplicationsError(''));
       });
   };
 }
@@ -131,7 +89,16 @@ export function fetchDocuments(params) {
         }
       })
       .catch(error => {
-        return dispatch(fetchDocumentsError(errorMessage(error)));
+        try {
+          let accounts = JSON.parse(error.response.data.reason);
+          if (accounts.accounts) {
+            return dispatch(fetchDocumentsError(accounts.accounts[0]));
+          } else {
+            return dispatch(fetchDocumentsError(''));
+          }
+        } catch (erro) {
+          return dispatch(fetchDocumentsError(''));
+        }
       });
   };
 }

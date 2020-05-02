@@ -11,7 +11,7 @@ export function fetchUsersPending() {
 export function fetchUsersSuccess(users) {
   return {
     type: types.FETCH_USERS_SUCCESS,
-    payload: users
+    users
   };
 }
 
@@ -23,38 +23,58 @@ export function fetchUsersError(error) {
 }
 
 export function fetchUsers(paramsList) {
-  return dispatch => {
+  return async dispatch => {
     dispatch(fetchUsersPending());
-    var users = paramsList.map(function(params) {
-      return userAPI
-        .searchUser(params)
-        .then(response => {
+    var users = [];
+
+    await Promise.all(
+      paramsList.map(async params => {
+        console.log('search', params);
+        try {
+          let response = await userAPI.searchUser(params);
           if (response.data.accounts !== undefined) {
-            for (let i = 0; i < response.data.accounts.length; i++) {
-              console.log('123455');
-              return response.data.accounts[i];
-            }
-          } else {
-            return null;
-            // return dispatch(fetchUsersError(response.data));
+            users = users.concat(response.data.accounts);
           }
-        })
-        .catch(error => {
-          return null;
-          // return dispatch(fetchUsersError(errorMessage(error)));
-        });
-    });
-    Promise.all(users).then(function(results) {
-      console.log(results);
-      const result = results.filter(item => {
-        console.log(item);
-        return item ? item : '';
-      });
-      console.log(result);
-      return dispatch(fetchUsersSuccess(result));
-    });
+        } catch (e) {}
+      })
+    );
+    return dispatch(fetchUsersSuccess(users));
   };
 }
+
+// export function fetchUsers(paramsList) {
+//   return dispatch => {
+//     dispatch(fetchUsersPending());
+//     var users = paramsList.map(function(params) {
+//       return userAPI
+//         .searchUser(params)
+//         .then(response => {
+//           if (response.data.accounts !== undefined) {
+//             for (let i = 0; i < response.data.accounts.length; i++) {
+//               console.log('123455');
+//               return response.data.accounts[i];
+//             }
+//           } else {
+//             return null;
+//             // return dispatch(fetchUsersError(response.data));
+//           }
+//         })
+//         .catch(error => {
+//           return null;
+//           // return dispatch(fetchUsersError(errorMessage(error)));
+//         });
+//     });
+//     Promise.all(users).then(function(results) {
+//       console.log(results);
+//       const result = results.filter(item => {
+//         console.log(item);
+//         return item ? item : '';
+//       });
+//       console.log(result);
+//       return dispatch(fetchUsersSuccess(result));
+//     });
+//   };
+// }
 
 export function fetchApplicationsByAccountPending() {
   return {
@@ -65,7 +85,7 @@ export function fetchApplicationsByAccountPending() {
 export function fetchApplicationsByAccountSuccess(applications) {
   return {
     type: types.FETCH_APPLICATIONS_BY_ACCOUNT_SUCCESS,
-    payload: applications
+    applications
   };
 }
 
@@ -82,7 +102,6 @@ export function fetchApplicationsByAccount(params) {
     passportAPI
       .getApplicationByAccount(params)
       .then(response => {
-        console.log(response);
         if (response.data !== undefined) {
           return dispatch(
             fetchApplicationsByAccountSuccess(response.data.applications)
@@ -92,7 +111,7 @@ export function fetchApplicationsByAccount(params) {
         }
       })
       .catch(error => {
-        return dispatch(fetchApplicationsByAccountError(errorMessage(error)));
+        return dispatch(fetchApplicationsByAccountError(''));
       });
   };
 }

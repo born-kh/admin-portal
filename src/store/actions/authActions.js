@@ -1,13 +1,8 @@
 import * as types from '../../constants/actionType';
-import {
-  PROFILE_DATA,
-  SESSION_TOKEN,
-  permissionParams,
-  PERMISSIONS,
-  SESSION_DATA
-} from 'constants/localStorage';
+import { permissionParams, PERMISSIONS } from 'constants/localStorage';
 
 import { authAPI } from 'service/api';
+import { axios } from 'helpers';
 
 export function loginPending() {
   return {
@@ -15,10 +10,10 @@ export function loginPending() {
   };
 }
 
-export function loginSuccess(data) {
+export function loginSuccess(user_data) {
   return {
     type: types.LOGIN_SUCCESS,
-    data
+    user_data: user_data
   };
 }
 
@@ -51,51 +46,47 @@ export function login(loginParams) {
     authAPI
       .login(params)
       .then(response => {
-        console.log(response);
-        console.log(response);
         if (response !== undefined) {
-          const session_data = response.data.session_data;
-          const profile_data = response.data.profile_data;
-          const auth_data = response.data;
-          localStorage.setItem(SESSION_TOKEN, session_data.session_token);
-          localStorage.setItem(SESSION_DATA, JSON.stringify(session_data));
-          localStorage.setItem(PROFILE_DATA, JSON.stringify(profile_data));
-          localStorage.setItem('isAuth', true);
-
+          const user_session = response.data;
+          localStorage.setItem(
+            types.USER_SESSION,
+            JSON.stringify(user_session)
+          );
+          const session_token = response.data.session_data.session_token;
           authAPI
             .getPermissions({
               permissions: permissionParams.permissions,
               metadata: {
-                headers: { 'X-Auth-Token': session_data.session_token }
+                headers: { Authorization: session_token }
               }
             })
             .then(
               response => {
-                console.log(response);
-                console.log(response.data.result.data);
-
-                for (var type in response.data.result.data) {
-                  console.log(type);
-                }
-                localStorage.setItem(
-                  PERMISSIONS,
-                  JSON.stringify(response.data.result.data)
-                );
                 if (response.data.result.data) {
-                  dispatch(loginSuccess(auth_data));
+                  localStorage.setItem(
+                    PERMISSIONS,
+                    JSON.stringify(response.data.result.data)
+                  );
+
+                  localStorage.setItem('isAuth', true);
+                  dispatch(loginSuccess(user_session));
                 }
               },
               error => {
-                dispatch(loginError(error.message));
+                dispatch(loginError());
               }
             );
         } else {
-          dispatch(loginError(''));
+          dispatch(loginError('response data is undifuned'));
         }
       })
       .catch(error => {
-        console.log(JSON.stringify(error));
-        dispatch(loginError('Wrong login or password.'));
+        console.log(error.status);
+        if (error.response) {
+          dispatch(loginError(error.response.data.reason));
+        } else {
+          dispatch(loginError(error.message));
+        }
       });
   };
 }
@@ -105,13 +96,33 @@ export function logout(params) {
     authAPI
       .logout(params)
       .then(response => {
-        if (response.status) {
-          localStorage.clear();
-          dispatch(logoutSuccess());
-        }
+        localStorage.removeItem(types.USER_SESSION);
+        localStorage.setItem('isAuth', false);
+        dispatch(logoutSuccess());
       })
       .catch(error => {
         dispatch(logoutSuccess());
       });
   };
 }
+
+export const checkSessionToken = () => async dispatch => {
+  dispatch({ type: types.CHECK_SESSION_TOKEN_REQUEST });
+  try {
+    const response = await axios.post('/refreshsession');
+    console.log(response);
+    if (response.data.result.data.authorization) {
+      const user_session = localStorage.getItem(types.USER_SESSION);
+      dispatch({
+        type: types.CHECK_SESSION_TOKEN_SUCCESS,
+        user_data: JSON.parse(user_session)
+      });
+    } else {
+      new Error();
+    }
+  } catch (e) {
+    localStorage.removeItem(types.USER_SESSION);
+    localStorage.setItem('isAuth', false);
+    dispatch({ type: types.CHECK_SESSION_TOKEN_FAILURE });
+  }
+};

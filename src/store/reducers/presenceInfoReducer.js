@@ -1,9 +1,8 @@
 import * as types from '../../constants/actionType';
 
 const initState = {
-  varStatus: null,
-  permaStatus: null,
-  activity: null,
+  presenceInfo: {},
+
   error: null,
   pending: false
 };
@@ -16,15 +15,13 @@ const presenceInfoReducer = (state = initState, action) => {
         pending: true,
         error: null
       };
-    case types.FETCH_ACCOUNT_SESSIONS_SUCCESS:
+    case types.FETCH_PRESENCE_INFO_SUCCESS:
       return {
         ...state,
         pending: false,
-        varStatus: action.result.varStatus,
-        permaStatus: action.result.permaStatus,
-        activity: action.result.activity
+        presenceInfo: action.result
       };
-    case types.FETCH_ACCOUNT_SESSIONS_ERROR:
+    case types.FETCH_PRESENCE_INFO_ERROR:
       return {
         ...state,
         pending: false,

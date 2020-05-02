@@ -28,6 +28,9 @@ export const permissionParams = {
     'ACC_SET_DOCUMENT_NOTE',
     'ACC_SET_DOCUMENT_TAGS',
     'ACC_GET_DOCUMENT_TYPES',
-    'ACC_DELETE_DOCUMENT'
+    'ACC_DELETE_DOCUMENT',
+    'ACC_GET_APIKEYS',
+    'ACC_UPDATE_APIKEYS',
+    'ACC_CREATE_APIKEYS'
   ]
 };
