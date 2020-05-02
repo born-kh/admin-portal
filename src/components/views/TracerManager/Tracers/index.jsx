@@ -150,14 +150,14 @@ class Tracers extends Component {
   handleOnSubmit(event) {
     event.preventDefault();
     let search = '?q=' + this.props.search;
-    let fromTs = '&start=' + this.state.start.toISOString();
-    let toTs = '&end=' + this.state.end.toISOString();
+    let fromTs = '&start=' + this.state.start.toISOString().split('.')[0] + 'Z';
+    let toTs = '&end=' + this.state.end.toISOString().split('.')[0] + 'Z';
 
     this.props.history.push(this.props.match.url + search + fromTs + toTs);
     const params = {
       search: this.props.search,
-      fromTS: this.state.start.toISOString(),
-      toTS: this.state.end.toISOString()
+      fromTS: this.state.start.toISOString().split('.')[0] + 'Z',
+      toTS: this.state.end.toISOString().split('.')[0] + 'Z'
     };
 
     this.props.fetchTracers(params);

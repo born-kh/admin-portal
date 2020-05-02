@@ -31,15 +31,19 @@ export function fetchTracers(params) {
     tracerAPI
       .searchTracer(params)
       .then(response => {
+        console.log(response);
         if (response.data.error === undefined) {
           var array = response.data;
           var arrayObj = [];
           var errors = [];
+          console.log(array);
           var messages = [];
           array.map(item => {
-            let rawPayload = item.payload.replace('', '');
+            console.log(item);
+            let rawPayload = item.payload.string.replace('', '');
             let payload = JSON.parse(rawPayload);
 
+            console.log(payload);
             const newItem = {
               ts: item.ts,
 
@@ -82,6 +86,7 @@ export function fetchTracers(params) {
           console.log(messages);
           dispatch(fetchTracersSuccess(messages, errors, accountId));
         } else {
+          console.log(123);
           dispatch(fetchTracersError(response.data.reason));
         }
       })

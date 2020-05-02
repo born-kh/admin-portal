@@ -1,5 +1,6 @@
-// export const SERVICE_URL = 'http://localhost:8080';
-export const SERVICE_URL = 'http://10.7.8.129:9002';
+export const SERVICE_URL =
+  process.env.REACT_APP_API_GATEWAY_URL || 'http://localhost:8080';
+
 export const SEARCH_USER = '/searchuser';
 export const GET_ACCOUNT_SESSIONS = '/getaccountsessions';
 export const LOGIN = '/login';
