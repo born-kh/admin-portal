@@ -1,18 +1,22 @@
-# This file is a template, and might need editing before it works on your project.
-FROM node:10.6-alpine
-
-# Uncomment if use of `process.dlopen` is necessary
-# apk add --no-cache libc6-compat
-
-ENV PORT 8080
-EXPOSE 8080 
-
-ARG NODE_ENV=production
-ENV NODE_ENV $NODE_ENV
-
+# Docker Image which is used as foundation to create
+# a custom Docker Image with this Dockerfile
+FROM node:latest
+ 
+# A directory within the virtualized Docker environment
+# Becomes more relevant when using Docker Compose later
 WORKDIR /usr/src/app
-COPY package.json .
+ 
+# Copies package.json and package-lock.json to Docker environment
+COPY package*.json ./
+ 
+# Installs all node packages
 RUN npm install
+ 
+# Copies everything over to Docker environment
 COPY . .
-
+ 
+# Uses port which is used by the actual application
+EXPOSE 8080
+ 
+# Finally runs the application
 CMD [ "npm", "start" ]
