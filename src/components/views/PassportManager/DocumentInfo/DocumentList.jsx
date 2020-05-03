@@ -14,7 +14,7 @@ import avatar6 from 'assets/utils/images/avatars/2.jpg';
 import bg1 from 'assets/utils/images/dropdown-header/abstract1.jpg';
 
 import { RViewerTrigger, RViewer } from 'react-viewerjs';
-import { imageOptions } from 'constants/actionType';
+import { imageOptions } from 'constants/ActionType';
 import { getDocumentStatusText } from 'helpers';
 class DocumentList extends React.Component {
   renderTable() {

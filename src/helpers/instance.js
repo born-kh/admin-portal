@@ -1,5 +1,5 @@
 import * as axios from 'axios';
-import { USER_SESSION } from 'constants/actionType';
+import { USER_SESSION } from 'constants/ActionType';
 import { SERVICE_URL } from 'constants/apiURL';
 
 const instance = axios.create({

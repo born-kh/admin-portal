@@ -1,1 +1,0 @@
-{"version":3,"sources":["/Users/nexsus/Documents/projects/react/interface-admin-portal/src/components/views/TracerManager/Tracers/style.scss"],"names":[],"mappings":"AAAA,0BAEI,UAAW","file":"5.cde646e0.chunk.css","sourcesContent":[".tabs {\n  .rc-tabs-nav-scroll {\n    width: 100%;\n  }\n}\n"]}

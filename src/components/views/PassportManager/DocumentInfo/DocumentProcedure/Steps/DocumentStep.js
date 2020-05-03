@@ -28,7 +28,7 @@ import {
   AvFeedback
 } from 'availity-reactstrap-validation';
 import { RViewerTrigger, RViewer } from 'react-viewerjs';
-import { imageOptions } from 'constants/actionType';
+import { imageOptions } from 'constants/ActionType';
 import DatePicker from 'react-datepicker';
 import { dateFormatter } from 'helpers';
 

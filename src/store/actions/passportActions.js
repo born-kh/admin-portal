@@ -1,4 +1,4 @@
-import * as types from '../../constants/actionType';
+import * as types from 'constants/ActionType';
 import { passportAPI } from 'service/api';
 
 export function fetchDocumentsPending() {

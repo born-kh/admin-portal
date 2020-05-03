@@ -16,7 +16,7 @@ import {
 } from 'reactstrap';
 
 import { RViewerTrigger, RViewer } from 'react-viewerjs';
-import { imageOptions } from 'constants/actionType';
+import { imageOptions } from 'constants/ActionType';
 
 export default class SelfieStep extends React.Component {
   constructor(props) {

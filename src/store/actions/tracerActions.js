@@ -1,4 +1,4 @@
-import * as types from '../../constants/actionType';
+import * as types from 'constants/ActionType';
 import { tracerAPI } from 'service/api';
 import { errorMessage } from 'helpers/errorMessage';
 

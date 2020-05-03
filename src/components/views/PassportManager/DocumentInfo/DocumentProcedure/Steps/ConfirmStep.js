@@ -28,7 +28,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import DatePicker from 'react-datepicker';
 import { dateFormatter } from 'helpers';
 import { RViewerTrigger, RViewer } from 'react-viewerjs';
-import { imageOptions } from 'constants/actionType';
+import { imageOptions } from 'constants/ActionType';
 export default class ConfirmStep extends React.Component {
   constructor(props) {
     super(props);
