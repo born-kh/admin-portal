@@ -9,13 +9,14 @@ import { history } from 'helpers/history';
 import store from 'store/store';
 import Main from 'components/views/Main';
 import './assets/base.scss';
+import { REACT_APP_BASE_NAME } from './constants/apiURL';
 
 const rootElement = document.getElementById('root');
 const renderApp = Component => {
   ReactDOM.render(
     <Provider store={store}>
       <Router
-        basename={process.env.REACT_APP_BASENAME}
+        basename={`/${REACT_APP_BASE_NAME}`}
         history={history}
       >
         <Component />
