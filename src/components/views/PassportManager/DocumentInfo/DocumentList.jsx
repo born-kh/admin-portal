@@ -9,7 +9,6 @@ import {
   ListGroup,
   ListGroupItem
 } from 'reactstrap';
-import Lightbox from 'react-image-lightbox';
 import avatar6 from 'assets/utils/images/avatars/2.jpg';
 import bg1 from 'assets/utils/images/dropdown-header/abstract1.jpg';
 
@@ -97,7 +96,7 @@ class DocumentList extends React.Component {
         </Card>
       );
     }
-    if (documents.length == 0) {
+    if (documents.length === 0) {
       return (
         <div className="dropdown-menu-header">
           <div className="dropdown-menu-header-inner bg-primary">
@@ -125,7 +124,7 @@ class DocumentList extends React.Component {
 
           {documents.map((document, index) => {
             return (
-              <tbody>
+              <tbody key={index}>
                 <tr>
                   <th scope="row">{index + 1}</th>
                   <td width="50%">
@@ -152,11 +151,12 @@ class DocumentList extends React.Component {
                     >
                       <RViewerTrigger>
                         <img
+                          alt=""
                           src={`http://10.7.8.129:9004/document/${document.ID}`}
                           style={{
                             cursor: 'pointer',
-                            'max-width': '100%',
-                            'max-height': '100%',
+                            maxWidth: '100%',
+                            maxHeight: '100%',
                             verticalAlign: 'middle'
                           }}
                         />
@@ -173,8 +173,6 @@ class DocumentList extends React.Component {
   }
 
   render() {
-    const { documents, pending, error } = this.props;
-    console.log(documents);
     return (
       <Fragment>
         <Col

@@ -19,13 +19,12 @@ export function convertMRZDate(str, dateConvertType) {
       case 'issue':
         year += 2000 - 10;
         break;
+      default:
     }
 
     const date =
       new Date(year.toString(), month - 1, day).toISOString().split('.')[0] +
       'Z';
-
-    console.log(year, parseInt(month) - 1, parseInt(day));
 
     return date;
   }

@@ -1,15 +1,6 @@
 import React, { Fragment } from 'react';
-import {
-  Row,
-  Col,
-  FormGroup,
-  Label,
-  Card,
-  CardBody,
-  CardTitle
-} from 'reactstrap';
+import { Row, Col, FormGroup, Label, Card, CardBody } from 'reactstrap';
 
-import { Table } from 'reactstrap';
 import {
   InputGroup,
   InputGroupAddon,
@@ -30,7 +21,6 @@ import {
 import { RViewerTrigger, RViewer } from 'react-viewerjs';
 import { imageOptions } from 'constants/ActionType';
 import DatePicker from 'react-datepicker';
-import { dateFormatter } from 'helpers';
 
 export default class DocumentStep extends React.Component {
   constructor(props) {
@@ -88,7 +78,6 @@ export default class DocumentStep extends React.Component {
 
   render() {
     const {
-      passportDocuments,
       handleChangeFields,
       editFieldsDocument,
       checkedPassportStep,
@@ -385,11 +374,12 @@ export default class DocumentStep extends React.Component {
                       >
                         <RViewerTrigger>
                           <img
+                            alt=""
                             src={`http://10.7.8.129:9004/document/${checkedPassportStep.ID}`}
                             style={{
                               cursor: 'pointer',
-                              'max-width': '100%',
-                              'max-height': '100%',
+                              maxWidth: '100%',
+                              maxHeight: '100%',
                               verticalAlign: 'middle'
                             }}
                           />

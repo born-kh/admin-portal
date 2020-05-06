@@ -1,9 +1,5 @@
-import React, { Fragment } from 'react';
-
-import _ from 'lodash';
-
+import React from 'react';
 import ReactJson from 'react-json-view';
-
 import {
   CardBody,
   Button,
@@ -13,7 +9,7 @@ import {
   ModalFooter
 } from 'reactstrap';
 import PropTypes from 'prop-types';
-import { axios, history } from 'helpers';
+import { history } from 'helpers';
 import { toast, Bounce } from 'react-toastify';
 import ReactTable from 'react-table';
 import {
@@ -25,9 +21,9 @@ import {
 import Loader from 'react-loaders';
 import cx from 'classnames';
 import { connect } from 'react-redux';
-import GoogleMapsExample from 'components/common/GoogleMaps';
 import { sessionAPI } from 'service/api';
 import OpenMaps from './OpenMaps';
+
 class SessionTable extends React.Component {
   constructor() {
     super();
@@ -47,7 +43,6 @@ class SessionTable extends React.Component {
   }
 
   handleClickOpenDialog = rowIndex => {
-    console.log(rowIndex);
     this.setState({
       modalInfo: !this.state.modalInfo,
       rowIndex
@@ -110,7 +105,6 @@ class SessionTable extends React.Component {
     sessionAPI
       .setTracer({ sessionID: sessionID, isTracing: !isTracing })
       .then(response => {
-        console.log('tracer', response);
         if (response.status === 200) {
           if (response.data) {
             let params = {
@@ -148,7 +142,6 @@ class SessionTable extends React.Component {
         isSuspended: !suspended
       })
       .then(response => {
-        console.log('suspend', response);
         if (response.status === 200) {
           this.props.onChangeSuspended({
             index: index,
@@ -175,7 +168,6 @@ class SessionTable extends React.Component {
   };
 
   handleRemoveSession = sessionID => {
-    console.log(sessionID);
     sessionAPI
       .removeSession({ sessionID: sessionID })
       .then(response => {
@@ -314,7 +306,6 @@ class SessionTable extends React.Component {
 
   render() {
     const { sessions, pending, error } = this.props;
-    console.log(sessions);
 
     if (pending) {
       return (
@@ -450,7 +441,7 @@ class SessionTable extends React.Component {
                       </div>
                     )
                   },
-                  ,
+
                   {
                     Header: 'Detail Info',
                     Cell: row => (

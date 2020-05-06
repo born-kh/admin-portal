@@ -1,5 +1,5 @@
 import React from 'react';
-import _ from 'lodash';
+
 import { Link, withRouter } from 'react-router-dom';
 import ReactJson from 'react-json-view';
 import {
@@ -95,7 +95,6 @@ class ApplicationTable extends React.Component {
       handleOnPageSizeChange,
       pageSize
     } = this.props;
-    console.log(pageSize);
 
     return (
       <Row>

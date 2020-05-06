@@ -1,6 +1,5 @@
 import * as types from 'constants/ActionType';
 import { tracerAPI } from 'service/api';
-import { errorMessage } from 'helpers/errorMessage';
 
 export function fetchTracersPending() {
   return {
@@ -31,19 +30,17 @@ export function fetchTracers(params) {
     tracerAPI
       .searchTracer(params)
       .then(response => {
-        console.log(response);
         if (response.data.error === undefined) {
           var array = response.data;
           var arrayObj = [];
           var errors = [];
-          console.log(array);
+
           var messages = [];
-          array.map(item => {
-            console.log(item);
+
+          array.forEach(item => {
             let rawPayload = item.payload.string.replace('', '');
             let payload = JSON.parse(rawPayload);
 
-            console.log(payload);
             const newItem = {
               ts: item.ts,
 
@@ -75,7 +72,7 @@ export function fetchTracers(params) {
           });
 
           var accountId = '';
-          arrayObj.map(val => {
+          arrayObj.forEach(val => {
             if (val.response.error !== undefined) {
               errors.push(val);
               accountId = val.account_id;
@@ -83,10 +80,9 @@ export function fetchTracers(params) {
               messages.push(val);
             }
           });
-          console.log(messages);
+
           dispatch(fetchTracersSuccess(messages, errors, accountId));
         } else {
-          console.log(123);
           dispatch(fetchTracersError(response.data.reason));
         }
       })

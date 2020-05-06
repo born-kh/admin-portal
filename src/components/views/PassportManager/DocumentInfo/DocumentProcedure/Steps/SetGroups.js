@@ -1,10 +1,9 @@
 import React, { Fragment } from 'react';
-import { Button, CustomInput } from 'reactstrap';
-import Lightbox from 'react-image-lightbox';
-import 'react-image-lightbox/style.css';
+import { Button } from 'reactstrap';
+
 import ReactTable from 'react-table';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 
 export default class SetGroups extends React.Component {

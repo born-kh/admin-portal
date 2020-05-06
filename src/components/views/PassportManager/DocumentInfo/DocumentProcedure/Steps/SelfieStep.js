@@ -1,10 +1,8 @@
 import React, { Fragment } from 'react';
-import { Button, CustomInput } from 'reactstrap';
+import { Button } from 'reactstrap';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-import ReactTable from 'react-table';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+
 import {
   Row,
   Col,
@@ -94,7 +92,6 @@ export default class SelfieStep extends React.Component {
   }
 
   render() {
-    console.log(this.state.selfieID);
     const {
       selfieDocuments,
       passportDocuments,
@@ -158,11 +155,12 @@ export default class SelfieStep extends React.Component {
                     >
                       <RViewerTrigger>
                         <img
+                          alt=""
                           src={`http://10.7.8.129:9004/document/${selfieID}`}
                           style={{
                             cursor: 'pointer',
-                            'max-width': '100%',
-                            'max-height': '100%',
+                            maxWidth: '100%',
+                            maxHeight: '100%',
                             verticalAlign: 'middle'
                           }}
                         />
@@ -205,11 +203,12 @@ export default class SelfieStep extends React.Component {
                     >
                       <RViewerTrigger>
                         <img
+                          alt=""
                           src={`http://10.7.8.129:9004/document/${passportID}`}
                           style={{
                             cursor: 'pointer',
-                            'max-width': '100%',
-                            'max-height': '100%',
+                            maxWidth: '100%',
+                            maxHeight: '100%',
                             verticalAlign: 'middle'
                           }}
                         />
@@ -229,6 +228,7 @@ export default class SelfieStep extends React.Component {
                     {selfieDocuments.map((row, index) => {
                       return (
                         <Col
+                          key={index}
                           sm="4"
                           xl="2"
                         >
@@ -248,8 +248,8 @@ export default class SelfieStep extends React.Component {
                               className=""
                               src={`http://10.7.8.129:9004/document/${row.ID}`}
                               style={{
-                                'max-width': '100%',
-                                'max-height': '100%'
+                                maxWidth: '100%',
+                                maxHeight: '100%'
                               }}
                             />
                           </Button>
@@ -290,8 +290,8 @@ export default class SelfieStep extends React.Component {
                               alt=""
                               src={`http://10.7.8.129:9004/document/${row.ID}`}
                               style={{
-                                'max-width': '100%',
-                                'max-height': '100%'
+                                maxWidth: '100%',
+                                maxHeight: '100%'
                               }}
                             />
                           </Button>

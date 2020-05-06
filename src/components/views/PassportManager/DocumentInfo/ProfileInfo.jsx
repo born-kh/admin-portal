@@ -1,13 +1,9 @@
 import React, { Fragment } from 'react';
-import PageTitle from 'components/common/PageTitle';
 
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import Loader from 'react-loaders';
-import {
-  fetchUsers,
-  fetchApplicationsByAccount
-} from 'store/actions/userActions';
+import { fetchApplicationsByAccount } from 'store/actions/userActions';
 import ApplicationTable from 'components/views/UserManager/AccountInfo/ApplicationTable';
 
 import avatar6 from 'assets/utils/images/avatars/2.jpg';
@@ -17,12 +13,10 @@ import {
   Card,
   CardBody,
   CardHeader,
-  CardFooter,
   Row,
   Col,
   ListGroup,
-  ListGroupItem,
-  Input
+  ListGroupItem
 } from 'reactstrap';
 
 class ProfileInfo extends React.Component {

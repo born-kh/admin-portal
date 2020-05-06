@@ -12,8 +12,6 @@ import HeaderLogo from '../AppLogo';
 import { setEnableMobileMenu } from '../../../../store/actions/themeOptionsActions';
 
 class AppSidebar extends Component {
-  state = {};
-
   toggleMobileSidebar = () => {
     let { enableMobileMenu, setEnableMobileMenu } = this.props;
     setEnableMobileMenu(!enableMobileMenu);

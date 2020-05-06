@@ -1,13 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PageTitle from 'components/common/PageTitle';
-
-import SearchInput from 'components/common/SearchInput';
 import Loader from 'react-loaders';
-import { fetchUsers, fetchUsersPending } from 'store/actions/userActions';
+import { fetchUsers } from 'store/actions/userActions';
 import UsersTable from './UsersTable';
 import {
   Col,
@@ -19,14 +16,8 @@ import {
   FormGroup,
   Button
 } from 'reactstrap';
-import { DropdownList } from 'react-widgets';
-import queryString from 'query-string';
 import PropTypes from 'prop-types';
-import LoaderOverlay from 'components/common/LoaderOverlay';
-
 import { passportAPI } from 'service/api';
-
-const types = ['username', 'phone', 'email', 'accountID'];
 
 class Users extends Component {
   constructor(props) {
@@ -63,14 +54,13 @@ class Users extends Component {
     if (firstname !== '' || lastname !== '' || phoneNumber !== '') {
       const response = await passportAPI.getApplicationsByName(params);
       if ((response.status = 200)) {
-        await Promise.all(
-          response.data.applications.map(async application => {
-            searchAccoountsList.push({
-              type: 'accountID',
-              search: application.accountID
-            });
-          })
-        );
+        for (let application of response.data.applications) {
+          searchAccoountsList.push({
+            type: 'accountID',
+            search: application.accountID
+          });
+        }
+
         searchAccoountsList = searchAccoountsList.concat(searchUserList);
         this.props.fetchUsers(searchAccoountsList);
       }
@@ -106,7 +96,7 @@ class Users extends Component {
     const findIndex = this.state.searchUserList.findIndex(
       obj => obj.type === event.target.name
     );
-    // if (event.target.value.length > 0) {
+
     if (findIndex === -1) {
       searchUserList.push({
         type: event.target.name,
@@ -119,7 +109,7 @@ class Users extends Component {
       };
     }
     searchUserList = searchUserList.filter(obj => obj.search !== '');
-    console.log(searchUserList);
+
     this.setState({ searchUserList });
   };
 
@@ -161,7 +151,6 @@ class Users extends Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <Fragment>
         <ReactCSSTransitionGroup

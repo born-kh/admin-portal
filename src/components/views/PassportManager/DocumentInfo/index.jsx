@@ -19,9 +19,8 @@ import {
 import Info from './Info';
 import DocumentList from './DocumentList';
 import DocumentProcedure from './DocumentProcedure';
-import { history } from 'helpers';
 import { fetchUsers } from 'store/actions/userActions';
-import AccountProfile from '../../UserManager/AccountInfo/AccountProfile';
+
 import Loader from 'react-loaders';
 import ProfileInfo from './ProfileInfo';
 

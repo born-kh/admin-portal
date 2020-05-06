@@ -1,16 +1,10 @@
 import React from 'react';
-import _ from 'lodash';
 import { Link, withRouter } from 'react-router-dom';
 import { Row, Col, Card, CardBody, Button } from 'reactstrap';
 import ReactTable from 'react-table';
 import { dateFormatter } from 'helpers';
 
 class ApplicationTable extends React.Component {
-  constructor() {
-    super();
-    this.state = {};
-  }
-
   render() {
     const { applications, rows } = this.props;
 

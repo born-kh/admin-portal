@@ -10,11 +10,13 @@ import store from 'store/store';
 import Main from 'components/views/Main';
 import './assets/base.scss';
 const rootElement = document.getElementById('root');
-console.log(process.env);
 const renderApp = Component => {
   ReactDOM.render(
     <Provider store={store}>
-      <Router history={history}>
+      <Router
+        basename="/react"
+        history={history}
+      >
         <Component />
       </Router>
     </Provider>,

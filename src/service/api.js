@@ -111,7 +111,6 @@ export const presenceAPI = {
 export const passportAPI = {
   getApplications(params) {
     return axios.post(GET_APPLICATIONS, params).then(response => {
-      console.log(response);
       return response;
     });
   },
@@ -131,13 +130,11 @@ export const passportAPI = {
     });
   },
   setDocumentStatus(params) {
-    console.log(params);
     return axios.post(SET_DOCUMENT_STATUS, params).then(response => {
       return response;
     });
   },
   setDocumentFields(params) {
-    console.log(params);
     return axios.post(SET_DOCUMENT_FIELDS, params).then(response => {
       return response;
     });

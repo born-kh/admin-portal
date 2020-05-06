@@ -5,7 +5,6 @@ import Dashboard from 'components/Layouts';
 import ApiKeyComponent from './ApiKeyComponent';
 
 const ApiKeyManager = ({ match }) => {
-  console.log(match.url);
   return (
     <Dashboard>
       <Route

@@ -19,7 +19,6 @@ import {
 import Info from './Info';
 import DocumentList from './DocumentList';
 
-import { history } from 'helpers';
 import { fetchUsers } from 'store/actions/userActions';
 import DocumentProcedure from 'components/views/PassportManager/DocumentInfo/DocumentProcedure';
 
@@ -36,7 +35,7 @@ class ApplicationInfo extends React.Component {
     this.handleGetApplications = this.handleGetApplications.bind(this);
   }
   componentDidMount() {
-    const { fetchDocuments, application, fetchUsers } = this.props;
+    const { fetchDocuments, application } = this.props;
     if (!application) {
       this.props.history.goBack();
     } else {

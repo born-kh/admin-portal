@@ -13,13 +13,11 @@ import {
   Col
 } from 'reactstrap';
 import { passportAPI } from 'service/api';
-import LaddaButton, { ZOOM_IN } from 'react-ladda';
+
 import BlockUi from 'react-block-ui';
-import { Loader, Types } from 'react-loaders';
-import 'react-image-lightbox/style.css';
+import { Loader } from 'react-loaders';
 
 import { toast, Bounce } from 'react-toastify';
-import { tsMethodSignature } from '@babel/types';
 const checkNavState = (currentStep, stepsLength) => {
   if (currentStep > 0 && currentStep < stepsLength - 1) {
     return {
@@ -224,7 +222,7 @@ export default class MultiStep extends React.Component {
       .then(res => {
         if (res.status === 200) {
           this.setState({ blocking: false });
-          toast('Application set status ' + 'success', {
+          toast('Application set status success', {
             transition: Bounce,
             closeButton: true,
             autoClose: 5000,
@@ -409,7 +407,7 @@ export default class MultiStep extends React.Component {
                     selfie: false
                   });
 
-                  toast('Document set status ' + 'success', {
+                  toast('Document set status success', {
                     transition: Bounce,
                     closeButton: true,
                     autoClose: 5000,
@@ -470,7 +468,7 @@ export default class MultiStep extends React.Component {
               });
             }
             this.handleClickCloseDialog();
-            toast('Document set status ' + 'success', {
+            toast('Document set status success', {
               transition: Bounce,
               closeButton: true,
               autoClose: 5000,
@@ -551,7 +549,7 @@ export default class MultiStep extends React.Component {
 
     const {
       navState,
-      rejectMessage,
+
       checkedStep,
       compState,
       blocking,

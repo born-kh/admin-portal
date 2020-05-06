@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import React, { Suspense, lazy, Fragment } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -34,7 +34,7 @@ const AppMain = () => {
       >
         <Route
           component={Login}
-          path="/login"
+          path={`${process.env.PUBLIC_URL}/login`}
         />
       </Suspense>
       {/* Tracer-manager */}
@@ -58,7 +58,7 @@ const AppMain = () => {
       >
         <Route
           component={TracerManager}
-          path="/tracer-manager"
+          path={`${process.env.PUBLIC_URL}/tracer-manager`}
         />
       </Suspense>
 
@@ -83,7 +83,7 @@ const AppMain = () => {
       >
         <Route
           component={UserManager}
-          path="/user-manager"
+          path={`${process.env.PUBLIC_URL}/user-manager`}
         />
       </Suspense>
 
@@ -133,13 +133,13 @@ const AppMain = () => {
       >
         <Route
           component={ApiKeyManager}
-          path="/apikey-manager"
+          path={`${process.env.PUBLIC_URL}/apikey-manager`}
         />
       </Suspense>
 
       <Route
         exact
-        path="/"
+        path={`${process.env.PUBLIC_URL}/`}
         render={() => <Redirect to="/login" />}
       />
       <ToastContainer />

@@ -1,6 +1,5 @@
 import React from 'react';
 
-import _ from 'lodash';
 import { Link, withRouter } from 'react-router-dom';
 import ReactJson from 'react-json-view';
 import avatar2 from 'assets/utils/images/avatars/2.jpg';
@@ -44,7 +43,7 @@ class UsersTable extends React.Component {
   };
 
   renderDialog() {
-    const { messagesData, className } = this.props;
+    const { messagesData } = this.props;
     const { modal, req } = this.state;
     if (modal) {
       return (

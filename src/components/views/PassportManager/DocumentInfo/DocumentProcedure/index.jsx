@@ -159,7 +159,7 @@ class DocumentProcedure extends React.Component {
         } else if (document.recognized && document.recognized.mrz.idcard) {
           passport = document.recognized.mrz.idcard;
         }
-        console.log(passport, document);
+
         if (passport) {
           fields = {
             country: passport.country,
@@ -293,7 +293,6 @@ class DocumentProcedure extends React.Component {
     } = this.props;
     const {
       checkedGroupStep,
-      documentID,
       editFieldsDocument,
       checkedPassportStep,
       checkedSelfieStep
@@ -329,7 +328,9 @@ class DocumentProcedure extends React.Component {
     );
   }
 }
-const mapStateToProps = state => {};
+const mapStateToProps = state => {
+  return state;
+};
 
 const mapDispatchToProps = dispatch => {
   return {

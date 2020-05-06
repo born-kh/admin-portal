@@ -1,6 +1,5 @@
 import * as types from 'constants/ActionType';
 import { userAPI, passportAPI } from 'service/api';
-import { errorMessage } from 'helpers/errorMessage';
 
 export function fetchUsersPending() {
   return {
@@ -27,54 +26,17 @@ export function fetchUsers(paramsList) {
     dispatch(fetchUsersPending());
     var users = [];
 
-    await Promise.all(
-      paramsList.map(async params => {
-        console.log('search', params);
-        try {
-          let response = await userAPI.searchUser(params);
-          if (response.data.accounts !== undefined) {
-            users = users.concat(response.data.accounts);
-          }
-        } catch (e) {}
-      })
-    );
+    try {
+      for (let params of paramsList) {
+        let response = await userAPI.searchUser(params);
+        if (response.data.accounts !== undefined) {
+          users = users.concat(response.data.accounts);
+        }
+      }
+    } catch (e) {}
     return dispatch(fetchUsersSuccess(users));
   };
 }
-
-// export function fetchUsers(paramsList) {
-//   return dispatch => {
-//     dispatch(fetchUsersPending());
-//     var users = paramsList.map(function(params) {
-//       return userAPI
-//         .searchUser(params)
-//         .then(response => {
-//           if (response.data.accounts !== undefined) {
-//             for (let i = 0; i < response.data.accounts.length; i++) {
-//               console.log('123455');
-//               return response.data.accounts[i];
-//             }
-//           } else {
-//             return null;
-//             // return dispatch(fetchUsersError(response.data));
-//           }
-//         })
-//         .catch(error => {
-//           return null;
-//           // return dispatch(fetchUsersError(errorMessage(error)));
-//         });
-//     });
-//     Promise.all(users).then(function(results) {
-//       console.log(results);
-//       const result = results.filter(item => {
-//         console.log(item);
-//         return item ? item : '';
-//       });
-//       console.log(result);
-//       return dispatch(fetchUsersSuccess(result));
-//     });
-//   };
-// }
 
 export function fetchApplicationsByAccountPending() {
   return {

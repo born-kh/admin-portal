@@ -1,6 +1,5 @@
 import * as types from 'constants/ActionType';
 import { presenceAPI } from 'service/api';
-import { errorMessage } from 'helpers/errorMessage';
 
 export function presenceInfoPending() {
   return {

@@ -49,7 +49,6 @@ class Login extends Component {
     if (isAuth) {
       return <Redirect to="/user-manager/users" />;
     }
-   
 
     return (
       <Fragment>
@@ -84,14 +83,6 @@ class Login extends Component {
                         backgroundImage: 'url(' + bg3 + ')'
                       }}
                     />
-                    {/* <div className="slider-content">
-                      <h3>Scalable, Modular, Consistent</h3>
-                      <p>
-                        Easily exclude the components you don't require.
-                        Lightweight, consistent Bootstrap based styles across
-                        all elements and components
-                      </p>
-                    </div> */}
                   </div>
                   <div className="h-100 d-flex justify-content-center align-items-center bg-sunny-morning">
                     <div
@@ -100,13 +91,6 @@ class Login extends Component {
                         backgroundImage: 'url(' + bg2 + ')'
                       }}
                     />
-                    {/* <div className="slider-content">
-                      <h3>Complex, but lightweight</h3>
-                      <p>
-                        We've included a lot of components that cover almost all
-                        use cases for any type of application.
-                      </p>
-                    </div> */}
                   </div>
                 </Slider>
               </div>
@@ -135,12 +119,12 @@ class Login extends Component {
 
                 <div className="d-flex align-items-center">
                   <div className="ml-auto">
-                    <a
+                    {/* <a
                       className="btn-lg btn btn-link"
-                      href="javascript:void(0);"
+                      // href="javascript:void(0);"
                     >
                       Recover Password
-                    </a>{' '}
+                    </a>{' '} */}
                     <LaddaButton
                       className="mb-2 mr-2 btn btn-alternate"
                       data-style={ZOOM_OUT}

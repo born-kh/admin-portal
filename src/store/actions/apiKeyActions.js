@@ -2,7 +2,6 @@ import * as types from 'constants/ActionType';
 import { apiKeyAPI } from 'service/api';
 
 export const fetchApiKeysPending = () => {
-  console.log(1);
   return {
     type: types.FETCH_APIKEYS_PENDING
   };
@@ -69,7 +68,6 @@ export const createApiKey = params => {
     apiKeyAPI
       .createApiKey(params)
       .then(response => {
-        console.log(response.data.message);
         if (response.data.message === 'Success') {
           dispatch(createApiKeySuccess(response.data.apiKey));
         } else {

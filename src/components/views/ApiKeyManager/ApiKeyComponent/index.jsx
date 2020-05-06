@@ -10,7 +10,7 @@ import {
 import { connect } from 'react-redux';
 import { Col, Card, CardHeader, CardBody, Button } from 'reactstrap';
 import { axios } from 'helpers';
-import { UPDATE_APIKEY, UPDATE_APIKEY_URL } from 'constants/apiURL';
+import { UPDATE_APIKEY_URL } from 'constants/apiURL';
 import { toast, Bounce } from 'react-toastify';
 const initialApiKeyParams = {
   validFrom: new Date().toISOString().split('.')[0] + 'Z',
@@ -27,7 +27,7 @@ const ApiKeyComponent = props => {
 
   useEffect(() => {
     fetchApiKeys();
-  }, []);
+  });
 
   const updateApiKey = (params, index) => {
     axios

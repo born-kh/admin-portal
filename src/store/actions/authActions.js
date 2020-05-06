@@ -81,7 +81,6 @@ export function login(loginParams) {
         }
       })
       .catch(error => {
-        console.log(error.status);
         if (error.response) {
           dispatch(loginError(error.response.data.reason));
         } else {
@@ -110,7 +109,7 @@ export const checkSessionToken = () => async dispatch => {
   dispatch({ type: types.CHECK_SESSION_TOKEN_REQUEST });
   try {
     const response = await axios.post('/refreshsession');
-    console.log(response);
+
     if (response.data.result.data.authorization) {
       const user_session = localStorage.getItem(types.USER_SESSION);
       dispatch({

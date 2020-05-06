@@ -132,8 +132,7 @@ class Accounts extends Component {
 }
 
 Accounts.propTypes = {
-  className: PropTypes.string,
-  classes: PropTypes.object.isRequired
+  className: PropTypes.string
 };
 
 const mapStateToProps = state => ({

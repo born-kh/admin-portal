@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FormGroup, Input, FormFeedback, FormText } from 'reactstrap';
+import { FormGroup, Input, FormFeedback } from 'reactstrap';
 let InputForm = ({ input, meta, ...props }) => {
   const hasError = meta.touched && meta.error;
   return (

@@ -53,7 +53,7 @@ class AccountProfile extends Component {
     return (
       <ListGroup flush>
         {userInfo.phones.map((phone, i) => (
-          <ListGroupItem>
+          <ListGroupItem key={i}>
             <div className="widget-content p-0">
               <div className="widget-content-wrapper">
                 <div className="widget-content-left">
@@ -161,9 +161,9 @@ class AccountProfile extends Component {
         <div>
           <ListGroupItem key={userInfo.auth.hasPassword}>
             <b className="text-dark">Has Password: </b>
-            {userInfo.auth.hasPassword == true ? 'true' : 'false'}
+            {userInfo.auth.hasPassword === true ? 'true' : 'false'}
           </ListGroupItem>
-          <ListGroupItem key ={userInfo.auth.passwordType}>
+          <ListGroupItem key={userInfo.auth.passwordType}>
             <b className="text-dark">Type: </b>
             {userInfo.auth.passwordType}
           </ListGroupItem>
@@ -231,7 +231,6 @@ class AccountProfile extends Component {
 
   renderTable() {
     const { pending, error, applications } = this.props;
-    console.log(this.props);
 
     if (pending) {
       return (
@@ -273,7 +272,7 @@ class AccountProfile extends Component {
   render() {
     const { userInfo } = this.props;
     const { password, loading } = this.state;
-    console.log(userInfo);
+
     if (!userInfo) {
       return <LoaderOverlay />;
     }
@@ -448,8 +447,7 @@ class AccountProfile extends Component {
 }
 
 AccountProfile.propTypes = {
-  className: PropTypes.string,
-
+  className: PropTypes.string
 };
 
 const mapStateToProps = state => {

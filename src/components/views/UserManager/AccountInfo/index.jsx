@@ -5,10 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import AccountProfile from './AccountProfile';
-import {
-  fetchUsers,
-  fetchApplicationsByAccount
-} from 'store/actions/userActions';
+import { fetchApplicationsByAccount } from 'store/actions/userActions';
 import { fetchPresenceInfo } from 'store/actions/presenceInfoActions';
 
 class AccountInfo extends React.Component {

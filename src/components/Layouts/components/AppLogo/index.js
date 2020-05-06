@@ -1,10 +1,7 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-
 import Hamburger from 'react-hamburgers';
-
 import AppMobileMenu from '../AppMobileMenu';
-
 import {
   setEnableClosedSidebar,
   setEnableMobileMenu,
@@ -37,8 +34,6 @@ class HeaderLogo extends React.Component {
 
   render() {
     let { enableClosedSidebar } = this.props;
-
-    const {} = this.state;
 
     return (
       <Fragment>

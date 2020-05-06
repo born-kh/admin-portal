@@ -9,7 +9,7 @@ import {
   ListGroup,
   ListGroupItem
 } from 'reactstrap';
-import Lightbox from 'react-image-lightbox';
+
 import avatar6 from 'assets/utils/images/avatars/2.jpg';
 import bg1 from 'assets/utils/images/dropdown-header/abstract1.jpg';
 
@@ -19,7 +19,6 @@ import { getDocumentStatusText } from 'helpers';
 class DocumentList extends React.Component {
   renderTable() {
     const { documents, pending, error } = this.props;
-    console.log(pending, error);
 
     if (pending) {
       return (
@@ -98,7 +97,7 @@ class DocumentList extends React.Component {
         </Card>
       );
     }
-    if (documents.length == 0) {
+    if (documents.length === 0) {
       return (
         <div className="dropdown-menu-header">
           <div className="dropdown-menu-header-inner bg-primary">
@@ -152,6 +151,7 @@ class DocumentList extends React.Component {
                     >
                       <RViewerTrigger>
                         <img
+                          alt=""
                           src={`http://10.7.8.129:9004/document/${document.ID}`}
                           style={{
                             cursor: 'pointer',
@@ -173,9 +173,6 @@ class DocumentList extends React.Component {
   }
 
   render() {
-    const { documents, pending, error } = this.props;
-    console.log(error);
-
     return (
       <Fragment>
         <Col

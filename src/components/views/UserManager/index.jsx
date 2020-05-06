@@ -6,13 +6,9 @@ import Users from './Users';
 
 import { withRouter } from 'react-router-dom';
 import AccountInfo from './AccountInfo';
-import PERMISSIONS from 'constants';
 
 import ApplicationInfo from './AccountInfo/ApplicationInfo';
 const UserManager = ({ match }) => {
-  console.log('User Manager');
-  const permissions = JSON.parse(localStorage.getItem(PERMISSIONS));
-
   return (
     <Dashboard>
       <Route

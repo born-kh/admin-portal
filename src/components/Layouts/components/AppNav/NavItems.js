@@ -57,10 +57,11 @@ export const MainNav = [
     content: [
       {
         label: 'Users',
-        to: '/user-manager/users'
+        to: `${process.env.PUBLIC_URL}/user-manager/users`
       }
     ]
   },
+
   {
     icon: 'pe-7s-plugin',
     label: 'Passport-Manager',
@@ -68,7 +69,7 @@ export const MainNav = [
     content: [
       {
         label: 'New Documents',
-        to: '/passport-manager/applications'
+        to: `${process.env.PUBLIC_URL}/passport-manager/applications`
       }
     ]
   },
@@ -78,7 +79,7 @@ export const MainNav = [
     content: [
       {
         label: 'Tracers',
-        to: '/tracer-manager/tracers'
+        to: `${process.env.PUBLIC_URL}/tracer-manager/tracers`
       }
     ]
   },
@@ -88,7 +89,7 @@ export const MainNav = [
     content: [
       {
         label: 'ApiKey List',
-        to: '/apikey-manager/apikeys'
+        to: `${process.env.PUBLIC_URL}/apikey-manager/apikeys`
       }
     ]
   }

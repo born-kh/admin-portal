@@ -7,16 +7,8 @@ import ScrollableInkTabBar from 'rc-tabs/lib/ScrollableInkTabBar';
 import { connect } from 'react-redux';
 import { fetchTracers } from 'store/actions/tracerActions';
 import PageTitle from 'components/common/PageTitle';
-import {
-  InputGroup,
-  InputGroupAddon,
-  CardHeader,
-  Card,
-  CardBody,
-  Input,
-  Row
-} from 'reactstrap';
-import { Button, Container, ButtonGroup } from 'reactstrap';
+import { InputGroup, InputGroupAddon, Card, CardBody, Row } from 'reactstrap';
+import { Button } from 'reactstrap';
 import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 import queryString from 'query-string';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -53,7 +45,7 @@ class Tracers extends Component {
 
   componentDidMount() {
     const values = queryString.parse(this.props.location.search);
-    console.log(values);
+
     if (values.q !== undefined) {
       const params = {
         search: values.q,
@@ -230,10 +222,7 @@ class Tracers extends Component {
                     <InputGroup>
                       <InputGroupAddon addonType="prepend">
                         <div className="input-group-text">
-                          <FontAwesomeIcon
-                            hover
-                            icon={faCalendarAlt}
-                          />
+                          <FontAwesomeIcon icon={faCalendarAlt} />
                         </div>
                       </InputGroupAddon>
                     </InputGroup>

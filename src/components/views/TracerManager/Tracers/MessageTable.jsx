@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 
 import ReactJson from 'react-json-view';
 
@@ -7,7 +6,7 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Row, Col, Card, CardBody } from 'reactstrap';
 import ReactTable from 'react-table';
 import { dateFormatter } from 'helpers';
-import matchSorter from 'match-sorter';
+
 class MessageTable extends React.Component {
   constructor() {
     super();

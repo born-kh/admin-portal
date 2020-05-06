@@ -40,7 +40,7 @@ const apiKeyReducer = (state = initialState, action) => {
     case types.UPDATE_APIKEY:
       let apiKeys = [...state.apiKeys];
       apiKeys[action.payload.index].enabled = action.payload.enabled;
-      console.log(action);
+
       return {
         ...state,
         apiKeys

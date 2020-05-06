@@ -19,14 +19,13 @@ const userReducer = (state = initState, action) => {
         pending: true
       };
     case types.FETCH_USERS_SUCCESS:
-      console.log(action.users);
       let users = action.users.reduce((unique, o) => {
         if (!unique.some(obj => obj.accountID === o.accountID)) {
           unique.push(o);
         }
         return unique;
       }, []);
-      console.log(users);
+
       return {
         ...state,
         pending: false,
