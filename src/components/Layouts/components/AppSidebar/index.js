@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 
-import Nav from '../AppNav/VerticalNavWrapper';
+import Nav from '../../../common/Nav';
 
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
@@ -10,6 +10,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import HeaderLogo from '../AppLogo';
 
 import { setEnableMobileMenu } from '../../../../store/actions/themeOptionsActions';
+import { MainNav } from '../AppNav/NavItems';
 
 class AppSidebar extends Component {
   toggleMobileSidebar = () => {
@@ -46,7 +47,7 @@ class AppSidebar extends Component {
           <HeaderLogo />
           <PerfectScrollbar>
             <div className="app-sidebar__inner">
-              <Nav />
+              <Nav content={MainNav} />
             </div>
           </PerfectScrollbar>
           <div

@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 
 import MetisMenu from 'react-metismenu';
 import { MainNav } from './NavItems';
+import RouterLink from 'react-metismenu-router-link';
 
 class Nav extends Component {
   render() {
@@ -15,6 +16,7 @@ class Nav extends Component {
           classNameStateIcon="pe-7s-angle-down"
           content={MainNav}
           iconNamePrefix=""
+          LinkComponent={RouterLink}
         />
       </Fragment>
     );

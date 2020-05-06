@@ -52,44 +52,49 @@
 
 export const MainNav = [
   {
-    icon: 'pe-7s-browser',
+    id: 1,
     label: 'User-Manager',
     content: [
       {
+        id: 12,
         label: 'Users',
-        to: `${process.env.PUBLIC_URL}/user-manager/users`
+        path: `${process.env.PUBLIC_URL}/user-manager/users`
       }
     ]
   },
 
   {
-    icon: 'pe-7s-plugin',
+    id: 2,
+
     label: 'Passport-Manager',
 
     content: [
       {
+        id: 22,
         label: 'New Documents',
-        to: `${process.env.PUBLIC_URL}/passport-manager/applications`
+        path: `${process.env.PUBLIC_URL}/passport-manager/applications`
       }
     ]
   },
   {
-    icon: 'pe-7s-rocket',
+    id: 3,
     label: 'Tracer-Manager',
     content: [
       {
+        id: 33,
         label: 'Tracers',
-        to: `${process.env.PUBLIC_URL}/tracer-manager/tracers`
+        path: `${process.env.PUBLIC_URL}/tracer-manager/tracers`
       }
     ]
   },
   {
-    icon: 'pe-7s-rocket',
+    id: 4,
     label: 'ApiKey-Manager',
     content: [
       {
+        id: 44,
         label: 'ApiKey List',
-        to: `${process.env.PUBLIC_URL}/apikey-manager/apikeys`
+        path: `${process.env.PUBLIC_URL}/apikey-manager/apikeys`
       }
     ]
   }

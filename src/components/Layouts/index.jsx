@@ -3,11 +3,12 @@ import AppHeader from './components/AppHeader';
 import AppSidebar from './components/AppSidebar';
 //import ThemeOptions from './components/ThemeOptions';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 
 class Dashboard extends React.Component {
   render() {
     const { isAuth } = this.props;
+    console.log(this.props);
     if (!isAuth) {
       return <Redirect to="/" />;
     }
@@ -29,5 +30,6 @@ class Dashboard extends React.Component {
 const mapStateToProps = state => ({
   isAuth: state.auth.isAuth
 });
+const withRouterDashboard = withRouter(Dashboard);
 
-export default connect(mapStateToProps)(Dashboard);
+export default connect(mapStateToProps)(withRouterDashboard);

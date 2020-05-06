@@ -27,7 +27,7 @@ const ApiKeyComponent = props => {
 
   useEffect(() => {
     fetchApiKeys();
-  });
+  }, [fetchApiKeys]);
 
   const updateApiKey = (params, index) => {
     axios
