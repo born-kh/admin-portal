@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import { Button } from 'reactstrap';
 import Lightbox from 'react-image-lightbox';
-import 'react-image-lightbox/style.css';
 
 import {
   Row,
@@ -269,6 +268,7 @@ export default class SelfieStep extends React.Component {
                     {passportDocuments.map((row, index) => {
                       return (
                         <Col
+                          key={index}
                           sm="4"
                           xl="2"
                         >

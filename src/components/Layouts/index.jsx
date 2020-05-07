@@ -8,7 +8,7 @@ import { Redirect, withRouter } from 'react-router-dom';
 class Dashboard extends React.Component {
   render() {
     const { isAuth } = this.props;
-    console.log(this.props);
+
     if (!isAuth) {
       return <Redirect to="/" />;
     }
