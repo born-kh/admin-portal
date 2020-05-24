@@ -88,11 +88,11 @@ class DocumentProcedure extends React.Component {
       });
 
       var passportDocuments = setDocuments.filter(document => {
-        return document.documentType.typeName !== 'SELFIE_PHOTO';
+        return document.documentType.typeName !== 'SELFIE';
       });
 
       var selfieDocuments = setDocuments.filter(document => {
-        return document.documentType.typeName === 'SELFIE_PHOTO';
+        return document.documentType.typeName === 'SELFIE';
       });
       if (selfieDocuments.length > 0) {
         this.setState({
@@ -340,7 +340,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(DocumentProcedure);
+export default connect(mapStateToProps, mapDispatchToProps)(DocumentProcedure);

@@ -82,6 +82,7 @@ export function fetchDocuments(params) {
     passportAPI
       .getDocuments(params)
       .then(response => {
+        console.log(response);
         if (response.data !== undefined) {
           return dispatch(fetchDocumentsSuccess(response.data.documents));
         } else {

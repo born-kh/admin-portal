@@ -95,8 +95,5 @@ const mapDispatchToProps = dispatch => {
 
 const TimeOutMain = ReactTimeout(Main);
 export default withRouter(
-  connect(
-    mapStateToProp,
-    mapDispatchToProps
-  )(TimeOutMain)
+  connect(mapStateToProp, mapDispatchToProps)(TimeOutMain)
 );
