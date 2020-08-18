@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route, withRouter } from 'react-router-dom';
 
+import Nats from './Nats';
 import Dashboard from 'components/Layouts';
-import Nats from '../Statistics/Nats';
 
 const Statistics = ({ match }) => {
   return (

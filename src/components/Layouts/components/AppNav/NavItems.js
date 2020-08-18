@@ -97,5 +97,16 @@ export const MainNav = [
         path: `${process.env.PUBLIC_URL}/apikey-manager/apikeys`
       }
     ]
+  },
+  {
+    id: 5,
+    label: 'Statistics',
+    content: [
+      {
+        id: 55,
+        label: 'Nats statistics',
+        path: `${process.env.PUBLIC_URL}/statistics/nats`
+      }
+    ]
   }
 ];
