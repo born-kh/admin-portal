@@ -37,10 +37,24 @@ export default class SetGroups extends React.Component {
   render() {
     const { documents, getDocumentSetID } = this.props;
 
-    let setGroups = _.values(_.groupBy(documents, 'documenSet.ID')).map(d => ({
-      group: d[0],
-      count: d.length
-    }));
+    let setGroups = _.values(_.groupBy(documents, 'documenSet.ID')).map(d => {
+      var setDocuments = documents.filter(document => {
+        return document.documenSet.ID === d[0].documenSet.ID;
+      });
+
+      var passportDocuments = setDocuments.filter(document => {
+        return document.documentType.typeName !== 'SELFIE';
+      });
+
+      var selfieDocuments = setDocuments.filter(document => {
+        return document.documentType.typeName === 'SELFIE';
+      });
+      return {
+        full: passportDocuments.length === 0 || selfieDocuments.length === 0,
+        setID: d[0].documenSet.ID,
+        count: d.length
+      };
+    });
 
     return (
       <Fragment>
@@ -81,15 +95,10 @@ export default class SetGroups extends React.Component {
                       <Button
                         className="border-0 btn-transition"
                         color="primary"
-                        onClick={() =>
-                          getDocumentSetID(row.value.group.documenSet.ID)
-                        }
+                        onClick={() => getDocumentSetID(row.value.setID)}
                         outline
-                      >
-                        <FontAwesomeIcon
-                          icon={faSignInAlt}
-                          size="2x"
-                        />
+                        disabled={row.value.full}>
+                        <FontAwesomeIcon icon={faSignInAlt} size="2x" />
                       </Button>
                     </div>
                   )

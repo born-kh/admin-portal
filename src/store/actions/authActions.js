@@ -46,6 +46,7 @@ export function login(loginParams) {
     authAPI
       .login(params)
       .then(response => {
+        console.log(response);
         if (response !== undefined) {
           const user_session = response.data;
           localStorage.setItem(
