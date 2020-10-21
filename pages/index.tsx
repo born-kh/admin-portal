@@ -1,15 +1,11 @@
 import React, { useEffect } from 'react'
-import { NextPage } from 'next'
-import { useSelector, useDispatch } from 'react-redux'
-import { wrapper } from 'store'
-import { RootState } from '@store/reducers'
-import { USER_LOGIN } from '@store/auth/types'
 
-const Page: NextPage = () => {
-  const { auth } = useSelector<RootState, RootState>((state) => state)
+import Router, { useRouter } from 'next/router'
 
-  console.log(auth)
-  return <div></div>
+export default function () {
+  const router = useRouter()
+  useEffect(() => {
+    router.push('/user-manager')
+  }, [])
+  return <React.Fragment></React.Fragment>
 }
-
-export default Page

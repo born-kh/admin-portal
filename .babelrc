@@ -1,13 +1,26 @@
 {
-  "presets": [["next/babel"]],
+  "presets": [
+    [
+      "next/babel"
+    ]
+  ],
   "plugins": [
     [
       "module-resolver",
       {
-        "root": ["./"],
+        "root": [
+          "./"
+        ],
         "alias": {
-          "@/components/*": ["components/*"],
-          "@/store/*": ["store/*"]
+          "@/components/*": [
+            "components/*"
+          ],
+          "@/store/*": [
+            "store/*"
+          ],
+          "@/interfaces/*": [
+            "interfaces/*"
+          ]
         }
       }
     ]

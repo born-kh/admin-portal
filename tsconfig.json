@@ -17,9 +17,18 @@
     "paths": {
       "@components/*": ["./components/*"],
       "@utils/*": ["./utils/*"],
-      "@store/*": ["store/*"]
+      "@store/*": ["store/*"],
+      "@interfaces/*": ["interfaces/*"]
     }
   },
   "exclude": ["node_modules"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "next.config.js",
+    "utils/useFetcher.js",
+    "utils/useFetcherjs",
+    "components/common/MaterialTable.jsx"
+  ]
 }
