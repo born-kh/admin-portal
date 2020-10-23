@@ -9,12 +9,12 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'row',
       flexWrap: 'wrap',
       padding: '16px 40px',
+      marginBottom: 20,
       width: 600,
     },
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
-      width: '30ch',
     },
     button: {
       marginLeft: 400,

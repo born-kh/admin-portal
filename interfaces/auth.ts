@@ -1,5 +1,3 @@
-import { SearchType } from '@utils/constants'
-
 export interface AuthParams {
   app_uuid: string
   domain: string
@@ -18,10 +16,6 @@ export interface AuthResponse {
   result: boolean
 }
 
-export interface SearchTypeParams {
-  type: SearchType
-  search: string
-}
 
 export interface SessionData {
   access_domains: string[]

@@ -70,6 +70,7 @@ export const permissions = [
   'TAP_DELETE_SETTINGS',
   'TAP_SET_SYSTEM_SETTINGS',
   'TAP_GET_SYSTEM_SETTINGS',
+  'TAP_GET_APPLICATION_BY_ACCOUNT',
 ]
 
 export const ERROR_CODES = {
@@ -79,11 +80,3 @@ export const ERROR_CODES = {
   unknown: 'unknown',
 }
 
-export enum SearchType {
-  phone = 'phone',
-  email = 'email',
-  username = 'username',
-  accountID = 'accountID',
-  firstname = 'firstname',
-  lastname = 'lastname',
-}

@@ -1,4 +1,4 @@
-import { AuthParams, AuthResponse } from '@interfaces/auth'
+import { AuthParams, AuthResponse } from 'interfaces/auth'
 import instance from '@utils/instance'
 import { Dispatch } from 'redux'
 import { AuthActionsTypes, USER_LOGIN, USER_LOGOUT } from '@store/auth/types'

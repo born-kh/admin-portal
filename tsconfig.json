@@ -17,7 +17,7 @@
     "paths": {
       "@components/*": ["./components/*"],
       "@utils/*": ["./utils/*"],
-      "@store/*": ["store/*"],
+      "@store/*": ["./store/*"],
       "@interfaces/*": ["interfaces/*"]
     }
   },

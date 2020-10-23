@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Container from '@material-ui/core/Container'
 import MenuIcon from '@material-ui/icons/Menu'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import PowerSettingsIcon from '@material-ui/icons/PowerSettingsNew'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import { mainListItems, secondaryListItems } from './listItems'
 import { useStyles } from './styles'
 import CopyRight from '@components/CopyRight'
@@ -24,7 +24,8 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import * as authAPI from 'service/authAPI'
 import { AUTH_STATUS } from '@utils/constants'
 import SignIn from 'pages/login'
-
+import Backdrop from '@material-ui/core/Backdrop'
+import Head from 'next/head'
 export default function Dashboard(props: any) {
   const classes = useStyles()
   const dispatch: AppDispatch = useDispatch()
@@ -62,13 +63,13 @@ export default function Dashboard(props: any) {
     dispatch(authAPI.checkAuth())
   }, [dispatch])
 
-  if (states.authStatus === AUTH_STATUS.loggedOut) {
-    return <SignIn />
-  }
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
 
   return (
     <div className={classes.root}>
+      <Head>
+        <title>{props.title} </title>
+      </Head>
       <CssBaseline />
       <AppBar position="absolute" className={clsx(classes.appBar, states.openMenu && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
@@ -85,7 +86,7 @@ export default function Dashboard(props: any) {
             Tamos Admin
           </Typography>
           <IconButton color="inherit" onClick={handleLogout}>
-            <PowerSettingsIcon />
+            <ExitToAppIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -111,10 +112,13 @@ export default function Dashboard(props: any) {
         <Container maxWidth="lg" className={classes.container}>
           {props.children}
         </Container>
-        <Box pt={4}>
+        {/* <Box pt={4}>
           <CopyRight />
-        </Box>
+        </Box> */}
       </main>
+      <Backdrop className={classes.backdrop} open={states.authStatus !== AUTH_STATUS.loggedOn}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   )
 }

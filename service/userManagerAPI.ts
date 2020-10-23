@@ -1,10 +1,11 @@
 import instance from '@utils/instance'
-import { SearchTypeParams } from '@interfaces/auth'
+
 import { removeDuplicatesFromArrayByProperty } from '@utils/helpers'
+import { SearchTypeParams, Account } from 'interfaces/user-manager'
 
 export const searchUsers = async (searchList: SearchTypeParams[]) => {
   try {
-    let accounts: any = []
+    let accounts: Account[] = []
     for (let params of searchList) {
       const responseSearchUser = await instance.post('/searchuser', params)
       if (responseSearchUser.status === 200) {
@@ -15,4 +16,8 @@ export const searchUsers = async (searchList: SearchTypeParams[]) => {
 
     return accounts
   } catch (e) {}
+}
+export const getAccountSessions = async (accountID: string) => {
+  const response = await instance.post('/getaccountsessions', { accountID })
+  return response.data.sessions
 }

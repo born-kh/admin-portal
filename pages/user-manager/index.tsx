@@ -6,15 +6,18 @@ import Button from '@material-ui/core/Button'
 import { Grid, TextField, IconButton, Paper } from '@material-ui/core'
 import { useFormik } from 'formik'
 import { useStyles } from './styles'
-import { SearchType } from '@utils/constants'
-import { SearchTypeParams } from '@interfaces/auth'
+
+import { SearchTypeParams } from 'interfaces/auth'
 import * as usermanagerAPI from 'service/userManagerAPI'
 import MaterialTable from 'material-table'
 import { resetServerContext } from 'react-beautiful-dnd'
 import Avatar from '@material-ui/core/Avatar'
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications'
+import DetailsIcon from '@material-ui/icons/Details'
+import LockIcon from '@material-ui/icons/Lock'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { useRouter } from 'next/router'
+import { SearchType } from '@interfaces/user-manager'
+
 export default function () {
   const classes = useStyles()
   const router = useRouter()
@@ -51,85 +54,84 @@ export default function () {
   })
   resetServerContext()
   return (
-    <Dashboard>
-      <Grid item xs={6} md={6} lg={6}>
-        <Paper className={classes.paper}>
-          <Title>Advanced search</Title>
-          <form noValidate onSubmit={formik.handleSubmit}>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              id="searchList[0].search"
-              label="UserName"
-              name="searchList[0].search"
-              className={classes.textField}
-              autoFocus
-              onChange={formik.handleChange}
-              value={formik.values.searchList[0].search}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              id="searchList[1].search"
-              className={classes.textField}
-              name="searchList[1].search"
-              label="Phone Number"
-              onChange={formik.handleChange}
-              value={formik.values.searchList[1].search}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              id="searchList[2].search"
-              className={classes.textField}
-              name="searchList[2].search"
-              label="Email"
-              onChange={formik.handleChange}
-              value={formik.values.searchList[2].search}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              id="searchList[3].search"
-              className={classes.textField}
-              name="searchList[3].search"
-              label="Last Name"
-              onChange={formik.handleChange}
-              value={formik.values.searchList[3].search}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              id="searchList[4].search"
-              className={classes.textField}
-              name="searchList[4].search"
-              label="First Name"
-              onChange={formik.handleChange}
-              value={formik.values.searchList[4].search}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              id="searchList[5].search"
-              className={classes.textField}
-              name="searchList[5].search"
-              label="Account ID"
-              onChange={formik.handleChange}
-              value={formik.values.searchList[5].search}
-            />
+    <Dashboard title={'user-manager'}>
+      <Paper className={classes.paper}>
+        <Title>Advanced search</Title>
+        <form noValidate onSubmit={formik.handleSubmit}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            id="searchList[0].search"
+            label="UserName"
+            name="searchList[0].search"
+            className={classes.textField}
+            autoFocus
+            onChange={formik.handleChange}
+            value={formik.values.searchList[0].search}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            id="searchList[1].search"
+            className={classes.textField}
+            name="searchList[1].search"
+            label="Phone Number"
+            onChange={formik.handleChange}
+            value={formik.values.searchList[1].search}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            id="searchList[2].search"
+            className={classes.textField}
+            name="searchList[2].search"
+            label="Email"
+            onChange={formik.handleChange}
+            value={formik.values.searchList[2].search}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            id="searchList[3].search"
+            className={classes.textField}
+            name="searchList[3].search"
+            label="Last Name"
+            onChange={formik.handleChange}
+            value={formik.values.searchList[3].search}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            id="searchList[4].search"
+            className={classes.textField}
+            name="searchList[4].search"
+            label="First Name"
+            onChange={formik.handleChange}
+            value={formik.values.searchList[4].search}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            id="searchList[5].search"
+            className={classes.textField}
+            name="searchList[5].search"
+            label="Account ID"
+            onChange={formik.handleChange}
+            value={formik.values.searchList[5].search}
+          />
 
-            <Button variant="contained" className={classes.button} color="primary" type="submit">
-              Search
-            </Button>
-          </form>
-        </Paper>
-      </Grid>
+          <Button variant="contained" className={classes.button} color="primary" type="submit">
+            Search
+          </Button>
+        </form>
+      </Paper>
+
       <div style={{ marginTop: 30 }}>
         <MaterialTable
           title="Users"
@@ -145,6 +147,7 @@ export default function () {
             { title: 'User Name', field: 'username' },
             { title: 'First Name', field: 'firstName' },
             { title: 'Last Name', field: 'lastName' },
+            { title: 'Status', field: 'status' },
             {
               title: 'Info User',
               field: 'accountID',
@@ -156,9 +159,26 @@ export default function () {
                     color="primary"
                     onClick={() => router.push('/user-manager/' + rowData.accountID)}
                     className={classes.buttonTable}
-                    startIcon={<SettingsApplicationsIcon />}
+                    startIcon={<DetailsIcon />}
                   >
                     Info
+                  </Button>
+                ),
+            },
+            {
+              title: 'Change Password',
+              field: 'accountID',
+
+              render: (rowData) =>
+                rowData && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {}}
+                    className={classes.buttonTable}
+                    startIcon={<LockIcon />}
+                  >
+                    Change
                   </Button>
                 ),
             },
