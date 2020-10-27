@@ -26,6 +26,7 @@ import { AUTH_STATUS } from '@utils/constants'
 import SignIn from 'pages/login'
 import Backdrop from '@material-ui/core/Backdrop'
 import Head from 'next/head'
+import { resetServerContext } from 'react-beautiful-dnd'
 export default function Dashboard(props: any) {
   const classes = useStyles()
   const dispatch: AppDispatch = useDispatch()
@@ -64,7 +65,7 @@ export default function Dashboard(props: any) {
   }, [dispatch])
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
-
+  resetServerContext()
   return (
     <div className={classes.root}>
       <Head>

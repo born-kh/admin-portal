@@ -13,7 +13,7 @@ type PropsType = {
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
-    maxWidth: 300,
+    maxWidth: 200,
     backgroundColor: theme.palette.background.paper,
   },
 }))

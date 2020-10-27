@@ -1,7 +1,7 @@
 import instance from '@utils/instance'
 
 import { removeDuplicatesFromArrayByProperty } from '@utils/helpers'
-import { SearchTypeParams, Account } from 'interfaces/user-manager'
+import { SearchTypeParams, Account } from '@interfaces/user-manager'
 
 export const searchUsers = async (searchList: SearchTypeParams[]) => {
   try {

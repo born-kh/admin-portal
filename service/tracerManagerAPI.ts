@@ -11,7 +11,7 @@ export const searchTracers = async (params: TracerSearchParamsType) => {
     var errors: Tracer[] = []
 
     var messages: Tracer[] = []
-    console.log(array)
+
     for (let item of array) {
       let rawPayload = item.payload.string.replace('', '')
       let payload = JSON.parse(rawPayload)
@@ -43,9 +43,8 @@ export const searchTracers = async (params: TracerSearchParamsType) => {
           arrayObj[index] = { ...arrayObj[index], response: payload }
         }
       }
-      console.log(newItem)
     }
-    console.log(arrayObj)
+
     for (let item of arrayObj) {
       if (item.response.error) {
         errors.push(item)

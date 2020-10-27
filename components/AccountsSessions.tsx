@@ -71,10 +71,10 @@ export default function () {
           return sessions
         })
 
-        setAlertData({ message: 'Set Suspend is updated', type: AlertMessageType.sucess, open: true })
+        setAlertData({ message: 'Set Tracer is updated', type: AlertMessageType.sucess, open: true })
       })
       .catch(() => {
-        setAlertData({ message: 'Set Suspendis not updated', type: AlertMessageType.error, open: true })
+        setAlertData({ message: 'Set Tracer is not updated', type: AlertMessageType.error, open: true })
       })
   }
 

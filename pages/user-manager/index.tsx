@@ -3,27 +3,30 @@ import Dashboard from '@components/Dashboard'
 import Title from '@components/common/Title'
 import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
 import Button from '@material-ui/core/Button'
-import { Grid, TextField, IconButton, Paper } from '@material-ui/core'
+import { Grid, TextField, IconButton, Paper, Dialog, Typography } from '@material-ui/core'
 import { useFormik } from 'formik'
 import { useStyles } from './styles'
 
-import { SearchTypeParams } from 'interfaces/auth'
 import * as usermanagerAPI from 'service/userManagerAPI'
 import MaterialTable from 'material-table'
-import { resetServerContext } from 'react-beautiful-dnd'
+
 import Avatar from '@material-ui/core/Avatar'
 import DetailsIcon from '@material-ui/icons/Details'
 import LockIcon from '@material-ui/icons/Lock'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { useRouter } from 'next/router'
-import { SearchType } from '@interfaces/user-manager'
+import { SearchType, SearchTypeParams, Account } from '@interfaces/user-manager'
+import { CustomDialogTitle, CustomDialogContent, CustomDialogActions } from '@components/common/Modal'
 
 export default function () {
   const classes = useStyles()
   const router = useRouter()
 
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState<Account[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState({})
   const formik = useFormik({
     initialValues: {
       searchList: [
@@ -44,7 +47,10 @@ export default function () {
       usermanagerAPI
         .searchUsers(filterSearchList)
         .then((users) => {
-          setUsers(users)
+          if (users) {
+            setUsers(users)
+          }
+
           setIsLoading(false)
         })
         .catch(() => {
@@ -52,7 +58,10 @@ export default function () {
         })
     },
   })
-  resetServerContext()
+
+  const handleClose = () => {
+    setIsOpen(false)
+  }
   return (
     <Dashboard title={'user-manager'}>
       <Paper className={classes.paper}>
@@ -174,7 +183,7 @@ export default function () {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => {}}
+                    onClick={() => setIsOpen(true)}
                     className={classes.buttonTable}
                     startIcon={<LockIcon />}
                   >
@@ -188,6 +197,33 @@ export default function () {
             search: false,
           }}
         />
+
+        <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={isOpen}>
+          <CustomDialogTitle id="customized-dialog-title" onClose={handleClose}>
+            Change Password
+          </CustomDialogTitle>
+          <CustomDialogContent dividers>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              id="searchList[5].search"
+              className={classes.textField}
+              name="searchList[5].search"
+              label="Password"
+              onChange={(e) => setIsOpen(e.target.value)}
+              value={password}
+            />
+          </CustomDialogContent>
+          <CustomDialogActions>
+            <Button autoFocus onClick={handleClose} color="primary">
+              Generate
+            </Button>
+            <Button autoFocus onClick={handleClose} color="primary">
+              Save changes
+            </Button>
+          </CustomDialogActions>
+        </Dialog>
       </div>
 
       {/* <SnackBarAlert onClose={handleClose} message={"success message"} type={AlertMessageType.sucess} open={open} /> */}

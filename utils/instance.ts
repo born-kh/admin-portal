@@ -3,7 +3,7 @@ import { SESSION_TOKEN } from './constants'
 import * as authAPI from 'service/authAPI'
 
 const config: AxiosRequestConfig = {
-  baseURL: 'http://localhost:8080',
+  baseURL: 'http://10.7.8.129:9011',
 }
 const instance: AxiosInstance = axios.create(config)
 

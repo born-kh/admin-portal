@@ -20,3 +20,22 @@ export const removeDuplicatesFromArrayByProperty = (arr: any[], prop: string) =>
     }
     return accumulator
   }, [])
+
+export function dateFormatter(
+  date: Date,
+  locale = 'en-US',
+  options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    timeZone: 'UTC',
+  }
+) {
+  if (date) {
+    let new_date = new Intl.DateTimeFormat(locale, options)
+    return new_date.format(new Date(date))
+  }
+  return null
+}

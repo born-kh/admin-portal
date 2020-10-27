@@ -80,3 +80,18 @@ export const ERROR_CODES = {
   unknown: 'unknown',
 }
 
+export const applicationOptions = [
+  { value: 'ALL', label: 'ALL' },
+  { value: 'NEW', label: 'NEW' },
+  { value: 'PENDING', label: 'PENDING' },
+  { value: 'APPROVED', label: 'APPROVED' },
+  { value: 'REJECTED', label: 'REJECTED' },
+]
+
+export const dateOptions = [
+  { value: 'ALL', label: 'ALL' },
+  { value: 0, label: 'CREATED' },
+  { value: 1, label: 'UPDATED' },
+  { value: 3, label: 'SUBMITED' },
+  { value: 4, label: 'APPROVED' },
+]

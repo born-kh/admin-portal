@@ -50,9 +50,11 @@ export default function () {
       console.log(params)
       searchTracers(params)
         .then((response) => {
-          console.log(response)
-          setMessages(response.messages)
-          setErrors(response.errors)
+          if (response) {
+            setMessages(response.messages)
+            setErrors(response.errors)
+          }
+
           setIsLoading(false)
         })
         .catch(() => {
