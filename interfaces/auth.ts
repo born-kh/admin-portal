@@ -9,12 +9,6 @@ export interface AuthParams {
   username: string
 }
 
-export interface AuthResponse {
-  data: AuthResponseData
-  return_code: number
-  return_note: string
-  result: boolean
-}
 
 
 export interface SessionData {

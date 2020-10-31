@@ -24,6 +24,7 @@ import { useRouter } from 'next/router'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import Select from 'react-select'
 import { applicationOptions, dateOptions } from '@utils/constants'
+import { documentAPI } from 'service/api'
 export default function (props: any) {
   const classes = useStyles()
   const [openDateRange, setOpenDateRange] = useState(false)
@@ -77,12 +78,12 @@ export default function (props: any) {
   //   })
   //   const searchError = formik.errors.search !== undefined && formik.touched.search
   useEffect(() => {
-    if (valueTab === 0) {
+    if (valueTab === 1) {
       router.push({
         pathname: '/document-manager',
         query: { applications: 'any' },
       })
-    } else if (valueTab === 1) {
+    } else if (valueTab === 0) {
       router.push({
         pathname: '/document-manager',
         query: { applications: 'new' },
@@ -93,6 +94,7 @@ export default function (props: any) {
   useEffect(() => {
     setIsLoadingAny(true)
     setIsLoadingNew(true)
+
     documentManagerAPI
       .fetchAnyApplications()
       .then((applications) => {
@@ -126,13 +128,7 @@ export default function (props: any) {
           indicatorColor="primary"
           textColor="primary"
         >
-          <Tab
-            label={
-              <Badge badgeContent={anyApplications.length} color="secondary">
-                Any Documents
-              </Badge>
-            }
-          />
+          {' '}
           <Tab
             label={
               <Badge badgeContent={newApplications.length} color="secondary">
@@ -140,8 +136,18 @@ export default function (props: any) {
               </Badge>
             }
           />
+          <Tab
+            label={
+              <Badge badgeContent={anyApplications.length} color="secondary">
+                Any Documents
+              </Badge>
+            }
+          />
         </Tabs>
         <TabPanel value={valueTab} index={0}>
+          <ApplicationTable type={'new applications'} isLoading={isLoadingNew} data={newApplications} />
+        </TabPanel>
+        <TabPanel value={valueTab} index={1}>
           <div className={classes.paper}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel> Application</InputLabel>
@@ -163,9 +169,6 @@ export default function (props: any) {
             />
           </div>
           <ApplicationTable type={'applications'} isLoading={isLoadingAny} data={anyApplications} />
-        </TabPanel>
-        <TabPanel value={valueTab} index={1}>
-          <ApplicationTable type={'new applications'} isLoading={isLoadingNew} data={newApplications} />
         </TabPanel>
       </Paper>
       <DatePicker
@@ -199,7 +202,7 @@ function TabPanel(props: any) {
 
 export const getServerSideProps: GetServerSideProps = async (cxt: GetServerSidePropsContext<{}>) => {
   let tabValue = 0
-  if (cxt.query.applications && cxt.query.applications === 'new') {
+  if (cxt.query.applications && cxt.query.applications === 'any') {
     tabValue = 1
   }
   return { props: { tabValue } }

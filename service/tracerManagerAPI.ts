@@ -1,10 +1,11 @@
 import instance from '@utils/instance'
 import { SearchTypeParams } from '@interfaces/user-manager'
 import { Tracer, TracerSearchParamsType } from '@interfaces/tracer-manager'
+import { tracerAPI } from './api'
 
 export const searchTracers = async (params: TracerSearchParamsType) => {
   try {
-    const response = await instance.post('/searchtracer', params)
+    const response = await tracerAPI.searchTracer(params)
 
     var array: any = response.data
     var arrayObj: any[] = []
@@ -24,7 +25,6 @@ export const searchTracers = async (params: TracerSearchParamsType) => {
       }
 
       if (payload.params) {
-        console.log(payload)
         const index = arrayObj.findIndex((e: any) => e.response.id.toLowerCase() === payload.id.toLowerCase())
         newItem = { ...newItem, request: payload }
 

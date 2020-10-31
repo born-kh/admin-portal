@@ -1,15 +1,12 @@
 import { useEffect, useState, Fragment } from 'react'
 
 import { Button, Switch } from '@material-ui/core'
-
-import * as usermanagerAPI from 'service/userManagerAPI'
 import MaterialTable from 'material-table'
 import DetailsIcon from '@material-ui/icons/Details'
 
 import DeleteIcon from '@material-ui/icons/Delete'
 import PersonPinCircleIcon from '@material-ui/icons/PersonPinCircle'
 import { useRouter } from 'next/router'
-import instance from '@utils/instance'
 import { AccountSessionsData } from '@interfaces/user-manager'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -17,8 +14,9 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import SnackBarAlert, { AlertMessageType } from './common/SnackbarAlert'
+import { sessionAPI } from 'service/api'
+import { initialAlertData } from '@utils/constants'
 
-const initialAlertData = { type: AlertMessageType.sucess, message: '', open: false }
 export default function () {
   const [sessions, setSessions] = useState<AccountSessionsData[]>([])
   const [sessionsIsLoading, setSessionsIsLoading] = useState(false)
@@ -37,10 +35,13 @@ export default function () {
   useEffect(() => {
     function loadData() {
       setSessionsIsLoading(true)
-      usermanagerAPI
-        .getAccountSessions(router.query.id as string)
-        .then((sessions) => {
-          setSessions(sessions)
+      sessionAPI
+        .fetchAccountSessions({ accountID: router.query.id as string })
+        .then((response) => {
+          if (response.status === 200) {
+            setSessions(response.data.sessions)
+          }
+
           setSessionsIsLoading(false)
         })
         .catch(() => {
@@ -57,9 +58,9 @@ export default function () {
   }
 
   const handleSetTracing = (params: { sessionID: string; isTracing: boolean }) => {
-    instance
-      .post('/settracer', params)
-      .then((response) => {
+    sessionAPI
+      .setTracer(params)
+      .then(() => {
         setSessions((prevSessions) => {
           const sessions = prevSessions.map((session) => {
             if (session.meta.sessionID === params.sessionID) {
@@ -70,7 +71,6 @@ export default function () {
           })
           return sessions
         })
-
         setAlertData({ message: 'Set Tracer is updated', type: AlertMessageType.sucess, open: true })
       })
       .catch(() => {
@@ -79,9 +79,9 @@ export default function () {
   }
 
   const handleSetSuspended = (params: { sessionID: string; isSuspended: boolean }) => {
-    instance
-      .post('/suspendsession', params)
-      .then((response) => {
+    sessionAPI
+      .suspendSession(params)
+      .then(() => {
         setSessions((prevSessions) => {
           const sessions = prevSessions.map((session) => {
             if (session.meta.sessionID === params.sessionID) {
@@ -101,24 +101,29 @@ export default function () {
   }
 
   const handleDeleteSession = () => {
-    instance
-      .post('/removesession', { sessionID })
-      .then((response) => {
-        setOpen(true)
-        setSessions((prevSessions) => {
-          const sessions = prevSessions.filter((session) => session.meta.sessionID !== sessionID)
-          return sessions
+    if (sessionID) {
+      sessionAPI
+        .removeSession(sessionID)
+        .then(() => {
+          setSessions((prevSessions) => {
+            const sessions = prevSessions.filter((session) => session.meta.sessionID !== sessionID)
+            return sessions
+          })
+          setOpen(false)
+          setAlertData({ message: 'Removed session', type: AlertMessageType.sucess, open: true })
         })
-      })
-      .catch(() => {
-        setOpen(false)
-      })
+        .catch(() => {
+          setOpen(false)
+          setAlertData({ message: 'Not removed sesssion', type: AlertMessageType.error, open: true })
+        })
+    }
   }
 
   return (
     <Fragment>
       <MaterialTable
         title="Sessions"
+        style={{ marginBottom: 20 }}
         isLoading={sessionsIsLoading}
         localization={{ body: { emptyDataSourceMessage: 'There are no sessions' } }}
         columns={[

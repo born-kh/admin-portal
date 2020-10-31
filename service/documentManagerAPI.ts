@@ -1,5 +1,5 @@
 import instance from '@utils/instance'
-import { Application, Document } from '@interfaces/document-manager'
+import { Application, Document, DocumentTypes } from '@interfaces/document-manager'
 
 export const fetchApplicationsByAccount = async (accountID: string) => {
   try {
@@ -24,5 +24,12 @@ export const fetchDocuments = async (applicationID: string) => {
   try {
     const response = await instance.post('/getdocuments', { applicationID })
     return response.data.documents as Document[]
+  } catch (e) {}
+}
+
+export const fetchTypes = async (setID: string) => {
+  try {
+    const response = await instance.post('/getdocumenttypes', { setID })
+    return response.data.types as DocumentTypes[]
   } catch (e) {}
 }

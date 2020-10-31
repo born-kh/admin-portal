@@ -1,4 +1,4 @@
-import { AuthParams, AuthResponse } from 'interfaces/auth'
+import { AuthParams } from 'interfaces/auth'
 import instance from '@utils/instance'
 import { Dispatch } from 'redux'
 import { AuthActionsTypes, USER_LOGIN, USER_LOGOUT } from '@store/auth/types'
@@ -7,6 +7,7 @@ import { SESSION_TOKEN, permissions, USER_PERMISSION } from '@utils/constants'
 export const login = (params: AuthParams) => {
   return async (dispatch: Dispatch<AuthActionsTypes>) => {
     return instance.post('/login', params).then((responseLogin) => {
+      console.log(responseLogin)
       if (responseLogin.status === 200) {
         const session_token = responseLogin.data.data.session_data.session_token
 

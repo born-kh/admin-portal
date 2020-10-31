@@ -18,6 +18,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     button: {
       marginLeft: 400,
     },
+    buttonDocument: {
+      marginRight: theme.spacing(1),
+    },
     buttonTable: {
       margin: theme.spacing(1),
     },

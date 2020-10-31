@@ -58,9 +58,9 @@ export interface Passport {
   type: string
   country: string
   number: string
-  date_of_birth: Date
-  expiration_date: Date
-  issue_date: Date
+  date_of_birth: string
+  expiration_date: string
+  issue_date: string
   nationality: string
   sex: SexType
   first_name: string
@@ -83,7 +83,7 @@ export interface MRZTD3 {
   date_of_birth: string
   expiration_date: string
   nationality: string
-  sex: string
+  sex: SexType
   names: string
   surname: string
   personal_number: string
@@ -106,7 +106,7 @@ export interface MRZTD1 {
   number: string
   national_id: string
   date_of_birth: string
-  sex: string
+  sex: SexType
   expiration_date: string
   nationality: string
   optional_data?: string
@@ -149,4 +149,28 @@ export enum SexType {
   M = 'M',
   F = 'F',
   Unknown = 'Unknown',
+}
+
+export interface StepType {
+  name: string
+  status: DocumentStatus
+  component: React.ReactElement
+  icon: React.ReactElement
+  typeID?: string
+}
+
+export interface DocumentTypes {
+  ID: string
+  name: string
+  note?: string
+  //  pageFields?: Array<string:string>
+  mlProfile?: string
+  projectID?: string
+  documents: Document[]
+  status: DocumentStatus
+}
+
+export interface PositionMap {
+  latitude: number
+  longitude: number
 }

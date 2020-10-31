@@ -27,6 +27,7 @@ import SignIn from 'pages/login'
 import Backdrop from '@material-ui/core/Backdrop'
 import Head from 'next/head'
 import { resetServerContext } from 'react-beautiful-dnd'
+import Loader from '@components/common/Loader'
 export default function Dashboard(props: any) {
   const classes = useStyles()
   const dispatch: AppDispatch = useDispatch()
@@ -66,6 +67,9 @@ export default function Dashboard(props: any) {
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
   resetServerContext()
+  if (states.authStatus !== AUTH_STATUS.loggedOn) {
+    return <Loader size={200} />
+  }
   return (
     <div className={classes.root}>
       <Head>
@@ -117,9 +121,9 @@ export default function Dashboard(props: any) {
           <CopyRight />
         </Box> */}
       </main>
-      <Backdrop className={classes.backdrop} open={states.authStatus !== AUTH_STATUS.loggedOn}>
+      {/* <Backdrop className={classes.backdrop} open={states.authStatus !== AUTH_STATUS.loggedOn}>
         <CircularProgress color="inherit" />
-      </Backdrop>
+      </Backdrop> */}
     </div>
   )
 }

@@ -17,6 +17,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import { useRouter } from 'next/router'
 import { SearchType, SearchTypeParams, Account } from '@interfaces/user-manager'
 import { CustomDialogTitle, CustomDialogContent, CustomDialogActions } from '@components/common/Modal'
+import { userAPI } from 'service/api'
 
 export default function () {
   const classes = useStyles()
@@ -43,17 +44,15 @@ export default function () {
       const filterSearchList = values.searchList.filter((item) => item.search)
       setUsers([])
       setIsLoading(true)
-
-      usermanagerAPI
-        .searchUsers(filterSearchList)
-        .then((users) => {
-          if (users) {
-            setUsers(users)
-          }
+      userAPI
+        .searchUser(filterSearchList)
+        .then((accounts) => {
+          setUsers(accounts)
 
           setIsLoading(false)
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log(error)
           setIsLoading(false)
         })
     },

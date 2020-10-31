@@ -25,7 +25,7 @@ export default function SnackBarAlert(props: PropsType) {
         horizontal: 'right',
       }}
       open={props.open}
-      autoHideDuration={2000}
+      autoHideDuration={3000}
       onClose={props.onClose}
     >
       <Alert onClose={props.onClose} severity={props.type}>

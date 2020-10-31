@@ -8,12 +8,14 @@ type PropsType = {
   data: Application[]
   isLoading: boolean
   type: string
+  title?: string
 }
 export default function (props: PropsType) {
   const router = useRouter()
   console.log(router)
   return (
     <MaterialTable
+      title={props.title}
       isLoading={props.isLoading}
       localization={{ body: { emptyDataSourceMessage: `There are no ${props.type}` } }}
       columns={[
@@ -68,7 +70,7 @@ export default function (props: PropsType) {
       ]}
       data={props.data}
       options={{
-        showTitle: false,
+        showTitle: props.title !== undefined,
         headerStyle: {
           zIndex: 0,
         },

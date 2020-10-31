@@ -29,6 +29,6 @@
     "next.config.js",
     "utils/useFetcher.js",
     "utils/useFetcherjs",
-    "components/common/MaterialTable.jsx"
+    "components/common/MaterialTable.jsx", "components/DocumentManager/DocumentProcedure/Steps"
   ]
 }
