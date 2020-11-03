@@ -1,4 +1,4 @@
-import { ERROR_CODES } from './constants'
+import { ERROR_CODES, DateConvertType } from './constants'
 
 export function getErrorMsgFromCode(code: string | number | null) {
   switch (code) {
@@ -39,14 +39,14 @@ export function dateFormatter(
   }
   return null
 }
-export function convertMRZDate(str: string, dateConvertType: string) {
-  if (str && str.length === 6) {
+export function convertMRZDate(str: string, dateConvertType: DateConvertType) {
+  if (str && str.length >= 6) {
     var year = parseInt(str.substring(0, 2))
     var month = str.substring(2, 4)
     var day = str.substring(4, 6)
 
     switch (dateConvertType) {
-      case 'dob':
+      case DateConvertType.dob:
         let curYear = new Date().getFullYear()
         if (year + 2000 < curYear) {
           year += 2000
@@ -54,10 +54,10 @@ export function convertMRZDate(str: string, dateConvertType: string) {
           year += 1900
         }
         break
-      case 'expiry':
+      case DateConvertType.expiry:
         year += 2000
         break
-      case 'issue':
+      case DateConvertType.issue:
         year += 2000 - 10
         break
       default:
@@ -65,7 +65,7 @@ export function convertMRZDate(str: string, dateConvertType: string) {
 
     const date = new Date(year.toString(), month - 1, day).toISOString().split('.')[0] + 'Z'
 
-    return date
+    return date.substring(0, 10)
   }
-  return null
+  return new Date().toISOString().split('.')[0] + 'Z'
 }

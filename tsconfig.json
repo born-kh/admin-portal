@@ -29,6 +29,10 @@
     "next.config.js",
     "utils/useFetcher.js",
     "utils/useFetcherjs",
-    "components/common/MaterialTable.jsx", "components/DocumentManager/DocumentProcedure/Steps"
+    "components/common/MaterialTable.jsx",
+    "components/DocumentManager/DocumentProcedure/Steps",
+    "components/OpenMap/index.jsx",
+    "components/OpenMap/index.jsx",
+    "components/OpenMap/index.jsx"
   ]
 }

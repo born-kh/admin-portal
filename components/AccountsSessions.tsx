@@ -16,12 +16,13 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import SnackBarAlert, { AlertMessageType } from './common/SnackbarAlert'
 import { sessionAPI } from 'service/api'
 import { initialAlertData } from '@utils/constants'
+import OpenMap from './OpenMap'
 
 export default function () {
   const [sessions, setSessions] = useState<AccountSessionsData[]>([])
   const [sessionsIsLoading, setSessionsIsLoading] = useState(false)
   const [sessionID, setSessionID] = useState<string | null>(null)
-
+  const [mapPosition, setMapPosition] = useState<number[]>([])
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
     initialAlertData
   )
@@ -55,6 +56,23 @@ export default function () {
 
   const handleClose = () => {
     setOpen(false)
+  }
+
+  const handleOpenMap = (sessionIP: string) => {
+    fetch(`http://api.ipstack.com/${sessionIP}?access_key=98b92bffbfd727524f6027db62913163`)
+      .then((response) => {
+        return response.json()
+      })
+      .then((myJson) => {
+        if (myJson.latitude) {
+          setMapPosition([myJson.latitude, myJson.longitude])
+        } else {
+          setAlertData({ message: 'Session IP is private', type: AlertMessageType.info, open: true })
+        }
+      })
+      .catch((e) => {
+        setAlertData({ message: 'Session IP is private', type: AlertMessageType.info, open: true })
+      })
   }
 
   const handleSetTracing = (params: { sessionID: string; isTracing: boolean }) => {
@@ -181,7 +199,12 @@ export default function () {
 
             render: (rowData) =>
               rowData && (
-                <Button variant="contained" color="primary" startIcon={<PersonPinCircleIcon />}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<PersonPinCircleIcon />}
+                  onClick={() => handleOpenMap(rowData.meta.ip)}
+                >
                   Location
                 </Button>
               ),
@@ -212,7 +235,7 @@ export default function () {
         }}
       />
       <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
-
+      <OpenMap open={mapPosition.length !== 0} handleClose={() => setMapPosition([])} position={mapPosition} />
       <Dialog
         open={open}
         onClose={handleClose}

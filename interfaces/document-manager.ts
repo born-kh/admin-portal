@@ -174,3 +174,19 @@ export interface PositionMap {
   latitude: number
   longitude: number
 }
+
+export interface FilterDateRange {
+  type: string
+  from: string
+  to: string
+}
+
+export interface FilterAnyApplication {
+  status?: string
+  range?: FilterDateRange
+}
+export interface FilterApplicationParams {
+  filter?: FilterAnyApplication
+  start: number
+  count: number
+}

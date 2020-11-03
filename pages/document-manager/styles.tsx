@@ -5,15 +5,17 @@ import TextField from '@material-ui/core/TextField'
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
+      display: 'flex',
+      flexDirection: 'column',
       marginBottom: 20,
+      width: 550,
     },
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
     },
     formControl: {
-      margin: theme.spacing(1),
-      minWidth: 200,
+      width: 250,
     },
     button: {
       marginLeft: 400,

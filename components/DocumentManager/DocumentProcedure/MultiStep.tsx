@@ -67,8 +67,9 @@ const MultiStep = (props: PropsType) => {
 
   useEffect(() => {
     let count = 0
-    let countTypes = steps.length - 3
-    for (let i = 0; i <= countTypes; i++) {
+    let countTypes = steps.length - 2
+    for (let i = 0; i < countTypes; i++) {
+      console.log(steps[i].status)
       if (steps[i].status === DocumentStatus.approved) {
         count++
       }
@@ -120,7 +121,7 @@ const MultiStep = (props: PropsType) => {
             <Button
               variant="contained"
               style={documentButtonStyle}
-              disabled={blocking}
+              disabled={blocking || steps[activeStep].status !== DocumentStatus.new}
               color="secondary"
               onClick={() => handleRejectDocument(steps[activeStep].typeID || '')}
               className={classes.button}
@@ -128,7 +129,7 @@ const MultiStep = (props: PropsType) => {
               Reject
             </Button>
             <Button
-              disabled={blocking}
+              disabled={blocking || steps[activeStep].status !== DocumentStatus.new}
               variant="contained"
               style={documentButtonStyle}
               color="primary"

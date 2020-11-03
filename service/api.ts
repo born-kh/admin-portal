@@ -2,7 +2,6 @@ import axios from '@utils/instance'
 import { API_URLS } from '@utils/constants'
 import { AuthParams } from '@interfaces/auth'
 import * as resTypes from '@interfaces/api'
-import { Dictionary } from 'lodash'
 import { TracerSearchParamsType } from '@interfaces/tracer-manager'
 import { SearchTypeParams, Account } from '@interfaces/user-manager'
 import { Fields } from '@interfaces/document-manager'
@@ -59,7 +58,7 @@ export const userAPI = {
 
 export const tracerAPI = {
   async searchTracer(params: TracerSearchParamsType) {
-    const response = await axios.post(API_URLS.SEARCH_TRACER, params)
+    const response = await axios.post<resTypes.FetchSessionsResponse>(API_URLS.SEARCH_TRACER, params)
     return response
   },
 }
@@ -125,6 +124,7 @@ export const documentAPI = {
     return response
   },
   async setDocumentFields(params: { documentID: string; fields: Fields }) {
+    console.log(params)
     const response = await axios.post<resTypes.DocumentMessageResponse>(API_URLS.SET_DOCUMENT_FIELDS, params)
     return response
   },
@@ -137,7 +137,7 @@ export const documentAPI = {
     return response
   },
 
-  async deleteDocument(params: any) {
+  async deleteDocument(params: { documentID: string }) {
     const response = await axios.post<resTypes.DocumentMessageResponse>(API_URLS.DELETE_DOCUMENT, params)
     return response
   },

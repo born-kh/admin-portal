@@ -11,3 +11,8 @@ export interface Tracer {
   response: any
   request: any
 }
+
+export interface TracerResult {
+  messages: Tracer[]
+  errors: Tracer[]
+}

@@ -1,12 +1,13 @@
 import MaterialTable from 'material-table'
-import { Application, Document } from '@interfaces/document-manager'
-import Viewer from 'react-viewer'
+import { Document } from '@interfaces/document-manager'
 import VisibilityIcon from '@material-ui/icons/Visibility'
 import _ from 'lodash'
-import { Button, Typography } from '@material-ui/core'
-import { useRouter } from 'next/router'
+import { Button } from '@material-ui/core'
 import { DOCUMENT_FILE_URL } from '@utils/constants'
 import { useState } from 'react'
+import dynamic from 'next/dynamic'
+const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
+
 type PropsType = {
   documents: Document[]
   isLoading: boolean
@@ -75,13 +76,14 @@ export default function (props: PropsType) {
 
 export const DetailPanel = ({ documents }: { documents: Document[] }) => {
   const [docID, setDocID] = useState<string | null>(null)
+
   return (
     <MaterialTable
       columns={[
         { title: '№', field: '', render: (rowData) => rowData && rowData.tableData.id + 1 },
-        { title: 'File Original Name', field: 'fileInfo.originalName' },
-        { title: 'File Size', field: 'fileInfo.size' },
-        { title: 'File Upload IP', field: 'fileInfo.uploadIP' },
+        { title: 'Document Type', field: 'documentType.typeName' },
+        { title: 'Status', field: 'status' },
+
         {
           title: 'Picture',
           field: '',
@@ -101,12 +103,12 @@ export const DetailPanel = ({ documents }: { documents: Document[] }) => {
                     verticalAlign: 'middle',
                   }}
                 />
-                {/* <Viewer
+                <Viewer
                   zIndex={9999}
                   visible={docID === rowData.ID}
                   onClose={() => setDocID(null)}
                   images={[{ src: DOCUMENT_FILE_URL + rowData.ID, alt: '' }]}
-                /> */}
+                />
               </div>
             ),
         },
@@ -115,9 +117,7 @@ export const DetailPanel = ({ documents }: { documents: Document[] }) => {
       options={{
         search: false,
         showTitle: false,
-
         maxBodyHeight: 600,
-
         paging: false,
         headerStyle: {
           position: 'sticky',

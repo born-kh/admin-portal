@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import Dashboard from '@components/Dashboard'
 import { useEffect, useState } from 'react'
 import Title from '@components/common/Title'
-import { Document } from '@interfaces/document-manager'
+import { Document, DocumentStatus } from '@interfaces/document-manager'
 import * as documentManagerAPI from 'service/documentManagerAPI'
 import SetGroups from '@components/DocumentManager/SetGroups'
 import DocumentProcedure from '@components/DocumentManager/DocumentProcedure'
@@ -37,6 +37,28 @@ export default function (props: any) {
       loadData()
     }
   }, [applicationID])
+
+  const deleteDocument = async (documentID: string) => {
+    documentAPI
+      .deleteDocument({ documentID })
+      .then((response) => {
+        console.log(response)
+        setDocuments((prevDocumnet) => prevDocumnet.filter((item) => item.ID !== documentID))
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+  }
+  const updateDocument = (typeID: string, documentSetID: string, status: DocumentStatus) => {
+    setDocuments((prevDocumnet) =>
+      prevDocumnet.map((item) => {
+        if (item.documentType.ID === typeID && item.documenSet.ID === documentSetID) {
+          return { ...item, status }
+        }
+        return item
+      })
+    )
+  }
 
   const goNextApplication = () => {
     setLoading(true)
@@ -78,24 +100,34 @@ export default function (props: any) {
 
   return (
     <Dashboard>
-      <Title>Application Info</Title>
-      <Box display="flex" p={1}>
-        <Box p={1} flexGrow={1}>
-          <Button variant="contained" color="primary" startIcon={<ArrowBackIosIcon />} onClick={() => router.back()}>
-            Back to Appllications
-          </Button>
-        </Box>
-        <Box p={1}>
-          <Button variant="contained" color="primary" endIcon={<ArrowForwardIosIcon />} onClick={goNextApplication}>
-            Next Appllication
-          </Button>
-        </Box>
-      </Box>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.buttonDocument}
+          startIcon={<ArrowBackIosIcon />}
+          onClick={() => router.back()}
+        >
+          Back to Appllications
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.buttonDocument}
+          endIcon={<ArrowForwardIosIcon />}
+          onClick={goNextApplication}
+        >
+          Next Appllication
+        </Button>
+      </div>
+
       {!documentSetID ? (
         <SetGroups documents={documents} isLoading={loading} handleSetID={(setID) => setDocumentSetID(setID)} />
       ) : (
         <DocumentProcedure
           documents={documents}
+          handleDeleteDocument={deleteDocument}
+          handleUpdateDocument={updateDocument}
           applicationID={applicationID}
           handleDoneDocumentProcedure={doneDocumentProcedure}
           accountID={accountID}

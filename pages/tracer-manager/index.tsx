@@ -17,7 +17,7 @@ import { SearchTypeParams } from '@interfaces/user-manager'
 import { TracerSearchParamsType, Tracer } from '@interfaces/tracer-manager'
 import TracerTable from '@components/TracerTable'
 import * as Yup from 'yup'
-import { tracerAPI } from 'service/api'
+
 export default function () {
   const classes = useStyles()
   const [openDateRange, setOpenDateRange] = useState(false)
@@ -48,17 +48,12 @@ export default function () {
         fromTS: dateRange.startDate.toISOString().split('.')[0] + 'Z',
         toTS: dateRange.endDate.toISOString().split('.')[0] + 'Z',
       }
-      tracerAPI.searchTracer(params).then((response)=>{
-        if (response.status===200) {
-          setMessages(response.dat)
-          setErrors(response.errors)
-        }
 
-        setIsLoading(false)
-      })
       searchTracers(params)
-        .then((response) => {
-        
+        .then((result) => {
+          setMessages(result.messages)
+          setErrors(result.errors)
+          setIsLoading(false)
         })
         .catch(() => {
           setIsLoading(false)

@@ -149,15 +149,21 @@ export default function () {
             {
               field: 'avatar',
               title: 'Avatar',
-              render: (rowData) => <Avatar>H</Avatar>,
+              align: 'center',
+              render: (rowData) => (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <Avatar>H</Avatar>
+                </div>
+              ),
             },
 
-            { title: 'User Name', field: 'username' },
-            { title: 'First Name', field: 'firstName' },
-            { title: 'Last Name', field: 'lastName' },
-            { title: 'Status', field: 'status' },
+            { title: 'User Name', field: 'username', align: 'center' },
+            { title: 'First Name', field: 'firstName', align: 'center' },
+            { title: 'Last Name', field: 'lastName', align: 'center' },
+            { title: 'Status', field: 'status', align: 'center' },
+
             {
-              title: 'Info User',
+              title: 'Detail Info',
               field: 'accountID',
 
               render: (rowData) =>
@@ -193,6 +199,7 @@ export default function () {
           ]}
           data={users}
           options={{
+            sorting: false,
             search: false,
           }}
         />

@@ -29,9 +29,12 @@ import {
   ListSubheader,
   Typography,
   Paper,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from '@material-ui/core'
 import { CustomDialogTitle, CustomDialogActions, CustomDialogContent } from '@components/common/Modal'
-import { rejectMessages, initialAlertData } from '@utils/constants'
+import { rejectMessages, initialAlertData, DateConvertType } from '@utils/constants'
 import { AccountStatus } from '@interfaces/user-manager'
 import { SetApplicationStatusParams, SetDocumentStatusParams } from '@interfaces/api'
 import { documentAPI } from 'service/api'
@@ -42,11 +45,15 @@ import EditIcon from '@material-ui/icons/Edit'
 import DoneAllIcon from '@material-ui/icons/DoneAll'
 import PageLoader from 'next/dist/client/page-loader'
 import Loader from '@components/common/Loader'
+import OpenMap from '@components/OpenMap'
+
 type PropsType = {
   documents: Document[]
   documentSetID: string
   applicationID: string
   accountID: string
+  handleDeleteDocument: (ID: string) => void
+  handleUpdateDocument: (typeID: string, documentSetID: string, status: DocumentStatus) => void
   handleDoneDocumentProcedure: () => void
 }
 
@@ -55,15 +62,16 @@ const DocumentProcedure = (props: PropsType) => {
   const [rejectMessageIndex, setRejectMessageIndex] = useState<number | null>(0)
   const [documentTypes, setDocumentTypes] = useState<DocumentTypes[]>([])
   const [passportDocuments, setPassportDocuments] = useState<Document[]>([])
-  const [editDocumentStatus, setEditDocumentStatus] = useState<DocumentStatus>(DocumentStatus.rejected)
-  const [mapPosition, setMapPosition] = useState({})
+  const [mapPosition, setMapPosition] = useState<number[]>([])
   const [isReject, setIsReject] = useState(false)
-  const [isOpenMap, setIsOpenMap] = useState(false)
+
   const [isLoadingTypes, setIsLoadingTypes] = useState(false)
   const [documentTypeID, setDocumentTypeID] = useState<string | null>(null)
+  const [deleteID, setDeleteID] = useState<string | null>(null)
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
     initialAlertData
   )
+
   const [blocking, setBlocking] = useState(false)
   const [activeStep, setActiveStep] = useState(0)
   const handleNext = () => {
@@ -86,9 +94,9 @@ const DocumentProcedure = (props: PropsType) => {
           type: '',
           country: '',
           number: '',
-          date_of_birth: new Date().toISOString().split('.')[0] + 'Z',
-          expiration_date: new Date().toISOString().split('.')[0] + 'Z',
-          issue_date: new Date().toISOString().split('.')[0] + 'Z',
+          date_of_birth: '',
+          expiration_date: '',
+          issue_date: '',
           nationality: '',
           sex: SexType.Unknown,
           first_name: '',
@@ -109,8 +117,19 @@ const DocumentProcedure = (props: PropsType) => {
         return item.fields?.passport
       })
 
-      if (passportFields.length > 0 && passportFields[0].fields) {
-        formik.setValues({ documentID: passportFields[0].ID, fields: passportFields[0].fields })
+      if (passportFields.length > 0 && passportFields[0].fields && passportFields[0].fields.passport) {
+        const passport = passportFields[0].fields.passport
+        formik.setValues({
+          documentID: passportFields[0].ID,
+          fields: {
+            passport: {
+              ...passport,
+              issue_date: convertMRZDate(passport.issue_date, DateConvertType.issue),
+              expiration_date: convertMRZDate(passport.expiration_date, DateConvertType.expiry),
+              date_of_birth: convertMRZDate(passport.date_of_birth, DateConvertType.dob),
+            },
+          },
+        })
       } else {
         const filterPassport = passportDocuments.filter((item) => {
           return item.recognized
@@ -120,16 +139,17 @@ const DocumentProcedure = (props: PropsType) => {
 
         if (document.recognized && document.recognized.mrz?.passport) {
           const passport = document.recognized.mrz?.passport
+
           formik.setValues({
             documentID: document.ID,
             fields: {
               passport: {
                 country: passport.country,
-                expiration_date: convertMRZDate(passport.expiration_date, 'expiry') || '',
-                date_of_birth: convertMRZDate(passport.date_of_birth, 'dob') || '',
+                expiration_date: convertMRZDate(passport.expiration_date, DateConvertType.expiry),
+                date_of_birth: convertMRZDate(passport.date_of_birth, DateConvertType.dob),
                 sex: passport.sex,
                 type: passport.type,
-                issue_date: convertMRZDate(passport.expiration_date, 'issue') || '',
+                issue_date: convertMRZDate(passport.expiration_date, DateConvertType.issue),
                 last_name: passport.surname,
                 first_name: passport.names,
                 nationality: passport.nationality,
@@ -140,16 +160,17 @@ const DocumentProcedure = (props: PropsType) => {
           })
         } else if (document.recognized && document.recognized.mrz?.idcard) {
           const idCard = document.recognized.mrz.idcard
+
           formik.setValues({
             documentID: document.ID,
             fields: {
               passport: {
                 country: idCard.country,
-                expiration_date: convertMRZDate(idCard.expiration_date, 'expiry') || '',
-                date_of_birth: convertMRZDate(idCard.date_of_birth, 'dob') || '',
+                expiration_date: convertMRZDate(idCard.expiration_date, DateConvertType.issue) || '',
+                date_of_birth: convertMRZDate(idCard.date_of_birth, DateConvertType.dob) || '',
                 sex: idCard.sex,
                 type: idCard.type,
-                issue_date: convertMRZDate(idCard.expiration_date, 'issue') || '',
+                issue_date: convertMRZDate(idCard.expiration_date, DateConvertType.expiry) || '',
                 last_name: idCard.surname,
                 first_name: idCard.names,
                 nationality: idCard.nationality,
@@ -165,7 +186,6 @@ const DocumentProcedure = (props: PropsType) => {
 
   useEffect(() => {
     function setTypes(types: DocumentTypes[]) {
-      let approves = 0
       const newDocumentTypes = types.map((documentType) => {
         const docs = props.documents.filter(
           (doc) => doc.documentType.ID === documentType.ID && doc.documenSet.ID === props.documentSetID
@@ -192,9 +212,7 @@ const DocumentProcedure = (props: PropsType) => {
             : newDocuments.length > 0
             ? DocumentStatus.new
             : DocumentStatus.rejected
-        if (approvedDocuments.length > 0) {
-          approves++
-        }
+
         documentType.status = status
 
         return documentType
@@ -205,11 +223,6 @@ const DocumentProcedure = (props: PropsType) => {
           (doc) => doc.documenSet.ID === props.documentSetID && doc.documentType.typeName !== 'SELFIE'
         )
       )
-      if (approves === newDocumentTypes.length) {
-        setEditDocumentStatus(DocumentStatus.approved)
-      } else {
-        setEditDocumentStatus(DocumentStatus.rejected)
-      }
 
       setDocumentTypes(newDocumentTypes)
       setIsLoadingTypes(false)
@@ -237,14 +250,21 @@ const DocumentProcedure = (props: PropsType) => {
   }, [props.documentSetID, props.documents])
 
   const renderSteps = () => {
-    var stepsDocuments: StepType[] = documentTypes.map((documentType) => {
-      console.log(documentType)
+    var stepsDocuments: StepType[] = documentTypes.map((documentType, index) => {
       if (documentType.name === 'SELFIE') {
         return {
           name: documentType.note || '',
           status: documentType.status,
           icon: <FaceIcon />,
-          component: <Selfie document={documentType} passportDocuments={passportDocuments} />,
+          component: (
+            <Selfie
+              key={index}
+              document={documentType}
+              passportDocuments={passportDocuments}
+              handleSetMapPosition={(position: number[]) => setMapPosition(position)}
+              handleDeleteDocument={(ID) => setDeleteID(ID)}
+            />
+          ),
           typeID: documentType.ID,
         }
       } else {
@@ -252,7 +272,14 @@ const DocumentProcedure = (props: PropsType) => {
           name: documentType.note || '',
           status: documentType.status,
           icon: <AssignmentIndIcon />,
-          component: <Passport />,
+          component: (
+            <Passport
+              key={index}
+              document={documentType}
+              handleDeleteDocument={(ID) => setDeleteID(ID)}
+              handleSetMapPosition={(position: number[]) => setMapPosition(position)}
+            />
+          ),
           typeID: documentType.ID,
         }
       }
@@ -262,27 +289,52 @@ const DocumentProcedure = (props: PropsType) => {
         name: 'Edit Document',
         status: DocumentStatus.new,
         icon: <EditIcon />,
-        component: <EditDocument />,
+        component: (
+          <EditDocument
+            documents={passportDocuments}
+            fields={formik.values.fields}
+            key={'editDocument'}
+            blocking={blocking}
+            handleOnChange={formik.handleChange}
+            handleSumbit={_saveDocumentData}
+          />
+        ),
       },
       {
         name: 'Confirm Document',
         status: DocumentStatus.new,
+
         icon: <DoneAllIcon />,
-        component: <ConfirmDocument />,
+        component: (
+          <ConfirmDocument key={'confirmDocument'} documents={props.documents} fields={formik.values.fields} />
+        ),
       },
     ]
     return stepsDocuments.concat(stepsConfirm)
   }
   const _saveDocumentData = () => {
+    let fields: Fields = formik.values.fields
+    if (fields.passport) {
+      fields = {
+        passport: {
+          ...fields.passport,
+          issue_date: new Date(fields.passport?.issue_date).toISOString().split('.')[0] + 'Z',
+          date_of_birth: new Date(fields.passport?.date_of_birth).toISOString().split('.')[0] + 'Z',
+          expiration_date: new Date(fields.passport?.expiration_date).toISOString().split('.')[0] + 'Z',
+        },
+      }
+    }
+
     setBlocking(true)
     documentAPI
-      .setDocumentFields(formik.values)
+      .setDocumentFields({ documentID: formik.values.documentID, fields })
       .then((response) => {
         handleClose()
         setAlertData({ message: response.data.message, type: AlertMessageType.sucess, open: true })
       })
       .catch((error) => {
-        setAlertData({ message: `Save Document data ${error.message}`, type: AlertMessageType.sucess, open: true })
+        handleClose()
+        setAlertData({ message: `Save Document data ${error.message}`, type: AlertMessageType.error, open: true })
       })
   }
 
@@ -303,6 +355,8 @@ const DocumentProcedure = (props: PropsType) => {
     documentAPI
       .setDocumentStatus(params)
       .then((response) => {
+        console.log(response)
+        props.handleUpdateDocument(typeID, documentSetID, status)
         handleClose()
         setAlertData({ message: response.data.message, type: AlertMessageType.sucess, open: true })
         handleNext()
@@ -341,7 +395,6 @@ const DocumentProcedure = (props: PropsType) => {
 
   const handleClose = () => {
     setDocumentTypeID(null)
-    setIsOpenMap(false)
     setIsReject(false)
     setBlocking(false)
   }
@@ -480,6 +533,34 @@ const DocumentProcedure = (props: PropsType) => {
         />
       </Paper>
       {renderRejectMessages()}
+      <OpenMap open={mapPosition.length !== 0} handleClose={() => setMapPosition([])} position={mapPosition} />
+
+      <Dialog
+        open={deleteID !== null}
+        onClose={() => setDeleteID(null)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'Are you sure you want to remove this document?'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description"></DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              deleteID && props.handleDeleteDocument(deleteID)
+              setDeleteID(null)
+            }}
+            color="primary"
+            autoFocus
+          >
+            Agree
+          </Button>
+          <Button onClick={() => setDeleteID(null)} color="primary">
+            Disagree
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Fragment>
   )
 }

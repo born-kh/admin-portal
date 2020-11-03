@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Dashboard from '@components/Dashboard'
 import Title from '@components/common/Title'
 import { useStyles } from './styles'
-import { TextField, Paper, Button, Typography, Box, Badge, FormControl, InputLabel } from '@material-ui/core'
+import { TextField, Paper, Button, Typography, Box, Badge, FormControl, InputLabel, MenuItem } from '@material-ui/core'
 import DatePicker from '@components/common/DatePicker'
 import Chip from '@material-ui/core/Chip'
 import FaceIcon from '@material-ui/icons/Face'
@@ -19,12 +19,19 @@ import TracerTable from '@components/TracerTable'
 import * as Yup from 'yup'
 import ApplicationTable from '@components/DocumentManager/ApplicationTable'
 import * as documentManagerAPI from 'service/documentManagerAPI'
-import { Application } from '@interfaces/document-manager'
+import {
+  Application,
+  FilterAnyApplication,
+  FilterDateRange,
+  FilterApplicationParams,
+} from '@interfaces/document-manager'
 import { useRouter } from 'next/router'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import Select from 'react-select'
 import { applicationOptions, dateOptions } from '@utils/constants'
 import { documentAPI } from 'service/api'
+import MySelect from '@material-ui/core/Select'
+import Autorenew from '@material-ui/icons/Autorenew'
 export default function (props: any) {
   const classes = useStyles()
   const [openDateRange, setOpenDateRange] = useState(false)
@@ -37,46 +44,16 @@ export default function (props: any) {
   const [valueTab, setValueTab] = useState(props.tabValue)
   const [anyApplications, setAnyApplications] = useState<Application[]>([])
   const [newApplications, setNewApplications] = useState<Application[]>([])
-  const [errors, setErrors] = useState<Tracer[]>([])
+
   const [isLoadingAny, setIsLoadingAny] = useState(false)
   const [isLoadingNew, setIsLoadingNew] = useState(false)
-  const [selectedOption, setSelectedOption] = useState({ value: 'ALL', label: 'ALL' })
-  const [selectedDateOption, setSelectedDateOption] = useState({ value: 'ALL', label: 'ALL' })
+  const [selectedApplication, setSelectedApplication] = useState('ALL')
+  const [selectedDateType, setSelectedDateType] = useState('ALL')
 
   const handleChange = (newValue: number) => {
     setValueTab(newValue)
   }
 
-  //   const formik = useFormik({
-  //     initialValues: {
-  //       search: '',
-  //     },
-  //     validationSchema: Yup.object().shape({
-  //       search: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
-  //     }),
-  //     onSubmit: (values) => {
-  //       setIsLoading(true)
-  //       const params: TracerSearchParamsType = {
-  //         search: values.search,
-  //         fromTS: dateRange.startDate.toISOString().split('.')[0] + 'Z',
-  //         toTS: dateRange.endDate.toISOString().split('.')[0] + 'Z',
-  //       }
-  //       console.log(params)
-  //       searchTracers(params)
-  //         .then((response) => {
-  //           if (response) {
-  //             setMessages(response.messages)
-  //             setErrors(response.errors)
-  //           }
-
-  //           setIsLoading(false)
-  //         })
-  //         .catch(() => {
-  //           setIsLoading(false)
-  //         })
-  //     },
-  //   })
-  //   const searchError = formik.errors.search !== undefined && formik.touched.search
   useEffect(() => {
     if (valueTab === 1) {
       router.push({
@@ -91,12 +68,23 @@ export default function (props: any) {
     }
   }, [valueTab])
 
-  useEffect(() => {
+  const handleFetch = () => {
     setIsLoadingAny(true)
-    setIsLoadingNew(true)
-
+    let filterParams: FilterApplicationParams = { start: 0, count: 100 }
+    let filter: FilterAnyApplication = {}
+    let range: FilterDateRange = { type: '', from: '', to: '' }
+    if (selectedApplication !== 'ALL') {
+      filter.status = selectedApplication
+    }
+    if (selectedDateType !== 'ALL') {
+      range.type = selectedDateType
+      range.from = dateRange.startDate.toISOString().split('.')[0] + 'Z'
+      range.to = dateRange.endDate.toISOString().split('.')[0] + 'Z'
+      filter.range = range
+    }
+    filterParams.filter = filter
     documentManagerAPI
-      .fetchAnyApplications()
+      .fetchAnyApplications(filterParams)
       .then((applications) => {
         if (applications) {
           setAnyApplications(applications)
@@ -106,6 +94,13 @@ export default function (props: any) {
       .catch(() => {
         setIsLoadingAny(false)
       })
+  }
+
+  useEffect(() => {
+    setIsLoadingAny(true)
+    setIsLoadingNew(true)
+
+    handleFetch()
 
     documentManagerAPI
       .fetchNewApplications()
@@ -149,24 +144,70 @@ export default function (props: any) {
         </TabPanel>
         <TabPanel value={valueTab} index={1}>
           <div className={classes.paper}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel> Application</InputLabel>
+            <div>
+              <FormControl variant="outlined" className={classes.formControl} style={{ margin: '20px 5px' }}>
+                <InputLabel id="application">Set Application Status</InputLabel>
 
-              <Select options={applicationOptions} onChange={(val) => setSelectedOption(val)} value={selectedOption} />
-            </FormControl>
+                <MySelect
+                  labelId="application"
+                  id="application"
+                  name="application"
+                  value={selectedApplication}
+                  onChange={(e: React.ChangeEvent<any>) => setSelectedApplication(e.target.value)}
+                  label="Set Application Status"
+                >
+                  {applicationOptions.map((item) => (
+                    <MenuItem key={item.value} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </MySelect>
+              </FormControl>
 
-            <Select options={dateOptions} onChange={(val) => setSelectedOption(val)} value={selectedDateOption} />
-            <Chip
-              variant="outlined"
-              size="medium"
-              icon={<DateRangeIcon />}
-              label={`from: ${moment(dateRange.startDate).format('DD MMMM YYYY ')}  to: ${moment(
-                dateRange.endDate
-              ).format('DD MMMM YYYY ')}`}
-              clickable
-              color="primary"
-              onClick={() => setOpenDateRange(true)}
-            />
+              <FormControl variant="outlined" className={classes.formControl} style={{ margin: '20px 5px' }}>
+                <InputLabel id="SetTypeDate">Set Type Date</InputLabel>
+
+                <MySelect
+                  labelId="SetTypeDate"
+                  id="SetTypeDate"
+                  name="SetTypeDate"
+                  value={selectedDateType}
+                  onChange={(e: React.ChangeEvent<any>) => setSelectedDateType(e.target.value)}
+                  label="Set Type Date"
+                >
+                  {dateOptions.map((item) => (
+                    <MenuItem key={item.value} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </MySelect>
+              </FormControl>
+            </div>
+
+            <div>
+              <Chip
+                variant="outlined"
+                size="medium"
+                style={{ width: 350 }}
+                icon={<DateRangeIcon />}
+                label={`from: ${moment(dateRange.startDate).format('DD MMMM YYYY ')}  to: ${moment(
+                  dateRange.endDate
+                ).format('DD MMMM YYYY ')}`}
+                clickable
+                color="primary"
+                onClick={() => setOpenDateRange(true)}
+              />
+
+              <Button
+                style={{ marginLeft: 40 }}
+                variant="contained"
+                color="primary"
+                onClick={handleFetch}
+                startIcon={<Autorenew />}
+              >
+                Search
+              </Button>
+            </div>
           </div>
           <ApplicationTable type={'applications'} isLoading={isLoadingAny} data={anyApplications} />
         </TabPanel>
