@@ -5,6 +5,12 @@ import * as resTypes from '@interfaces/api'
 import { TracerSearchParamsType } from '@interfaces/tracer-manager'
 import { SearchTypeParams, Account } from '@interfaces/user-manager'
 import { Fields } from '@interfaces/document-manager'
+import {
+  ApiKeysResponse,
+  ApiKeyCreateParams,
+  ApiKeyCreateResponse,
+  ApiKeyUpdateParams,
+} from '@interfaces/apiKey-manager'
 
 /* AUTH API */
 
@@ -148,17 +154,22 @@ export const documentAPI = {
   },
 }
 
-// export const apiKeyAPI = {
-//   async getApiKeys() {
-//     const response = await axios.post(API_URLS.GET_APIKEYS, {})
-//     return response
-//   },
+export const apiKeyAPI = {
+  async getApiKeys() {
+    const response = await axios.post<ApiKeysResponse>(API_URLS.GET_APIKEYS, {})
+    return response
+  },
 
-//   async createApiKey(params: any) {
-//     const response = await axios.post(API_URLS.CREATE_APIKEY, params)
-//     return response
-//   },
-// }
+  async createApiKey(params: ApiKeyCreateParams) {
+    const response = await axios.post<ApiKeyCreateResponse>(API_URLS.CREATE_APIKEY, params)
+    return response
+  },
+
+  async updateApiKey(params: ApiKeyUpdateParams) {
+    const response = await axios.post<ApiKeyCreateResponse>(API_URLS.UPDATE_APIKEY_URL, params)
+    return response
+  },
+}
 
 //   export const settingsAPI = {
 //     async getAllSettings() {

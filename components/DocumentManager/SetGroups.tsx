@@ -6,6 +6,7 @@ import { Button } from '@material-ui/core'
 import { DOCUMENT_FILE_URL } from '@utils/constants'
 import { useState } from 'react'
 import dynamic from 'next/dynamic'
+import ImageComponent from '@components/common/ImageComponent'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
 
 type PropsType = {
@@ -90,19 +91,7 @@ export const DetailPanel = ({ documents }: { documents: Document[] }) => {
           render: (rowData) =>
             rowData && (
               <div style={{ height: 100, width: 100 }}>
-                <img
-                  alt=""
-                  onClick={() => {
-                    setDocID(rowData.ID)
-                  }}
-                  src={DOCUMENT_FILE_URL + rowData.ID}
-                  style={{
-                    cursor: 'pointer',
-                    maxWidth: '100%',
-                    maxHeight: '100%',
-                    verticalAlign: 'middle',
-                  }}
-                />
+                <ImageComponent ID={rowData.ID} alt="" />
                 <Viewer
                   zIndex={9999}
                   visible={docID === rowData.ID}

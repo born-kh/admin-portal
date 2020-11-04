@@ -12,7 +12,6 @@ type PropsType = {
 }
 export default function (props: PropsType) {
   const router = useRouter()
-  console.log(router)
   return (
     <MaterialTable
       title={props.title}
@@ -21,8 +20,8 @@ export default function (props: PropsType) {
       columns={[
         {
           title: 'FNLN',
-          field: '',
-
+          field: 'firstName',
+          searchable: true,
           render: (rowData) => rowData && `${rowData.firstName || ''}  ${rowData.lastName || ''}`,
         },
         { title: 'Status', field: 'status' },

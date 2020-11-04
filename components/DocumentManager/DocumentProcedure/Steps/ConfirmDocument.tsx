@@ -198,11 +198,7 @@ const ConfirmDocument = (props: Propstype) => {
                         </TableRow>
                       </TableCell>
                       <TableCell align="left" style={{ color: primaryText, height: 100 }}>
-                        <ImageComponent
-                          src={DOCUMENT_FILE_URL + item.ID}
-                          alt={'Document'}
-                          onclick={() => setDocID(item.ID)}
-                        />
+                        <ImageComponent ID={item.ID} alt={'Document'} onclick={() => setDocID(item.ID)} />
                       </TableCell>
                     </TableRow>
                   )

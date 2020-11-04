@@ -2,13 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import Stepper from '@material-ui/core/Stepper'
 import Step from '@material-ui/core/Step'
-import StepButton from '@material-ui/core/StepButton'
 import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
-import { StepType, DocumentTypes, ApplicationStatus, DocumentStatus } from '@interfaces/document-manager'
+import { StepType, ApplicationStatus, DocumentStatus } from '@interfaces/document-manager'
 import { ColorlibStepIcon } from './styles'
-import { StepLabel, Box, StepConnector } from '@material-ui/core'
-import Icon from '@material-ui/core/Icon'
+import { StepLabel, Box } from '@material-ui/core'
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {

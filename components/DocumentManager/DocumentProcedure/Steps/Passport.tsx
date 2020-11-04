@@ -1,5 +1,5 @@
-import { Fragment, useState, useEffect } from 'react'
-import { Typography, Button, CardHeader, CardActions } from '@material-ui/core'
+import { useState, useEffect } from 'react'
+import { Button, CardHeader, CardActions } from '@material-ui/core'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
@@ -9,12 +9,12 @@ import { DOCUMENT_FILE_URL } from '@utils/constants'
 import DeleteIcon from '@material-ui/icons/Delete'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
-import CardMedia from '@material-ui/core/CardMedia'
 import IconButton from '@material-ui/core/IconButton'
 import dynamic from 'next/dynamic'
 
 import LocationOnIcon from '@material-ui/icons/LocationOn'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -81,7 +81,7 @@ const Passport = (props: PropsType) => {
                     label: classes.imageButtonLabel,
                   }}
                 >
-                  <ImageComponent src={DOCUMENT_FILE_URL + item.ID} alt={'Selfie'} />
+                  <ImageComponent ID={item.ID} alt={'Selfie'} />
                 </Button>
               </Grid>
             ))}
@@ -91,11 +91,7 @@ const Passport = (props: PropsType) => {
           <Card>
             <CardHeader title={`${passport?.status}`} />
             <CardContent className={classes.card}>
-              <ImageComponent
-                src={DOCUMENT_FILE_URL + passport?.ID}
-                alt={'passport'}
-                onclick={() => setDocID(passport?.ID)}
-              />
+              <ImageComponent ID={passport?.ID} alt={'passport'} onclick={() => setDocID(passport?.ID)} />
             </CardContent>
             <CardActions disableSpacing>
               <IconButton

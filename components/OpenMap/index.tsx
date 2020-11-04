@@ -1,5 +1,3 @@
-import React from 'react'
-
 let Map: any
 
 if (typeof window !== 'undefined') {

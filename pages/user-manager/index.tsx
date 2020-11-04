@@ -1,23 +1,20 @@
 import React, { useState } from 'react'
 import Dashboard from '@components/Dashboard'
 import Title from '@components/common/Title'
-import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
 import Button from '@material-ui/core/Button'
-import { Grid, TextField, IconButton, Paper, Dialog, Typography } from '@material-ui/core'
+import { TextField, Paper, Dialog } from '@material-ui/core'
 import { useFormik } from 'formik'
 import { useStyles } from './styles'
-
-import * as usermanagerAPI from 'service/userManagerAPI'
 import MaterialTable from 'material-table'
 
 import Avatar from '@material-ui/core/Avatar'
 import DetailsIcon from '@material-ui/icons/Details'
 import LockIcon from '@material-ui/icons/Lock'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import { useRouter } from 'next/router'
 import { SearchType, SearchTypeParams, Account } from '@interfaces/user-manager'
 import { CustomDialogTitle, CustomDialogContent, CustomDialogActions } from '@components/common/Modal'
 import { userAPI } from 'service/api'
+import Loader from '@components/common/Loader'
 
 export default function () {
   const classes = useStyles()
@@ -60,6 +57,10 @@ export default function () {
 
   const handleClose = () => {
     setIsOpen(false)
+  }
+
+  if (router.isFallback) {
+    return <Loader />
   }
   return (
     <Dashboard title={'user-manager'}>

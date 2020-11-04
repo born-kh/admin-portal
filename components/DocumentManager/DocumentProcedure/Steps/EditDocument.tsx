@@ -1,17 +1,15 @@
-import { Fragment, useState, useEffect } from 'react'
-import { Typography, Button, TextField, InputLabel, FormControl, MenuItem } from '@material-ui/core'
+import { useState, useEffect } from 'react'
+import { Button, TextField, InputLabel, FormControl, MenuItem } from '@material-ui/core'
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
 import { Document, Fields } from '@interfaces/document-manager'
-
 import MySelect from '@material-ui/core/Select'
-import { DocumentTypes } from '@interfaces/document-manager'
-import ImageComponent from '@components/common/ImageComponent'
-import { DOCUMENT_FILE_URL } from '@utils/constants'
-import { genderOptions, typeOptions, nationOptions } from '@utils/constants'
+import { genderOptions, typeOptions, nationOptions, DOCUMENT_FILE_URL } from '@utils/constants'
 import dynamic from 'next/dynamic'
+import ImageComponent from '@components/common/ImageComponent'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -91,7 +89,7 @@ const EditDocument = (props: Propstype) => {
                   }}
                   onClick={() => setSelectID(item.ID)}
                 >
-                  <ImageComponent src={DOCUMENT_FILE_URL + item.ID} alt={'Selfie'} />
+                  <ImageComponent ID={item.ID} alt={'Selfie'} />
                 </Button>
               </Grid>
             ))}
@@ -276,7 +274,7 @@ const EditDocument = (props: Propstype) => {
         </Grid>
         <Grid item xs={6}>
           <Paper className={classes.paperImage}>
-            <ImageComponent src={DOCUMENT_FILE_URL + selectID} alt={'Passport'} onclick={() => setDocID(selectID)} />
+            <ImageComponent ID={selectID} alt={'Passport'} onclick={() => setDocID(selectID)} />
           </Paper>
         </Grid>
       </Grid>

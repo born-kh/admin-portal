@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
 import Dashboard from '@components/Dashboard'
-import * as usermanagerAPI from 'service/userManagerAPI'
 import { useEffect, useState } from 'react'
 import Title from '@components/common/Title'
 import { Grid } from '@material-ui/core'
@@ -55,6 +54,7 @@ function AccountPage(props: any) {
         })
     }
   }, [account])
+  console.log(process.env)
 
   return (
     <Dashboard title={`user-manager | ${account?.username} `}>

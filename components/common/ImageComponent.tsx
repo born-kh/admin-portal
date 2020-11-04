@@ -1,19 +1,25 @@
 import React from 'react'
+import { DOCUMENT_FILE_URL } from '@utils/constants'
 
-export default function ({ src, alt, onclick }: { src: string; alt: string; onclick?: () => void }) {
-  return (
-    <img
-      alt={alt}
-      src={src}
-      onClick={onclick}
-      id={src}
-      style={{
-        maxWidth: '100%',
-        maxHeight: '100%',
-        justifyContent: 'center',
-        display: 'flex',
-        cursor: 'pointer',
-      }}
-    />
-  )
+export default function ({ ID, alt, onclick }: { ID: string | undefined; alt: string; onclick?: () => void }) {
+  console.log
+  if (ID) {
+    return (
+      <img
+        alt={alt}
+        src={DOCUMENT_FILE_URL + ID}
+        onClick={onclick}
+        id={ID}
+        style={{
+          maxWidth: '100%',
+          maxHeight: '100%',
+          justifyContent: 'center',
+          display: 'flex',
+          cursor: 'pointer',
+          verticalAlign: 'center',
+        }}
+      />
+    )
+  }
+  return null
 }

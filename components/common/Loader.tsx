@@ -5,10 +5,12 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      height: 'auto',
+      height: '100vh',
       display: 'flex',
+      flexDirection: 'column',
       alignContent: 'center',
       justifyContent: 'center',
+      alignItems: 'center',
     },
   })
 )

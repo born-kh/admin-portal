@@ -8,7 +8,8 @@ export const login = (params: AuthParams) => {
   return async (dispatch: Dispatch<AuthActionsTypes>) => {
     return authAPI.login(params).then((responseLogin) => {
       if (responseLogin.status === 200) {
-        const session_token = responseLogin.data.data.session_data.session_token
+        const session_token = responseLogin.data.result.data.session_data.session_token
+
         localStorage.setItem(SESSION_TOKEN, session_token)
         authAPI.fetchPermissions(permissions, session_token).then((responsePermission) => {
           localStorage.setItem(USER_PERMISSION, JSON.stringify(responsePermission.data.result.data))

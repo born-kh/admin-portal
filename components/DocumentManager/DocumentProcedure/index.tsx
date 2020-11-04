@@ -6,8 +6,6 @@ import {
   DocumentStatus,
   Fields,
   SexType,
-  MRZTD1,
-  MRZTD3,
   StepType,
   ApplicationStatus,
 } from '@interfaces/document-manager'
@@ -26,7 +24,6 @@ import {
   ListItem,
   ListItemText,
   TextField,
-  ListSubheader,
   Typography,
   Paper,
   DialogContent,
@@ -35,7 +32,6 @@ import {
 } from '@material-ui/core'
 import { CustomDialogTitle, CustomDialogActions, CustomDialogContent } from '@components/common/Modal'
 import { rejectMessages, initialAlertData, DateConvertType } from '@utils/constants'
-import { AccountStatus } from '@interfaces/user-manager'
 import { SetApplicationStatusParams, SetDocumentStatusParams } from '@interfaces/api'
 import { documentAPI } from 'service/api'
 import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
@@ -43,7 +39,6 @@ import FaceIcon from '@material-ui/icons/Face'
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd'
 import EditIcon from '@material-ui/icons/Edit'
 import DoneAllIcon from '@material-ui/icons/DoneAll'
-import PageLoader from 'next/dist/client/page-loader'
 import Loader from '@components/common/Loader'
 import OpenMap from '@components/OpenMap'
 
@@ -55,6 +50,7 @@ type PropsType = {
   handleDeleteDocument: (ID: string) => void
   handleUpdateDocument: (typeID: string, documentSetID: string, status: DocumentStatus) => void
   handleDoneDocumentProcedure: () => void
+  handleNextApplication: () => void
 }
 
 const DocumentProcedure = (props: PropsType) => {
@@ -375,8 +371,6 @@ const DocumentProcedure = (props: PropsType) => {
       status,
       documentSetID,
     }
-    console.log('_setApplicationStatus', params)
-
     if (status === ApplicationStatus.rejected) {
       params.reason = rejectMessage
     }
@@ -386,10 +380,11 @@ const DocumentProcedure = (props: PropsType) => {
       .then((response) => {
         handleClose()
         setAlertData({ message: response.data.message, type: AlertMessageType.sucess, open: true })
+        props.handleNextApplication()
       })
       .catch((error) => {
         handleClose()
-        setAlertData({ message: `Application set status ${error.message}`, type: AlertMessageType.sucess, open: true })
+        setAlertData({ message: `Application set status ${error.message}`, type: AlertMessageType.error, open: true })
       })
   }
 

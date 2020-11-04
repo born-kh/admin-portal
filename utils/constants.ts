@@ -1,4 +1,7 @@
 import { AlertMessageType } from '@components/common/SnackbarAlert'
+
+export const API_GATEWAY_URL = process.env.API_GATEWAY_URL
+
 import red from '@material-ui/core/colors/red'
 import green from '@material-ui/core/colors/green'
 import indigo from '@material-ui/core/colors/indigo'
@@ -114,7 +117,7 @@ export const dateOptions = [
   { value: 4, label: 'APPROVED' },
 ]
 
-export const DOCUMENT_FILE_URL = 'http://10.7.20.206:9002/doc/'
+export const DOCUMENT_FILE_URL = process.env.NEXT_PUBLIC_DOCUMENT_FILE_URL || ''
 
 export const API_URLS = {
   SEARCH_USER: '/searchuser',

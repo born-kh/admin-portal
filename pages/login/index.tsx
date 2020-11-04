@@ -13,13 +13,13 @@ import { useFormik } from 'formik'
 import ButtonLoader from '@components/common/ButtonLoader'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import { AuthParams } from 'interfaces/auth'
 import { useDispatch, useSelector } from 'react-redux'
 import * as authAPI from 'service/authAPI'
 import { RootState, AppDispatch } from '@store/reducers'
 import { AUTH_STATUS, ERROR_CODES } from '@utils/constants'
 import { getErrorMsgFromCode } from '@utils/helpers'
 import * as Yup from 'yup'
+import { login } from '@store/auth/actions'
 export default function SignIn() {
   const classes = useStyles()
   const [loading, setLoading] = useState(false)
@@ -45,9 +45,8 @@ export default function SignIn() {
     onSubmit: (values) => {
       setLoading(true)
       setErrorCode('')
-      dispatch(authAPI.login(values))
+      dispatch(login(values))
         .then((response) => {
-          console.log(response)
           setLoading(false)
         })
         .catch((error: any) => {
@@ -77,6 +76,7 @@ export default function SignIn() {
   const errorMessage = getErrorMsgFromCode(errorCode)
   const passwordError = formik.errors.password !== undefined && formik.touched.password
   const usernameError = formik.errors.username !== undefined && formik.touched.username
+
   return (
     <Container component="main" maxWidth="xs">
       <Head>

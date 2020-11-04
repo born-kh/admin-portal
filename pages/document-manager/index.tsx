@@ -1,22 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import Dashboard from '@components/Dashboard'
-import Title from '@components/common/Title'
 import { useStyles } from './styles'
-import { TextField, Paper, Button, Typography, Box, Badge, FormControl, InputLabel, MenuItem } from '@material-ui/core'
+import { Paper, Button, Typography, Box, Badge, FormControl, InputLabel, MenuItem } from '@material-ui/core'
 import DatePicker from '@components/common/DatePicker'
 import Chip from '@material-ui/core/Chip'
-import FaceIcon from '@material-ui/icons/Face'
 import DateRangeIcon from '@material-ui/icons/DateRange'
 import moment from 'moment'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-import MaterialTable from 'material-table'
-import { useFormik } from 'formik'
-import { searchTracers } from 'service/tracerManagerAPI'
-import { SearchTypeParams } from '@interfaces/user-manager'
-import { TracerSearchParamsType, Tracer } from '@interfaces/tracer-manager'
-import TracerTable from '@components/TracerTable'
-import * as Yup from 'yup'
 import ApplicationTable from '@components/DocumentManager/ApplicationTable'
 import * as documentManagerAPI from 'service/documentManagerAPI'
 import {
@@ -27,9 +18,7 @@ import {
 } from '@interfaces/document-manager'
 import { useRouter } from 'next/router'
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
-import Select from 'react-select'
 import { applicationOptions, dateOptions } from '@utils/constants'
-import { documentAPI } from 'service/api'
 import MySelect from '@material-ui/core/Select'
 import Autorenew from '@material-ui/icons/Autorenew'
 export default function (props: any) {
@@ -146,7 +135,7 @@ export default function (props: any) {
           <div className={classes.paper}>
             <div>
               <FormControl variant="outlined" className={classes.formControl} style={{ margin: '20px 5px' }}>
-                <InputLabel id="application">Set Application Status</InputLabel>
+                <InputLabel id="application">Application Status</InputLabel>
 
                 <MySelect
                   labelId="application"
@@ -154,7 +143,7 @@ export default function (props: any) {
                   name="application"
                   value={selectedApplication}
                   onChange={(e: React.ChangeEvent<any>) => setSelectedApplication(e.target.value)}
-                  label="Set Application Status"
+                  label="Application Status"
                 >
                   {applicationOptions.map((item) => (
                     <MenuItem key={item.value} value={item.value}>
@@ -165,7 +154,7 @@ export default function (props: any) {
               </FormControl>
 
               <FormControl variant="outlined" className={classes.formControl} style={{ margin: '20px 5px' }}>
-                <InputLabel id="SetTypeDate">Set Type Date</InputLabel>
+                <InputLabel id="SetTypeDate">Date Type</InputLabel>
 
                 <MySelect
                   labelId="SetTypeDate"
@@ -173,7 +162,7 @@ export default function (props: any) {
                   name="SetTypeDate"
                   value={selectedDateType}
                   onChange={(e: React.ChangeEvent<any>) => setSelectedDateType(e.target.value)}
-                  label="Set Type Date"
+                  label="Date Type"
                 >
                   {dateOptions.map((item) => (
                     <MenuItem key={item.value} value={item.value}>

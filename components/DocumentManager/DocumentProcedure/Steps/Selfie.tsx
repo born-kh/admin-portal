@@ -95,11 +95,7 @@ const Selfie = (props: PropsType) => {
           <Card>
             <CardHeader title={`${selfie?.status || 'No Document'}`} />
             <CardContent className={classes.card}>
-              <ImageComponent
-                src={DOCUMENT_FILE_URL + selfie?.ID}
-                alt={'Selfie'}
-                onclick={() => setDocID(selfie?.ID)}
-              />
+              <ImageComponent ID={selfie?.ID} alt={'Selfie'} onclick={() => setDocID(selfie?.ID)} />
             </CardContent>
             <CardActions disableSpacing>
               <IconButton
@@ -125,11 +121,7 @@ const Selfie = (props: PropsType) => {
           <Card>
             <CardHeader title={`${passport?.status || 'No Document'}`} />
             <CardContent className={classes.card}>
-              <ImageComponent
-                src={DOCUMENT_FILE_URL + passport?.ID}
-                alt={'passport'}
-                onclick={() => setDocID(passport?.ID)}
-              />
+              <ImageComponent ID={passport?.ID} alt={'passport'} onclick={() => setDocID(passport?.ID)} />
             </CardContent>
             <CardActions disableSpacing>
               <IconButton
@@ -163,7 +155,7 @@ const Selfie = (props: PropsType) => {
                     label: classes.imageButtonLabel,
                   }}
                 >
-                  <ImageComponent src={DOCUMENT_FILE_URL + item.ID} alt={'Selfie'} />
+                  <ImageComponent ID={item.ID} alt={'Selfie'} />
                 </Button>
               </Grid>
             ))}
@@ -181,7 +173,7 @@ const Selfie = (props: PropsType) => {
                     label: classes.imageButtonLabel,
                   }}
                 >
-                  <ImageComponent src={DOCUMENT_FILE_URL + item.ID} alt={'Selfie'} />
+                  <ImageComponent ID={item.ID} alt={'Selfie'} />
                 </Button>
               </Grid>
             ))}

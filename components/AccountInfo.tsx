@@ -1,9 +1,7 @@
 import { Account, ItemType } from '@interfaces/user-manager'
 import { Fragment } from 'react'
-
-import Title from './common/Title'
 import MaterialList from './common/MaterialList'
-import { Avatar, Box, Button, Card, CardActions, CardContent, Divider, Typography, makeStyles } from '@material-ui/core'
+import { Avatar, Box, Card, CardContent, Typography, makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles(() => ({
   card: {
