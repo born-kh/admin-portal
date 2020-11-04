@@ -45,7 +45,7 @@ export default function SignIn() {
     onSubmit: (values) => {
       setLoading(true)
       setErrorCode('')
-      dispatch(login(values))
+      dispatch(authAPI.login(values))
         .then((response) => {
           setLoading(false)
         })

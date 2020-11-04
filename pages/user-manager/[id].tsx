@@ -54,7 +54,6 @@ function AccountPage(props: any) {
         })
     }
   }, [account])
-  console.log(process.env)
 
   return (
     <Dashboard title={`user-manager | ${account?.username} `}>

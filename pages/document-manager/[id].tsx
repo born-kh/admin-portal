@@ -128,6 +128,7 @@ export default function (props: any) {
           handleDeleteDocument={deleteDocument}
           handleUpdateDocument={updateDocument}
           applicationID={applicationID}
+          handleNextApplication={goNextApplication}
           handleDoneDocumentProcedure={doneDocumentProcedure}
           accountID={accountID}
           documentSetID={documentSetID}

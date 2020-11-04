@@ -1,9 +1,7 @@
 import { useEffect, useState, Fragment } from 'react'
-
 import { Button, Switch } from '@material-ui/core'
 import MaterialTable from 'material-table'
 import DetailsIcon from '@material-ui/icons/Details'
-
 import DeleteIcon from '@material-ui/icons/Delete'
 import PersonPinCircleIcon from '@material-ui/icons/PersonPinCircle'
 import { useRouter } from 'next/router'
