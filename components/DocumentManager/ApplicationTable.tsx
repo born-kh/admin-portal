@@ -1,16 +1,11 @@
 import MaterialTable from 'material-table'
-import { Application } from '@interfaces/document-manager'
 import DetailsIcon from '@material-ui/icons/Details'
 import moment from 'moment'
 import { Button } from '@material-ui/core'
 import { useRouter } from 'next/router'
-type PropsType = {
-  data: Application[]
-  isLoading: boolean
-  type: string
-  title?: string
-}
-export default function (props: PropsType) {
+import { ApplicationTableProps } from '@interfaces/document-manager'
+
+export default function (props: ApplicationTableProps) {
   const router = useRouter()
   return (
     <MaterialTable

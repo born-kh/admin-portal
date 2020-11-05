@@ -1,5 +1,3 @@
-import instance from '@utils/instance'
-import { SearchTypeParams } from '@interfaces/user-manager'
 import { Tracer, TracerSearchParamsType } from '@interfaces/tracer-manager'
 import { tracerAPI } from './api'
 

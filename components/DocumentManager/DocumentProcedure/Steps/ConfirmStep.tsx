@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
-import { Document, Fields } from '@interfaces/document-manager'
+import { ConfirmStepProps } from '@interfaces/document-manager'
 import ImageComponent from '@components/common/ImageComponent'
 import { DOCUMENT_FILE_URL } from '@utils/constants'
 import { primaryText } from '@utils/constants'
@@ -13,55 +12,10 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import Title from '@components/common/Title'
 import dynamic from 'next/dynamic'
+import useStyles from './style'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      margin: theme.spacing(1),
-    },
-    imageButtonLabel: {
-      height: 80,
-      width: 100,
-    },
-    table: {
-      minWidth: 300,
-    },
 
-    paperImage: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      padding: theme.spacing(2),
-      color: theme.palette.text.secondary,
-      height: 456,
-    },
-    textField: {
-      margin: theme.spacing(1),
-      width: '30ch',
-    },
-
-    paperImages: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-      padding: theme.spacing(2),
-      color: theme.palette.text.secondary,
-    },
-    images: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      padding: theme.spacing(2),
-    },
-  })
-)
-
-type Propstype = {
-  documents: Document[]
-  fields: Fields
-}
-const ConfirmDocument = (props: Propstype) => {
+export default function (props: ConfirmStepProps) {
   const classes = useStyles()
   const { documents, fields } = props
   const [selectID, setSelectID] = useState('')
@@ -217,5 +171,3 @@ const ConfirmDocument = (props: Propstype) => {
     </div>
   )
 }
-
-export default ConfirmDocument

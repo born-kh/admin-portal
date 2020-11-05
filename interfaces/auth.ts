@@ -1,3 +1,5 @@
+import { Dictionary } from 'lodash'
+
 export interface AuthParams {
   app_uuid: string
   domain: string
@@ -8,8 +10,6 @@ export interface AuthParams {
   user_ip: string
   username: string
 }
-
-
 
 export interface SessionData {
   access_domains: string[]
@@ -34,4 +34,30 @@ export interface SessionData {
 export interface AuthResponseData {
   authorization: boolean
   session_data: SessionData
+}
+
+export interface LoginResponse {
+  result: LoginResult
+}
+
+export interface LoginResult {
+  data: AuthResponseData
+  return_code: number
+  return_note: string
+  result: boolean
+}
+export interface LogoutResponse {
+  code: number
+  note: string
+  result: boolean
+}
+
+export interface FetchPermissionsResponse {
+  result: ResultPermissions
+}
+export interface ResultPermissions {
+  data: Dictionary<string>
+  return_code: number
+  return_note: string
+  result: boolean
 }

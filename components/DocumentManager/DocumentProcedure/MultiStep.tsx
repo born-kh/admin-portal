@@ -1,51 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
+
 import Stepper from '@material-ui/core/Stepper'
 import Step from '@material-ui/core/Step'
 import Button from '@material-ui/core/Button'
-import { StepType, ApplicationStatus, DocumentStatus } from '@interfaces/document-manager'
-import { ColorlibStepIcon } from './styles'
+import { ApplicationStatus, DocumentStatus, MultiStepProps } from '@interfaces/document-manager'
+import { ColorlibStepIcon, useStyles } from './styles'
 import { StepLabel, Box } from '@material-ui/core'
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-    },
-    stepLabel: {
-      '&:hover': {
-        cursor: 'pointer',
-      },
-    },
-    header: {
-      display: 'flex',
-      justifyContent: 'space',
-    },
-    button: {
-      marginRight: theme.spacing(1),
-    },
-    instructions: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-    },
-  })
-)
-
-type PropsType = {
-  steps: StepType[]
-  handleRejectApplication: () => void
-  handleRejectDocument: (value: string) => void
-  handleSetActiveStep: (val: number) => void
-  handleNext: () => void
-  handleBack: () => void
-  activeStep: number
-  blocking: boolean
-  handleApproveDocument: (status: DocumentStatus, typeID: string) => void
-  handleApproveApplication: (status: ApplicationStatus) => void
-  handleDoneDocumentProcedure: () => void
-}
-
-const MultiStep = (props: PropsType) => {
+export default function (props: MultiStepProps) {
   const classes = useStyles()
   const {
     activeStep,
@@ -76,10 +38,12 @@ const MultiStep = (props: PropsType) => {
       setAllDocumentsApproved(true)
     }
   }, [steps])
+
   const documentButtonStyle = activeStep < steps.length - 2 ? {} : { display: 'none' }
   const rejectApplicationButtonStyle = activeStep === steps.length - 1 ? {} : { display: 'none' }
   const approveApplicationButtonStyle =
     activeStep === steps.length - 1 && allDocumentsApproved ? {} : { display: 'none' }
+
   return (
     <div className={classes.root}>
       <Box display="flex" p={1}>
@@ -180,5 +144,3 @@ const MultiStep = (props: PropsType) => {
     </div>
   )
 }
-
-export default MultiStep

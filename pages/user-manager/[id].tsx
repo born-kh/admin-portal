@@ -11,7 +11,8 @@ import { userAPI, documentAPI } from 'service/api'
 import ApplicationTable from '@components/DocumentManager/ApplicationTable'
 import { Application } from '@interfaces/document-manager'
 import Loader from '@components/common/Loader'
-function AccountPage(props: any) {
+
+export default function () {
   const classes = useStyles()
   const [account, setAcccount] = useState<Account | null>(null)
   const [applications, setApplications] = useState<Application[]>([])
@@ -77,5 +78,3 @@ function AccountPage(props: any) {
     </Dashboard>
   )
 }
-
-export default AccountPage

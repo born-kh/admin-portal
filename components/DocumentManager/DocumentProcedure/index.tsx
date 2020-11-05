@@ -8,14 +8,16 @@ import {
   SexType,
   StepType,
   ApplicationStatus,
+  DocumentProcedureProps,
+  SetDocumentStatusParams,
+  SetApplicationStatusParams,
 } from '@interfaces/document-manager'
-import * as documentManagerAPI from 'service/documentManagerAPI'
 import { useFormik } from 'formik'
 import { convertMRZDate } from '@utils/helpers'
-import Selfie from './Steps/Selfie'
-import Passport from './Steps/Passport'
-import EditDocument from './Steps/EditDocument'
-import ConfirmDocument from './Steps/ConfirmDocument'
+import SelfieStep from './Steps/SelfieStep'
+import PassportStep from './Steps/PassportStep'
+import EditStep from './Steps/EditStep'
+import ConfirmStep from './Steps/ConfirmStep'
 import {
   Dialog,
   DialogTitle,
@@ -32,7 +34,6 @@ import {
 } from '@material-ui/core'
 import { CustomDialogTitle, CustomDialogActions, CustomDialogContent } from '@components/common/Modal'
 import { rejectMessages, initialAlertData, DateConvertType } from '@utils/constants'
-import { SetApplicationStatusParams, SetDocumentStatusParams } from '@interfaces/api'
 import { documentAPI } from 'service/api'
 import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
 import FaceIcon from '@material-ui/icons/Face'
@@ -42,18 +43,7 @@ import DoneAllIcon from '@material-ui/icons/DoneAll'
 import Loader from '@components/common/Loader'
 import OpenMap from '@components/OpenMap'
 
-type PropsType = {
-  documents: Document[]
-  documentSetID: string
-  applicationID: string
-  accountID: string
-  handleDeleteDocument: (ID: string) => void
-  handleUpdateDocument: (typeID: string, documentSetID: string, status: DocumentStatus) => void
-  handleDoneDocumentProcedure: () => void
-  handleNextApplication: () => void
-}
-
-const DocumentProcedure = (props: PropsType) => {
+export default function (props: DocumentProcedureProps) {
   const [rejectMessage, setRejectMessage] = useState('')
   const [rejectMessageIndex, setRejectMessageIndex] = useState<number | null>(0)
   const [documentTypes, setDocumentTypes] = useState<DocumentTypes[]>([])
@@ -226,11 +216,11 @@ const DocumentProcedure = (props: PropsType) => {
 
     async function loadTypes() {
       setIsLoadingTypes(true)
-      documentManagerAPI
-        .fetchTypes(props.documentSetID)
-        .then((types) => {
-          if (types) {
-            setTypes(types)
+      documentAPI
+        .fetchDocumentTypes({ setID: props.documentSetID })
+        .then((response) => {
+          if (response.status === 200) {
+            setTypes(response.data.types)
           }
         })
         .catch(() => {
@@ -245,69 +235,6 @@ const DocumentProcedure = (props: PropsType) => {
     }
   }, [props.documentSetID, props.documents])
 
-  const renderSteps = () => {
-    var stepsDocuments: StepType[] = documentTypes.map((documentType, index) => {
-      if (documentType.name === 'SELFIE') {
-        return {
-          name: documentType.note || '',
-          status: documentType.status,
-          icon: <FaceIcon />,
-          component: (
-            <Selfie
-              key={index}
-              document={documentType}
-              passportDocuments={passportDocuments}
-              handleSetMapPosition={(position: number[]) => setMapPosition(position)}
-              handleDeleteDocument={(ID) => setDeleteID(ID)}
-            />
-          ),
-          typeID: documentType.ID,
-        }
-      } else {
-        return {
-          name: documentType.note || '',
-          status: documentType.status,
-          icon: <AssignmentIndIcon />,
-          component: (
-            <Passport
-              key={index}
-              document={documentType}
-              handleDeleteDocument={(ID) => setDeleteID(ID)}
-              handleSetMapPosition={(position: number[]) => setMapPosition(position)}
-            />
-          ),
-          typeID: documentType.ID,
-        }
-      }
-    })
-    const stepsConfirm = [
-      {
-        name: 'Edit Document',
-        status: DocumentStatus.new,
-        icon: <EditIcon />,
-        component: (
-          <EditDocument
-            documents={passportDocuments}
-            fields={formik.values.fields}
-            key={'editDocument'}
-            blocking={blocking}
-            handleOnChange={formik.handleChange}
-            handleSumbit={_saveDocumentData}
-          />
-        ),
-      },
-      {
-        name: 'Confirm Document',
-        status: DocumentStatus.new,
-
-        icon: <DoneAllIcon />,
-        component: (
-          <ConfirmDocument key={'confirmDocument'} documents={props.documents} fields={formik.values.fields} />
-        ),
-      },
-    ]
-    return stepsDocuments.concat(stepsConfirm)
-  }
   const _saveDocumentData = () => {
     let fields: Fields = formik.values.fields
     if (fields.passport) {
@@ -499,6 +426,68 @@ const DocumentProcedure = (props: PropsType) => {
       </Dialog>
     )
   }
+
+  const renderSteps = () => {
+    var stepsDocuments: StepType[] = documentTypes.map((documentType, index) => {
+      if (documentType.name === 'SELFIE') {
+        return {
+          name: documentType.note || '',
+          status: documentType.status,
+          icon: <FaceIcon />,
+          component: (
+            <SelfieStep
+              key={index}
+              document={documentType}
+              passportDocuments={passportDocuments}
+              handleSetMapPosition={(position: number[]) => setMapPosition(position)}
+              handleDeleteDocument={(ID) => setDeleteID(ID)}
+            />
+          ),
+          typeID: documentType.ID,
+        }
+      } else {
+        return {
+          name: documentType.note || '',
+          status: documentType.status,
+          icon: <AssignmentIndIcon />,
+          component: (
+            <PassportStep
+              key={index}
+              document={documentType}
+              handleDeleteDocument={(ID) => setDeleteID(ID)}
+              handleSetMapPosition={(position: number[]) => setMapPosition(position)}
+            />
+          ),
+          typeID: documentType.ID,
+        }
+      }
+    })
+    const stepsConfirm = [
+      {
+        name: 'Edit Document',
+        status: DocumentStatus.new,
+        icon: <EditIcon />,
+        component: (
+          <EditStep
+            documents={passportDocuments}
+            fields={formik.values.fields}
+            key={'editDocument'}
+            blocking={blocking}
+            handleOnChange={formik.handleChange}
+            handleSumbit={_saveDocumentData}
+          />
+        ),
+      },
+      {
+        name: 'Confirm Document',
+        status: DocumentStatus.new,
+
+        icon: <DoneAllIcon />,
+        component: <ConfirmStep key={'confirmDocument'} documents={props.documents} fields={formik.values.fields} />,
+      },
+    ]
+    return stepsDocuments.concat(stepsConfirm)
+  }
   if (isLoadingTypes) {
     return <Loader />
   }
@@ -559,4 +548,3 @@ const DocumentProcedure = (props: PropsType) => {
     </Fragment>
   )
 }
-export default DocumentProcedure

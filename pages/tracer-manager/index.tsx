@@ -5,15 +5,12 @@ import { useStyles } from './styles'
 import { TextField, Paper, Button, Typography, Box, Badge } from '@material-ui/core'
 import DatePicker from '@components/common/DatePicker'
 import Chip from '@material-ui/core/Chip'
-import FaceIcon from '@material-ui/icons/Face'
 import DateRangeIcon from '@material-ui/icons/DateRange'
 import moment from 'moment'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-import MaterialTable from 'material-table'
 import { useFormik } from 'formik'
 import { searchTracers } from 'service/tracerManagerAPI'
-import { SearchTypeParams } from '@interfaces/user-manager'
 import { TracerSearchParamsType, Tracer } from '@interfaces/tracer-manager'
 import TracerTable from '@components/TracerTable'
 import * as Yup from 'yup'
@@ -30,7 +27,7 @@ export default function () {
   const [messages, setMessages] = useState<Tracer[]>([])
   const [errors, setErrors] = useState<Tracer[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const handleChange = (event, newValue) => {
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue)
   }
 

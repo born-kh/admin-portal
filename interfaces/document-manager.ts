@@ -1,4 +1,5 @@
 import { GeoLocation } from './user-manager'
+import { StepIconProps } from '@material-ui/core'
 export interface Application {
   ID: string
   applicationID: string
@@ -189,4 +190,108 @@ export interface FilterApplicationParams {
   filter?: FilterAnyApplication
   start: number
   count: number
+}
+
+export interface EditStepProps {
+  documents: Document[]
+  fields: Fields
+  handleOnChange: (e: React.ChangeEvent<any>) => void
+  handleSumbit: () => void
+  blocking: boolean
+}
+
+export interface SelfieStepProps {
+  document: DocumentTypes
+  passportDocuments: Document[]
+  handleDeleteDocument: (ID: string) => void
+  handleSetMapPosition: (position: number[]) => void
+}
+
+export interface PassportStepProps {
+  document: DocumentTypes
+  handleDeleteDocument: (ID: string) => void
+  handleSetMapPosition: (position: number[]) => void
+}
+
+export interface ConfirmStepProps {
+  documents: Document[]
+  fields: Fields
+}
+
+export interface MultiStepProps {
+  steps: StepType[]
+  handleRejectApplication: () => void
+  handleRejectDocument: (value: string) => void
+  handleSetActiveStep: (val: number) => void
+  handleNext: () => void
+  handleBack: () => void
+  activeStep: number
+  blocking: boolean
+  handleApproveDocument: (status: DocumentStatus, typeID: string) => void
+  handleApproveApplication: (status: ApplicationStatus) => void
+  handleDoneDocumentProcedure: () => void
+}
+
+export interface ColorlibStepIconProps {
+  propsIcon: StepIconProps
+  step: StepType
+  activeStep: number
+  count: number
+}
+
+export interface ApplicationTableProps {
+  data: Application[]
+  isLoading: boolean
+  type: string
+  title?: string
+}
+
+export interface DocumentProcedureProps {
+  documents: Document[]
+  documentSetID: string
+  applicationID: string
+  accountID: string
+  handleDeleteDocument: (ID: string) => void
+  handleUpdateDocument: (typeID: string, documentSetID: string, status: DocumentStatus) => void
+  handleDoneDocumentProcedure: () => void
+  handleNextApplication: () => void
+}
+
+export interface SetGroupsProps {
+  documents: Document[]
+  isLoading: boolean
+  handleSetID: (value: string) => void
+}
+
+export interface EmptyResponse {}
+
+export interface FetchApplicationsResponse {
+  applications: Application[]
+}
+export interface FetchDocumentsResponse {
+  documents: Document[]
+}
+export interface DocumentMessageResponse {
+  message: string
+}
+
+export interface FetchDocumentTypesResponse {
+  types: DocumentTypes[]
+}
+
+export interface SetApplicationStatusParams {
+  user: string
+  applicationID: string
+  status: ApplicationStatus
+  documentSetID: string
+  reason?: string
+}
+
+export interface SetDocumentStatusParams {
+  documentTypeID: string
+  documentSetID: string
+  user: string
+  status: DocumentStatus
+  applicationID: string
+  reason?: string
 }

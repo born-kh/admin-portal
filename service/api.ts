@@ -1,10 +1,25 @@
 import axios from '@utils/instance'
 import { API_URLS } from '@utils/constants'
-import { AuthParams } from '@interfaces/auth'
-import * as resTypes from '@interfaces/api'
+import { AuthParams, LoginResponse, LogoutResponse, FetchPermissionsResponse } from '@interfaces/auth'
+
 import { TracerSearchParamsType } from '@interfaces/tracer-manager'
-import { SearchTypeParams, Account } from '@interfaces/user-manager'
-import { Fields } from '@interfaces/document-manager'
+import {
+  SearchTypeParams,
+  Account,
+  SearchUserResponse,
+  SetPasswordResponse,
+  FetchSessionsResponse,
+} from '@interfaces/user-manager'
+import {
+  Fields,
+  EmptyResponse,
+  FetchApplicationsResponse,
+  FetchDocumentsResponse,
+  FetchDocumentTypesResponse,
+  SetApplicationStatusParams,
+  DocumentMessageResponse,
+  SetDocumentStatusParams,
+} from '@interfaces/document-manager'
 import {
   ApiKeysResponse,
   ApiKeyCreateParams,
@@ -16,17 +31,17 @@ import {
 
 export const authAPI = {
   async login(params: AuthParams) {
-    const response = await axios.post<resTypes.LoginResponse>(API_URLS.LOGIN, params)
+    const response = await axios.post<LoginResponse>(API_URLS.LOGIN, params)
     return response
   },
 
   async logout() {
-    const response = await axios.post<resTypes.LogoutResponse>(API_URLS.LOGOUT, { reason_note: 'User request' })
+    const response = await axios.post<LogoutResponse>(API_URLS.LOGOUT, { reason_note: 'User request' })
     return response
   },
 
   async fetchPermissions(permissions: string[], session_token: string) {
-    const response = await axios.post<resTypes.FetchPermissionsResponse>(API_URLS.GET_PERMISSIONS, {
+    const response = await axios.post<FetchPermissionsResponse>(API_URLS.GET_PERMISSIONS, {
       permissions,
       metadata: {
         headers: { Authorization: session_token },
@@ -36,7 +51,7 @@ export const authAPI = {
   },
 
   async refreshSession() {
-    const response = await axios.post<resTypes.LoginResponse>(API_URLS.REFRESH_SESSION)
+    const response = await axios.post<LoginResponse>(API_URLS.REFRESH_SESSION)
     return response
   },
 }
@@ -47,7 +62,7 @@ export const userAPI = {
   async searchUser(paramsList: SearchTypeParams[]) {
     let accounts: Account[] = []
     for (let params of paramsList) {
-      const response = await axios.post<resTypes.SearchUserResponse>(API_URLS.SEARCH_USER, params)
+      const response = await axios.post<SearchUserResponse>(API_URLS.SEARCH_USER, params)
       if (response.status === 200) {
         accounts = accounts.concat(response.data.accounts)
       }
@@ -56,7 +71,7 @@ export const userAPI = {
     return accounts
   },
   async setPassword(params: any) {
-    const response = await axios.post<resTypes.SetPasswordResponse>(API_URLS.SET_PASSWORD, params)
+    const response = await axios.post<SetPasswordResponse>(API_URLS.SET_PASSWORD, params)
     return response
   },
 }
@@ -64,7 +79,7 @@ export const userAPI = {
 
 export const tracerAPI = {
   async searchTracer(params: TracerSearchParamsType) {
-    const response = await axios.post<resTypes.FetchSessionsResponse>(API_URLS.SEARCH_TRACER, params)
+    const response = await axios.post<FetchSessionsResponse>(API_URLS.SEARCH_TRACER, params)
     return response
   },
 }
@@ -72,19 +87,19 @@ export const tracerAPI = {
 
 export const sessionAPI = {
   async fetchAccountSessions(params: { accountID: string }) {
-    const response = await axios.post<resTypes.FetchSessionsResponse>(API_URLS.GET_ACCOUNT_SESSIONS, params)
+    const response = await axios.post<FetchSessionsResponse>(API_URLS.GET_ACCOUNT_SESSIONS, params)
     return response
   },
   async setTracer(params: { sessionID: string; isTracing: boolean }) {
-    const response = await axios.post<resTypes.EmptyResponse>(API_URLS.SET_TRACER, params)
+    const response = await axios.post<EmptyResponse>(API_URLS.SET_TRACER, params)
     return response
   },
   async suspendSession(params: { sessionID: string; isSuspended: boolean }) {
-    const response = await axios.post<resTypes.EmptyResponse>(API_URLS.SUSPEND_SESSION, params)
+    const response = await axios.post<EmptyResponse>(API_URLS.SUSPEND_SESSION, params)
     return response
   },
   async removeSession(sessionID: string) {
-    const response = await axios.post<resTypes.EmptyResponse>(API_URLS.REMOVE_SESSION, { sessionID })
+    const response = await axios.post<EmptyResponse>(API_URLS.REMOVE_SESSION, { sessionID })
     return response
   },
   async fetchPresenceInfo(params: any) {
@@ -97,54 +112,54 @@ export const sessionAPI = {
 
 export const documentAPI = {
   async fetchApplications(params: { start: number; count: number }) {
-    const response = await axios.post<resTypes.FetchApplicationsResponse>(API_URLS.GET_APPLICATIONS, params)
+    const response = await axios.post<FetchApplicationsResponse>(API_URLS.GET_APPLICATIONS, params)
     return response
   },
   async fetchApplicationsAny(params: any) {
-    const response = await axios.post<resTypes.FetchApplicationsResponse>(API_URLS.GET_APPLICATIONS_ANY, params)
+    const response = await axios.post<FetchApplicationsResponse>(API_URLS.GET_APPLICATIONS_ANY, params)
     return response
   },
   async fetchApplicationByAccount(params: { accountID: string }) {
-    const response = await axios.post<resTypes.FetchApplicationsResponse>(API_URLS.GET_APPLICATIONS_BY_ACCOUNT, params)
+    const response = await axios.post<FetchApplicationsResponse>(API_URLS.GET_APPLICATIONS_BY_ACCOUNT, params)
     return response
   },
   async fetchApplicationsByName(params: any) {
-    const response = await axios.post<resTypes.FetchApplicationsResponse>(API_URLS.GET_APPLICATIONS_BY_NAME, params)
+    const response = await axios.post<FetchApplicationsResponse>(API_URLS.GET_APPLICATIONS_BY_NAME, params)
     return response
   },
-  async fetchDocuments(params: any) {
-    const response = await axios.post<resTypes.FetchDocumentsResponse>(API_URLS.GET_DOCUMENTS, params)
+  async fetchDocuments(params: { applicationID: string }) {
+    const response = await axios.post<FetchDocumentsResponse>(API_URLS.GET_DOCUMENTS, params)
     return response
   },
-  async fetchDocumentTypes(params: any) {
-    const response = await axios.post<resTypes.FetchDocumentTypesResponse>(API_URLS.GET_DOCUMENT_TYPES, params)
+  async fetchDocumentTypes(params: { setID: string }) {
+    const response = await axios.post<FetchDocumentTypesResponse>(API_URLS.GET_DOCUMENT_TYPES, params)
     return response
   },
 
-  async setApplicationStatus(params: resTypes.SetApplicationStatusParams) {
-    const response = await axios.post<resTypes.DocumentMessageResponse>(API_URLS.SET_APPLICATION_STATUS, params)
+  async setApplicationStatus(params: SetApplicationStatusParams) {
+    const response = await axios.post<DocumentMessageResponse>(API_URLS.SET_APPLICATION_STATUS, params)
     return response
   },
-  async setDocumentStatus(params: resTypes.SetDocumentStatusParams) {
-    const response = await axios.post<resTypes.DocumentMessageResponse>(API_URLS.SET_DOCUMENT_STATUS, params)
+  async setDocumentStatus(params: SetDocumentStatusParams) {
+    const response = await axios.post<DocumentMessageResponse>(API_URLS.SET_DOCUMENT_STATUS, params)
     return response
   },
   async setDocumentFields(params: { documentID: string; fields: Fields }) {
     console.log(params)
-    const response = await axios.post<resTypes.DocumentMessageResponse>(API_URLS.SET_DOCUMENT_FIELDS, params)
+    const response = await axios.post<DocumentMessageResponse>(API_URLS.SET_DOCUMENT_FIELDS, params)
     return response
   },
   async setDocumentNote(params: any) {
-    const response = await axios.post<resTypes.DocumentMessageResponse>(API_URLS.SET_DOCUMENT_NOTE, params)
+    const response = await axios.post<DocumentMessageResponse>(API_URLS.SET_DOCUMENT_NOTE, params)
     return response
   },
   async setDocumentTags(params: any) {
-    const response = await axios.post<resTypes.DocumentMessageResponse>(API_URLS.SET_DOCUMENT_TAGS, params)
+    const response = await axios.post<DocumentMessageResponse>(API_URLS.SET_DOCUMENT_TAGS, params)
     return response
   },
 
   async deleteDocument(params: { documentID: string }) {
-    const response = await axios.post<resTypes.DocumentMessageResponse>(API_URLS.DELETE_DOCUMENT, params)
+    const response = await axios.post<DocumentMessageResponse>(API_URLS.DELETE_DOCUMENT, params)
     return response
   },
 

@@ -1,5 +1,5 @@
 import MaterialTable from 'material-table'
-import { Document } from '@interfaces/document-manager'
+import { Document, SetGroupsProps } from '@interfaces/document-manager'
 import VisibilityIcon from '@material-ui/icons/Visibility'
 import _ from 'lodash'
 import { Button } from '@material-ui/core'
@@ -9,12 +9,7 @@ import dynamic from 'next/dynamic'
 import ImageComponent from '@components/common/ImageComponent'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
 
-type PropsType = {
-  documents: Document[]
-  isLoading: boolean
-  handleSetID: (value: string) => void
-}
-export default function (props: PropsType) {
+export default function (props: SetGroupsProps) {
   let setGroups = _.values(_.groupBy(props.documents, 'documenSet.ID')).map((d) => {
     return {
       setID: d[0].documenSet.ID,

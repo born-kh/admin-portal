@@ -1,73 +1,21 @@
 import { useState, useEffect } from 'react'
 import { Button, TextField, InputLabel, FormControl, MenuItem } from '@material-ui/core'
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
-import { Document, Fields } from '@interfaces/document-manager'
+import { EditStepProps } from '@interfaces/document-manager'
 import MySelect from '@material-ui/core/Select'
 import { genderOptions, typeOptions, nationOptions, DOCUMENT_FILE_URL } from '@utils/constants'
 import dynamic from 'next/dynamic'
 import ImageComponent from '@components/common/ImageComponent'
+import useStyles from './style'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      margin: theme.spacing(1),
-    },
-    imageButtonLabel: {
-      height: 80,
-      width: 100,
-    },
-
-    paperImage: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      padding: theme.spacing(2),
-      color: theme.palette.text.secondary,
-      height: 456,
-    },
-    textField: {
-      margin: theme.spacing(1),
-      width: '30ch',
-    },
-    button: {
-      marginRight: theme.spacing(1),
-      float: 'right',
-      width: 150,
-    },
-
-    paperImages: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-      padding: theme.spacing(2),
-      color: theme.palette.text.secondary,
-    },
-    images: {
-      display: 'flex',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      padding: theme.spacing(2),
-    },
-  })
-)
-
-type Propstype = {
-  documents: Document[]
-  fields: Fields
-  handleOnChange: (e: React.ChangeEvent<any>) => void
-  handleSumbit: () => void
-
-  blocking: boolean
-}
-const EditDocument = (props: Propstype) => {
+export default function (props: EditStepProps) {
   const classes = useStyles()
   const { documents, fields, handleOnChange, blocking, handleSumbit } = props
   const [selectID, setSelectID] = useState('')
   const [docID, setDocID] = useState<string | undefined>(undefined)
+
   useEffect(() => {
     if (documents.length > 0) {
       setSelectID(documents[0].ID)
@@ -78,7 +26,7 @@ const EditDocument = (props: Propstype) => {
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Paper className={classes.images}>
+          <Paper className={classes.editStepImages}>
             {documents.map((item, i) => (
               <Grid item xs={2} key={i}>
                 <Button
@@ -261,7 +209,7 @@ const EditDocument = (props: Propstype) => {
             <Grid style={{ width: '100%', justifyContent: 'flex-end', marginRight: 30 }}>
               {' '}
               <Button
-                className={classes.button}
+                className={classes.editButton}
                 disabled={blocking}
                 variant="contained"
                 color="primary"
@@ -273,7 +221,7 @@ const EditDocument = (props: Propstype) => {
           </Paper>
         </Grid>
         <Grid item xs={6}>
-          <Paper className={classes.paperImage}>
+          <Paper className={classes.editPaperImage}>
             <ImageComponent ID={selectID} alt={'Passport'} onclick={() => setDocID(selectID)} />
           </Paper>
         </Grid>
@@ -288,5 +236,3 @@ const EditDocument = (props: Propstype) => {
     </div>
   )
 }
-
-export default EditDocument

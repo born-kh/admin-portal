@@ -137,3 +137,15 @@ export interface ItemType {
   name: string
   type?: string
 }
+
+export interface SearchUserResponse {
+  accounts: Account[]
+}
+
+export interface SetPasswordResponse {
+  message: string
+  success: boolean
+}
+export interface FetchSessionsResponse {
+  sessions: AccountSessionsData[]
+}

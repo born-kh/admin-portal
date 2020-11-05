@@ -16,3 +16,9 @@ export interface TracerResult {
   messages: Tracer[]
   errors: Tracer[]
 }
+
+export interface TracerTableProps {
+  data: Tracer[]
+  isLoading: boolean
+  type: string
+}

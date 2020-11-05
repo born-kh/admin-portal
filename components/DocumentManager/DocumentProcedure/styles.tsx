@@ -1,21 +1,35 @@
-import { makeStyles, withStyles, StepConnector, Step, StepConnectorProps } from '@material-ui/core'
-import { DocumentStatus, StepType } from '@interfaces/document-manager'
-import SettingsIcon from '@material-ui/icons/Settings'
-import GroupAddIcon from '@material-ui/icons/GroupAdd'
-import VideoLabelIcon from '@material-ui/icons/VideoLabel'
-import FaceIcon from '@material-ui/icons/Face'
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd'
-import EditIcon from '@material-ui/icons/Edit'
-import DoneAllIcon from '@material-ui/icons/DoneAll'
+import { DocumentStatus, StepType, ColorlibStepIconProps } from '@interfaces/document-manager'
 import clsx from 'clsx'
-import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
-import { StepIconProps } from '@material-ui/core/StepIcon'
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
 import { activeStepColor, rejectStepColor, newDocStepColor, approveStepColor } from '@utils/constants'
-import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import NewReleasesIcon from '@material-ui/icons/NewReleases'
 import WarningIcon from '@material-ui/icons/Warning'
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
+
+export const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      width: '100%',
+    },
+    stepLabel: {
+      '&:hover': {
+        cursor: 'pointer',
+      },
+    },
+    header: {
+      display: 'flex',
+      justifyContent: 'space',
+    },
+    button: {
+      marginRight: theme.spacing(1),
+    },
+    instructions: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1),
+    },
+  })
+)
+
 export const useColorlibStepIconStyles = makeStyles({
   root: {
     backgroundColor: '#ccc',
@@ -52,18 +66,13 @@ export const useColorlibStepIconStyles = makeStyles({
     backgroundImage: 'linear-gradient( 136deg, rgb(242,113,33) 0%, rgb(233,64,87) 50%, rgb(138,35,135) 100%)',
   },
 })
-type ColorlibStepIconPropsType = {
-  propsIcon: StepIconProps
-  step: StepType
-  activeStep: number
-  count: number
-}
-export function ColorlibStepIcon(props: ColorlibStepIconPropsType) {
+
+export function ColorlibStepIcon(props: ColorlibStepIconProps) {
   const classes = useColorlibStepIconStyles()
-  const { active, completed, tabIndex } = props.propsIcon
+  const { active, completed } = props.propsIcon
   let icon = props.step.icon
   let completedEdit = false
-  if (props.propsIcon && props.propsIcon.icon >= props.count - 1) {
+  if (props.propsIcon.icon && props.propsIcon.icon >= props.count - 1) {
     if (completed) {
       icon = <CheckCircleOutlineIcon />
       completedEdit = true

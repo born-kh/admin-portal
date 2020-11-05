@@ -9,7 +9,7 @@ import moment from 'moment'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import ApplicationTable from '@components/DocumentManager/ApplicationTable'
-import * as documentManagerAPI from 'service/documentManagerAPI'
+
 import {
   Application,
   FilterAnyApplication,
@@ -21,6 +21,7 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 import { applicationOptions, dateOptions } from '@utils/constants'
 import MySelect from '@material-ui/core/Select'
 import Autorenew from '@material-ui/icons/Autorenew'
+import { documentAPI } from 'service/api'
 export default function (props: any) {
   const classes = useStyles()
   const [openDateRange, setOpenDateRange] = useState(false)
@@ -72,11 +73,11 @@ export default function (props: any) {
       filter.range = range
     }
     filterParams.filter = filter
-    documentManagerAPI
-      .fetchAnyApplications(filterParams)
-      .then((applications) => {
-        if (applications) {
-          setAnyApplications(applications)
+    documentAPI
+      .fetchApplicationsAny(filterParams)
+      .then((response) => {
+        if (response.status == 200) {
+          setAnyApplications(response.data.applications)
         }
         setIsLoadingAny(false)
       })
@@ -91,11 +92,11 @@ export default function (props: any) {
 
     handleFetch()
 
-    documentManagerAPI
-      .fetchNewApplications()
-      .then((applications) => {
-        if (applications) {
-          setNewApplications(applications)
+    documentAPI
+      .fetchApplications()
+      .then((response) => {
+        if (response.status === 200) {
+          setNewApplications(response.data.applications)
         }
         setIsLoadingNew(false)
       })

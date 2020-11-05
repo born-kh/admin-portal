@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import Dashboard from '@components/Dashboard'
 import { useEffect, useState } from 'react'
 import { Document, DocumentStatus } from '@interfaces/document-manager'
-import * as documentManagerAPI from 'service/documentManagerAPI'
+
 import SetGroups from '@components/DocumentManager/SetGroups'
 import DocumentProcedure from '@components/DocumentManager/DocumentProcedure'
 import { Button } from '@material-ui/core'
@@ -10,7 +10,7 @@ import { useStyles } from './styles'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 import { documentAPI } from 'service/api'
-export default function (props: any) {
+export default function () {
   const [documents, setDocuments] = useState<Document[]>([])
   const [documentSetID, setDocumentSetID] = useState<string | null>(null)
   const [applicationID, setApplicationID] = useState('')
@@ -18,13 +18,14 @@ export default function (props: any) {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const classes = useStyles()
+
   useEffect(() => {
     function loadData() {
-      documentManagerAPI
-        .fetchDocuments(applicationID)
-        .then((documents) => {
-          if (documents) {
-            setDocuments(documents)
+      documentAPI
+        .fetchDocuments({ applicationID })
+        .then((response) => {
+          if (response.status === 200) {
+            setDocuments(response.data.documents)
           }
           setLoading(false)
         })

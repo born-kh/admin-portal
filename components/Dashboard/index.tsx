@@ -23,8 +23,10 @@ import { AUTH_STATUS } from '@utils/constants'
 import Head from 'next/head'
 import { resetServerContext } from 'react-beautiful-dnd'
 import Loader from '@components/common/Loader'
-export const DashboardContext = createContext()
-export default function Dashboard(props: any) {
+import CopyRight from '@components/CopyRight'
+import { Box } from '@material-ui/core'
+
+export default function (props: any) {
   const classes = useStyles()
   const dispatch: AppDispatch = useDispatch()
   const router = useRouter()
@@ -68,61 +70,56 @@ export default function Dashboard(props: any) {
     return <Loader size={100} />
   }
   return (
-    <DashboardContext.Provider>
-      <div className={classes.root}>
-        <Head>
-          <title>{props.title} </title>
-        </Head>
-        <CssBaseline />
-        <AppBar position="absolute" className={clsx(classes.appBar, states.openMenu && classes.appBarShift)}>
-          <Toolbar className={classes.toolbar}>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              className={clsx(classes.menuButton, states.openMenu && classes.menuButtonHidden)}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              Tamos Admin
-            </Typography>
-            <IconButton color="inherit" onClick={handleLogout}>
-              <ExitToAppIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Drawer
-          variant="permanent"
-          classes={{
-            paper: clsx(classes.drawerPaper, !states.openMenu && classes.drawerPaperClose),
-          }}
-          open={states.openMenu}
-        >
-          <div className={classes.toolbarIcon}>
-            <IconButton onClick={handleDrawerClose}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </div>
-          <Divider />
-          <List>{mainListItems()}</List>
-          <Divider />
-          <List>{secondaryListItems}</List>
-        </Drawer>
-        <main className={classes.content}>
-          <div className={classes.appBarSpacer} />
-          <Container maxWidth="lg" className={classes.container}>
-            {props.children}
-          </Container>
-          {/* <Box pt={4}>
+    <div className={classes.root}>
+      <Head>
+        <title>{props.title} </title>
+      </Head>
+      <CssBaseline />
+      <AppBar position="absolute" className={clsx(classes.appBar, states.openMenu && classes.appBarShift)}>
+        <Toolbar className={classes.toolbar}>
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            className={clsx(classes.menuButton, states.openMenu && classes.menuButtonHidden)}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+            {process.env.NEXT_PUBLIC_APP_NAME} Admin
+          </Typography>
+          <IconButton color="inherit" onClick={handleLogout}>
+            <ExitToAppIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        variant="permanent"
+        classes={{
+          paper: clsx(classes.drawerPaper, !states.openMenu && classes.drawerPaperClose),
+        }}
+        open={states.openMenu}
+      >
+        <div className={classes.toolbarIcon}>
+          <IconButton onClick={handleDrawerClose}>
+            <ChevronLeftIcon />
+          </IconButton>
+        </div>
+        <Divider />
+        <List>{mainListItems()}</List>
+        <Divider />
+        <List>{secondaryListItems}</List>
+      </Drawer>
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <Container maxWidth="lg" className={classes.container}>
+          {props.children}
+        </Container>
+        <Box pt={4}>
           <CopyRight />
-        </Box> */}
-        </main>
-        {/* <Backdrop className={classes.backdrop} open={states.authStatus !== AUTH_STATUS.loggedOn}>
-        <CircularProgress color="inherit" />
-      </Backdrop> */}
-      </div>
-    </DashboardContext.Provider>
+        </Box>
+      </main>
+    </div>
   )
 }

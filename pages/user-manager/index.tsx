@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, ReactElement } from 'react'
 import Dashboard from '@components/Dashboard'
 import Title from '@components/common/Title'
 import Button from '@material-ui/core/Button'
@@ -6,7 +6,6 @@ import { TextField, Paper, Dialog } from '@material-ui/core'
 import { useFormik } from 'formik'
 import { useStyles } from './styles'
 import MaterialTable from 'material-table'
-
 import Avatar from '@material-ui/core/Avatar'
 import DetailsIcon from '@material-ui/icons/Details'
 import LockIcon from '@material-ui/icons/Lock'
@@ -24,7 +23,7 @@ export default function () {
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState({})
+
   const formik = useFormik({
     initialValues: {
       searchList: [
@@ -218,7 +217,7 @@ export default function () {
               className={classes.textField}
               name="searchList[5].search"
               label="Password"
-              onChange={(e) => setIsOpen(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               value={password}
             />
           </CustomDialogContent>
@@ -232,8 +231,6 @@ export default function () {
           </CustomDialogActions>
         </Dialog>
       </div>
-
-      {/* <SnackBarAlert onClose={handleClose} message={"success message"} type={AlertMessageType.sucess} open={open} /> */}
     </Dashboard>
   )
 }
