@@ -1,20 +1,26 @@
 import React, { useState } from 'react'
+//material ui components
+import { TextField, Paper, Button, Typography, Box, Badge, Tabs, Tab, Chip } from '@material-ui/core'
+//custom components
+import DatePicker from '@components/common/DatePicker'
 import Dashboard from '@components/Dashboard'
 import Title from '@components/common/Title'
-import { useStyles } from './styles'
-import { TextField, Paper, Button, Typography, Box, Badge } from '@material-ui/core'
-import DatePicker from '@components/common/DatePicker'
-import Chip from '@material-ui/core/Chip'
+import TracerTable from '@components/TracerTable'
+//material ui icons
 import DateRangeIcon from '@material-ui/icons/DateRange'
+//moment js
 import moment from 'moment'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import { useFormik } from 'formik'
+//tracer-manager REST APIS
 import { searchTracers } from 'service/tracerManagerAPI'
 import { TracerSearchParamsType, Tracer } from '@interfaces/tracer-manager'
-import TracerTable from '@components/TracerTable'
+//useFormik hook
+import { useFormik } from 'formik'
+//Yup lib for validation
 import * as Yup from 'yup'
+//styles
+import { useStyles } from './styles'
 
+/* Tracer Manager Component */
 export default function () {
   const classes = useStyles()
   const [openDateRange, setOpenDateRange] = useState(false)

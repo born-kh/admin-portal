@@ -1,15 +1,23 @@
+//router
 import { useRouter } from 'next/router'
-import Dashboard from '@components/Dashboard'
+// react hooks
 import { useEffect, useState } from 'react'
-import { Document, DocumentStatus } from '@interfaces/document-manager'
-
+// custom components
+import Dashboard from '@components/Dashboard'
 import SetGroups from '@components/DocumentManager/SetGroups'
 import DocumentProcedure from '@components/DocumentManager/DocumentProcedure'
+//material-ui components
 import { Button } from '@material-ui/core'
-import { useStyles } from './styles'
+//document-managaer interfaces
+import { Document, DocumentStatus } from '@interfaces/document-manager'
+//material-ui icons
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
+//document-managaer REST APIS
 import { documentAPI } from 'service/api'
+//document-managaer styles
+import { useStyles } from './styles'
+
 export default function () {
   const [documents, setDocuments] = useState<Document[]>([])
   const [documentSetID, setDocumentSetID] = useState<string | null>(null)

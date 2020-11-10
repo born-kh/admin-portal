@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react'
-import { Button, TextField, InputLabel, FormControl, MenuItem } from '@material-ui/core'
-import Paper from '@material-ui/core/Paper'
-import Grid from '@material-ui/core/Grid'
+//material ui components
+import { Button, TextField, InputLabel, FormControl, MenuItem, Paper, Grid, Select } from '@material-ui/core'
+//document-manager interface EditStepProps
 import { EditStepProps } from '@interfaces/document-manager'
-import MySelect from '@material-ui/core/Select'
+//constants
 import { genderOptions, typeOptions, nationOptions, DOCUMENT_FILE_URL } from '@utils/constants'
-import dynamic from 'next/dynamic'
+//custom components
 import ImageComponent from '@components/common/ImageComponent'
-import useStyles from './style'
+
+import dynamic from 'next/dynamic'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
+import useStyles from './style'
 
 export default function (props: EditStepProps) {
   const classes = useStyles()
@@ -84,7 +86,7 @@ export default function (props: EditStepProps) {
             <FormControl variant="outlined" className={classes.textField}>
               <InputLabel id="fields.passport.nationality">Nationality</InputLabel>
 
-              <MySelect
+              <Select
                 labelId="fields.passport.nationality"
                 id="fields.passport.nationality"
                 name="fields.passport.nationality"
@@ -97,7 +99,7 @@ export default function (props: EditStepProps) {
                     {item.label}
                   </MenuItem>
                 ))}
-              </MySelect>
+              </Select>
             </FormControl>
             <TextField
               label="Issue date"
@@ -148,7 +150,7 @@ export default function (props: EditStepProps) {
             <FormControl variant="outlined" className={classes.textField}>
               <InputLabel id="fields.passport.sex">Gender</InputLabel>
 
-              <MySelect
+              <Select
                 labelId="fields.passport.sex"
                 id="fields.passport.sex"
                 name="fields.passport.sex"
@@ -161,13 +163,13 @@ export default function (props: EditStepProps) {
                     {item.label}
                   </MenuItem>
                 ))}
-              </MySelect>
+              </Select>
             </FormControl>
 
             <FormControl variant="outlined" className={classes.textField}>
               <InputLabel id="fields.passport.type">Type</InputLabel>
 
-              <MySelect
+              <Select
                 labelId="fields.passport.type"
                 id="fields.passport.type"
                 name="fields.passport.type"
@@ -180,7 +182,7 @@ export default function (props: EditStepProps) {
                     {item.label}
                   </MenuItem>
                 ))}
-              </MySelect>
+              </Select>
             </FormControl>
 
             <TextField

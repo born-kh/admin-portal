@@ -1,20 +1,28 @@
-import React, { useState, ReactElement } from 'react'
+import React, { useState } from 'react'
+///material ui components
+import { TextField, Paper, Dialog, Button, Avatar } from '@material-ui/core'
+//useformik hook
+import { useFormik } from 'formik'
+//custom components
+import { CustomDialogTitle, CustomDialogContent, CustomDialogActions } from '@components/common/Modal'
+import Loader from '@components/common/Loader'
 import Dashboard from '@components/Dashboard'
 import Title from '@components/common/Title'
-import Button from '@material-ui/core/Button'
-import { TextField, Paper, Dialog } from '@material-ui/core'
-import { useFormik } from 'formik'
-import { useStyles } from './styles'
+//material table component
 import MaterialTable from 'material-table'
-import Avatar from '@material-ui/core/Avatar'
+//material ui icons
 import DetailsIcon from '@material-ui/icons/Details'
 import LockIcon from '@material-ui/icons/Lock'
+//next router
 import { useRouter } from 'next/router'
+//user-manager interfaces
 import { SearchType, SearchTypeParams, Account } from '@interfaces/user-manager'
-import { CustomDialogTitle, CustomDialogContent, CustomDialogActions } from '@components/common/Modal'
+//user-manager REST APIS
 import { userAPI } from 'service/api'
-import Loader from '@components/common/Loader'
+//styles
+import { useStyles } from './styles'
 
+/* User Manager Component */
 export default function () {
   const classes = useStyles()
   const router = useRouter()

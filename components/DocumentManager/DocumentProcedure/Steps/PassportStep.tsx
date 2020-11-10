@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react'
-import { Button, CardHeader, CardActions } from '@material-ui/core'
-import Paper from '@material-ui/core/Paper'
-import Grid from '@material-ui/core/Grid'
+//material ui components
+import { Button, CardHeader, CardActions, Paper, Grid, Card, CardContent, IconButton } from '@material-ui/core'
+//document-manager interfaces
 import { DocumentStatus, Document, PassportStepProps } from '@interfaces/document-manager'
+//Custom ImageComponent
 import ImageComponent from '@components/common/ImageComponent'
+//constants
 import { DOCUMENT_FILE_URL } from '@utils/constants'
+//material ui icons
 import DeleteIcon from '@material-ui/icons/Delete'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import IconButton from '@material-ui/core/IconButton'
-import dynamic from 'next/dynamic'
 import LocationOnIcon from '@material-ui/icons/LocationOn'
-import useStyles from './style'
-
+import dynamic from 'next/dynamic'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
+
+import useStyles from './style'
 
 export default function (props: PassportStepProps) {
   const classes = useStyles()

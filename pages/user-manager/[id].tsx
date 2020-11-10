@@ -1,17 +1,25 @@
-import { useRouter } from 'next/router'
-import Dashboard from '@components/Dashboard'
+//react hoooks
 import { useEffect, useState } from 'react'
-import Title from '@components/common/Title'
+//next router
+import { useRouter } from 'next/router'
+//material ui components
 import { Grid } from '@material-ui/core'
-import { SearchType, Account } from '@interfaces/user-manager'
-import { useStyles } from './styles'
+//custom components
+import Dashboard from '@components/Dashboard'
 import AccountsSessions from '@components/AccountsSessions'
 import AccountInfo from '@components/AccountInfo'
-import { userAPI, documentAPI } from 'service/api'
+import Title from '@components/common/Title'
 import ApplicationTable from '@components/DocumentManager/ApplicationTable'
-import { Application } from '@interfaces/document-manager'
 import Loader from '@components/common/Loader'
+//user-manager REST APIS
+import { userAPI, documentAPI } from 'service/api'
+//user-manager interfaces
+import { SearchType, Account } from '@interfaces/user-manager'
+import { Application } from '@interfaces/document-manager'
+//styles
+import { useStyles } from './styles'
 
+/* User Manager Detail Info Component */
 export default function () {
   const classes = useStyles()
   const [account, setAcccount] = useState<Account | null>(null)

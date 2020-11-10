@@ -1,15 +1,27 @@
 import React, { useState, useEffect } from 'react'
+//material-ui components
+import {
+  Paper,
+  Button,
+  Typography,
+  Box,
+  Badge,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Chip,
+  Tabs,
+  Tab,
+  Select,
+} from '@material-ui/core'
+//custom components
 import Dashboard from '@components/Dashboard'
-import { useStyles } from './styles'
-import { Paper, Button, Typography, Box, Badge, FormControl, InputLabel, MenuItem } from '@material-ui/core'
 import DatePicker from '@components/common/DatePicker'
-import Chip from '@material-ui/core/Chip'
 import DateRangeIcon from '@material-ui/icons/DateRange'
-import moment from 'moment'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
 import ApplicationTable from '@components/DocumentManager/ApplicationTable'
-
+//moment js lib
+import moment from 'moment'
+//document-manager interfaces
 import {
   Application,
   FilterAnyApplication,
@@ -17,11 +29,16 @@ import {
   FilterApplicationParams,
 } from '@interfaces/document-manager'
 import { useRouter } from 'next/router'
+// next props-types
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
+// constants
 import { applicationOptions, dateOptions } from '@utils/constants'
-import MySelect from '@material-ui/core/Select'
 import Autorenew from '@material-ui/icons/Autorenew'
+//document-managaer REST APIS
 import { documentAPI } from 'service/api'
+
+import { useStyles } from './styles'
+
 export default function (props: any) {
   const classes = useStyles()
   const [openDateRange, setOpenDateRange] = useState(false)
@@ -138,7 +155,7 @@ export default function (props: any) {
               <FormControl variant="outlined" className={classes.formControl} style={{ margin: '20px 5px' }}>
                 <InputLabel id="application">Application Status</InputLabel>
 
-                <MySelect
+                <Select
                   labelId="application"
                   id="application"
                   name="application"
@@ -151,13 +168,13 @@ export default function (props: any) {
                       {item.label}
                     </MenuItem>
                   ))}
-                </MySelect>
+                </Select>
               </FormControl>
 
               <FormControl variant="outlined" className={classes.formControl} style={{ margin: '20px 5px' }}>
                 <InputLabel id="SetTypeDate">Date Type</InputLabel>
 
-                <MySelect
+                <Select
                   labelId="SetTypeDate"
                   id="SetTypeDate"
                   name="SetTypeDate"
@@ -170,7 +187,7 @@ export default function (props: any) {
                       {item.label}
                     </MenuItem>
                   ))}
-                </MySelect>
+                </Select>
               </FormControl>
             </div>
 

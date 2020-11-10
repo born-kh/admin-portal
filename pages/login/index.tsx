@@ -1,25 +1,34 @@
 import React, { useState, useEffect } from 'react'
-import Avatar from '@material-ui/core/Avatar'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import TextField from '@material-ui/core/TextField'
-import Box from '@material-ui/core/Box'
+//material ui components
+import { Avatar, CssBaseline, TextField, Box, Typography, Container } from '@material-ui/core'
+//material ui icons
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import Typography from '@material-ui/core/Typography'
-import Container from '@material-ui/core/Container'
 import Alert from '@material-ui/lab/Alert'
-import { useStyles } from './styles'
+//custom components
 import CopyRight from '@components/CopyRight'
-import { useFormik } from 'formik'
 import ButtonLoader from '@components/common/ButtonLoader'
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState, AppDispatch } from '@store/reducers'
-import { AUTH_STATUS, ERROR_CODES } from '@utils/constants'
-import { getErrorMsgFromCode } from '@utils/helpers'
+//useFormik hook
+import { useFormik } from 'formik'
+//Yup lib for validation
 import * as Yup from 'yup'
-import { login } from 'service/authAPI'
+//next header
+import Head from 'next/head'
+//next router
+import { useRouter } from 'next/router'
+//constants
+import { AUTH_STATUS, ERROR_CODES } from '@utils/constants'
+//helpers functions
+import { getErrorMsgFromCode } from '@utils/helpers'
+//login actions
+import { login } from '@store/auth/actions'
+//login redusers
+import { RootState, AppDispatch } from '@store/reducers'
+//react-redux hooks
+import { useDispatch, useSelector } from 'react-redux'
+//styles
+import { useStyles } from './styles'
 
+/* Login Component */
 export default function () {
   const classes = useStyles()
   const [loading, setLoading] = useState(false)

@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
-
-import Stepper from '@material-ui/core/Stepper'
-import Step from '@material-ui/core/Step'
-import Button from '@material-ui/core/Button'
+//material ui components
+import { Stepper, Step, Button, StepLabel, Box } from '@material-ui/core/'
+// material ui interfaces
 import { ApplicationStatus, DocumentStatus, MultiStepProps } from '@interfaces/document-manager'
+//styles
 import { ColorlibStepIcon, useStyles } from './styles'
-import { StepLabel, Box } from '@material-ui/core'
 
 export default function (props: MultiStepProps) {
   const classes = useStyles()

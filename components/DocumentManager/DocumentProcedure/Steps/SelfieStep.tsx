@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react'
-import Paper from '@material-ui/core/Paper'
-import Grid from '@material-ui/core/Grid'
+//material ui components
+import { Paper, Grid, Card, CardContent, IconButton, Button, CardHeader, CardActions } from '@material-ui/core'
+//document-manager interfaces
 import { Document, DocumentStatus, SelfieStepProps } from '@interfaces/document-manager'
-import { Button, CardHeader, CardActions } from '@material-ui/core'
+//custom image component
 import ImageComponent from '@components/common/ImageComponent'
+//constants
 import { DOCUMENT_FILE_URL } from '@utils/constants'
+//material ui icons
 import DeleteIcon from '@material-ui/icons/Delete'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import IconButton from '@material-ui/core/IconButton'
 import LocationOnIcon from '@material-ui/icons/LocationOn'
-import dynamic from 'next/dynamic'
-import useStyles from './style'
 
+import dynamic from 'next/dynamic'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
+
+import useStyles from './style'
 
 export default function (props: SelfieStepProps) {
   const classes = useStyles()

@@ -1,8 +1,12 @@
+/* custom axios */
 import axios from '@utils/instance'
+/* constants API_URLS */
 import { API_URLS } from '@utils/constants'
+/* auth interfaces */
 import { AuthParams, LoginResponse, LogoutResponse, FetchPermissionsResponse } from '@interfaces/auth'
-
+/* tracer-manager interfaces */
 import { TracerSearchParamsType } from '@interfaces/tracer-manager'
+/* user-manager interfaces */
 import {
   SearchTypeParams,
   Account,
@@ -10,6 +14,7 @@ import {
   SetPasswordResponse,
   FetchSessionsResponse,
 } from '@interfaces/user-manager'
+/* document-manager interfaces */
 import {
   Fields,
   EmptyResponse,
@@ -20,12 +25,21 @@ import {
   DocumentMessageResponse,
   SetDocumentStatusParams,
 } from '@interfaces/document-manager'
+/* apiKey-manager interfaces */
 import {
   ApiKeysResponse,
   ApiKeyCreateParams,
   ApiKeyCreateResponse,
   ApiKeyUpdateParams,
 } from '@interfaces/apiKey-manager'
+/* settins interfaces */
+import {
+  AuthSettings,
+  GetAllAuthSettingsResponse,
+  AuthSettingsResponse,
+  SystemSettings,
+  GetSystemSettingsResponse,
+} from '@interfaces/settings'
 
 /* AUTH API */
 
@@ -186,35 +200,35 @@ export const apiKeyAPI = {
   },
 }
 
-//   export const settingsAPI = {
-//     async getAllSettings() {
-//       return axios.post('getallsettings', {}).then(response => {
-//         return response;
-//       });
-//     },
-//     async createSettings(params) {
-//       return axios.post('createsettings', params).then(response => {
-//         return response;
-//       });
-//     },
-//     async updateSettings(params) {
-//       return axios.post('updatesettings', params).then(response => {
-//         return response;
-//       });
-//     },
-//     async deleteSettings(params) {
-//       return axios.post('deletesettings', params).then(response => {
-//         return response;
-//       });
-//     },
-//     async setSettings(params) {
-//       return axios.post('setsystemsettings', params).then(response => {
-//         return response;
-//       });
-//     },
-//     async getSettings() {
-//       return axios.post('getsystemsettings', {}).then(response => {
-//         return response;
-//       });
-//     }
-//   };
+export const settingsAPI = {
+  async getAllAuthSettings() {
+    return axios.post<GetAllAuthSettingsResponse>(API_URLS.GET_ALL_AUTH_SETIINGS, {}).then((response) => {
+      return response
+    })
+  },
+  async createAuthSettings(params: AuthSettings) {
+    return axios.post<AuthSettingsResponse>(API_URLS.CREATE_AUTH_SETTINGS, params).then((response) => {
+      return response
+    })
+  },
+  async updateAuthSettings(params: AuthSettings) {
+    return axios.post<AuthSettingsResponse>(API_URLS.UPDATE_AUTH_SETTINGS, params).then((response) => {
+      return response
+    })
+  },
+  async deleteAuthSettings(params: { id: string }) {
+    return axios.post(API_URLS.DELETE_AUTH_SETTINGS, params).then((response) => {
+      return response
+    })
+  },
+  async setSystemSettings(params: SystemSettings) {
+    return axios.post(API_URLS.SET_SYSTEM_SETTINGS, params).then((response) => {
+      return response
+    })
+  },
+  async getSystemSettings() {
+    return axios.post<GetSystemSettingsResponse>(API_URLS.GET_SYSTEM_SETTINGS, {}).then((response) => {
+      return response
+    })
+  },
+}

@@ -1,8 +1,14 @@
+//material table lib
 import MaterialTable from 'material-table'
+//material ui icons
 import DetailsIcon from '@material-ui/icons/Details'
+//moment js lib
 import moment from 'moment'
+//material ui components
 import { Button } from '@material-ui/core'
+//next router
 import { useRouter } from 'next/router'
+//document-manager interfaces
 import { ApplicationTableProps } from '@interfaces/document-manager'
 
 export default function (props: ApplicationTableProps) {

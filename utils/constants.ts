@@ -33,8 +33,14 @@ export const NAVIGATOR = {
     name: 'Statistics',
   },
   settings: {
-    path: '/settings',
-    name: 'Settings',
+    auth: {
+      path: '/settings/auth',
+      name: 'Auth',
+    },
+    system: {
+      path: '/settings/system',
+      name: 'System',
+    },
   },
 }
 export enum AUTH_STATUS {
@@ -150,6 +156,12 @@ export const API_URLS = {
   CREATE_APIKEY: 'createapikey',
   UPDATE_APIKEY_URL: 'updateapikey',
   REFRESH_SESSION: '/refreshsession',
+  GET_ALL_AUTH_SETIINGS: 'getallauthsettings',
+  CREATE_AUTH_SETTINGS: 'createauthsettings',
+  UPDATE_AUTH_SETTINGS: 'updateauthsettings',
+  DELETE_AUTH_SETTINGS: 'deleteauthsettings',
+  SET_SYSTEM_SETTINGS: 'setsystemsettings',
+  GET_SYSTEM_SETTINGS: 'getsystemsettings',
 }
 
 export const rejectMessages = [

@@ -1,19 +1,17 @@
 import { useState, useEffect } from 'react'
-import Paper from '@material-ui/core/Paper'
-import Grid from '@material-ui/core/Grid'
+//material ui components
+import { Paper, Grid, TableRow, TableContainer, TableCell, TableBody, Table } from '@material-ui/core'
+//document-manager interfaces
 import { ConfirmStepProps } from '@interfaces/document-manager'
+//custom components
 import ImageComponent from '@components/common/ImageComponent'
-import { DOCUMENT_FILE_URL } from '@utils/constants'
-import { primaryText } from '@utils/constants'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableRow from '@material-ui/core/TableRow'
 import Title from '@components/common/Title'
+//constants
+import { primaryText } from '@utils/constants'
+import { DOCUMENT_FILE_URL } from '@utils/constants'
 import dynamic from 'next/dynamic'
-import useStyles from './style'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
+import useStyles from './style'
 
 export default function (props: ConfirmStepProps) {
   const classes = useStyles()

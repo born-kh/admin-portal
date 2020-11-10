@@ -1,4 +1,4 @@
-import { DocumentStatus, StepType, ColorlibStepIconProps } from '@interfaces/document-manager'
+import { DocumentStatus, ColorlibStepIconProps } from '@interfaces/document-manager'
 import clsx from 'clsx'
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
 import { activeStepColor, rejectStepColor, newDocStepColor, approveStepColor } from '@utils/constants'

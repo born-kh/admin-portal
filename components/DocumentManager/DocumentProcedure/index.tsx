@@ -1,23 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import MultiStep from './MultiStep'
-import {
-  DocumentTypes,
-  Document,
-  DocumentStatus,
-  Fields,
-  SexType,
-  StepType,
-  ApplicationStatus,
-  DocumentProcedureProps,
-  SetDocumentStatusParams,
-  SetApplicationStatusParams,
-} from '@interfaces/document-manager'
-import { useFormik } from 'formik'
-import { convertMRZDate } from '@utils/helpers'
-import SelfieStep from './Steps/SelfieStep'
-import PassportStep from './Steps/PassportStep'
-import EditStep from './Steps/EditStep'
-import ConfirmStep from './Steps/ConfirmStep'
+//material ui components
 import {
   Dialog,
   DialogTitle,
@@ -32,16 +14,44 @@ import {
   DialogContentText,
   DialogActions,
 } from '@material-ui/core'
+//document-manager interfaces
+import {
+  DocumentTypes,
+  Document,
+  DocumentStatus,
+  Fields,
+  SexType,
+  StepType,
+  ApplicationStatus,
+  DocumentProcedureProps,
+  SetDocumentStatusParams,
+  SetApplicationStatusParams,
+} from '@interfaces/document-manager'
+//formik lib
+import { useFormik } from 'formik'
+//helpers
+import { convertMRZDate } from '@utils/helpers'
+
 import { CustomDialogTitle, CustomDialogActions, CustomDialogContent } from '@components/common/Modal'
+//constants
 import { rejectMessages, initialAlertData, DateConvertType } from '@utils/constants'
-import { documentAPI } from 'service/api'
-import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
+//material ui icons
 import FaceIcon from '@material-ui/icons/Face'
 import AssignmentIndIcon from '@material-ui/icons/AssignmentInd'
 import EditIcon from '@material-ui/icons/Edit'
 import DoneAllIcon from '@material-ui/icons/DoneAll'
 import Loader from '@components/common/Loader'
+import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
+//documnet-manager REST APIS
+import { documentAPI } from 'service/api'
+//OpenMap
 import OpenMap from '@components/OpenMap'
+//MultiStep Component and Step Components
+import MultiStep from './MultiStep'
+import SelfieStep from './Steps/SelfieStep'
+import PassportStep from './Steps/PassportStep'
+import EditStep from './Steps/EditStep'
+import ConfirmStep from './Steps/ConfirmStep'
 
 export default function (props: DocumentProcedureProps) {
   const [rejectMessage, setRejectMessage] = useState('')

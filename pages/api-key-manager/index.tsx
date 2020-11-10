@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Dashboard from '@components/Dashboard'
-import Button from '@material-ui/core/Button'
+//material ui comments
 import {
   TextField,
   Dialog,
@@ -10,14 +10,21 @@ import {
   FormControl,
   FormControlLabel,
   Checkbox,
+  Select,
+  Button,
 } from '@material-ui/core'
+// formik lib
 import { useFormik } from 'formik'
-
+// material table lib
 import MaterialTable from 'material-table'
+// custom modal components
 import { CustomDialogTitle, CustomDialogContent, CustomDialogActions } from '@components/common/Modal'
+// apiKey-manager REST APIS
 import { apiKeyAPI } from 'service/api'
+// apiKey-manager interfaces
 import { ApiKey, ApiKeyUpdateParams, ApiKeyCreateParams, Platforms } from '@interfaces/apiKey-manager'
-import MySelect from '@material-ui/core/Select'
+
+///api-key-manager component
 export default function () {
   const [apiKeys, setAPiKeys] = useState<ApiKey[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -164,7 +171,7 @@ export default function () {
           <FormControl variant="outlined" style={{ margin: '20px 5px' }}>
             <InputLabel id="platform">Platform</InputLabel>
 
-            <MySelect
+            <Select
               labelId="platform"
               id="platform"
               fullWidth
@@ -175,7 +182,7 @@ export default function () {
               label="Set Type Date"
             >
               {platforms}
-            </MySelect>
+            </Select>
           </FormControl>
           <TextField
             label="Valid From"
