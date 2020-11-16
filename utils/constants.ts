@@ -33,14 +33,16 @@ export const NAVIGATOR = {
     name: 'Statistics',
   },
   settings: {
-    auth: {
-      path: '/settings/auth',
-      name: 'Auth',
-    },
-    system: {
-      path: '/settings/system',
-      name: 'System',
-    },
+    path: '/settings',
+    name: 'Backend Settings',
+    // auth: {
+    //   path: '/settings/auth',
+    //   name: 'Auth',
+    // },
+    // system: {
+    //   path: '/settings/system',
+    //   name: 'System',
+    // },
   },
 }
 export enum AUTH_STATUS {
@@ -55,6 +57,10 @@ export enum DateConvertType {
   expiry = 'expiry',
   dob = 'dob',
   issue = 'issue',
+}
+export enum LangType {
+  ru = 'ru',
+  en = 'en',
 }
 
 export const SESSION_TOKEN = 'session_token'
@@ -99,6 +105,10 @@ export const permissions = [
   'TAP_GET_SYSTEM_SETTINGS',
   'TAP_GET_APPLICATION_BY_ACCOUNT',
 ]
+export enum USER_PERMISSION_TYPE {
+  allow = 'ALLOW',
+  deny = 'DENY',
+}
 
 export const ERROR_CODES = {
   password: {
@@ -162,6 +172,15 @@ export const API_URLS = {
   DELETE_AUTH_SETTINGS: 'deleteauthsettings',
   SET_SYSTEM_SETTINGS: 'setsystemsettings',
   GET_SYSTEM_SETTINGS: 'getsystemsettings',
+  GET_ALL_CALL_QUALITY: 'getallcallquality',
+  UPDATE_CALL_QUALITY: 'updatecallquality',
+  DELETE_CALL_QUALITY: 'deletecallquality',
+  CREATE_CALL_QUALITY: 'createcallquality',
+  CREATE_QUESTION: 'createquestion',
+  UPDATE_QUESTION: 'updatequestion',
+  DELETE_QUESTION: 'deletequestion',
+  GET_ALL_QUESTION: 'getallquestion',
+  ACCOUNT_GET_BY_DATE: 'accountgetbydate',
 }
 
 export const rejectMessages = [

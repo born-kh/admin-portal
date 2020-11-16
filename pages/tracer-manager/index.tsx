@@ -5,6 +5,7 @@ import { TextField, Paper, Button, Typography, Box, Badge, Tabs, Tab, Chip } fro
 import DatePicker from '@components/common/DatePicker'
 import Dashboard from '@components/Dashboard'
 import Title from '@components/common/Title'
+import TabPanel from '@components/common/TabPanel'
 import TracerTable from '@components/TracerTable'
 //material ui icons
 import DateRangeIcon from '@material-ui/icons/DateRange'
@@ -19,6 +20,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 //styles
 import { useStyles } from './styles'
+import useTranslation from 'hooks/useTranslation'
 
 /* Tracer Manager Component */
 export default function () {
@@ -29,13 +31,15 @@ export default function () {
     endDate: new Date(),
     key: 'selection',
   })
-  const [value, setValue] = React.useState(0)
+  const [value, setValue] = useState(0)
   const [messages, setMessages] = useState<Tracer[]>([])
   const [errors, setErrors] = useState<Tracer[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const { t, locale } = useTranslation()
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue)
   }
+  moment.locale(locale)
 
   const formik = useFormik({
     initialValues: {
@@ -67,13 +71,13 @@ export default function () {
   return (
     <Dashboard title={'tracer-manager'}>
       <Paper className={classes.paper}>
-        <Title>Search Tracer</Title>
+        <Title>{t('searchTracer')}</Title>
         <form noValidate onSubmit={formik.handleSubmit}>
           <Chip
             variant="outlined"
             size="medium"
             icon={<DateRangeIcon />}
-            label={`from: ${moment(dateRange.startDate).format('DD MMMM YYYY ')}  to: ${moment(
+            label={`${t('from')}: ${moment(dateRange.startDate).format('DD MMMM YYYY ')}   ${t('to')}: ${moment(
               dateRange.endDate
             ).format('DD MMMM YYYY ')}`}
             clickable
@@ -86,7 +90,7 @@ export default function () {
             required
             fullWidth
             id="search"
-            label="Search Tracer"
+            label={t('searchTracer')}
             name="search"
             className={classes.textField}
             autoFocus
@@ -97,7 +101,7 @@ export default function () {
           />
 
           <Button variant="contained" className={classes.button} color="primary" type="submit">
-            Search
+            {t('search')}
           </Button>
         </form>
       </Paper>
@@ -106,14 +110,14 @@ export default function () {
           <Tab
             label={
               <Badge badgeContent={messages.length} color="secondary">
-                Tracer Messages
+                {t('tracerMessages')}
               </Badge>
             }
           />
           <Tab
             label={
               <Badge badgeContent={errors.length} color="secondary">
-                Tracer Errors
+                {t('tracerErrors')}
               </Badge>
             }
           />
@@ -132,24 +136,5 @@ export default function () {
         onChange={(e) => setDateRange(e.selection)}
       />
     </Dashboard>
-  )
-}
-function TabPanel(props: any) {
-  const { children, value, index, ...other } = props
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`nav-tabpanel-${index}`}
-      aria-labelledby={`nav-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
   )
 }

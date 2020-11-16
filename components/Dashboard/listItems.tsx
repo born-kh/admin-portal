@@ -7,84 +7,104 @@ import PeopleIcon from '@material-ui/icons/People'
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { NAVIGATOR } from '@utils/constants'
+import { NAVIGATOR, USER_PERMISSION, USER_PERMISSION_TYPE } from '@utils/constants'
 import SupervisedUserCircle from '@material-ui/icons/SupervisedUserCircle'
 import Assessment from '@material-ui/icons/Assessment'
 import AssignmentInd from '@material-ui/icons/AssignmentInd'
 import Equalizer from '@material-ui/icons/Equalizer'
+import useTranslation from 'hooks/useTranslation'
 export const mainListItems = () => {
   const router = useRouter()
+  const { t } = useTranslation()
   const { userManager, tracerManager, documentManager, apiKeyManager, statistics } = NAVIGATOR
-
-  return (
-    <div>
-      <Link href={userManager.path} passHref>
+  let permissions = JSON.parse(localStorage.getItem(USER_PERMISSION) || '') || []
+  let navList = []
+  if (permissions.TAP_MODIFY_USER_MANAGER === USER_PERMISSION_TYPE.allow) {
+    navList.push(
+      <Link href={userManager.path} passHref key={userManager.path}>
         <ListItem button selected={router.pathname.includes(userManager.path)}>
           <ListItemIcon>
             <SupervisedUserCircle />
           </ListItemIcon>
-          <ListItemText primary={userManager.name} />
+          <ListItemText primary={t('usersPage')} />
         </ListItem>
       </Link>
+    )
+  }
 
-      <Link href={tracerManager.path} passHref>
+  if (permissions.TAP_MODIFY_TRACER_MANAGER === USER_PERMISSION_TYPE.allow) {
+    navList.push(
+      <Link href={tracerManager.path} passHref key={tracerManager.path}>
         <ListItem button selected={router.pathname.includes(tracerManager.path)}>
           <ListItemIcon>
             <Assessment />
           </ListItemIcon>
-          <ListItemText primary={tracerManager.name} />
+          <ListItemText primary={t('tracerPage')} />
         </ListItem>
       </Link>
-      <Link href={documentManager.path} passHref>
+    )
+  }
+
+  if (permissions.TAP_MODIFY_PASSPORT_MANAGER === USER_PERMISSION_TYPE.allow) {
+    navList.push(
+      <Link href={documentManager.path} passHref key={documentManager.path}>
         <ListItem button selected={router.pathname.includes(documentManager.path)}>
           <ListItemIcon>
             <AssignmentInd />
           </ListItemIcon>
-          <ListItemText primary={documentManager.name} />
+          <ListItemText primary={t('documentPage')} />
         </ListItem>
       </Link>
-      <Link href={apiKeyManager.path} passHref>
+    )
+  }
+
+  if (permissions.TAP_MODIFY_API_KEY_MANAGER === USER_PERMISSION_TYPE.allow) {
+    navList.push(
+      <Link href={apiKeyManager.path} passHref key={apiKeyManager.path}>
         <ListItem button selected={router.pathname.includes(apiKeyManager.path)}>
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
-          <ListItemText primary={apiKeyManager.name} />
+          <ListItemText primary={t('apiKeyPage')} />
         </ListItem>
       </Link>
-      <Link href={statistics.path} passHref>
+    )
+  }
+
+  if (permissions.TAP_MODIFY_STATISTICS === USER_PERMISSION_TYPE.allow) {
+    navList.push(
+      <Link href={statistics.path} passHref key={statistics.path}>
         <ListItem button selected={router.pathname.includes(statistics.path)}>
           <ListItemIcon>
             <Equalizer />
           </ListItemIcon>
-          <ListItemText primary={statistics.name} />
+          <ListItemText primary={t('statisticsPage')} />
         </ListItem>
       </Link>
-    </div>
-  )
+    )
+  }
+  return navList
 }
 
 export const secondaryListItems = () => {
   const router = useRouter()
   const { settings } = NAVIGATOR
-  return (
-    <div>
-      <ListSubheader inset>Settings</ListSubheader>
-      <Link href={settings.auth.path} passHref>
-        <ListItem button selected={router.pathname.includes(settings.auth.path)}>
-          <ListItemIcon>
-            <AssignmentIcon />
-          </ListItemIcon>
-          <ListItemText primary={settings.auth.name} />
-        </ListItem>
-      </Link>
-      <Link href={settings.system.path} passHref>
-        <ListItem button selected={router.pathname.includes(settings.system.path)}>
-          <ListItemIcon>
-            <AssignmentIcon />
-          </ListItemIcon>
-          <ListItemText primary={settings.system.name} />
-        </ListItem>
-      </Link>
-    </div>
-  )
+  let permissions = JSON.parse(localStorage.getItem(USER_PERMISSION) || '[]') || []
+  let navList = []
+  if (permissions.TAP_MODIFY_SETTINGS === USER_PERMISSION_TYPE.allow) {
+    navList.push(
+      <div key={'TAP_MODIFY_SETTINGS'}>
+        <ListSubheader inset>Settings</ListSubheader>
+        <Link href={settings.path} passHref key={settings.path}>
+          <ListItem button selected={router.pathname.includes(settings.path)}>
+            <ListItemIcon>
+              <AssignmentIcon />
+            </ListItemIcon>
+            <ListItemText primary={settings.name} />
+          </ListItem>
+        </Link>
+      </div>
+    )
+  }
+  return navList
 }

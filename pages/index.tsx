@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react'
-
-import Router, { useRouter } from 'next/router'
+import React from 'react'
+import Dashboard from '@components/Dashboard'
+import { Typography } from '@material-ui/core'
 
 export default function () {
-  const router = useRouter()
-  useEffect(() => {
-    router.push('/user-manager')
-  }, [])
-  return <React.Fragment></React.Fragment>
+  return (
+    <Dashboard>
+      {/* <Typography component="h2" variant="h2" color="primary" gutterBottom>
+        Weclome to Admin Portal
+      </Typography> */}
+    </Dashboard>
+  )
 }

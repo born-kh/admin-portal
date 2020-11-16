@@ -2,6 +2,7 @@ import { Account, ItemType } from '@interfaces/user-manager'
 import { Fragment } from 'react'
 import MaterialList from './common/MaterialList'
 import { Avatar, Box, Card, CardContent, Typography, makeStyles } from '@material-ui/core'
+import useTranslation from 'hooks/useTranslation'
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -20,7 +21,7 @@ const useStyles = makeStyles(() => ({
 
 export default function ({ account }: { account: Account }) {
   const classes = useStyles()
-
+  const { t } = useTranslation()
   const phones: ItemType[] = account.phones.map((phone) => ({ name: phone.number, type: phone.type }))
   const emails: ItemType[] = account.emails.map((email) => ({ name: email.email, type: email.type }))
   return (
@@ -43,12 +44,12 @@ export default function ({ account }: { account: Account }) {
       </Card>
       <Card className={classes.card}>
         <CardContent>
-          <MaterialList items={phones} header="Phones" />
+          <MaterialList items={phones} header={t('userPhones')} />
         </CardContent>
       </Card>
       <Card className={classes.card}>
         <CardContent>
-          <MaterialList items={emails} header="Emails" />
+          <MaterialList items={emails} header={t('userEmails')} />
         </CardContent>
       </Card>
     </Fragment>

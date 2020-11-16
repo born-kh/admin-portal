@@ -11,13 +11,14 @@ import ImageComponent from '@components/common/ImageComponent'
 import dynamic from 'next/dynamic'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
 import useStyles from './style'
+import useTranslation from 'hooks/useTranslation'
 
 export default function (props: EditStepProps) {
   const classes = useStyles()
   const { documents, fields, handleOnChange, blocking, handleSumbit } = props
   const [selectID, setSelectID] = useState('')
   const [docID, setDocID] = useState<string | undefined>(undefined)
-
+  const { t } = useTranslation()
   useEffect(() => {
     if (documents.length > 0) {
       setSelectID(documents[0].ID)
@@ -34,6 +35,7 @@ export default function (props: EditStepProps) {
                 <Button
                   variant="outlined"
                   color="primary"
+                  style={{ marginBottom: 10 }}
                   classes={{
                     label: classes.imageButtonLabel,
                   }}
@@ -52,7 +54,7 @@ export default function (props: EditStepProps) {
               margin="normal"
               required
               id="fields.passport.last_name"
-              label="Last Name"
+              label={t('lastName')}
               name="fields.passport.last_name"
               className={classes.textField}
               onChange={handleOnChange}
@@ -63,7 +65,7 @@ export default function (props: EditStepProps) {
               margin="normal"
               required
               id="fields.passport.first_name"
-              label="First Name"
+              label={t('firstName')}
               name="fields.passport.first_name"
               className={classes.textField}
               onChange={handleOnChange}
@@ -71,7 +73,7 @@ export default function (props: EditStepProps) {
             />
 
             <TextField
-              label="Date of birth"
+              label={t('dateOfBirth')}
               type="date"
               name="fields.passport.date_of_birth"
               id="fields.passport.date_of_birth"
@@ -84,7 +86,7 @@ export default function (props: EditStepProps) {
             />
 
             <FormControl variant="outlined" className={classes.textField}>
-              <InputLabel id="fields.passport.nationality">Nationality</InputLabel>
+              <InputLabel id="fields.passport.nationality">{t('nationality')}</InputLabel>
 
               <Select
                 labelId="fields.passport.nationality"
@@ -92,7 +94,7 @@ export default function (props: EditStepProps) {
                 name="fields.passport.nationality"
                 value={fields.passport?.nationality}
                 onChange={handleOnChange}
-                label="Nationality"
+                label={t('nationality')}
               >
                 {nationOptions.map((item) => (
                   <MenuItem key={item.value} value={item.value}>
@@ -102,7 +104,7 @@ export default function (props: EditStepProps) {
               </Select>
             </FormControl>
             <TextField
-              label="Issue date"
+              label={t('issueDate')}
               type="date"
               name="fields.passport.issue_date"
               id="fields.passport.issue_date"
@@ -114,7 +116,7 @@ export default function (props: EditStepProps) {
               value={fields.passport?.issue_date}
             />
             <TextField
-              label="Expiration date"
+              label={t('expritaionDate')}
               type="date"
               name="fields.passport.expiration_date"
               id="fields.passport.expiration_date"
@@ -130,7 +132,7 @@ export default function (props: EditStepProps) {
               margin="normal"
               required
               id="fields.passport.number"
-              label="Number"
+              label={t('number')}
               name="fields.passport.number"
               className={classes.textField}
               onChange={handleOnChange}
@@ -141,14 +143,14 @@ export default function (props: EditStepProps) {
               margin="normal"
               required
               id="fields.passport.personal_number"
-              label="Personal Number"
+              label={t('personalNumber')}
               name="fields.passport.personal_number"
               className={classes.textField}
               onChange={handleOnChange}
               value={fields.passport?.personal_number}
             />
             <FormControl variant="outlined" className={classes.textField}>
-              <InputLabel id="fields.passport.sex">Gender</InputLabel>
+              <InputLabel id="fields.passport.sex">{t('gender')}</InputLabel>
 
               <Select
                 labelId="fields.passport.sex"
@@ -156,7 +158,7 @@ export default function (props: EditStepProps) {
                 name="fields.passport.sex"
                 value={fields.passport?.sex || ''}
                 onChange={handleOnChange}
-                label="Gender"
+                label={t('gender')}
               >
                 {genderOptions.map((item) => (
                   <MenuItem key={item.value} value={item.value}>
@@ -167,7 +169,7 @@ export default function (props: EditStepProps) {
             </FormControl>
 
             <FormControl variant="outlined" className={classes.textField}>
-              <InputLabel id="fields.passport.type">Type</InputLabel>
+              <InputLabel id="fields.passport.type">{t('type')}</InputLabel>
 
               <Select
                 labelId="fields.passport.type"
@@ -175,7 +177,7 @@ export default function (props: EditStepProps) {
                 name="fields.passport.type"
                 value={fields.passport?.type || ''}
                 onChange={handleOnChange}
-                label="Type"
+                label={t('type')}
               >
                 {typeOptions.map((item) => (
                   <MenuItem key={item.value} value={item.value}>
@@ -186,7 +188,7 @@ export default function (props: EditStepProps) {
             </FormControl>
 
             <TextField
-              label="Issuing Auth"
+              label={t('issuingAuth')}
               type="date"
               name="fields.passport.issuingAuth"
               id="fields.passport.issuingAuth"
@@ -202,7 +204,7 @@ export default function (props: EditStepProps) {
               margin="normal"
               required
               id="fields.passport.address"
-              label="Address"
+              label={t('address')}
               name="fields.passport.address"
               className={classes.textField}
               onChange={handleOnChange}
@@ -217,7 +219,7 @@ export default function (props: EditStepProps) {
                 color="primary"
                 onClick={handleSumbit}
               >
-                Save
+                {t('save')}
               </Button>
             </Grid>
           </Paper>

@@ -10,44 +10,56 @@ import { Button } from '@material-ui/core'
 import { useRouter } from 'next/router'
 //document-manager interfaces
 import { ApplicationTableProps } from '@interfaces/document-manager'
+import useTranslation from 'hooks/useTranslation'
 
 export default function (props: ApplicationTableProps) {
   const router = useRouter()
+  const { t } = useTranslation()
   return (
     <MaterialTable
       title={props.title}
       isLoading={props.isLoading}
-      localization={{ body: { emptyDataSourceMessage: `There are no ${props.type}` } }}
+      localization={{
+        body: { emptyDataSourceMessage: t('noApplications') },
+        toolbar: { searchPlaceholder: t('search') },
+        pagination: {
+          firstTooltip: t('firstTooltip'),
+          lastTooltip: t('lastTooltip'),
+          previousTooltip: t('previousTooltip'),
+          nextTooltip: t('nextTooltip'),
+          labelRowsSelect: t('labelRowsSelect'),
+        },
+      }}
       columns={[
         {
-          title: 'FNLN',
+          title: t('fullName'),
           field: 'firstName',
           searchable: true,
           render: (rowData) => rowData && `${rowData.firstName || ''}  ${rowData.lastName || ''}`,
         },
-        { title: 'Status', field: 'status' },
-        { title: 'Country ISO Code', field: 'countryISOCode' },
+        { title: t('status'), field: 'status' },
+        { title: t('countryIsoCode'), field: 'countryISOCode' },
 
         {
-          title: 'Created At',
+          title: t('createdAt'),
           field: 'createdAt',
 
           render: (rowData) => rowData.createdAt && moment(rowData.createdAt).format('DD MMM YYYY HH:mm'),
         },
         {
-          title: 'Updated At',
+          title: t('updatedAt'),
           field: 'updatedAt',
 
           render: (rowData) => rowData.updatedAt && moment(rowData.updatedAt).format('DD MMM YYYY HH:mm'),
         },
         {
-          title: 'Submitted At',
+          title: t('submittedAt'),
           field: 'submittedAt',
 
           render: (rowData) => rowData.submittedAt && moment(rowData.submittedAt).format('DD MMM YYYY HH:mm'),
         },
         {
-          title: 'Detail Info',
+          title: t('detailInfo'),
           field: '',
 
           render: (rowData) =>
@@ -63,7 +75,7 @@ export default function (props: ApplicationTableProps) {
                 }}
                 startIcon={<DetailsIcon />}
               >
-                Info
+                {t('detail')}
               </Button>
             ),
         },

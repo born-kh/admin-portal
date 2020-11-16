@@ -2,12 +2,31 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      padding: '16px 40px',
+      width: '100%',
+    },
+
     paper: {
       display: 'flex',
       flexDirection: 'row',
       flexWrap: 'wrap',
       padding: '16px 40px',
+      marginBottom: 10,
       width: 600,
+    },
+
+    paper2: {
+      display: 'flex',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      padding: '16px 40px',
+      width: 340,
+      marginBottom: 10,
+      marginLeft: 150,
     },
     textField: {
       marginLeft: theme.spacing(1),
@@ -17,6 +36,10 @@ export const useStyles = makeStyles((theme: Theme) =>
     button: {
       marginLeft: 400,
     },
+    button2: {
+      marginLeft: 170,
+    },
+
     buttonTable: {
       margin: theme.spacing(1),
     },

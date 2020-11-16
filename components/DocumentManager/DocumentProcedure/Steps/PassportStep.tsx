@@ -40,6 +40,7 @@ export default function (props: PassportStepProps) {
                 <Button
                   variant="outlined"
                   color="primary"
+                  style={{ marginBottom: 10 }}
                   classes={{
                     label: classes.imageButtonLabel,
                   }}

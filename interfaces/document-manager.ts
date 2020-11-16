@@ -267,6 +267,7 @@ export interface EmptyResponse {}
 
 export interface FetchApplicationsResponse {
   applications: Application[]
+  totalCount?: number
 }
 export interface FetchDocumentsResponse {
   documents: Document[]

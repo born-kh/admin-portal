@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 ///material ui components
-import { TextField, Paper, Dialog, Button, Avatar } from '@material-ui/core'
+import { TextField, Paper, Dialog, Button, Avatar, InputLabel, FormControl, Select, MenuItem } from '@material-ui/core'
 //useformik hook
 import { useFormik } from 'formik'
 //custom components
@@ -16,11 +16,12 @@ import LockIcon from '@material-ui/icons/Lock'
 //next router
 import { useRouter } from 'next/router'
 //user-manager interfaces
-import { SearchType, SearchTypeParams, Account } from '@interfaces/user-manager'
+import { SearchType, SearchTypeParams, Account, AccountGetByDateParams, FilterType } from '@interfaces/user-manager'
 //user-manager REST APIS
 import { userAPI } from 'service/api'
 //styles
 import { useStyles } from './styles'
+import useTranslation from 'hooks/useTranslation'
 
 /* User Manager Component */
 export default function () {
@@ -28,9 +29,15 @@ export default function () {
   const router = useRouter()
 
   const [users, setUsers] = useState<Account[]>([])
+  const [filterParams, setFilterParams] = useState<AccountGetByDateParams>({
+    ts: '2020-11-12',
+    type: FilterType.around,
+  })
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [password, setPassword] = useState('')
+
+  const { t } = useTranslation()
 
   const formik = useFormik({
     initialValues: {
@@ -65,98 +72,184 @@ export default function () {
   const handleClose = () => {
     setIsOpen(false)
   }
+  const handleOnChangeFilterParams = (event: React.ChangeEvent<any>) => {
+    setFilterParams({ ...filterParams, [event.target.name]: event.target.value })
+  }
+
+  const handleFilterAccounts = () => {
+    setUsers([])
+    setIsLoading(true)
+    userAPI
+      .accountGetByDate(filterParams)
+      .then((response) => {
+        if (response.status === 200) {
+          setUsers(response.data.accounts)
+        }
+
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.log(error)
+        setIsLoading(false)
+      })
+  }
 
   if (router.isFallback) {
     return <Loader />
   }
+
   return (
     <Dashboard title={'user-manager'}>
-      <Paper className={classes.paper}>
-        <Title>Advanced search</Title>
-        <form noValidate onSubmit={formik.handleSubmit}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            id="searchList[0].search"
-            label="UserName"
-            name="searchList[0].search"
-            className={classes.textField}
-            autoFocus
-            onChange={formik.handleChange}
-            value={formik.values.searchList[0].search}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            id="searchList[1].search"
-            className={classes.textField}
-            name="searchList[1].search"
-            label="Phone Number"
-            onChange={formik.handleChange}
-            value={formik.values.searchList[1].search}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            id="searchList[2].search"
-            className={classes.textField}
-            name="searchList[2].search"
-            label="Email"
-            onChange={formik.handleChange}
-            value={formik.values.searchList[2].search}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            id="searchList[3].search"
-            className={classes.textField}
-            name="searchList[3].search"
-            label="Last Name"
-            onChange={formik.handleChange}
-            value={formik.values.searchList[3].search}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            id="searchList[4].search"
-            className={classes.textField}
-            name="searchList[4].search"
-            label="First Name"
-            onChange={formik.handleChange}
-            value={formik.values.searchList[4].search}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            id="searchList[5].search"
-            className={classes.textField}
-            name="searchList[5].search"
-            label="Account ID"
-            onChange={formik.handleChange}
-            value={formik.values.searchList[5].search}
-          />
+      <div className={classes.root}>
+        <Paper className={classes.paper}>
+          <Title>{t('advancedSearch')}</Title>
+          <form noValidate onSubmit={formik.handleSubmit}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              id="searchList[0].search"
+              label={t('username')}
+              name="searchList[0].search"
+              className={classes.textField}
+              autoFocus
+              onChange={formik.handleChange}
+              value={formik.values.searchList[0].search}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              id="searchList[1].search"
+              className={classes.textField}
+              name="searchList[1].search"
+              label={t('phoneNumber')}
+              onChange={formik.handleChange}
+              value={formik.values.searchList[1].search}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              id="searchList[2].search"
+              className={classes.textField}
+              name="searchList[2].search"
+              label={t('email')}
+              onChange={formik.handleChange}
+              value={formik.values.searchList[2].search}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              id="searchList[3].search"
+              className={classes.textField}
+              name="searchList[3].search"
+              label={t('lastName')}
+              onChange={formik.handleChange}
+              value={formik.values.searchList[3].search}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              id="searchList[4].search"
+              className={classes.textField}
+              name="searchList[4].search"
+              label={t('firstName')}
+              onChange={formik.handleChange}
+              value={formik.values.searchList[4].search}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              id="searchList[5].search"
+              className={classes.textField}
+              name="searchList[5].search"
+              label={t('accountId')}
+              onChange={formik.handleChange}
+              value={formik.values.searchList[5].search}
+            />
 
-          <Button variant="contained" className={classes.button} color="primary" type="submit">
-            Search
-          </Button>
-        </form>
-      </Paper>
+            <Button variant="contained" className={classes.button} color="primary" type="submit">
+              {t('search')}
+            </Button>
+          </form>
+        </Paper>
+        <Paper className={classes.paper2}>
+          <Title>{t('filterAccountByDate')}</Title>
+          <form noValidate onSubmit={formik.handleSubmit}>
+            <TextField
+              label={t('dateTime')}
+              type="date"
+              name="ts"
+              id="dateTime"
+              className={classes.textField}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={filterParams.ts}
+              onChange={handleOnChangeFilterParams}
+            />
 
+            <FormControl variant="outlined" className={classes.textField} style={{ margin: '50px 5px' }}>
+              <InputLabel id="filterType">{t('type')}</InputLabel>
+
+              <Select
+                labelId="filterType"
+                id="filterType"
+                name="type"
+                value={filterParams.type}
+                onChange={handleOnChangeFilterParams}
+                label={t('type')}
+              >
+                <MenuItem key={FilterType.after} value={FilterType.after}>
+                  {FilterType.after}
+                </MenuItem>
+                <MenuItem key={FilterType.before} value={FilterType.before}>
+                  {FilterType.before}
+                </MenuItem>
+                <MenuItem key={FilterType.exact} value={FilterType.exact}>
+                  {FilterType.exact}
+                </MenuItem>
+                <MenuItem key={FilterType.around} value={FilterType.around}>
+                  {FilterType.around}
+                </MenuItem>
+              </Select>
+            </FormControl>
+
+            <Button
+              variant="contained"
+              className={classes.button2}
+              color="primary"
+              type="button"
+              onClick={handleFilterAccounts}
+            >
+              {t('search')}
+            </Button>
+          </form>
+        </Paper>
+      </div>
       <div style={{ marginTop: 30 }}>
         <MaterialTable
-          title="Users"
+          title={t('users')}
           isLoading={isLoading}
-          localization={{ body: { emptyDataSourceMessage: 'There are no users' } }}
+          localization={{
+            body: { emptyDataSourceMessage: t('noUsers') },
+            toolbar: { searchPlaceholder: t('search') },
+            pagination: {
+              firstTooltip: t('firstTooltip'),
+              lastTooltip: t('lastTooltip'),
+              previousTooltip: t('previousTooltip'),
+              nextTooltip: t('nextTooltip'),
+              labelRowsSelect: t('labelRowsSelect'),
+            },
+          }}
           columns={[
             {
               field: 'avatar',
-              title: 'Avatar',
+              title: t('avatar'),
               align: 'center',
               render: (rowData) => (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -165,13 +258,13 @@ export default function () {
               ),
             },
 
-            { title: 'User Name', field: 'username', align: 'center' },
-            { title: 'First Name', field: 'firstName', align: 'center' },
-            { title: 'Last Name', field: 'lastName', align: 'center' },
-            { title: 'Status', field: 'status', align: 'center' },
+            { title: t('username'), field: 'username', align: 'center' },
+            { title: t('firstName'), field: 'firstName', align: 'center' },
+            { title: t('lastName'), field: 'lastName', align: 'center' },
+            { title: t('status'), field: 'status', align: 'center' },
 
             {
-              title: 'Detail Info',
+              title: t('detailInfo'),
               field: 'accountID',
 
               render: (rowData) =>
@@ -183,26 +276,13 @@ export default function () {
                     className={classes.buttonTable}
                     startIcon={<DetailsIcon />}
                   >
-                    Info
+                    {t('detail')}
                   </Button>
                 ),
             },
             {
-              title: 'Change Password',
-              field: 'accountID',
-
-              render: (rowData) =>
-                rowData && (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => setIsOpen(true)}
-                    className={classes.buttonTable}
-                    startIcon={<LockIcon />}
-                  >
-                    Change
-                  </Button>
-                ),
+              title: t('createdAt'),
+              field: 'createdAt',
             },
           ]}
           data={users}
@@ -214,7 +294,7 @@ export default function () {
 
         <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={isOpen}>
           <CustomDialogTitle id="customized-dialog-title" onClose={handleClose}>
-            Change Password
+            {t('changePasssword')}
           </CustomDialogTitle>
           <CustomDialogContent dividers>
             <TextField
@@ -231,10 +311,10 @@ export default function () {
           </CustomDialogContent>
           <CustomDialogActions>
             <Button autoFocus onClick={handleClose} color="primary">
-              Generate
+              {t('generatePasssword')}
             </Button>
             <Button autoFocus onClick={handleClose} color="primary">
-              Save changes
+              {t('ok')}
             </Button>
           </CustomDialogActions>
         </Dialog>

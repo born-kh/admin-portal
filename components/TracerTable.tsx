@@ -2,19 +2,31 @@ import MaterialTable from 'material-table'
 import { TracerTableProps } from '@interfaces/tracer-manager'
 import Typography from '@material-ui/core/Typography'
 import { Accordion, AccordionSummary, AccordionDetails } from './common/Accordion'
+import useTranslation from 'hooks/useTranslation'
 
 export default function (props: TracerTableProps) {
+  const { t } = useTranslation()
   return (
     <MaterialTable
-      title="Sessions"
+      title={t('sessions')}
       isLoading={props.isLoading}
-      localization={{ body: { emptyDataSourceMessage: `There are no ${props.type}` } }}
+      localization={{
+        body: { emptyDataSourceMessage: props.type === 'errors' ? t('noErrors') : t('noMessages') },
+        toolbar: { searchPlaceholder: t('search') },
+        pagination: {
+          firstTooltip: t('firstTooltip'),
+          lastTooltip: t('lastTooltip'),
+          previousTooltip: t('previousTooltip'),
+          nextTooltip: t('nextTooltip'),
+          labelRowsSelect: t('labelRowsSelect'),
+        },
+      }}
       columns={[
         { title: '№', field: '', render: (rowData) => rowData && rowData.tableData.id + 1, width: 75 },
-        { title: 'Ts', field: 'ts' },
-        { title: 'Method', field: 'response.method' },
-        { title: 'Account ID', field: 'account_id' },
-        { title: 'Session ID', field: 'session_id' },
+        { title: t('dateTime'), field: 'ts' },
+        { title: t('method'), field: 'response.method' },
+        { title: t('accountId'), field: 'account_id' },
+        { title: t('sesssionId'), field: 'session_id' },
       ]}
       data={props.data}
       options={{
@@ -22,7 +34,7 @@ export default function (props: TracerTableProps) {
       }}
       detailPanel={[
         {
-          tooltip: 'Show Detail',
+          tooltip: t('showDetail'),
           render: (d) => {
             return (
               d.request.id && (

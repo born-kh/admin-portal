@@ -38,6 +38,7 @@ import Autorenew from '@material-ui/icons/Autorenew'
 import { documentAPI } from 'service/api'
 
 import { useStyles } from './styles'
+import useTranslation from 'hooks/useTranslation'
 
 export default function (props: any) {
   const classes = useStyles()
@@ -56,7 +57,8 @@ export default function (props: any) {
   const [isLoadingNew, setIsLoadingNew] = useState(false)
   const [selectedApplication, setSelectedApplication] = useState('ALL')
   const [selectedDateType, setSelectedDateType] = useState('ALL')
-
+  const { t, locale } = useTranslation()
+  moment.locale(locale)
   const handleChange = (newValue: number) => {
     setValueTab(newValue)
   }
@@ -110,7 +112,7 @@ export default function (props: any) {
     handleFetch()
 
     documentAPI
-      .fetchApplications()
+      .fetchApplications({ start: 0, count: 100 })
       .then((response) => {
         if (response.status === 200) {
           setNewApplications(response.data.applications)
@@ -130,18 +132,18 @@ export default function (props: any) {
           indicatorColor="primary"
           textColor="primary"
         >
-          {' '}
           <Tab
             label={
               <Badge badgeContent={newApplications.length} color="secondary">
-                New Documents
+                {' '}
+                {t('newDocuments')}
               </Badge>
             }
           />
           <Tab
             label={
               <Badge badgeContent={anyApplications.length} color="secondary">
-                Any Documents
+                {t('anyDocuments')}
               </Badge>
             }
           />
@@ -153,7 +155,7 @@ export default function (props: any) {
           <div className={classes.paper}>
             <div>
               <FormControl variant="outlined" className={classes.formControl} style={{ margin: '20px 5px' }}>
-                <InputLabel id="application">Application Status</InputLabel>
+                <InputLabel id="application">{t('setApplicationStatus')}</InputLabel>
 
                 <Select
                   labelId="application"
@@ -161,7 +163,7 @@ export default function (props: any) {
                   name="application"
                   value={selectedApplication}
                   onChange={(e: React.ChangeEvent<any>) => setSelectedApplication(e.target.value)}
-                  label="Application Status"
+                  label={t('setApplicationStatus')}
                 >
                   {applicationOptions.map((item) => (
                     <MenuItem key={item.value} value={item.value}>
@@ -172,7 +174,7 @@ export default function (props: any) {
               </FormControl>
 
               <FormControl variant="outlined" className={classes.formControl} style={{ margin: '20px 5px' }}>
-                <InputLabel id="SetTypeDate">Date Type</InputLabel>
+                <InputLabel id="SetTypeDate">{t('setTypeDate')}</InputLabel>
 
                 <Select
                   labelId="SetTypeDate"
@@ -180,7 +182,7 @@ export default function (props: any) {
                   name="SetTypeDate"
                   value={selectedDateType}
                   onChange={(e: React.ChangeEvent<any>) => setSelectedDateType(e.target.value)}
-                  label="Date Type"
+                  label={t('setTypeDate')}
                 >
                   {dateOptions.map((item) => (
                     <MenuItem key={item.value} value={item.value}>
@@ -212,7 +214,7 @@ export default function (props: any) {
                 onClick={handleFetch}
                 startIcon={<Autorenew />}
               >
-                Search
+                {t('search')}
               </Button>
             </div>
           </div>

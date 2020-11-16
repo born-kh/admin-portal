@@ -17,6 +17,7 @@ import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
 import { documentAPI } from 'service/api'
 //document-managaer styles
 import { useStyles } from './styles'
+import useTranslation from 'hooks/useTranslation'
 
 export default function () {
   const [documents, setDocuments] = useState<Document[]>([])
@@ -26,6 +27,7 @@ export default function () {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const classes = useStyles()
+  const { t } = useTranslation()
 
   useEffect(() => {
     function loadData() {
@@ -116,7 +118,7 @@ export default function () {
           startIcon={<ArrowBackIosIcon />}
           onClick={() => router.back()}
         >
-          Back to Appllications
+          {t('backToApplications')}
         </Button>
         <Button
           variant="contained"
@@ -125,7 +127,7 @@ export default function () {
           endIcon={<ArrowForwardIosIcon />}
           onClick={goNextApplication}
         >
-          Next Appllication
+          {t('nextApplication')}
         </Button>
       </div>
 

@@ -33,6 +33,8 @@
     "components/DocumentManager/DocumentProcedure/Steps",
     "components/OpenMap/index.jsx",
     "components/OpenMap/index.jsx",
-    "components/OpenMap/index.jsx"
+    "components/OpenMap/index.jsx",
+    "nex-config.tjs",
+    "i18.js"
   ]
 }

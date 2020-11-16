@@ -23,13 +23,14 @@ import { CustomDialogTitle, CustomDialogContent, CustomDialogActions } from '@co
 import { apiKeyAPI } from 'service/api'
 // apiKey-manager interfaces
 import { ApiKey, ApiKeyUpdateParams, ApiKeyCreateParams, Platforms } from '@interfaces/apiKey-manager'
+import useTranslation from 'hooks/useTranslation'
 
 ///api-key-manager component
 export default function () {
   const [apiKeys, setAPiKeys] = useState<ApiKey[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
-
+  const { t } = useTranslation()
   const formik = useFormik({
     initialValues: {
       validFrom: '',
@@ -76,18 +77,18 @@ export default function () {
     }
   }
   useEffect(() => {
-    setIsLoading(true)
-    apiKeyAPI
-      .getApiKeys()
-      .then((response) => {
-        if (response.status === 200) {
-          setAPiKeys(response.data.apiKeys)
-        }
-        setIsLoading(false)
-      })
-      .catch(() => {
-        setIsLoading(false)
-      })
+    // setIsLoading(true)
+    // apiKeyAPI
+    //   .getApiKeys()
+    //   .then((response) => {
+    //     if (response.status === 200) {
+    //       setAPiKeys(response.data.apiKeys)
+    //     }
+    //     setIsLoading(false)
+    //   })
+    //   .catch(() => {
+    //     setIsLoading(false)
+    //   })
   }, [])
   const platforms = []
   for (const value in Platforms) {
@@ -100,25 +101,25 @@ export default function () {
   return (
     <Dashboard title={'user-manager'}>
       <MaterialTable
-        title="API Keys"
+        title={t('apiKeys')}
         isLoading={isLoading}
-        localization={{ body: { emptyDataSourceMessage: 'There are no api keys' } }}
+        localization={{ body: { emptyDataSourceMessage: t('noApiKeys') } }}
         columns={[
-          { title: 'Platform', field: 'platform' },
-          { title: 'Version', field: 'version' },
-          { title: 'Valid From', field: 'validFrom' },
-          { title: 'Valid To', field: 'validTo' },
+          { title: t('platform'), field: 'platform' },
+          { title: t('version'), field: 'version' },
+          { title: t('validFrom'), field: 'validFrom' },
+          { title: t('validTo'), field: 'validTo' },
 
           {
-            title: 'Expiration',
+            title: t('expiration'),
             field: 'cacheExpiration',
           },
           {
-            title: 'Created At',
+            title: t('createdAt'),
             field: 'createdAt',
           },
           {
-            title: 'Enabled',
+            title: t('enabled'),
             field: '',
 
             render: (rowData) =>
@@ -137,7 +138,7 @@ export default function () {
         actions={[
           {
             icon: 'add_box',
-            tooltip: 'Create api key',
+            tooltip: t('createApiKey'),
             position: 'toolbar',
             onClick: () => {
               setIsOpen(true)
@@ -153,7 +154,7 @@ export default function () {
 
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={isOpen} fullWidth maxWidth="xs">
         <CustomDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Create APi Key
+          {t('createApiKey')}
         </CustomDialogTitle>
         <CustomDialogContent dividers style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
           <TextField
@@ -163,29 +164,28 @@ export default function () {
             style={{ width: 300 }}
             id="version"
             name="version"
-            label="version"
+            label={t('version')}
             onChange={formik.handleChange}
             value={formik.values.version}
           />
 
           <FormControl variant="outlined" style={{ margin: '20px 5px' }}>
-            <InputLabel id="platform">Platform</InputLabel>
+            <InputLabel id="platform">{t('platform')}</InputLabel>
 
             <Select
-              labelId="platform"
               id="platform"
               fullWidth
               name="platform"
               style={{ width: 300 }}
               value={formik.values.platform}
               onChange={formik.handleChange}
-              label="Set Type Date"
+              label={t('platform')}
             >
               {platforms}
             </Select>
           </FormControl>
           <TextField
-            label="Valid From"
+            label={t('validFrom')}
             type="date"
             fullWidth
             name="validFrom"
@@ -198,7 +198,7 @@ export default function () {
             onChange={formik.handleChange}
           />
           <TextField
-            label="Valid To"
+            label={t('validTo')}
             type="date"
             fullWidth
             name="validTo"
@@ -214,15 +214,15 @@ export default function () {
             control={
               <Checkbox checked={formik.values.enabled} onChange={formik.handleChange} name="enabled" color="primary" />
             }
-            label="Enabled"
+            label={t('enabled')}
           />
         </CustomDialogContent>
         <CustomDialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
-            Cancel
+            {t('cancel')}
           </Button>
           <Button autoFocus onClick={handleClose} color="primary">
-            Create
+            {t('ok')}
           </Button>
         </CustomDialogActions>
       </Dialog>

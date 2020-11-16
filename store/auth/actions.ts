@@ -12,6 +12,7 @@ export const login = (params: AuthParams) => {
 
         localStorage.setItem(SESSION_TOKEN, session_token)
         authAPI.fetchPermissions(permissions, session_token).then((responsePermission) => {
+          console.log(responsePermission)
           localStorage.setItem(USER_PERMISSION, JSON.stringify(responsePermission.data.result.data))
           dispatch({ type: USER_LOGIN })
         })

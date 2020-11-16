@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 //material ui components
 import { TextField, Dialog, MenuItem, InputLabel, FormControl, Button, Select } from '@material-ui/core'
 //material table lib
@@ -15,15 +15,14 @@ import { settingsAPI } from 'service/api'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
 //settings interfaces
-import { AuthSettings, PermissionType } from '@interfaces/settings'
+import { AuthSettings, PermissionType, CallQuality } from '@interfaces/settings'
 //constants
 import { initialAlertData } from '@utils/constants'
+import { Dictionary } from 'lodash'
 
 /* AUTH Component */
 export default function () {
-  const [allAuthSeetings, setAllAuthSettings] = useState<AuthSettings[]>([
-    { id: '1', prefix: '+992', permissionType: PermissionType.allow, description: 'desc' },
-  ])
+  const [allCallQuality, setAllCallQuality] = useState<CallQuality[]>([])
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
     initialAlertData
   )
@@ -32,10 +31,11 @@ export default function () {
 
   const formik = useFormik({
     initialValues: {
-      prefix: '',
-      permissionType: PermissionType.allow,
-      description: '',
-    } as AuthSettings,
+      ask: true,
+      AskDuration: 0,
+      AskIf: {},
+      questions: {},
+    } as CallQuality,
 
     onSubmit: (values) => {},
   })
@@ -48,46 +48,44 @@ export default function () {
   }
   const handleDelete = (id: string) => {
     settingsAPI
-      .deleteAuthSettings({ id })
+      .deleteCallQulaity({ id })
       .then(() => {
-        setAllAuthSettings(allAuthSeetings.filter((item: AuthSettings) => item.id !== id))
+        setAllCallQuality(allCallQuality.filter((item) => item.id !== id))
 
-        setAlertData({ message: `Auth settings deleted`, type: AlertMessageType.sucess, open: true })
+        setAlertData({ message: `Call quality deleted`, type: AlertMessageType.sucess, open: true })
       })
       .catch((error) => {
-        setAlertData({ message: `Auth settings ${error.message}`, type: AlertMessageType.error, open: true })
+        setAlertData({ message: `Call quality ${error.message}`, type: AlertMessageType.error, open: true })
       })
   }
 
-  const openEditModal = (data: AuthSettings) => {
+  const openEditModal = (data: CallQuality) => {
     formik.setValues(data)
     setIsOpen(true)
   }
   const handleCraete = () => {
     if (formik.values.id) {
       settingsAPI
-        .updateAuthSettings(formik.values)
+        .updateCallQulaity(formik.values)
         .then(() => {
-          setAllAuthSettings(
-            allAuthSeetings.map((item: AuthSettings) => (item.id === formik.values.id ? formik.values : item))
-          )
+          setAllCallQuality(allCallQuality.map((item) => (item.id === formik.values.id ? formik.values : item)))
           handleClose()
-          setAlertData({ message: `Auth settings updated.`, type: AlertMessageType.sucess, open: true })
+          setAlertData({ message: `Call qulaity updated.`, type: AlertMessageType.sucess, open: true })
         })
         .catch((error) => {
           handleClose()
-          setAlertData({ message: `Update Auth Settings ${error.message}`, type: AlertMessageType.error, open: true })
+          setAlertData({ message: `Update Call quality ${error.message}`, type: AlertMessageType.error, open: true })
         })
     } else {
       settingsAPI
-        .createAuthSettings(formik.values)
+        .createCallQulaity(formik.values)
         .then((response) => {
-          setAllAuthSettings([...allAuthSeetings, { ...formik.values }])
-          setAlertData({ message: `Auth settings created`, type: AlertMessageType.sucess, open: true })
+          setAllCallQuality([...allCallQuality, response.data.callQuality])
+          setAlertData({ message: `Call quality created`, type: AlertMessageType.sucess, open: true })
         })
         .catch((error) => {
           handleClose()
-          setAlertData({ message: `Create Auth Settings ${error.message}`, type: AlertMessageType.error, open: true })
+          setAlertData({ message: `Create call qulaity ${error.message}`, type: AlertMessageType.error, open: true })
         })
     }
   }
@@ -95,10 +93,10 @@ export default function () {
   useEffect(() => {
     setIsLoading(true)
     settingsAPI
-      .getAllAuthSettings()
+      .getAllCallQulaity()
       .then((response) => {
         if (response.status === 200) {
-          setAllAuthSettings(response.data.allSettings)
+          setAllCallQuality(response.data.allCallQuality)
         }
         setIsLoading(false)
       })
@@ -108,16 +106,16 @@ export default function () {
   }, [])
 
   return (
-    <Dashboard title={'user-manager'}>
+    <Fragment>
       <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
       <MaterialTable
-        title="Auth Settings"
+        title="Call Quality"
         isLoading={isLoading}
-        localization={{ body: { emptyDataSourceMessage: 'There are no auth settings' } }}
+        localization={{ body: { emptyDataSourceMessage: 'There are no call qulaity' } }}
         columns={[
           { title: 'ID', field: 'id' },
-          { title: 'Prefix', field: 'prefix' },
-          { title: 'Permission', field: 'permissionType' },
+          { title: 'Ask', field: 'ask' },
+          { title: 'Ask Duration', field: 'askDuration' },
           { title: 'Description', field: 'description' },
           {
             title: 'Edit',
@@ -158,12 +156,12 @@ export default function () {
             tooltip: 'Create auth settings',
             position: 'toolbar',
             onClick: () => {
-              formik.setValues({ prefix: '', permissionType: PermissionType.allow, description: '' })
+              formik.setValues({ ask: true, AskDuration: 0, AskIf: {}, questions: {} })
               setIsOpen(true)
             },
           },
         ]}
-        data={allAuthSeetings}
+        data={allCallQuality}
         options={{
           sorting: false,
           search: false,
@@ -172,9 +170,9 @@ export default function () {
 
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={isOpen} fullWidth maxWidth="xs">
         <CustomDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Auth Settings
+          Call quality
         </CustomDialogTitle>
-        <CustomDialogContent dividers style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+        {/* <CustomDialogContent dividers style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -218,16 +216,16 @@ export default function () {
             onChange={formik.handleChange}
             value={formik.values.description}
           />
-        </CustomDialogContent>
+        </CustomDialogContent> */}
         <CustomDialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button autoFocus onClick={handleCraete} color="primary">
+          <Button autoFocus onClick={() => {}} color="primary">
             OK
           </Button>
         </CustomDialogActions>
       </Dialog>
-    </Dashboard>
+    </Fragment>
   )
 }

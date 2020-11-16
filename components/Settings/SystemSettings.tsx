@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 //material ui components
 import { Dialog, Button } from '@material-ui/core'
 //matetrail table lib
@@ -81,7 +81,7 @@ export default function () {
   }
 
   return (
-    <Dashboard title={'system-settings'}>
+    <Fragment>
       <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
       <MaterialTable
         title="System Settings"
@@ -130,6 +130,6 @@ export default function () {
           </Button>
         </CustomDialogActions>
       </Dialog>
-    </Dashboard>
+    </Fragment>
   )
 }

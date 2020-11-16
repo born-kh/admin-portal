@@ -15,6 +15,7 @@ import SnackBarAlert, { AlertMessageType } from './common/SnackbarAlert'
 import { sessionAPI } from 'service/api'
 import { initialAlertData } from '@utils/constants'
 import OpenMap from './OpenMap'
+import useTranslation from 'hooks/useTranslation'
 
 export default function () {
   const [sessions, setSessions] = useState<AccountSessionsData[]>([])
@@ -26,7 +27,7 @@ export default function () {
   )
   const [open, setOpen] = useState(false)
   const router = useRouter()
-
+  const { t } = useTranslation()
   const handleCloseAlert = () => {
     setAlertData(initialAlertData)
   }
@@ -138,17 +139,27 @@ export default function () {
   return (
     <Fragment>
       <MaterialTable
-        title="Sessions"
+        title=""
         style={{ marginBottom: 20 }}
         isLoading={sessionsIsLoading}
-        localization={{ body: { emptyDataSourceMessage: 'There are no sessions' } }}
+        localization={{
+          body: { emptyDataSourceMessage: t('noSessions') },
+          toolbar: { searchPlaceholder: t('search') },
+          pagination: {
+            firstTooltip: t('firstTooltip'),
+            lastTooltip: t('lastTooltip'),
+            previousTooltip: t('previousTooltip'),
+            nextTooltip: t('nextTooltip'),
+            labelRowsSelect: t('labelRowsSelect'),
+          },
+        }}
         columns={[
-          { title: 'Device Name', field: 'meta.deviceName' },
-          { title: 'Platform', field: 'meta.platform' },
-          { title: 'IP', field: 'meta.ip' },
+          { title: t('deviceName'), field: 'meta.deviceName' },
+          { title: t('platform'), field: 'meta.platform' },
+          { title: t('ip'), field: 'meta.ip' },
 
           {
-            title: 'Set Trasing',
+            title: t('setTracing'),
             field: '',
 
             render: (rowData) =>
@@ -164,7 +175,7 @@ export default function () {
               ),
           },
           {
-            title: 'Set Suspend',
+            title: t('suspendSession'),
             field: '',
 
             render: (rowData) =>
@@ -180,19 +191,19 @@ export default function () {
               ),
           },
           {
-            title: 'Detail Info',
+            title: t('detailInfo'),
             field: '',
 
             render: (rowData) =>
               rowData && (
                 <Button variant="contained" color="primary" onClick={() => {}} startIcon={<DetailsIcon />}>
-                  Info
+                  {t('detail')}
                 </Button>
               ),
           },
 
           {
-            title: 'Geo Location',
+            title: t('geoLocation'),
             field: '',
 
             render: (rowData) =>
@@ -203,12 +214,12 @@ export default function () {
                   startIcon={<PersonPinCircleIcon />}
                   onClick={() => handleOpenMap(rowData.meta.ip)}
                 >
-                  Location
+                  {t('location')}
                 </Button>
               ),
           },
           {
-            title: 'Delete',
+            title: t('remove'),
             field: '',
 
             render: (rowData) =>
@@ -222,7 +233,7 @@ export default function () {
                     setOpen(true)
                   }}
                 >
-                  Delete
+                  {t('remove')}
                 </Button>
               ),
           },
@@ -246,10 +257,10 @@ export default function () {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteSession} color="primary" autoFocus>
-            Agree
+            {t('agree')}
           </Button>
           <Button onClick={handleClose} color="primary">
-            Disagree
+            {t('disagree')}
           </Button>
         </DialogActions>
       </Dialog>

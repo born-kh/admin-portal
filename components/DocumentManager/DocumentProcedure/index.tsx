@@ -52,6 +52,7 @@ import SelfieStep from './Steps/SelfieStep'
 import PassportStep from './Steps/PassportStep'
 import EditStep from './Steps/EditStep'
 import ConfirmStep from './Steps/ConfirmStep'
+import useTranslation from 'hooks/useTranslation'
 
 export default function (props: DocumentProcedureProps) {
   const [rejectMessage, setRejectMessage] = useState('')
@@ -60,7 +61,7 @@ export default function (props: DocumentProcedureProps) {
   const [passportDocuments, setPassportDocuments] = useState<Document[]>([])
   const [mapPosition, setMapPosition] = useState<number[]>([])
   const [isReject, setIsReject] = useState(false)
-
+  const { t } = useTranslation()
   const [isLoadingTypes, setIsLoadingTypes] = useState(false)
   const [documentTypeID, setDocumentTypeID] = useState<string | null>(null)
   const [deleteID, setDeleteID] = useState<string | null>(null)
@@ -474,7 +475,7 @@ export default function (props: DocumentProcedureProps) {
     })
     const stepsConfirm = [
       {
-        name: 'Edit Document',
+        name: t('editDocument'),
         status: DocumentStatus.new,
         icon: <EditIcon />,
         component: (
@@ -489,7 +490,7 @@ export default function (props: DocumentProcedureProps) {
         ),
       },
       {
-        name: 'Confirm Document',
+        name: t('confirmDocument'),
         status: DocumentStatus.new,
 
         icon: <DoneAllIcon />,
@@ -548,10 +549,10 @@ export default function (props: DocumentProcedureProps) {
             color="primary"
             autoFocus
           >
-            Agree
+            {t('aggree')}
           </Button>
           <Button onClick={() => setDeleteID(null)} color="primary">
-            Disagree
+            {t('disagree')}
           </Button>
         </DialogActions>
       </Dialog>

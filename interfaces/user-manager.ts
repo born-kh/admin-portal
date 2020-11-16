@@ -149,3 +149,18 @@ export interface SetPasswordResponse {
 export interface FetchSessionsResponse {
   sessions: AccountSessionsData[]
 }
+
+export interface AccountGetByDateParams {
+  ts: string
+  type: FilterType
+}
+export interface AccountGetByDateResponse {
+  accounts: Account[]
+}
+
+export enum FilterType {
+  exact = 'EXACT',
+  after = 'AFTER',
+  around = 'AROUND',
+  before = 'BEFORE',
+}

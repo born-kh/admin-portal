@@ -5,6 +5,7 @@ if (typeof window !== 'undefined') {
 }
 import { Dialog, Button, Typography } from '@material-ui/core'
 import { CustomDialogTitle, CustomDialogContent, CustomDialogActions } from '@components/common/Modal'
+import useTranslation from 'hooks/useTranslation'
 export function OpenMap({ position }: { position: number[] }) {
   return (
     <Map.MapContainer
@@ -32,7 +33,7 @@ type PropsType = {
   position: number[]
 }
 export default function (props: PropsType) {
-  console.log(props)
+  const { t } = useTranslation()
   return (
     <Dialog
       onClose={props.handleClose}
@@ -42,7 +43,7 @@ export default function (props: PropsType) {
       open={props.open}
     >
       <CustomDialogTitle id="customized-dialog-title" onClose={props.handleClose}>
-        Location
+        {t('location')}
       </CustomDialogTitle>
       <CustomDialogContent dividers>
         {props.position.length > 0 ? (

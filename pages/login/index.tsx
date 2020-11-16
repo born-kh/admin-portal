@@ -27,6 +27,8 @@ import { RootState, AppDispatch } from '@store/reducers'
 import { useDispatch, useSelector } from 'react-redux'
 //styles
 import { useStyles } from './styles'
+import useTranslation from 'hooks/useTranslation'
+import Title from '@components/common/Title'
 
 /* Login Component */
 export default function () {
@@ -35,6 +37,7 @@ export default function () {
   const dispatch: AppDispatch = useDispatch()
   const router = useRouter()
   const [errorCode, setErrorCode] = useState('')
+  const { t } = useTranslation()
 
   const formik = useFormik({
     initialValues: {
@@ -96,8 +99,9 @@ export default function () {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
+
         <Typography component="h1" variant="h5">
-          Sign in
+          {t(process.env.NEXT_PUBLIC_APP_NAME || 'tamos')} {t('admin')}
         </Typography>
         <form className={classes.form} noValidate onSubmit={formik.handleSubmit}>
           <TextField
@@ -106,7 +110,7 @@ export default function () {
             required
             fullWidth
             id="username"
-            label="UserName"
+            label={t('username')}
             name="username"
             autoComplete="username"
             autoFocus
@@ -121,7 +125,7 @@ export default function () {
             required
             fullWidth
             name="password"
-            label="Password"
+            label={t('password')}
             type="password"
             id="password"
             autoComplete="current-password"
@@ -139,7 +143,7 @@ export default function () {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            {t('login')}
           </ButtonLoader>
 
           {errorMessage && <Alert severity="error">{errorMessage}</Alert>}

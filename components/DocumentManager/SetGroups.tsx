@@ -7,9 +7,12 @@ import { DOCUMENT_FILE_URL } from '@utils/constants'
 import { useState } from 'react'
 import dynamic from 'next/dynamic'
 import ImageComponent from '@components/common/ImageComponent'
+import useTranslation from 'hooks/useTranslation'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
 
 export default function (props: SetGroupsProps) {
+  const { t } = useTranslation()
+
   let setGroups = _.values(_.groupBy(props.documents, 'documenSet.ID')).map((d) => {
     return {
       setID: d[0].documenSet.ID,
@@ -21,19 +24,29 @@ export default function (props: SetGroupsProps) {
 
   return (
     <MaterialTable
-      title="Set Groups"
+      title={t('setGroups')}
       isLoading={props.isLoading}
-      localization={{ body: { emptyDataSourceMessage: `There are no sets` } }}
+      localization={{
+        body: { emptyDataSourceMessage: t('noSets') },
+        toolbar: { searchPlaceholder: t('search') },
+        pagination: {
+          firstTooltip: t('firstTooltip'),
+          lastTooltip: t('lastTooltip'),
+          previousTooltip: t('previousTooltip'),
+          nextTooltip: t('nextTooltip'),
+          labelRowsSelect: t('labelRowsSelect'),
+        },
+      }}
       columns={[
         {
-          title: 'Set Name',
+          title: t('setName'),
           field: 'setName ',
           render: (rowData) => rowData && rowData.setName,
         },
-        { title: 'Documents', field: 'count' },
+        { title: t('documents'), field: 'count' },
 
         {
-          title: 'Begin review',
+          title: t('beginReview'),
           field: '',
 
           render: (rowData) =>
@@ -44,7 +57,7 @@ export default function (props: SetGroupsProps) {
                 onClick={() => props.handleSetID(rowData.setID)}
                 startIcon={<VisibilityIcon />}
               >
-                Begin review
+                {'beginReview'}
               </Button>
             ),
         },
@@ -58,8 +71,8 @@ export default function (props: SetGroupsProps) {
       }}
       detailPanel={[
         {
-          tooltip: 'Show Detail',
-          // disabled: docID !== null,
+          tooltip: t('showDetail'),
+
           render: (d) => {
             console.log(d)
             return d && d.documents && <DetailPanel documents={props.documents} />
@@ -72,16 +85,16 @@ export default function (props: SetGroupsProps) {
 
 export const DetailPanel = ({ documents }: { documents: Document[] }) => {
   const [docID, setDocID] = useState<string | null>(null)
-
+  const { t } = useTranslation()
   return (
     <MaterialTable
       columns={[
         { title: '№', field: '', render: (rowData) => rowData && rowData.tableData.id + 1 },
-        { title: 'Document Type', field: 'documentType.typeName' },
-        { title: 'Status', field: 'status' },
+        { title: t('documentType'), field: 'documentType.typeName' },
+        { title: t('status'), field: 'status' },
 
         {
-          title: 'Picture',
+          title: t('image'),
           field: '',
           render: (rowData) =>
             rowData && (

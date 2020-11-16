@@ -13,6 +13,8 @@ import {
   SearchUserResponse,
   SetPasswordResponse,
   FetchSessionsResponse,
+  AccountGetByDateParams,
+  AccountGetByDateResponse,
 } from '@interfaces/user-manager'
 /* document-manager interfaces */
 import {
@@ -39,6 +41,10 @@ import {
   AuthSettingsResponse,
   SystemSettings,
   GetSystemSettingsResponse,
+  GetAllCallQualityResponse,
+  CallQuality,
+  GetAllQuestionsResponse,
+  Question,
 } from '@interfaces/settings'
 
 /* AUTH API */
@@ -86,6 +92,10 @@ export const userAPI = {
   },
   async setPassword(params: any) {
     const response = await axios.post<SetPasswordResponse>(API_URLS.SET_PASSWORD, params)
+    return response
+  },
+  async accountGetByDate(params: AccountGetByDateParams) {
+    const response = await axios.post<AccountGetByDateResponse>(API_URLS.ACCOUNT_GET_BY_DATE, params)
     return response
   },
 }
@@ -159,7 +169,6 @@ export const documentAPI = {
     return response
   },
   async setDocumentFields(params: { documentID: string; fields: Fields }) {
-    console.log(params)
     const response = await axios.post<DocumentMessageResponse>(API_URLS.SET_DOCUMENT_FIELDS, params)
     return response
   },
@@ -228,6 +237,48 @@ export const settingsAPI = {
   },
   async getSystemSettings() {
     return axios.post<GetSystemSettingsResponse>(API_URLS.GET_SYSTEM_SETTINGS, {}).then((response) => {
+      return response
+    })
+  },
+  async getAllCallQulaity() {
+    return axios.post<GetAllCallQualityResponse>(API_URLS.GET_ALL_CALL_QUALITY, {}).then((response) => {
+      return response
+    })
+  },
+  async createCallQulaity(params: CallQuality) {
+    return axios.post(API_URLS.CREATE_CALL_QUALITY, params).then((response) => {
+      return response
+    })
+  },
+
+  async updateCallQulaity(params: CallQuality) {
+    return axios.post(API_URLS.UPDATE_CALL_QUALITY, params).then((response) => {
+      return response
+    })
+  },
+  async deleteCallQulaity(params: { id: string }) {
+    return axios.post(API_URLS.DELETE_CALL_QUALITY, params).then((response) => {
+      return response
+    })
+  },
+
+  async getAllQuestions() {
+    return axios.post<GetAllQuestionsResponse>(API_URLS.GET_ALL_QUESTION, {}).then((response) => {
+      return response
+    })
+  },
+  async createQuestion(params: Question) {
+    return axios.post(API_URLS.CREATE_QUESTION, params).then((response) => {
+      return response
+    })
+  },
+  async updateQuestion(params: Question) {
+    return axios.post(API_URLS.DELETE_QUESTION, params).then((response) => {
+      return response
+    })
+  },
+  async deleteQuestion(params: { id: string }) {
+    return axios.post(API_URLS.DELETE_QUESTION, params).then((response) => {
       return response
     })
   },

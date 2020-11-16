@@ -5,6 +5,7 @@ import { Stepper, Step, Button, StepLabel, Box } from '@material-ui/core/'
 import { ApplicationStatus, DocumentStatus, MultiStepProps } from '@interfaces/document-manager'
 //styles
 import { ColorlibStepIcon, useStyles } from './styles'
+import useTranslation from 'hooks/useTranslation'
 
 export default function (props: MultiStepProps) {
   const classes = useStyles()
@@ -23,7 +24,7 @@ export default function (props: MultiStepProps) {
 
   const [allDocumentsApproved, setAllDocumentsApproved] = useState(false)
   const { steps } = props
-
+  const { t } = useTranslation()
   useEffect(() => {
     let count = 0
     let countTypes = steps.length - 2
@@ -55,7 +56,7 @@ export default function (props: MultiStepProps) {
               onClick={handleDoneDocumentProcedure}
               className={classes.button}
             >
-              Overview
+              {t('overview')}
             </Button>
             <Button
               variant="outlined"
@@ -64,7 +65,7 @@ export default function (props: MultiStepProps) {
               onClick={handleBack}
               className={classes.button}
             >
-              Previous
+              {t('previous')}
             </Button>
             <Button
               disabled={activeStep === steps.length - 1 || blocking}
@@ -73,7 +74,7 @@ export default function (props: MultiStepProps) {
               onClick={handleNext}
               className={classes.button}
             >
-              Next
+              {t('next')}
             </Button>
           </div>
         </Box>
@@ -87,7 +88,7 @@ export default function (props: MultiStepProps) {
               onClick={() => handleRejectDocument(steps[activeStep].typeID || '')}
               className={classes.button}
             >
-              Reject
+              {t('reject')}
             </Button>
             <Button
               disabled={blocking || steps[activeStep].status !== DocumentStatus.new}
@@ -97,7 +98,7 @@ export default function (props: MultiStepProps) {
               onClick={() => handleApproveDocument(DocumentStatus.approved, steps[activeStep].typeID || '')}
               className={classes.button}
             >
-              Approve
+              {t('approve')}
             </Button>
 
             <Button
@@ -108,7 +109,7 @@ export default function (props: MultiStepProps) {
               onClick={() => handleRejectApplication()}
               className={classes.button}
             >
-              Reject Application
+              {t('rejectApplication')}
             </Button>
             <Button
               disabled={blocking}
@@ -118,7 +119,7 @@ export default function (props: MultiStepProps) {
               onClick={() => handleApproveApplication(ApplicationStatus.approved)}
               className={classes.button}
             >
-              Approve Application
+              {t('approveApplication')}
             </Button>
           </div>
         </Box>

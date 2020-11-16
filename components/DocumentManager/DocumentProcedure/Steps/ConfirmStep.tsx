@@ -12,12 +12,14 @@ import { DOCUMENT_FILE_URL } from '@utils/constants'
 import dynamic from 'next/dynamic'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
 import useStyles from './style'
+import useTranslation from 'hooks/useTranslation'
 
 export default function (props: ConfirmStepProps) {
   const classes = useStyles()
   const { documents, fields } = props
   const [selectID, setSelectID] = useState('')
   const [docID, setDocID] = useState<string | undefined>(undefined)
+  const { t } = useTranslation()
   useEffect(() => {
     if (documents.length > 0) {
       setSelectID(documents[0].ID)
@@ -34,13 +36,13 @@ export default function (props: ConfirmStepProps) {
               <TableBody>
                 <TableRow key={fields.passport?.first_name}>
                   <TableCell align="left" width={150}>
-                    First Name:
+                    {t('firstName')}:
                   </TableCell>
                   <TableCell align="left" style={{ color: primaryText }}>
                     {fields.passport?.first_name}
                   </TableCell>
                   <TableCell align="left" width={150}>
-                    Last Name:
+                    {t('lastName')}:
                   </TableCell>
                   <TableCell align="left" style={{ color: primaryText }}>
                     {fields.passport?.last_name}
@@ -48,13 +50,13 @@ export default function (props: ConfirmStepProps) {
                 </TableRow>
                 <TableRow key={fields.passport?.date_of_birth}>
                   <TableCell align="left" width={150}>
-                    Date of birth:
+                    {t('dateOfBirth')}:
                   </TableCell>
                   <TableCell align="left" style={{ color: primaryText }}>
                     {fields.passport?.date_of_birth}
                   </TableCell>
                   <TableCell align="left" width={150}>
-                    Nationality:
+                    {t('nationality')}:
                   </TableCell>
                   <TableCell align="left" style={{ color: primaryText }}>
                     {fields.passport?.nationality}
@@ -63,13 +65,13 @@ export default function (props: ConfirmStepProps) {
 
                 <TableRow key={fields.passport?.issuingAuth}>
                   <TableCell align="left" width={150}>
-                    Issue Date:
+                    {t('issueDate')} :
                   </TableCell>
                   <TableCell align="left" style={{ color: primaryText }}>
                     {fields.passport?.issue_date}
                   </TableCell>
                   <TableCell align="left" width={150}>
-                    Expiration Date:
+                    {t('expritaionDate')} :
                   </TableCell>
                   <TableCell align="left" style={{ color: primaryText }}>
                     {fields.passport?.expiration_date}
@@ -78,28 +80,27 @@ export default function (props: ConfirmStepProps) {
 
                 <TableRow key={fields.passport?.number}>
                   <TableCell align="left" width={150}>
-                    Number:
+                    {t('number')}:
                   </TableCell>
                   <TableCell align="left" style={{ color: primaryText }}>
                     {fields.passport?.number}
                   </TableCell>
                   <TableCell align="left" width={150}>
-                    Personal number:
+                    {t('personalNumber')} :
                   </TableCell>
                   <TableCell align="left" style={{ color: primaryText }}>
-                    {' '}
                     {fields.passport?.personal_number}
                   </TableCell>
                 </TableRow>
                 <TableRow key={fields.passport?.sex}>
                   <TableCell align="left" width={150}>
-                    Gender:
+                    {t('gender')} :
                   </TableCell>
                   <TableCell align="left" style={{ color: primaryText }}>
                     {fields.passport?.sex}
                   </TableCell>
                   <TableCell align="left" width={150}>
-                    Type:
+                    {t('type')} :
                   </TableCell>
                   <TableCell align="left" style={{ color: primaryText }}>
                     {fields.passport?.type}
@@ -107,13 +108,13 @@ export default function (props: ConfirmStepProps) {
                 </TableRow>
                 <TableRow key={fields.passport?.address}>
                   <TableCell align="left" width={150}>
-                    Address:
+                    {t('address')} :
                   </TableCell>
                   <TableCell align="left" style={{ color: primaryText }}>
                     {fields.passport?.address}
                   </TableCell>
                   <TableCell align="left" width={150}>
-                    Issuing Auth:
+                    {t('issuingAuth')} :
                   </TableCell>
                   <TableCell align="left" style={{ color: primaryText }}>
                     {fields.passport?.issuingAuth}
@@ -126,7 +127,7 @@ export default function (props: ConfirmStepProps) {
         <Grid item xs={6}>
           <TableContainer component={Paper} style={{ padding: 10 }}>
             <Table className={classes.table} aria-label="simple table">
-              <Title>Documents</Title>
+              <Title>{t('documents')}</Title>
               <TableBody>
                 {documents.map((item) => {
                   return (
@@ -134,7 +135,7 @@ export default function (props: ConfirmStepProps) {
                       <TableCell align="left">
                         <TableRow key={item.status}>
                           <TableCell align="left" width={150}>
-                            Status:
+                            {t('status')}:
                           </TableCell>
                           <TableCell align="left" style={{ color: primaryText }}>
                             {item.status}
@@ -142,7 +143,7 @@ export default function (props: ConfirmStepProps) {
                         </TableRow>
                         <TableRow key={item.documentType.typeName}>
                           <TableCell align="left" width={150}>
-                            Document Type:
+                            {t('documentType')}:
                           </TableCell>
                           <TableCell align="left" style={{ color: primaryText }}>
                             {item.documentType.typeName}

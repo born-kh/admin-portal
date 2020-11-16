@@ -105,6 +105,7 @@ export default function (props: SelfieStepProps) {
                 <Button
                   variant="outlined"
                   color="primary"
+                  style={{ marginBottom: 10 }}
                   onClick={() => setSelfie(item)}
                   classes={{
                     label: classes.imageButtonLabel,
@@ -123,6 +124,7 @@ export default function (props: SelfieStepProps) {
                 <Button
                   variant="outlined"
                   color="primary"
+                  style={{ marginBottom: 10 }}
                   onClick={() => setPassport(item)}
                   classes={{
                     label: classes.imageButtonLabel,
