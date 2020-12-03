@@ -101,7 +101,7 @@ export default function () {
         </Avatar>
 
         <Typography component="h1" variant="h5">
-          {t(process.env.NEXT_PUBLIC_APP_NAME || 'tamos')} {t('admin')}
+          {t('admin')}
         </Typography>
         <form className={classes.form} noValidate onSubmit={formik.handleSubmit}>
           <TextField

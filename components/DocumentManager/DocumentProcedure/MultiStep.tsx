@@ -18,6 +18,7 @@ export default function (props: MultiStepProps) {
     handleApproveDocument,
     handleApproveApplication,
     handleRejectApplication,
+    handleCheckPassportNumber,
     blocking,
     handleDoneDocumentProcedure,
   } = props
@@ -110,6 +111,16 @@ export default function (props: MultiStepProps) {
               className={classes.button}
             >
               {t('rejectApplication')}
+            </Button>
+            <Button
+              disabled={blocking}
+              variant="contained"
+              style={rejectApplicationButtonStyle}
+              color="default"
+              onClick={() => handleCheckPassportNumber()}
+              className={classes.button}
+            >
+              {t('checkBeeline')}
             </Button>
             <Button
               disabled={blocking}

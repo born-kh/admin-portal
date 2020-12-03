@@ -13,11 +13,13 @@ import Assessment from '@material-ui/icons/Assessment'
 import AssignmentInd from '@material-ui/icons/AssignmentInd'
 import Equalizer from '@material-ui/icons/Equalizer'
 import useTranslation from 'hooks/useTranslation'
+
 export const mainListItems = () => {
   const router = useRouter()
   const { t } = useTranslation()
   const { userManager, tracerManager, documentManager, apiKeyManager, statistics } = NAVIGATOR
   let permissions = JSON.parse(localStorage.getItem(USER_PERMISSION) || '') || []
+
   let navList = []
   if (permissions.TAP_MODIFY_USER_MANAGER === USER_PERMISSION_TYPE.allow) {
     navList.push(
@@ -26,7 +28,7 @@ export const mainListItems = () => {
           <ListItemIcon>
             <SupervisedUserCircle />
           </ListItemIcon>
-          <ListItemText primary={t('usersPage')} />
+          <ListItemText primary={t('usersPage')} primaryTypographyProps={{ style: { whiteSpace: 'normal' } }} />
         </ListItem>
       </Link>
     )
@@ -39,7 +41,7 @@ export const mainListItems = () => {
           <ListItemIcon>
             <Assessment />
           </ListItemIcon>
-          <ListItemText primary={t('tracerPage')} />
+          <ListItemText primary={t('tracerPage')} primaryTypographyProps={{ style: { whiteSpace: 'normal' } }} />
         </ListItem>
       </Link>
     )
@@ -52,7 +54,7 @@ export const mainListItems = () => {
           <ListItemIcon>
             <AssignmentInd />
           </ListItemIcon>
-          <ListItemText primary={t('documentPage')} />
+          <ListItemText primary={t('documentPage')} primaryTypographyProps={{ style: { whiteSpace: 'normal' } }} />
         </ListItem>
       </Link>
     )
@@ -65,7 +67,7 @@ export const mainListItems = () => {
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
-          <ListItemText primary={t('apiKeyPage')} />
+          <ListItemText primary={t('apiKeyPage')} primaryTypographyProps={{ style: { whiteSpace: 'normal' } }} />
         </ListItem>
       </Link>
     )
@@ -78,7 +80,7 @@ export const mainListItems = () => {
           <ListItemIcon>
             <Equalizer />
           </ListItemIcon>
-          <ListItemText primary={t('statisticsPage')} />
+          <ListItemText primary={t('statisticsPage')} primaryTypographyProps={{ style: { whiteSpace: 'normal' } }} />
         </ListItem>
       </Link>
     )
@@ -89,18 +91,19 @@ export const mainListItems = () => {
 export const secondaryListItems = () => {
   const router = useRouter()
   const { settings } = NAVIGATOR
+  const { t } = useTranslation()
   let permissions = JSON.parse(localStorage.getItem(USER_PERMISSION) || '[]') || []
   let navList = []
   if (permissions.TAP_MODIFY_SETTINGS === USER_PERMISSION_TYPE.allow) {
     navList.push(
       <div key={'TAP_MODIFY_SETTINGS'}>
-        <ListSubheader inset>Settings</ListSubheader>
+        <ListSubheader inset>{t('settings')}</ListSubheader>
         <Link href={settings.path} passHref key={settings.path}>
           <ListItem button selected={router.pathname.includes(settings.path)}>
             <ListItemIcon>
               <AssignmentIcon />
             </ListItemIcon>
-            <ListItemText primary={settings.name} />
+            <ListItemText primary={settings.name} primaryTypographyProps={{ style: { whiteSpace: 'normal' } }} />
           </ListItem>
         </Link>
       </div>

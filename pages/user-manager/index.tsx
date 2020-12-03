@@ -99,7 +99,7 @@ export default function () {
   }
 
   return (
-    <Dashboard title={'user-manager'}>
+    <>
       <div className={classes.root}>
         <Paper className={classes.paper}>
           <Title>{t('advancedSearch')}</Title>
@@ -231,7 +231,7 @@ export default function () {
           </form>
         </Paper>
       </div>
-      <div style={{ marginTop: 30 }}>
+      <div style={{ marginTop: 10 }}>
         <MaterialTable
           title={t('users')}
           isLoading={isLoading}
@@ -319,6 +319,6 @@ export default function () {
           </CustomDialogActions>
         </Dialog>
       </div>
-    </Dashboard>
+    </>
   )
 }

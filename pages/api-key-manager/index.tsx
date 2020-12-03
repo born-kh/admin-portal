@@ -76,19 +76,41 @@ export default function () {
         })
     }
   }
+
+  const handleCreateApiKey = () => {
+    console.log(formik.values)
+    apiKeyAPI
+      .createApiKey({
+        ...formik.values,
+        validTo: new Date(formik.values.validTo).toISOString().split('.')[0] + 'Z',
+        validFrom: new Date(formik.values.validFrom).toISOString().split('.')[0] + 'Z',
+      })
+      .then((response) => {
+        setAPiKeys((prevApiKeys) => {
+          return [...prevApiKeys, response.data.apiKey]
+        })
+        setIsOpen(false)
+      })
+      .catch((e) => {
+        setIsOpen(false)
+        console.log(e)
+      })
+  }
   useEffect(() => {
-    // setIsLoading(true)
-    // apiKeyAPI
-    //   .getApiKeys()
-    //   .then((response) => {
-    //     if (response.status === 200) {
-    //       setAPiKeys(response.data.apiKeys)
-    //     }
-    //     setIsLoading(false)
-    //   })
-    //   .catch(() => {
-    //     setIsLoading(false)
-    //   })
+    setIsLoading(true)
+    apiKeyAPI
+      .getApiKeys()
+      .then((response) => {
+        console.log(response)
+        if (response.status === 200) {
+          setAPiKeys(response.data.apiKeys)
+        }
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.log(error)
+        setIsLoading(false)
+      })
   }, [])
   const platforms = []
   for (const value in Platforms) {
@@ -99,12 +121,13 @@ export default function () {
     )
   }
   return (
-    <Dashboard title={'user-manager'}>
+    <>
       <MaterialTable
         title={t('apiKeys')}
         isLoading={isLoading}
         localization={{ body: { emptyDataSourceMessage: t('noApiKeys') } }}
         columns={[
+          { title: t('ApiKey'), field: 'apiKey' },
           { title: t('platform'), field: 'platform' },
           { title: t('version'), field: 'version' },
           { title: t('validFrom'), field: 'validFrom' },
@@ -221,13 +244,13 @@ export default function () {
           <Button autoFocus onClick={handleClose} color="primary">
             {t('cancel')}
           </Button>
-          <Button autoFocus onClick={handleClose} color="primary">
+          <Button autoFocus onClick={handleCreateApiKey} color="primary">
             {t('ok')}
           </Button>
         </CustomDialogActions>
       </Dialog>
 
       {/* <SnackBarAlert onClose={handleClose} message={"success message"} type={AlertMessageType.sucess} open={open} /> */}
-    </Dashboard>
+    </>
   )
 }

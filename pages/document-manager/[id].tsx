@@ -109,7 +109,7 @@ export default function () {
   }
 
   return (
-    <Dashboard>
+    <>
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 10 }}>
         <Button
           variant="contained"
@@ -145,6 +145,6 @@ export default function () {
           documentSetID={documentSetID}
         />
       )}
-    </Dashboard>
+    </>
   )
 }

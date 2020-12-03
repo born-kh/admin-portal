@@ -80,6 +80,7 @@ export default function () {
       settingsAPI
         .createCallQulaity(formik.values)
         .then((response) => {
+          handleClose()
           setAllCallQuality([...allCallQuality, response.data.callQuality])
           setAlertData({ message: `Call quality created`, type: AlertMessageType.sucess, open: true })
         })

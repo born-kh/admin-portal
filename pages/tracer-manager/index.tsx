@@ -69,7 +69,7 @@ export default function () {
   })
   const searchError = formik.errors.search !== undefined && formik.touched.search
   return (
-    <Dashboard title={'tracer-manager'}>
+    <>
       <Paper className={classes.paper}>
         <Title>{t('searchTracer')}</Title>
         <form noValidate onSubmit={formik.handleSubmit}>
@@ -135,6 +135,6 @@ export default function () {
         onClose={() => setOpenDateRange(false)}
         onChange={(e) => setDateRange(e.selection)}
       />
-    </Dashboard>
+    </>
   )
 }

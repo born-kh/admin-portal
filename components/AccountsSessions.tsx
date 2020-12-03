@@ -16,6 +16,8 @@ import { sessionAPI } from 'service/api'
 import { initialAlertData } from '@utils/constants'
 import OpenMap from './OpenMap'
 import useTranslation from 'hooks/useTranslation'
+import dynamic from 'next/dynamic'
+const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 export default function () {
   const [sessions, setSessions] = useState<AccountSessionsData[]>([])
@@ -26,6 +28,7 @@ export default function () {
     initialAlertData
   )
   const [open, setOpen] = useState(false)
+  const [sessionData, setSessionData] = useState<AccountSessionsData | null>(null)
   const router = useRouter()
   const { t } = useTranslation()
   const handleCloseAlert = () => {
@@ -55,6 +58,7 @@ export default function () {
 
   const handleClose = () => {
     setOpen(false)
+    setSessionData(null)
   }
 
   const handleOpenMap = (sessionIP: string) => {
@@ -196,7 +200,14 @@ export default function () {
 
             render: (rowData) =>
               rowData && (
-                <Button variant="contained" color="primary" onClick={() => {}} startIcon={<DetailsIcon />}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    setSessionData(rowData)
+                  }}
+                  startIcon={<DetailsIcon />}
+                >
                   {t('detail')}
                 </Button>
               ),
@@ -261,6 +272,23 @@ export default function () {
           </Button>
           <Button onClick={handleClose} color="primary">
             {t('disagree')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={!!sessionData}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{t('detail')}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">{<ReactJson src={sessionData || {}} />}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary" autoFocus>
+            {t('ok')}
           </Button>
         </DialogActions>
       </Dialog>

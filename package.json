@@ -24,6 +24,7 @@
     "react-dom": "16.14.0",
     "react-flagkit": "^2.0.4",
     "react-json-editor-viewer": "^1.0.7",
+    "react-json-view": "^1.19.1",
     "react-leaflet": "^3.0.0",
     "react-redux": "^7.2.1",
     "react-viewer": "^3.2.2",

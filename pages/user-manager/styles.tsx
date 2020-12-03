@@ -26,7 +26,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       padding: '16px 40px',
       width: 340,
       marginBottom: 10,
-      marginLeft: 150,
+      marginLeft: 20,
     },
     textField: {
       marginLeft: theme.spacing(1),

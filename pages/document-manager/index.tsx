@@ -124,7 +124,7 @@ export default function (props: any) {
       })
   }, [])
   return (
-    <Dashboard title={'document-manager'}>
+    <>
       <Paper style={{ paddingTop: 10 }}>
         <Tabs
           value={valueTab}
@@ -227,7 +227,7 @@ export default function (props: any) {
         onClose={() => setOpenDateRange(false)}
         onChange={(e) => setDateRange(e.selection)}
       />
-    </Dashboard>
+    </>
   )
 }
 function TabPanel(props: any) {

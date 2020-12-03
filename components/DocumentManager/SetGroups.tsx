@@ -57,7 +57,7 @@ export default function (props: SetGroupsProps) {
                 onClick={() => props.handleSetID(rowData.setID)}
                 startIcon={<VisibilityIcon />}
               >
-                {'beginReview'}
+                {t('beginReview')}
               </Button>
             ),
         },

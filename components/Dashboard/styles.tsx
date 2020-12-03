@@ -1,4 +1,4 @@
-const drawerWidth = 300
+const drawerWidth = 240
 import { makeStyles } from '@material-ui/core/styles'
 export const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,6 +18,9 @@ export const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
+  },
+  ListItemRoot: {
+    whiteSpace: 'nowrap',
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,

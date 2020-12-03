@@ -126,7 +126,7 @@ export const sessionAPI = {
     const response = await axios.post<EmptyResponse>(API_URLS.REMOVE_SESSION, { sessionID })
     return response
   },
-  async fetchPresenceInfo(params: any) {
+  async fetchPresenceInfo(params: { accountID: string }) {
     const response = await axios.post(API_URLS.GET_PRECENSE_INFO, params)
     return response
   },
@@ -186,7 +186,7 @@ export const documentAPI = {
     return response
   },
 
-  async checkPassportNumber(params: any) {
+  async checkPassportNumber(params: { passportNumber: string }) {
     const response = await axios.post<{ availabe: string }>(API_URLS.CHECK_PASSPORT_NUMBER, params)
     return response
   },

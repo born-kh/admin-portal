@@ -12,6 +12,7 @@ export default (state = initialState, action: SettingsActionsTypes): { openMenu:
     case CLOSE_MENU:
       return { ...state, openMenu: false }
     case CHANGE_THEME:
+      // localStorage.setItem('theme', !state.theme)
       return { ...state, theme: !state.theme }
     default:
       return state

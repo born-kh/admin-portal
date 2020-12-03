@@ -31,6 +31,7 @@ export const login = (params: AuthParams) => {
 export const checkAuth = () => {
   return async (dispatch: Dispatch<AuthActionsTypes>) => {
     try {
+      console.log('checkAuth')
       const response = await instance.post('/refreshsession')
       if (response.data.result.data.authorization) {
         dispatch({ type: USER_LOGIN })

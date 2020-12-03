@@ -14,7 +14,7 @@ export default function () {
     setValue(newValue)
   }
   return (
-    <Dashboard>
+    <>
       <Paper style={{ paddingTop: 10 }}>
         <Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
           <Tab
@@ -60,6 +60,6 @@ export default function () {
           <Question />
         </TabPanel>
       </Paper>
-    </Dashboard>
+    </>
   )
 }

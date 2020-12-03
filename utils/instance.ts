@@ -28,8 +28,11 @@ instance.interceptors.response.use(
     return Promise.resolve(response)
   },
   (error) => {
+    console.log(error)
     if (error.response && error.response.status === 401) {
-      authAPI.logout()
+      return async (dispatch: Dispatch<AuthActionsTypes>) => {
+        dispatch(authAPI.logout())
+      }
     }
     return Promise.reject(error)
   }

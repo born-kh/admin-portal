@@ -21,9 +21,7 @@ import { initialAlertData } from '@utils/constants'
 
 /* AUTH Component */
 export default function () {
-  const [allAuthSeetings, setAllAuthSettings] = useState<AuthSettings[]>([
-    { id: '1', prefix: '+992', permissionType: PermissionType.allow, description: 'desc' },
-  ])
+  const [allAuthSeetings, setAllAuthSettings] = useState<AuthSettings[]>([])
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
     initialAlertData
   )
@@ -50,11 +48,13 @@ export default function () {
     settingsAPI
       .deleteAuthSettings({ id })
       .then(() => {
+        handleClose()
         setAllAuthSettings(allAuthSeetings.filter((item: AuthSettings) => item.id !== id))
 
         setAlertData({ message: `Auth settings deleted`, type: AlertMessageType.sucess, open: true })
       })
       .catch((error) => {
+        handleClose()
         setAlertData({ message: `Auth settings ${error.message}`, type: AlertMessageType.error, open: true })
       })
   }

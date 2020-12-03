@@ -271,6 +271,27 @@ export default function (props: DocumentProcedureProps) {
         setAlertData({ message: `Save Document data ${error.message}`, type: AlertMessageType.error, open: true })
       })
   }
+  const _checkPassportNumber = () => {
+    const fields: Fields = formik.values.fields
+
+    if (fields.passport) {
+      setBlocking(true)
+      documentAPI
+        .checkPassportNumber({ passportNumber: fields.passport.number })
+        .then((response) => {
+          handleClose()
+          setAlertData({ message: response.data.availabe, type: AlertMessageType.sucess, open: true })
+        })
+        .catch((error) => {
+          handleClose()
+          setAlertData({
+            message: `Check passport number:  ${error.message}`,
+            type: AlertMessageType.error,
+            open: true,
+          })
+        })
+    }
+  }
 
   const _setDocumentStatus = (status: DocumentStatus, typeID: string) => {
     const { applicationID, accountID, documentSetID } = props
@@ -517,6 +538,7 @@ export default function (props: DocumentProcedureProps) {
           handleNext={handleNext}
           handleBack={handleBack}
           activeStep={activeStep}
+          handleCheckPassportNumber={_checkPassportNumber}
           handleDoneDocumentProcedure={props.handleDoneDocumentProcedure}
           handleSetActiveStep={(val) => setActiveStep(val)}
           handleApproveDocument={_setDocumentStatus}

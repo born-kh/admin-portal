@@ -61,21 +61,10 @@ export default function (props: any) {
         router.push('/login')
       })
   }
-  useEffect(() => {
-    if (states.authStatus === AUTH_STATUS.loggedOut) {
-      router.push('/login')
-    }
-  }, [states.authStatus])
-
-  useEffect(() => {
-    dispatch(authAPI.checkAuth())
-  }, [dispatch])
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
   resetServerContext()
-  if (states.authStatus !== AUTH_STATUS.loggedOn) {
-    return <Loader size={100} />
-  }
+ 
   return (
     <div className={classes.root}>
       <Head>
@@ -94,7 +83,7 @@ export default function (props: any) {
             <MenuIcon />
           </IconButton>
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            {t(process.env.NEXT_PUBLIC_APP_NAME || 'tamos')} {t('admin')}
+            {t('admin')}
           </Typography>
 
           <DropDownLanguage />
@@ -104,7 +93,7 @@ export default function (props: any) {
             </IconButton>
           </Tooltip>
 
-          <Tooltip title={t('exit')}>
+          <Tooltip title={t('logout')}>
             <IconButton color="inherit" onClick={handleLogout}>
               <ExitToAppIcon />
             </IconButton>
@@ -125,7 +114,7 @@ export default function (props: any) {
         </div>
         <Divider />
         <List>{mainListItems()}</List>
-        <Divider />
+        <Divider style={{ width: 240 }} />
         <List>{secondaryListItems()}</List>
       </Drawer>
       <main className={classes.content}>

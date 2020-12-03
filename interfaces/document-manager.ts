@@ -230,6 +230,7 @@ export interface MultiStepProps {
   handleApproveDocument: (status: DocumentStatus, typeID: string) => void
   handleApproveApplication: (status: ApplicationStatus) => void
   handleDoneDocumentProcedure: () => void
+  handleCheckPassportNumber: () => void
 }
 
 export interface ColorlibStepIconProps {

@@ -12,7 +12,7 @@ import Title from '@components/common/Title'
 import ApplicationTable from '@components/DocumentManager/ApplicationTable'
 import Loader from '@components/common/Loader'
 //user-manager REST APIS
-import { userAPI, documentAPI } from 'service/api'
+import { userAPI, documentAPI, sessionAPI } from 'service/api'
 //user-manager interfaces
 import { SearchType, Account } from '@interfaces/user-manager'
 import { Application } from '@interfaces/document-manager'
@@ -67,11 +67,19 @@ export default function () {
         .catch(() => {
           setIsLoadingApplications(false)
         })
+      sessionAPI
+        .fetchPresenceInfo({ accountID: account.accountID })
+        .then((response) => {
+          console.log('reesponse', response)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
     }
   }, [account])
 
   return (
-    <Dashboard title={`user-manager | ${account?.username} `}>
+    <>
       {loading ? (
         <Loader />
       ) : (
@@ -113,6 +121,6 @@ export default function () {
           </TabPanel>
         </Paper>
       )}
-    </Dashboard>
+    </>
   )
 }
