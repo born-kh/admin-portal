@@ -241,17 +241,19 @@ export interface ColorlibStepIconProps {
 }
 
 export interface ApplicationTableProps {
-  data: Application[]
+  data: ApplicationState
   isLoading: boolean
   type: string
   title?: string
+  handleChangePage: (value: number) => void
+  handleChangePageSize: (value: number) => void
 }
 
 export interface DocumentProcedureProps {
   documents: Document[]
   documentSetID: string
   applicationID: string
-  accountID: string
+
   handleDeleteDocument: (ID: string) => void
   handleUpdateDocument: (typeID: string, documentSetID: string, status: DocumentStatus) => void
   handleDoneDocumentProcedure: () => void
@@ -268,7 +270,12 @@ export interface EmptyResponse {}
 
 export interface FetchApplicationsResponse {
   applications: Application[]
-  totalCount?: number
+  totalCount: number
+}
+
+export interface ApplicationState extends FetchApplicationsResponse {
+  page: number
+  pageSize: number
 }
 export interface FetchDocumentsResponse {
   documents: Document[]

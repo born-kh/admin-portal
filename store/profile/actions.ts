@@ -1,21 +1,20 @@
-import { AuthParams } from '@interfaces/auth'
+import { AuthParams } from './node_modules/@interfaces/auth'
 import { Dispatch } from 'react'
-import { authAPI } from 'service/api'
-import { SESSION_TOKEN, permissions, USER_PERMISSION, USER_NAME } from '@utils/constants'
+import { authAPI } from './node_modules/service/api'
+import { SESSION_TOKEN, permissions, USER_PERMISSION, USER_NAME } from './node_modules/@utils/constants'
 import { AuthActionsTypes, USER_LOGIN, USER_LOGOUT } from './types'
 
 export const login = (params: AuthParams) => {
   return async (dispatch: Dispatch<AuthActionsTypes>) => {
     return authAPI.login(params).then((responseLogin) => {
       if (responseLogin.status === 200) {
-        console.log(responseLogin)
         const session_token = responseLogin.data.result.data.session_data.session_token
 
         localStorage.setItem(SESSION_TOKEN, session_token)
         authAPI.fetchPermissions(permissions, session_token).then((responsePermission) => {
           console.log(responsePermission)
           localStorage.setItem(USER_PERMISSION, JSON.stringify(responsePermission.data.result.data))
-          dispatch({ type: USER_LOGIN, payload: responseLogin.data.result.data.session_data.username })
+          dispatch({ type: USER_LOGIN })
         })
       }
     })
@@ -27,9 +26,8 @@ export const checkAuth = () => {
     authAPI
       .refreshSession()
       .then((response) => {
-        console.log(response)
-        if (response.data.authorization) {
-          dispatch({ type: USER_LOGIN, payload: response.data.session_data.username })
+        if (response.data.result.data.authorization) {
+          dispatch({ type: USER_LOGIN })
         } else {
           dispatch({ type: USER_LOGOUT })
         }

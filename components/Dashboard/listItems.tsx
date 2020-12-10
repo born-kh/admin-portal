@@ -19,72 +19,69 @@ export const mainListItems = () => {
   const { t } = useTranslation()
   const { userManager, tracerManager, documentManager, apiKeyManager, statistics } = NAVIGATOR
   let permissions = JSON.parse(localStorage.getItem(USER_PERMISSION) || '') || []
-
   let navList = []
-  if (permissions.TAP_MODIFY_USER_MANAGER === USER_PERMISSION_TYPE.allow) {
-    navList.push(
-      <Link href={userManager.path} passHref key={userManager.path}>
-        <ListItem button selected={router.pathname.includes(userManager.path)}>
-          <ListItemIcon>
-            <SupervisedUserCircle />
-          </ListItemIcon>
-          <ListItemText primary={t('usersPage')} primaryTypographyProps={{ style: { whiteSpace: 'normal' } }} />
-        </ListItem>
-      </Link>
-    )
+  switch (USER_PERMISSION_TYPE.allow) {
+    case permissions.TAP_MODIFY_USER_MANAGER:
+      navList.push(
+        <Link href={userManager.path} passHref key={userManager.path}>
+          <ListItem button selected={router.pathname.includes(userManager.path)}>
+            <ListItemIcon>
+              <SupervisedUserCircle />
+            </ListItemIcon>
+            <ListItemText primary={t('usersPage')} primaryTypographyProps={{ style: { whiteSpace: 'normal' } }} />
+          </ListItem>
+        </Link>
+      )
+    case permissions.TAP_MODIFY_TRACER_MANAGER:
+      navList.push(
+        <Link href={tracerManager.path} passHref key={tracerManager.path}>
+          <ListItem button selected={router.pathname.includes(tracerManager.path)}>
+            <ListItemIcon>
+              <Assessment />
+            </ListItemIcon>
+            <ListItemText primary={t('tracerPage')} primaryTypographyProps={{ style: { whiteSpace: 'normal' } }} />
+          </ListItem>
+        </Link>
+      )
+    case permissions.TAP_MODIFY_PASSPORT_MANAGER:
+      navList.push(
+        <Link href={documentManager.path} passHref key={documentManager.path}>
+          <ListItem button selected={router.pathname.includes(documentManager.path)}>
+            <ListItemIcon>
+              <AssignmentInd />
+            </ListItemIcon>
+            <ListItemText primary={t('documentPage')} primaryTypographyProps={{ style: { whiteSpace: 'normal' } }} />
+          </ListItem>
+        </Link>
+      )
+    case permissions.TAP_MODIFY_API_KEY_MANAGER:
+      navList.push(
+        <Link href={apiKeyManager.path} passHref key={apiKeyManager.path}>
+          <ListItem button selected={router.pathname.includes(apiKeyManager.path)}>
+            <ListItemIcon>
+              <PeopleIcon />
+            </ListItemIcon>
+            <ListItemText primary={t('apiKeyPage')} primaryTypographyProps={{ style: { whiteSpace: 'normal' } }} />
+          </ListItem>
+        </Link>
+      )
+    case permissions.TAP_MODIFY_STATISTICS:
+      navList.push(
+        <Link href={statistics.authentication.path} passHref key={statistics.authentication.path}>
+          <ListItem button selected={router.pathname.includes(statistics.authentication.path)}>
+            <ListItemIcon>
+              <Equalizer />
+            </ListItemIcon>
+            <ListItemText
+              primary={statistics.authentication.name}
+              primaryTypographyProps={{ style: { whiteSpace: 'normal' } }}
+            />
+          </ListItem>
+        </Link>
+      )
+    default:
   }
 
-  if (permissions.TAP_MODIFY_TRACER_MANAGER === USER_PERMISSION_TYPE.allow) {
-    navList.push(
-      <Link href={tracerManager.path} passHref key={tracerManager.path}>
-        <ListItem button selected={router.pathname.includes(tracerManager.path)}>
-          <ListItemIcon>
-            <Assessment />
-          </ListItemIcon>
-          <ListItemText primary={t('tracerPage')} primaryTypographyProps={{ style: { whiteSpace: 'normal' } }} />
-        </ListItem>
-      </Link>
-    )
-  }
-
-  if (permissions.TAP_MODIFY_PASSPORT_MANAGER === USER_PERMISSION_TYPE.allow) {
-    navList.push(
-      <Link href={documentManager.path} passHref key={documentManager.path}>
-        <ListItem button selected={router.pathname.includes(documentManager.path)}>
-          <ListItemIcon>
-            <AssignmentInd />
-          </ListItemIcon>
-          <ListItemText primary={t('documentPage')} primaryTypographyProps={{ style: { whiteSpace: 'normal' } }} />
-        </ListItem>
-      </Link>
-    )
-  }
-
-  if (permissions.TAP_MODIFY_API_KEY_MANAGER === USER_PERMISSION_TYPE.allow) {
-    navList.push(
-      <Link href={apiKeyManager.path} passHref key={apiKeyManager.path}>
-        <ListItem button selected={router.pathname.includes(apiKeyManager.path)}>
-          <ListItemIcon>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText primary={t('apiKeyPage')} primaryTypographyProps={{ style: { whiteSpace: 'normal' } }} />
-        </ListItem>
-      </Link>
-    )
-  }
-
-  if (permissions.TAP_MODIFY_STATISTICS === USER_PERMISSION_TYPE.allow) {
-    navList.push(
-      <Link href={statistics.path} passHref key={statistics.path}>
-        <ListItem button selected={router.pathname.includes(statistics.path)}>
-          <ListItemIcon>
-            <Equalizer />
-          </ListItemIcon>
-          <ListItemText primary={t('statisticsPage')} primaryTypographyProps={{ style: { whiteSpace: 'normal' } }} />
-        </ListItem>
-      </Link>
-    )
-  }
   return navList
 }
 

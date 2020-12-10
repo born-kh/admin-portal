@@ -3,6 +3,7 @@ export const USER_LOGOUT = 'USER_LOGOUT'
 
 interface UserLoginAction {
   type: typeof USER_LOGIN
+  payload: string
 }
 
 interface UserLogoutAction {

@@ -75,7 +75,7 @@ export default function () {
   const states = useSelector((state: RootState) => {
     return {
       settings: state.settings,
-      authStatus: state.authStatus,
+      authStatus: state.auth.authStatus,
     }
   })
 

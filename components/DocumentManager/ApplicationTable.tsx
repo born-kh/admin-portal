@@ -5,7 +5,7 @@ import DetailsIcon from '@material-ui/icons/Details'
 //moment js lib
 import moment from 'moment'
 //material ui components
-import { Button } from '@material-ui/core'
+import { Button, TablePagination } from '@material-ui/core'
 //next router
 import { useRouter } from 'next/router'
 //document-manager interfaces
@@ -15,6 +15,8 @@ import useTranslation from 'hooks/useTranslation'
 export default function (props: ApplicationTableProps) {
   const router = useRouter()
   const { t } = useTranslation()
+  const { data, handleChangePage, handleChangePageSize } = props
+
   return (
     <MaterialTable
       title={props.title}
@@ -70,7 +72,7 @@ export default function (props: ApplicationTableProps) {
                 onClick={() => {
                   router.push({
                     pathname: '/document-manager/[id]',
-                    query: { id: rowData.applicationID, accountID: rowData.accountID },
+                    query: { id: rowData.applicationID },
                   })
                 }}
                 startIcon={<DetailsIcon />}
@@ -80,8 +82,23 @@ export default function (props: ApplicationTableProps) {
             ),
         },
       ]}
-      data={props.data}
+      data={data.applications}
+      components={{
+        Pagination: (props) => (
+          <TablePagination
+            {...props}
+            rowsPerPage={data.pageSize}
+            count={data.totalCount}
+            page={data.page}
+            onChangePage={(e, page) => handleChangePage(page)}
+          />
+        ),
+      }}
+      onChangeRowsPerPage={(pageSize) => {
+        handleChangePageSize(pageSize)
+      }}
       options={{
+        pageSize: data.pageSize,
         showTitle: props.title !== undefined,
         headerStyle: {
           zIndex: 0,

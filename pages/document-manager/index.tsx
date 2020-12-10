@@ -27,6 +27,7 @@ import {
   FilterAnyApplication,
   FilterDateRange,
   FilterApplicationParams,
+  FetchApplicationsResponse,
 } from '@interfaces/document-manager'
 import { useRouter } from 'next/router'
 // next props-types
@@ -39,6 +40,11 @@ import { documentAPI } from 'service/api'
 
 import { useStyles } from './styles'
 import useTranslation from 'hooks/useTranslation'
+import { fetchNewApplicationsAction, fetchAnyApplicationsAction } from '@store/document/actions'
+import { RootState, AppDispatch } from '@store/reducers'
+//react-redux hooks
+import { useDispatch, useSelector } from 'react-redux'
+import { CHANGE_PAGE_NEW_APPLICATION } from '@store/document/types'
 
 export default function (props: any) {
   const classes = useStyles()
@@ -50,8 +56,19 @@ export default function (props: any) {
   })
   const router = useRouter()
   const [valueTab, setValueTab] = useState(props.tabValue)
-  const [anyApplications, setAnyApplications] = useState<Application[]>([])
-  const [newApplications, setNewApplications] = useState<Application[]>([])
+
+  const [anyApplication, setAnyApplication] = useState<{ page: number; pageSize: number }>({
+    page: 0,
+    pageSize: 5,
+  })
+
+  const dispatch: AppDispatch = useDispatch()
+  const state = useSelector((state: RootState) => {
+    return {
+      newApplication: state.document.newApplication,
+      anyApplication: state.document.anyApplication,
+    }
+  })
 
   const [isLoadingAny, setIsLoadingAny] = useState(false)
   const [isLoadingNew, setIsLoadingNew] = useState(false)
@@ -61,6 +78,22 @@ export default function (props: any) {
   moment.locale(locale)
   const handleChange = (newValue: number) => {
     setValueTab(newValue)
+  }
+
+  const handleChangeAnyPage = (value: number) => {
+    fetchAnyApplications(value, anyApplication.pageSize)
+  }
+
+  const handleChangeAnyPageSize = (value: number) => {
+    fetchAnyApplications(anyApplication.page, value)
+  }
+
+  const handleChangeNewPage = (value: number) => {
+    fetchNewApplications(value, state.newApplication.pageSize)
+  }
+
+  const handleChangeNewPageSize = (value: number) => {
+    fetchNewApplications(state.newApplication.page, value)
   }
 
   useEffect(() => {
@@ -75,11 +108,25 @@ export default function (props: any) {
         query: { applications: 'new' },
       })
     }
+    fetchAnyApplications(anyApplication.page, anyApplication.pageSize)
+    fetchNewApplications(state.newApplication.page, state.newApplication.pageSize)
   }, [valueTab])
 
-  const handleFetch = () => {
+  const fetchNewApplications = (start: number, count: number) => {
+    setIsLoadingNew(true)
+    dispatch(fetchNewApplicationsAction({ start: start * count, count }))
+      .then(() => {
+        dispatch({ type: CHANGE_PAGE_NEW_APPLICATION, payload: { page: start, pageSize: count } })
+        setIsLoadingNew(false)
+      })
+      .catch(() => {
+        setIsLoadingNew(false)
+      })
+  }
+
+  const fetchAnyApplications = (start: number, count: number) => {
     setIsLoadingAny(true)
-    let filterParams: FilterApplicationParams = { start: 0, count: 100 }
+    let filterParams: FilterApplicationParams = { start: start * count, count }
     let filter: FilterAnyApplication = {}
     let range: FilterDateRange = { type: '', from: '', to: '' }
     if (selectedApplication !== 'ALL') {
@@ -92,12 +139,9 @@ export default function (props: any) {
       filter.range = range
     }
     filterParams.filter = filter
-    documentAPI
-      .fetchApplicationsAny(filterParams)
-      .then((response) => {
-        if (response.status == 200) {
-          setAnyApplications(response.data.applications)
-        }
+    dispatch(fetchAnyApplicationsAction(filterParams))
+      .then(() => {
+        setAnyApplication({ page: start, pageSize: count })
         setIsLoadingAny(false)
       })
       .catch(() => {
@@ -105,24 +149,6 @@ export default function (props: any) {
       })
   }
 
-  useEffect(() => {
-    setIsLoadingAny(true)
-    setIsLoadingNew(true)
-
-    handleFetch()
-
-    documentAPI
-      .fetchApplications({ start: 0, count: 100 })
-      .then((response) => {
-        if (response.status === 200) {
-          setNewApplications(response.data.applications)
-        }
-        setIsLoadingNew(false)
-      })
-      .catch(() => {
-        setIsLoadingNew(false)
-      })
-  }, [])
   return (
     <>
       <Paper style={{ paddingTop: 10 }}>
@@ -134,7 +160,7 @@ export default function (props: any) {
         >
           <Tab
             label={
-              <Badge badgeContent={newApplications.length} color="secondary">
+              <Badge badgeContent={state.newApplication.totalCount} color="secondary">
                 {' '}
                 {t('newDocuments')}
               </Badge>
@@ -142,14 +168,20 @@ export default function (props: any) {
           />
           <Tab
             label={
-              <Badge badgeContent={anyApplications.length} color="secondary">
+              <Badge badgeContent={state.anyApplication.totalCount} color="secondary">
                 {t('anyDocuments')}
               </Badge>
             }
           />
         </Tabs>
         <TabPanel value={valueTab} index={0}>
-          <ApplicationTable type={'new applications'} isLoading={isLoadingNew} data={newApplications} />
+          <ApplicationTable
+            type={'new applications'}
+            isLoading={isLoadingNew}
+            data={state.newApplication}
+            handleChangePage={handleChangeNewPage}
+            handleChangePageSize={handleChangeNewPageSize}
+          />
         </TabPanel>
         <TabPanel value={valueTab} index={1}>
           <div className={classes.paper}>
@@ -211,14 +243,20 @@ export default function (props: any) {
                 style={{ marginLeft: 40 }}
                 variant="contained"
                 color="primary"
-                onClick={handleFetch}
+                onClick={() => fetchAnyApplications(anyApplication.pageSize, anyApplication.pageSize)}
                 startIcon={<Autorenew />}
               >
                 {t('search')}
               </Button>
             </div>
           </div>
-          <ApplicationTable type={'applications'} isLoading={isLoadingAny} data={anyApplications} />
+          <ApplicationTable
+            type={'applications'}
+            isLoading={isLoadingAny}
+            data={{ ...anyApplication, ...state.anyApplication }}
+            handleChangePage={handleChangeAnyPage}
+            handleChangePageSize={handleChangeAnyPageSize}
+          />
         </TabPanel>
       </Paper>
       <DatePicker

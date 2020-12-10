@@ -12,7 +12,7 @@ import Title from '@components/common/Title'
 import MaterialTable from 'material-table'
 //material ui icons
 import DetailsIcon from '@material-ui/icons/Details'
-import LockIcon from '@material-ui/icons/Lock'
+import moment from 'moment'
 //next router
 import { useRouter } from 'next/router'
 //user-manager interfaces
@@ -80,7 +80,7 @@ export default function () {
     setUsers([])
     setIsLoading(true)
     userAPI
-      .accountGetByDate(filterParams)
+      .accountGetByDate({ ...filterParams, ts: new Date(filterParams.ts).toISOString().split('.')[0] + 'Z' })
       .then((response) => {
         if (response.status === 200) {
           setUsers(response.data.accounts)
@@ -283,6 +283,7 @@ export default function () {
             {
               title: t('createdAt'),
               field: 'createdAt',
+              render: (rowData) => rowData.createdAt && moment(rowData.createdAt).format('DD MMM YYYY HH:mm'),
             },
           ]}
           data={users}

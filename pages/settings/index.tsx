@@ -1,4 +1,3 @@
-import Dashboard from '@components/Dashboard'
 import { Paper, Tabs, Tab, Badge } from '@material-ui/core'
 import TabPanel from '@components/common/TabPanel'
 import { useState } from 'react'

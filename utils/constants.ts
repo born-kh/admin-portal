@@ -31,6 +31,10 @@ export const NAVIGATOR = {
   statistics: {
     path: '/statistics',
     name: 'Statistics',
+    authentication: {
+      path: '/statistics/authentication/',
+      name: 'Authentication',
+    },
   },
   settings: {
     path: '/settings',
@@ -65,6 +69,7 @@ export enum LangType {
 
 export const SESSION_TOKEN = 'session_token'
 export const USER_PERMISSION = 'user_permissions'
+export const USER_NAME = 'USER_NAME'
 export const permissions = [
   'TAP_MODIFY_API_KEY_MANAGER',
   'TAP_MODIFY_USER_MANAGER',
@@ -190,6 +195,7 @@ export const API_URLS = {
   DELETE_QUESTION: 'deletequestion',
   GET_ALL_QUESTION: 'getallquestion',
   ACCOUNT_GET_BY_DATE: 'accountgetbydate',
+  GET_AUTH_CODES: 'getauthcodes',
 }
 
 export const rejectMessages = [

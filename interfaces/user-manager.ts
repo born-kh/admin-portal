@@ -8,6 +8,7 @@ export interface Account {
   phones: PhoneInfo[]
   emails: EmailInfo[]
   auth: AuthInfo
+  createdAt: Date
 }
 
 export interface AccountSessionsData {

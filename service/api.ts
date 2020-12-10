@@ -3,7 +3,7 @@ import axios from '@utils/instance'
 /* constants API_URLS */
 import { API_URLS } from '@utils/constants'
 /* auth interfaces */
-import { AuthParams, LoginResponse, LogoutResponse, FetchPermissionsResponse } from '@interfaces/auth'
+import { AuthParams, LoginResponse, LogoutResponse, FetchPermissionsResponse, AuthResponseData } from '@interfaces/auth'
 /* tracer-manager interfaces */
 import { TracerSearchParamsType } from '@interfaces/tracer-manager'
 /* user-manager interfaces */
@@ -46,12 +46,14 @@ import {
   GetAllQuestionsResponse,
   Question,
 } from '@interfaces/settings'
+import { FetchAuthCodesResponse } from '@interfaces/statistics'
 
 /* AUTH API */
 
 export const authAPI = {
   async login(params: AuthParams) {
     const response = await axios.post<LoginResponse>(API_URLS.LOGIN, params)
+
     return response
   },
 
@@ -71,7 +73,7 @@ export const authAPI = {
   },
 
   async refreshSession() {
-    const response = await axios.post<LoginResponse>(API_URLS.REFRESH_SESSION)
+    const response = await axios.post<AuthResponseData>(API_URLS.REFRESH_SESSION)
     return response
   },
 }
@@ -136,10 +138,12 @@ export const sessionAPI = {
 
 export const documentAPI = {
   async fetchApplications(params: { start: number; count: number }) {
+    console.log(params)
     const response = await axios.post<FetchApplicationsResponse>(API_URLS.GET_APPLICATIONS, params)
     return response
   },
   async fetchApplicationsAny(params: any) {
+    console.log(params)
     const response = await axios.post<FetchApplicationsResponse>(API_URLS.GET_APPLICATIONS_ANY, params)
     return response
   },
@@ -279,6 +283,14 @@ export const settingsAPI = {
   },
   async deleteQuestion(params: { id: string }) {
     return axios.post(API_URLS.DELETE_QUESTION, params).then((response) => {
+      return response
+    })
+  },
+}
+
+export const statisticsAPI = {
+  async getAuthCodes() {
+    return axios.post<FetchAuthCodesResponse>(API_URLS.GET_AUTH_CODES, {}).then((response) => {
       return response
     })
   },

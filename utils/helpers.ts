@@ -1,4 +1,4 @@
-import { ERROR_CODES, DateConvertType } from './constants'
+import { ERROR_CODES, DateConvertType, USER_NAME } from './constants'
 
 export function getErrorMsgFromCode(code: string | number | null) {
   switch (code) {
@@ -73,4 +73,8 @@ export function convertMRZDate(str: string, dateConvertType: DateConvertType) {
   } catch (e) {
     console.log(e)
   }
+}
+
+export const getUsername = () => {
+  return localStorage.getItem(USER_NAME) || ''
 }

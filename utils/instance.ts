@@ -1,6 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { SESSION_TOKEN } from './constants'
 import * as authAPI from 'service/authAPI'
+import { AuthActionsTypes } from '@store/auth/types'
+import { Dispatch } from 'react'
 
 const config: AxiosRequestConfig = {
   baseURL: process.env.NEXT_PUBLIC_API_GATEWAY_URL,

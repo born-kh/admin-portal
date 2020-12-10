@@ -30,7 +30,7 @@ import {
 //formik lib
 import { useFormik } from 'formik'
 //helpers
-import { convertMRZDate } from '@utils/helpers'
+import { convertMRZDate, getUsername } from '@utils/helpers'
 
 import { CustomDialogTitle, CustomDialogActions, CustomDialogContent } from '@components/common/Modal'
 //constants
@@ -53,6 +53,8 @@ import PassportStep from './Steps/PassportStep'
 import EditStep from './Steps/EditStep'
 import ConfirmStep from './Steps/ConfirmStep'
 import useTranslation from 'hooks/useTranslation'
+import { useSelector } from 'react-redux'
+import { RootState } from '@store/reducers'
 
 export default function (props: DocumentProcedureProps) {
   const [rejectMessage, setRejectMessage] = useState('')
@@ -68,6 +70,12 @@ export default function (props: DocumentProcedureProps) {
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
     initialAlertData
   )
+
+  const state = useSelector((state: RootState) => {
+    return {
+      username: state.auth.username,
+    }
+  })
 
   const [blocking, setBlocking] = useState(false)
   const [activeStep, setActiveStep] = useState(0)
@@ -294,15 +302,14 @@ export default function (props: DocumentProcedureProps) {
   }
 
   const _setDocumentStatus = (status: DocumentStatus, typeID: string) => {
-    const { applicationID, accountID, documentSetID } = props
+    const { applicationID, documentSetID } = props
     const params: SetDocumentStatusParams = {
       documentTypeID: typeID,
       documentSetID,
-      user: accountID,
+      user: state.username,
       status: status,
       applicationID: applicationID,
     }
-    console.log('_setDocumentStatus', params)
     if (status === DocumentStatus.rejected) {
       params.reason = rejectMessage
     }
@@ -310,7 +317,6 @@ export default function (props: DocumentProcedureProps) {
     documentAPI
       .setDocumentStatus(params)
       .then((response) => {
-        console.log(response)
         props.handleUpdateDocument(typeID, documentSetID, status)
         handleClose()
         setAlertData({ message: response.data.message, type: AlertMessageType.sucess, open: true })
@@ -323,9 +329,9 @@ export default function (props: DocumentProcedureProps) {
   }
 
   const _setApplicationStatus = (status: ApplicationStatus) => {
-    const { applicationID, accountID, documentSetID } = props
+    const { applicationID, documentSetID } = props
     const params: SetApplicationStatusParams = {
-      user: accountID,
+      user: state.username,
       applicationID,
       status,
       documentSetID,

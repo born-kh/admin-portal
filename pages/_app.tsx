@@ -11,14 +11,15 @@ import { useSelector, useDispatch } from 'react-redux'
 import { RootState, AppDispatch } from '@store/reducers'
 import Dashboard from '@components/Dashboard'
 import { AUTH_STATUS } from '@utils/constants'
-import { checkAuth } from 'service/authAPI'
 import Loader from '@components/common/Loader'
+import { checkAuth } from '@store/auth/actions'
 
 const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
   const state = useSelector((state: RootState) => {
     return {
       theme: state.settings.theme,
-      authStatus: state.authStatus,
+      authStatus: state.auth.authStatus,
+      username: state.auth.username,
     }
   })
   const dispatch: AppDispatch = useDispatch()
