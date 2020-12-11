@@ -73,7 +73,7 @@ export const mainListItems = () => {
               <Equalizer />
             </ListItemIcon>
             <ListItemText
-              primary={statistics.authentication.name}
+              primary={t(statistics.authentication.name)}
               primaryTypographyProps={{ style: { whiteSpace: 'normal' } }}
             />
           </ListItem>

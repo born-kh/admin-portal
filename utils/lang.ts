@@ -146,6 +146,13 @@ const LangStrings: Record<LangType, any> = {
     noSets: 'There are no sets',
     documentType: 'Document Type',
     settings: 'Settings',
+    identifier: 'Identifier',
+    deliveryType: 'Delivery Type',
+    activated: 'Activated',
+    authCodes: 'Auth Codes',
+    authentication: 'Authentication',
+    resendCode: 'Resend code',
+    send: 'Send',
   },
   ru: {
     settings: 'Настройка',
@@ -186,7 +193,6 @@ const LangStrings: Record<LangType, any> = {
     method: 'Метод',
     firstName: 'Имя',
     lastName: 'Фамилия',
-
     updatedAt: 'Дата обновления',
     submittedAt: 'Дата отправки',
     info: 'Информация',
@@ -291,8 +297,14 @@ const LangStrings: Record<LangType, any> = {
     previousTooltip: 'Предыдущая страница',
     nextTooltip: 'Следующая Страница',
     labelRowsSelect: 'Строка',
-
+    identifier: 'Идентификатор',
     noSets: 'Нет набор группы',
+    deliveryType: 'Тип доставки',
+    activated: 'Активирован',
+    authCodes: 'Коды авторизации',
+    authentication: 'Аутентификация',
+    resendCode: 'Отправить код',
+    send: 'Отправить',
   },
 }
 export default LangStrings

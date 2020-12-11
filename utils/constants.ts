@@ -33,7 +33,7 @@ export const NAVIGATOR = {
     name: 'Statistics',
     authentication: {
       path: '/statistics/authentication/',
-      name: 'Authentication',
+      name: 'authentication',
     },
   },
   settings: {
@@ -118,6 +118,7 @@ export const permissions = [
   'TAP_GET_GET_ALL_CALL_QUALITY',
   'TAP_GET_DELETE_CALL_QUALITY',
   'TAP_ACCOUNT_GET_BY_DATE',
+  'TAP_GET_AUTH_CODE_LIST',
 ]
 export enum USER_PERMISSION_TYPE {
   allow = 'ALLOW',
@@ -181,7 +182,7 @@ export const API_URLS = {
   UPDATE_APIKEY_URL: 'updateapikey',
   REFRESH_SESSION: '/refreshsession',
   GET_ALL_AUTH_SETIINGS: 'getallauthsettings',
-  CREATE_AUTH_SETTINGS: 'createauthsettings',
+  CREATE_AUTH_SETTINGS: 'cre  ateauthsettings',
   UPDATE_AUTH_SETTINGS: 'updateauthsettings',
   DELETE_AUTH_SETTINGS: 'deleteauthsettings',
   SET_SYSTEM_SETTINGS: 'setsystemsettings',
@@ -195,7 +196,7 @@ export const API_URLS = {
   DELETE_QUESTION: 'deletequestion',
   GET_ALL_QUESTION: 'getallquestion',
   ACCOUNT_GET_BY_DATE: 'accountgetbydate',
-  GET_AUTH_CODES: 'getauthcodes',
+  GET_AUTH_CODES: 'getauthcodelist',
 }
 
 export const rejectMessages = [

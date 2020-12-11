@@ -289,8 +289,8 @@ export const settingsAPI = {
 }
 
 export const statisticsAPI = {
-  async getAuthCodes() {
-    return axios.post<FetchAuthCodesResponse>(API_URLS.GET_AUTH_CODES, {}).then((response) => {
+  async getAuthCodes(params: { identifier?: string }) {
+    return axios.post<FetchAuthCodesResponse>(API_URLS.GET_AUTH_CODES, params).then((response) => {
       return response
     })
   },

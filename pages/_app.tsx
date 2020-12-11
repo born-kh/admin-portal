@@ -6,7 +6,7 @@ import { wrapper } from 'store'
 //globale styles
 import './styles.css'
 import LanguageProvider from '@components/common/LanguageProvider'
-import { ThemeProvider, createMuiTheme } from '@material-ui/core'
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState, AppDispatch } from '@store/reducers'
 import Dashboard from '@components/Dashboard'
@@ -43,35 +43,44 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
 
   useEffect(() => {
     dispatch(checkAuth())
+    const jssStyles = document.querySelector('#jss-server-side')
+    if (jssStyles && jssStyles.parentNode) {
+      jssStyles.parentNode.removeChild(jssStyles)
+    }
   }, [])
 
   if (router.pathname.startsWith('/login')) {
     return (
-      <Container>
-        <React.StrictMode>
-          <ThemeProvider theme={state.theme ? lightTheme : darkTheme}>
-            <Component {...pageProps} />
-          </ThemeProvider>
-        </React.StrictMode>
-      </Container>
+      <React.StrictMode>
+        <MuiThemeProvider theme={state.theme ? lightTheme : darkTheme}>
+          <Component {...pageProps} />
+        </MuiThemeProvider>
+      </React.StrictMode>
     )
   }
   if (state.authStatus !== AUTH_STATUS.loggedOn) {
     return <Loader size={100} />
   }
   return (
-    <Container>
-      <React.StrictMode>
-        <ThemeProvider theme={state.theme ? lightTheme : darkTheme}>
-          <LanguageProvider>
-            <Dashboard>
-              <Component {...pageProps} key={router.route} />
-            </Dashboard>
-          </LanguageProvider>
-        </ThemeProvider>
-      </React.StrictMode>
-    </Container>
+    <React.StrictMode>
+      <MuiThemeProvider theme={state.theme ? lightTheme : darkTheme}>
+        <LanguageProvider>
+          <Dashboard>
+            <Component {...pageProps} key={router.route} />
+          </Dashboard>
+        </LanguageProvider>
+      </MuiThemeProvider>
+    </React.StrictMode>
   )
 }
+
+// WrappedApp.getInitialProps = async ({ Component, ctx }) => {
+//   return {
+//     pageProps: {
+//       ...(Component.getInitialProps ? await Component.getInitialProps(ctx) : {}),
+//       pathname: ctx.pathname,
+//     },
+//   }
+// }
 
 export default wrapper.withRedux(WrappedApp)

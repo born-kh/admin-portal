@@ -1,4 +1,4 @@
-import React, { useEffect, useState, createContext } from 'react'
+import React from 'react'
 import clsx from 'clsx'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Drawer from '@material-ui/core/Drawer'
@@ -18,17 +18,16 @@ import { useRouter } from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState, AppDispatch } from '@store/reducers'
 import { OPEN_MENU, CLOSE_MENU, CHANGE_THEME } from '@store/settings/types'
-import * as authAPI from 'service/authAPI'
-import { AUTH_STATUS } from '@utils/constants'
+
 import Head from 'next/head'
 import { resetServerContext } from 'react-beautiful-dnd'
-import Loader from '@components/common/Loader'
 import CopyRight from '@components/CopyRight'
 import { Box, Tooltip } from '@material-ui/core'
 import DropDownLanguage from '@components/common/DropDownLanguage'
 import Brightness3Icon from '@material-ui/icons/Brightness3'
 import Brightness7Icon from '@material-ui/icons/Brightness7'
 import useTranslation from 'hooks/useTranslation'
+import { authAPI } from 'service/api'
 
 export default function (props: any) {
   const classes = useStyles()
@@ -38,7 +37,7 @@ export default function (props: any) {
   const states = useSelector((state: RootState) => {
     return {
       settings: state.settings,
-      authStatus: state.authStatus,
+      authStatus: state.auth.authStatus,
     }
   })
   const { t } = useTranslation()
@@ -53,7 +52,8 @@ export default function (props: any) {
   }
 
   const handleLogout = () => {
-    dispatch(authAPI.logout())
+    authAPI
+      .logout()
       .then(() => {
         router.push('/login')
       })
@@ -64,7 +64,7 @@ export default function (props: any) {
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
   resetServerContext()
- 
+
   return (
     <div className={classes.root}>
       <Head>
