@@ -2,18 +2,29 @@ import { useState, useEffect } from 'react'
 import { IAuthCode } from '@interfaces/statistics'
 import MaterialTable from 'material-table'
 import useTranslation from 'hooks/useTranslation'
-import { statisticsAPI } from 'service/api'
+import { statisticsAPI, userAPI } from 'service/api'
 import moment from 'moment'
 import { Paper, Button, TextField } from '@material-ui/core'
 import Title from '@components/common/Title'
 import SendIcon from '@material-ui/icons/Send'
 import { useStyles } from './styles'
+import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
+import { initialAlertData, LangType } from '@utils/constants'
 
 export default function () {
   const classes = useStyles()
   const [authCodes, setAuthCodes] = useState<IAuthCode[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [search, setSearch] = useState('')
+  const [resendCodeId, setResendCodeId] = useState<string | null>(null)
+
+  const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
+    initialAlertData
+  )
+
+  const handleCloseAlert = () => {
+    setAlertData(initialAlertData)
+  }
 
   useEffect(() => {
     hanldeFetchData({})
@@ -35,10 +46,25 @@ export default function () {
       })
   }
 
+  const handleSendResendSMS = (codeId: string, phoneNumber: string) => {
+    setResendCodeId(codeId)
+    statisticsAPI
+      .resendCode({ lang: 'en', codeId, phoneNumber, sms: true })
+      .then(() => {
+        setAlertData({ message: `Resend SMS success`, type: AlertMessageType.sucess, open: true })
+        setResendCodeId(null)
+      })
+      .catch((e) => {
+        setAlertData({ message: `Resend SMS error` + e.message, type: AlertMessageType.error, open: true })
+        setResendCodeId(null)
+      })
+  }
+
   const { t } = useTranslation()
 
   return (
     <>
+      <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
       <Paper className={classes.paper}>
         <Title>{t('search')}</Title>
 
@@ -98,7 +124,13 @@ export default function () {
 
             render: (rowData) =>
               rowData && (
-                <Button variant="contained" color="primary" onClick={() => {}} endIcon={<SendIcon />}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disabled={resendCodeId === rowData.id}
+                  onClick={() => handleSendResendSMS(rowData.id, rowData.identifier)}
+                  endIcon={<SendIcon />}
+                >
                   {t('send')}
                 </Button>
               ),

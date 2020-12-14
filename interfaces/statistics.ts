@@ -7,15 +7,10 @@ export interface IAuthCode {
   ip: string // Show
   platform: Platforms // Show
   appVersion: string // Show
-  deviceId: string // Not
   deliveryType: DeliveryType // Show
-  timeout: number // Not
-  ttl: number // Not
   createdAt: Date // Show
   updatedAt: Date // Not
   activated: boolean // Show
-  accountId: string // Not
-  sessionId: string // Not
 }
 
 export enum DeliveryType {
@@ -33,4 +28,11 @@ export enum IdentifierType {
 
 export interface FetchAuthCodesResponse {
   authCodes: IAuthCode[]
+}
+
+export interface ResendCodeParams {
+  lang: string
+  phoneNumber: string
+  codeId: string
+  sms: boolean
 }

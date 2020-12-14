@@ -74,7 +74,7 @@ export default function () {
       settingsAPI
         .createQuestion(formik.values)
         .then((response) => {
-          setQuestions([...questions, response.data.question])
+          setQuestions((prevQuestions) => [...prevQuestions, response.data.question])
           setAlertData({ message: `Question created`, type: AlertMessageType.sucess, open: true })
         })
         .catch((error) => {

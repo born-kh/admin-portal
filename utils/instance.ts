@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { SESSION_TOKEN } from './constants'
-import * as authAPI from 'service/authAPI'
+// import * as authAPI from 'service/authAPI'
 import { AuthActionsTypes } from '@store/auth/types'
 import { Dispatch } from 'react'
 
@@ -33,7 +33,7 @@ instance.interceptors.response.use(
     console.log(error)
     if (error.response && error.response.status === 401) {
       return async (dispatch: Dispatch<AuthActionsTypes>) => {
-        dispatch(authAPI.logout())
+        // dispatch(authAPI.logout())
       }
     }
     return Promise.reject(error)

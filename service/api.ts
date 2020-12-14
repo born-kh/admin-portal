@@ -46,7 +46,7 @@ import {
   GetAllQuestionsResponse,
   Question,
 } from '@interfaces/settings'
-import { FetchAuthCodesResponse } from '@interfaces/statistics'
+import { FetchAuthCodesResponse, ResendCodeParams } from '@interfaces/statistics'
 
 /* AUTH API */
 
@@ -138,12 +138,10 @@ export const sessionAPI = {
 
 export const documentAPI = {
   async fetchApplications(params: { start: number; count: number }) {
-    console.log(params)
     const response = await axios.post<FetchApplicationsResponse>(API_URLS.GET_APPLICATIONS, params)
     return response
   },
   async fetchApplicationsAny(params: any) {
-    console.log(params)
     const response = await axios.post<FetchApplicationsResponse>(API_URLS.GET_APPLICATIONS_ANY, params)
     return response
   },
@@ -291,6 +289,11 @@ export const settingsAPI = {
 export const statisticsAPI = {
   async getAuthCodes(params: { identifier?: string }) {
     return axios.post<FetchAuthCodesResponse>(API_URLS.GET_AUTH_CODES, params).then((response) => {
+      return response
+    })
+  },
+  async resendCode(params: ResendCodeParams) {
+    return axios.post(API_URLS.RESEND_CODE, params).then((response) => {
       return response
     })
   },
