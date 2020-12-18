@@ -32,7 +32,7 @@ type PropsType = {
   open: boolean
   position: number[]
 }
-export default function (props: PropsType) {
+export default function OpenMapComponent(props: PropsType) {
   const { t } = useTranslation()
   return (
     <Dialog

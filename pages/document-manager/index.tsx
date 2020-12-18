@@ -38,7 +38,6 @@ import Autorenew from '@material-ui/icons/Autorenew'
 //document-managaer REST APIS
 import { documentAPI } from 'service/api'
 
-import { useStyles } from './styles'
 import useTranslation from 'hooks/useTranslation'
 import { fetchNewApplicationsAction, fetchAnyApplicationsAction } from '@store/document/actions'
 import { RootState, AppDispatch } from '@store/reducers'
@@ -46,14 +45,19 @@ import { RootState, AppDispatch } from '@store/reducers'
 import { useDispatch, useSelector } from 'react-redux'
 import { CHANGE_PAGE_NEW_APPLICATION } from '@store/document/types'
 import TabPanel from '@components/common/TabPanel'
+import { useStylesDocumentManger } from 'styles/document-manager-styles'
 
-export default function (props: any) {
-  const classes = useStyles()
+export default function DocumentManger(props: any) {
+  const classes = useStylesDocumentManger()
   const [openDateRange, setOpenDateRange] = useState(false)
-  const [dateRange, setDateRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
-    key: 'selection',
+  var startDate = new Date()
+  startDate.setDate(startDate.getDate() - 30)
+  const [dateRange, setDateRange] = useState(() => {
+    return {
+      startDate,
+      endDate: new Date(),
+      key: 'selection',
+    }
   })
   const router = useRouter()
   const [valueTab, setValueTab] = useState(props.tabValue)
@@ -103,18 +107,19 @@ export default function (props: any) {
         pathname: '/document-manager',
         query: { applications: 'any' },
       })
+      fetchAnyApplications(anyApplication.page, anyApplication.pageSize)
     } else if (valueTab === 0) {
       router.push({
         pathname: '/document-manager',
         query: { applications: 'new' },
       })
+      fetchNewApplications(state.newApplication.page, state.newApplication.pageSize)
     }
-    fetchAnyApplications(anyApplication.page, anyApplication.pageSize)
-    fetchNewApplications(state.newApplication.page, state.newApplication.pageSize)
   }, [valueTab])
 
   const fetchNewApplications = (start: number, count: number) => {
     setIsLoadingNew(true)
+
     dispatch(fetchNewApplicationsAction({ start: start * count, count }))
       .then(() => {
         dispatch({ type: CHANGE_PAGE_NEW_APPLICATION, payload: { page: start, pageSize: count } })
@@ -140,6 +145,7 @@ export default function (props: any) {
       filter.range = range
     }
     filterParams.filter = filter
+    console.log(filterParams)
     dispatch(fetchAnyApplicationsAction(filterParams))
       .then(() => {
         setAnyApplication({ page: start, pageSize: count })
@@ -158,6 +164,7 @@ export default function (props: any) {
           onChange={(e, newValue) => handleChange(newValue)}
           indicatorColor="primary"
           textColor="primary"
+          style={{ borderBottom: '1px solid #e8e8e8' }}
         >
           <Tab
             label={
@@ -244,7 +251,8 @@ export default function (props: any) {
                 style={{ marginLeft: 40 }}
                 variant="contained"
                 color="primary"
-                onClick={() => fetchAnyApplications(anyApplication.pageSize, anyApplication.pageSize)}
+                disabled={isLoadingAny}
+                onClick={() => fetchAnyApplications(anyApplication.page, anyApplication.pageSize)}
                 startIcon={<Autorenew />}
               >
                 {t('search')}

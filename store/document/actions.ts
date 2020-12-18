@@ -5,6 +5,7 @@ import { documentAPI } from 'service/api'
 export const fetchAnyApplicationsAction = (params: any) => {
   return async (dispatch: Dispatch<DocumentActionsTypes>) => {
     let response = await documentAPI.fetchApplicationsAny(params)
+    console.log(response)
 
     if (response.status == 200) {
       dispatch({ type: FETCH_ANY_APPLICATIONS, payload: { ...response.data } })

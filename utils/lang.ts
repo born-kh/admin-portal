@@ -139,6 +139,7 @@ const LangStrings: Record<LangType, any> = {
     showDetail: 'Show Detail',
     save: 'Save',
     labelRowsSelect: 'Rows',
+
     tracerMessages: 'Tracer Messages',
     tracerErrors: 'Tracer Errors',
     newDocuments: 'New documents',
@@ -153,6 +154,8 @@ const LangStrings: Record<LangType, any> = {
     authentication: 'Authentication',
     resendCode: 'Resend code',
     send: 'Send',
+    data: 'Data',
+    userLogs: 'User logs',
   },
   ru: {
     settings: 'Настройка',
@@ -305,6 +308,8 @@ const LangStrings: Record<LangType, any> = {
     authentication: 'Аутентификация',
     resendCode: 'Отправить код',
     send: 'Отправить',
+    data: 'Дата',
+    userLogs: ' История пользователей',
   },
 }
 export default LangStrings

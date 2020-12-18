@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react'
 //material ui components
-import { Dialog, Button } from '@material-ui/core'
+import { Dialog, Button, Paper } from '@material-ui/core'
 //matetrail table lib
 import MaterialTable from 'material-table'
 //settings REST APIS
@@ -15,12 +15,12 @@ import { CustomDialogTitle, CustomDialogContent, CustomDialogActions } from '@co
 //constants
 import { initialAlertData } from '@utils/constants'
 //json-editor lib
-import { JSONEditor } from 'react-json-editor-viewer'
+// import { JSONEditor } from 'react-json-editor-viewer'
 
 /* SYSTEM SETTINGS */
-export default function () {
+export default function SystemSettingsComponent() {
   const [systemSettings, setSystemSettings] = useState<SystemSettings[]>([])
-  const [systemSettingsData, setSystemSettingsData] = useState<SystemSettings>({})
+  const [systemSettingsData, setSystemSettingsData] = useState<SystemSettings | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
@@ -108,6 +108,9 @@ export default function () {
           },
         ]}
         data={systemSettings}
+        components={{
+          Container: (props) => <Paper {...props} elevation={0} />,
+        }}
         options={{
           sorting: false,
           search: false,
@@ -119,7 +122,7 @@ export default function () {
           Edit system settings
         </CustomDialogTitle>
         <CustomDialogContent dividers style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-          <JSONEditor data={systemSettingsData} collapsible onChange={onChangeSettingsData} />
+          {/* <JSONEditor data={systemSettingsData} collapsible onChange={onChangeSettingsData} /> */}
         </CustomDialogContent>
         <CustomDialogActions>
           <Button autoFocus onClick={handleClose} color="primary">

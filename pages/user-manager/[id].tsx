@@ -17,13 +17,13 @@ import { userAPI, documentAPI, sessionAPI } from 'service/api'
 import { SearchType, Account } from '@interfaces/user-manager'
 import { Application } from '@interfaces/document-manager'
 //styles
-import { useStyles } from './styles'
+import { useStylesUserManager } from 'styles/user-manager-styles'
 import TabPanel from '@components/common/TabPanel'
 import useTranslation from 'hooks/useTranslation'
 
 /* User Manager Detail Info Component */
-export default function () {
-  const classes = useStyles()
+export default function UserManagerDetail() {
+  const classes = useStylesUserManager()
   const [account, setAcccount] = useState<Account | null>(null)
   const [applications, setApplications] = useState<Application[]>([])
   const [isLoadingApplications, setIsLoadingApplications] = useState(false)
@@ -34,6 +34,18 @@ export default function () {
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue)
+    console.log(newValue)
+    if (newValue === 2) {
+      router.push({
+        pathname: '/user-manager/[id]',
+        query: { id: router.query.id, applications: 'user-manager' },
+      })
+    } else {
+      router.push({
+        pathname: '/user-manager/[id]',
+        query: { id: router.query.id },
+      })
+    }
   }
   useEffect(() => {
     function loadData() {
@@ -53,6 +65,10 @@ export default function () {
     if (router.query.id) {
       loadData()
     }
+
+    if (router.query.applications) {
+      setValue(2)
+    }
   }, [router])
   useEffect(() => {
     if (account) {
@@ -66,14 +82,6 @@ export default function () {
         })
         .catch(() => {
           setIsLoadingApplications(false)
-        })
-      sessionAPI
-        .fetchPresenceInfo({ accountID: account.accountID })
-        .then((response) => {
-          console.log('reesponse', response)
-        })
-        .catch((e) => {
-          console.log(e)
         })
     }
   }, [account])
@@ -117,7 +125,12 @@ export default function () {
             <AccountsSessions />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <ApplicationTable title="" type={'applications'} isLoading={isLoadingApplications} data={applications} />
+            <ApplicationTable
+              title=""
+              type={'applications'}
+              isLoading={isLoadingApplications}
+              applications={applications}
+            />
           </TabPanel>
         </Paper>
       )}

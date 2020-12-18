@@ -1,21 +1,25 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
-export const useStyles = makeStyles((theme: Theme) =>
+export const useStylesStatistics = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       display: 'flex',
       flexDirection: 'row',
-      flexWrap: 'wrap',
+      alignItems: 'center',
+
+      alignContent: 'center',
+      justifyContent: 'center',
       padding: '16px 40px',
       marginBottom: 20,
-      width: 600,
+      width: '100%',
     },
     textField: {
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
+      width: 300,
     },
     button: {
-      marginLeft: 400,
+      marginRight: 50,
     },
     buttonTable: {
       margin: theme.spacing(1),

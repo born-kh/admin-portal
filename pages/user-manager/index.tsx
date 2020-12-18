@@ -20,12 +20,12 @@ import { SearchType, SearchTypeParams, Account, AccountGetByDateParams, FilterTy
 //user-manager REST APIS
 import { userAPI } from 'service/api'
 //styles
-import { useStyles } from './styles'
+import { useStylesUserManager } from 'styles/user-manager-styles'
 import useTranslation from 'hooks/useTranslation'
 
 /* User Manager Component */
-export default function () {
-  const classes = useStyles()
+export default function UserManager() {
+  const classes = useStylesUserManager()
   const router = useRouter()
 
   const [users, setUsers] = useState<Account[]>([])

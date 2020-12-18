@@ -26,7 +26,7 @@ import { ApiKey, ApiKeyUpdateParams, ApiKeyCreateParams, Platforms } from '@inte
 import useTranslation from 'hooks/useTranslation'
 
 ///api-key-manager component
-export default function () {
+export default function ApiKeyManager() {
   const [apiKeys, setAPiKeys] = useState<ApiKey[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)

@@ -28,6 +28,7 @@ export interface Document {
   reviewManagerID?: string
   fieldsUUID?: string
   geo: GeoLocation
+  tableData: any
 }
 
 export interface DocumentSet {
@@ -241,12 +242,13 @@ export interface ColorlibStepIconProps {
 }
 
 export interface ApplicationTableProps {
-  data: ApplicationState
+  data?: ApplicationState
   isLoading: boolean
+  applications?: Application[]
   type: string
   title?: string
-  handleChangePage: (value: number) => void
-  handleChangePageSize: (value: number) => void
+  handleChangePage?: (value: number) => void
+  handleChangePageSize?: (value: number) => void
 }
 
 export interface DocumentProcedureProps {

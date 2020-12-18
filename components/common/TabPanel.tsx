@@ -1,6 +1,5 @@
 import { Box, Typography } from '@material-ui/core'
-
-export default function (props: any) {
+const TabPanel = (props: any) => {
   const { children, value, index, ...other } = props
 
   return (
@@ -15,3 +14,4 @@ export default function (props: any) {
     </div>
   )
 }
+export default TabPanel

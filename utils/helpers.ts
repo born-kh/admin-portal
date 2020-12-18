@@ -42,10 +42,9 @@ export function dateFormatter(
 export function convertMRZDate(str: string, dateConvertType: DateConvertType) {
   try {
     if (str && str.length >= 6) {
-      console.log(str)
       var year = parseInt(str.substring(0, 2))
       var month = str.substring(2, 4)
-      var day = str.substring(4, 6)
+      var day = str.substring(5, 7)
 
       switch (dateConvertType) {
         case DateConvertType.dob:
@@ -64,14 +63,14 @@ export function convertMRZDate(str: string, dateConvertType: DateConvertType) {
           break
         default:
       }
-      console.log(year, month, day)
-      const date = new Date(year.toString(), month - 1, day).toISOString().split('.')[0] + 'Z'
 
+      const date = new Date(Number(year.toString()), Number(month), Number(day)).toISOString().split('.')[0] + 'Z'
+      console.log(date)
       return date.substring(0, 10)
     }
     return new Date().toISOString().split('.')[0] + 'Z'
   } catch (e) {
-    console.log(e)
+    return new Date().toISOString().split('.')[0] + 'Z'
   }
 }
 

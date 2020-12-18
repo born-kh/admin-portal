@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react'
 //material ui components
-import { TextField, Dialog, MenuItem, InputLabel, FormControl, Button, Select } from '@material-ui/core'
+import { TextField, Dialog, MenuItem, InputLabel, FormControl, Button, Select, Paper } from '@material-ui/core'
 //material table lib
 import MaterialTable from 'material-table'
 //useformik hook
@@ -20,7 +20,7 @@ import { AuthSettings, PermissionType } from '@interfaces/settings'
 import { initialAlertData } from '@utils/constants'
 
 /* AUTH Component */
-export default function () {
+export default function AuthSettingsComponent() {
   const [allAuthSeetings, setAllAuthSettings] = useState<AuthSettings[]>([])
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
     initialAlertData
@@ -164,6 +164,9 @@ export default function () {
           },
         ]}
         data={allAuthSeetings}
+        components={{
+          Container: (props) => <Paper {...props} elevation={0} />,
+        }}
         options={{
           sorting: false,
           search: false,

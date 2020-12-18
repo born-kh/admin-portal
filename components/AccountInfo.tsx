@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-export default function ({ account }: { account: Account }) {
+export default function AccountInfo({ account }: { account: Account }) {
   const classes = useStyles()
   const { t } = useTranslation()
   const phones: ItemType[] = account.phones.map((phone) => ({ name: phone.number, type: phone.type }))

@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function ({ items, header }: PropsType) {
+export default function MateriaList({ items, header }: PropsType) {
   const classes = useStyles()
   const { t } = useTranslation()
   return (

@@ -29,7 +29,7 @@ import Brightness7Icon from '@material-ui/icons/Brightness7'
 import useTranslation from 'hooks/useTranslation'
 import { authAPI } from 'service/api'
 
-export default function (props: any) {
+export default function Dashboard(props: any) {
   const classes = useStyles()
   const dispatch: AppDispatch = useDispatch()
   const router = useRouter()

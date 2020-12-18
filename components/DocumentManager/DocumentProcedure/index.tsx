@@ -56,7 +56,7 @@ import useTranslation from 'hooks/useTranslation'
 import { useSelector } from 'react-redux'
 import { RootState } from '@store/reducers'
 
-export default function (props: DocumentProcedureProps) {
+export default function DocumentProcedure(props: DocumentProcedureProps) {
   const [rejectMessage, setRejectMessage] = useState('')
   const [rejectMessageIndex, setRejectMessageIndex] = useState<number | null>(0)
   const [documentTypes, setDocumentTypes] = useState<DocumentTypes[]>([])
@@ -340,10 +340,11 @@ export default function (props: DocumentProcedureProps) {
       params.reason = rejectMessage
     }
     setBlocking(true)
+    console.log(params)
+
     documentAPI
       .setApplicationStatus(params)
       .then((response) => {
-        handleClose()
         setAlertData({ message: response.data.message, type: AlertMessageType.sucess, open: true })
         props.handleNextApplication()
       })

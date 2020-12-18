@@ -6,7 +6,7 @@ import SystemSettings from '@components/Settings/SystemSettings'
 import CallQuality from '@components/Settings/CallQuality'
 import Question from '@components/Settings/Question'
 
-export default function () {
+export default function Settings() {
   const [value, setValue] = useState(0)
 
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -15,7 +15,13 @@ export default function () {
   return (
     <>
       <Paper style={{ paddingTop: 10 }}>
-        <Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+          style={{ borderBottom: '1px solid #e8e8e8' }}
+        >
           <Tab
             label={
               <Badge badgeContent={0} color="secondary">

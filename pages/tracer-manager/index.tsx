@@ -19,17 +19,22 @@ import { useFormik } from 'formik'
 //Yup lib for validation
 import * as Yup from 'yup'
 //styles
-import { useStyles } from './styles'
+
 import useTranslation from 'hooks/useTranslation'
+import { useStylesTracerManager } from 'styles/tracer-manager-styles'
 
 /* Tracer Manager Component */
-export default function () {
-  const classes = useStyles()
+export default function Tracermanager() {
+  const classes = useStylesTracerManager()
   const [openDateRange, setOpenDateRange] = useState(false)
-  const [dateRange, setDateRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
-    key: 'selection',
+  var startDate = new Date()
+  startDate.setDate(startDate.getDate() - 30)
+  const [dateRange, setDateRange] = useState(() => {
+    return {
+      startDate,
+      endDate: new Date(),
+      key: 'selection',
+    }
   })
   const [value, setValue] = useState(0)
   const [messages, setMessages] = useState<Tracer[]>([])
@@ -106,7 +111,13 @@ export default function () {
         </form>
       </Paper>
       <Paper style={{ paddingTop: 10 }}>
-        <Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          indicatorColor="primary"
+          textColor="primary"
+          style={{ borderBottom: '1px solid #e8e8e8' }}
+        >
           <Tab
             label={
               <Badge badgeContent={messages.length} color="secondary">

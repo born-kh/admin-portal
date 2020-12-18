@@ -165,3 +165,12 @@ export enum FilterType {
   around = 'AROUND',
   before = 'BEFORE',
 }
+
+export interface IUserLog {
+  id: string
+  method: string
+  account_id: string
+  data: string
+  ip: string
+  ts: string
+}

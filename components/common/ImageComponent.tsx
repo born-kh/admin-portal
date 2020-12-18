@@ -1,7 +1,15 @@
 import React from 'react'
 import { DOCUMENT_FILE_URL } from '@utils/constants'
 
-export default function ({ ID, alt, onclick }: { ID: string | undefined; alt: string; onclick?: () => void }) {
+export default function ImageComponent({
+  ID,
+  alt,
+  onclick,
+}: {
+  ID: string | undefined
+  alt: string
+  onclick?: () => void
+}) {
   console.log
   if (ID) {
     return (

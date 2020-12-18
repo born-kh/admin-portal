@@ -3,8 +3,9 @@ import { TracerTableProps } from '@interfaces/tracer-manager'
 import Typography from '@material-ui/core/Typography'
 import { Accordion, AccordionSummary, AccordionDetails } from './common/Accordion'
 import useTranslation from 'hooks/useTranslation'
+import { Paper } from '@material-ui/core'
 
-export default function (props: TracerTableProps) {
+export default function TracerTable(props: TracerTableProps) {
   const { t } = useTranslation()
   return (
     <MaterialTable
@@ -29,6 +30,9 @@ export default function (props: TracerTableProps) {
         { title: t('sesssionId'), field: 'session_id' },
       ]}
       data={props.data}
+      components={{
+        Container: (props) => <Paper {...props} elevation={0} />,
+      }}
       options={{
         showTitle: false,
       }}

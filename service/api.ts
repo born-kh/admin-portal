@@ -15,6 +15,7 @@ import {
   FetchSessionsResponse,
   AccountGetByDateParams,
   AccountGetByDateResponse,
+  IUserLog,
 } from '@interfaces/user-manager'
 /* document-manager interfaces */
 import {
@@ -98,6 +99,10 @@ export const userAPI = {
   },
   async accountGetByDate(params: AccountGetByDateParams) {
     const response = await axios.post<AccountGetByDateResponse>(API_URLS.ACCOUNT_GET_BY_DATE, params)
+    return response
+  },
+  async getUserLogs(params: TracerSearchParamsType) {
+    const response = await axios.post<IUserLog[]>(API_URLS.GET_USER_LOGS, params)
     return response
   },
 }
@@ -293,6 +298,7 @@ export const statisticsAPI = {
     })
   },
   async resendCode(params: ResendCodeParams) {
+    console.log(params)
     return axios.post(API_URLS.RESEND_CODE, params).then((response) => {
       return response
     })

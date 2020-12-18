@@ -7,12 +7,12 @@ import moment from 'moment'
 import { Paper, Button, TextField } from '@material-ui/core'
 import Title from '@components/common/Title'
 import SendIcon from '@material-ui/icons/Send'
-import { useStyles } from './styles'
+
 import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
 import { initialAlertData, LangType } from '@utils/constants'
-
-export default function () {
-  const classes = useStyles()
+import { useStylesStatistics } from 'styles/statistics-styles'
+export default function Authencation() {
+  const classes = useStylesStatistics()
   const [authCodes, setAuthCodes] = useState<IAuthCode[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [search, setSearch] = useState('')
@@ -47,16 +47,16 @@ export default function () {
   }
 
   const handleSendResendSMS = (codeId: string, phoneNumber: string) => {
+    console.log(codeId, phoneNumber)
     setResendCodeId(codeId)
     statisticsAPI
       .resendCode({ lang: 'en', codeId, phoneNumber, sms: true })
       .then(() => {
         setAlertData({ message: `Resend SMS success`, type: AlertMessageType.sucess, open: true })
-        setResendCodeId(null)
       })
       .catch((e) => {
+        console.log(e.message)
         setAlertData({ message: `Resend SMS error` + e.message, type: AlertMessageType.error, open: true })
-        setResendCodeId(null)
       })
   }
 
@@ -66,13 +66,10 @@ export default function () {
     <>
       <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
       <Paper className={classes.paper}>
-        <Title>{t('search')}</Title>
-
         <TextField
           variant="outlined"
           margin="normal"
           required
-          fullWidth
           id="search"
           label={t('search')}
           name="search"
@@ -127,7 +124,7 @@ export default function () {
                 <Button
                   variant="contained"
                   color="primary"
-                  disabled={resendCodeId === rowData.id}
+                  disabled={resendCodeId === rowData.id || rowData.activated}
                   onClick={() => handleSendResendSMS(rowData.id, rowData.identifier)}
                   endIcon={<SendIcon />}
                 >

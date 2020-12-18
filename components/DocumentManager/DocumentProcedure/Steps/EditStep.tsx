@@ -13,7 +13,7 @@ const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
 import useStyles from './style'
 import useTranslation from 'hooks/useTranslation'
 
-export default function (props: EditStepProps) {
+export default function EditStep(props: EditStepProps) {
   const classes = useStyles()
   const { documents, fields, handleOnChange, blocking, handleSumbit } = props
   const [selectID, setSelectID] = useState('')

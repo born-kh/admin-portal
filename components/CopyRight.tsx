@@ -1,6 +1,6 @@
 import { Typography, Link } from '@material-ui/core'
 
-export default function () {
+export default function CopyRight() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}

@@ -5,17 +5,19 @@ import DetailsIcon from '@material-ui/icons/Details'
 //moment js lib
 import moment from 'moment'
 //material ui components
-import { Button, TablePagination } from '@material-ui/core'
+import { Button, TablePagination, Paper } from '@material-ui/core'
 //next router
 import { useRouter } from 'next/router'
 //document-manager interfaces
 import { ApplicationTableProps } from '@interfaces/document-manager'
 import useTranslation from 'hooks/useTranslation'
+import { NAVIGATOR } from '@utils/constants'
 
-export default function (props: ApplicationTableProps) {
+export default function ApplicationTable(props: ApplicationTableProps) {
   const router = useRouter()
   const { t } = useTranslation()
   const { data, handleChangePage, handleChangePageSize } = props
+  const isUserManagerPage = router.route.includes(NAVIGATOR.userManager.path)
 
   return (
     <MaterialTable
@@ -70,9 +72,17 @@ export default function (props: ApplicationTableProps) {
                 variant="contained"
                 color="primary"
                 onClick={() => {
+                  let query = {
+                    id: rowData.applicationID,
+                    applications: router.query.applications,
+                  }
+
+                  if (isUserManagerPage) {
+                    query.accountID = router.query.id
+                  }
                   router.push({
                     pathname: '/document-manager/[id]',
-                    query: { id: rowData.applicationID },
+                    query,
                   })
                 }}
                 startIcon={<DetailsIcon />}
@@ -82,24 +92,32 @@ export default function (props: ApplicationTableProps) {
             ),
         },
       ]}
-      data={data.applications}
+      data={data ? data.applications : props.applications ? props.applications : []}
       components={{
-        Pagination: (props) => (
-          <TablePagination
-            {...props}
-            rowsPerPage={data.pageSize}
-            count={data.totalCount}
-            page={data.page}
-            onChangePage={(e, page) => handleChangePage(page)}
-          />
-        ),
+        Pagination: (props) => {
+          if (data && handleChangePage) {
+            return (
+              <TablePagination
+                {...props}
+                rowsPerPage={data.pageSize}
+                count={data.totalCount}
+                page={data.page}
+                onChangePage={(e, page) => handleChangePage(page)}
+              />
+            )
+          }
+          return null
+        },
+
+        // Container: (props) => <Paper {...props} elevation={0} />,
       }}
       onChangeRowsPerPage={(pageSize) => {
-        handleChangePageSize(pageSize)
+        handleChangePageSize ? handleChangePageSize(pageSize) : null
       }}
       options={{
-        pageSize: data.pageSize,
+        pageSize: data ? data.pageSize : 20,
         showTitle: props.title !== undefined,
+        paging: !!data,
         headerStyle: {
           zIndex: 0,
         },

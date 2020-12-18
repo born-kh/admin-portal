@@ -120,6 +120,7 @@ export const permissions = [
   'TAP_ACCOUNT_GET_BY_DATE',
   'TAP_GET_AUTH_CODE_LIST',
   'TAP_RESEND_CODE',
+  'TAP_GET_USER_LOGS',
 ]
 export enum USER_PERMISSION_TYPE {
   allow = 'ALLOW',
@@ -199,6 +200,7 @@ export const API_URLS = {
   ACCOUNT_GET_BY_DATE: 'accountgetbydate',
   GET_AUTH_CODES: 'getauthcodelist',
   RESEND_CODE: 'resendcode',
+  GET_USER_LOGS: 'getuserlogs',
 }
 
 export const rejectMessages = [

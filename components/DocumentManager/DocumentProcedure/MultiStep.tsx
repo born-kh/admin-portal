@@ -7,7 +7,7 @@ import { ApplicationStatus, DocumentStatus, MultiStepProps } from '@interfaces/d
 import { ColorlibStepIcon, useStyles } from './styles'
 import useTranslation from 'hooks/useTranslation'
 
-export default function (props: MultiStepProps) {
+export default function MultiStep(props: MultiStepProps) {
   const classes = useStyles()
   const {
     activeStep,
@@ -130,7 +130,7 @@ export default function (props: MultiStepProps) {
               onClick={() => handleApproveApplication(ApplicationStatus.approved)}
               className={classes.button}
             >
-              {t('approveApplication')}
+              {t('confirmApplication')}
             </Button>
           </div>
         </Box>

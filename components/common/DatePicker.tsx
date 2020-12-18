@@ -19,7 +19,7 @@ type PropsType = {
   }
 }
 
-export default function (props: PropsType) {
+export default function DatePicker(props: PropsType) {
   const { open, onClose, onChange, ranges } = props
   return (
     <Dialog fullWidth={true} maxWidth={'md'} open={open} onClose={onClose} aria-labelledby="max-width-dialog-title">

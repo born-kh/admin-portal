@@ -1,5 +1,5 @@
 export interface TracerSearchParamsType {
-  search: string
+  search?: string
   fromTS: string
   toTS: string
 }
@@ -10,6 +10,7 @@ export interface Tracer {
   session_id: string
   response: any
   request: any
+  tableData: any
 }
 
 export interface TracerResult {

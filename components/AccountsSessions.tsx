@@ -19,7 +19,7 @@ import useTranslation from 'hooks/useTranslation'
 import dynamic from 'next/dynamic'
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
-export default function () {
+export default function AccountSessions() {
   const [sessions, setSessions] = useState<AccountSessionsData[]>([])
   const [sessionsIsLoading, setSessionsIsLoading] = useState(false)
   const [sessionID, setSessionID] = useState<string | null>(null)

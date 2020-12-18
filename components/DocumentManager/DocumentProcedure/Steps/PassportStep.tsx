@@ -15,7 +15,7 @@ const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
 
 import useStyles from './style'
 
-export default function (props: PassportStepProps) {
+export default function PassportStep(props: PassportStepProps) {
   const classes = useStyles()
   const { document, handleDeleteDocument, handleSetMapPosition } = props
   const [passport, setPassport] = useState<Document | null>(null)

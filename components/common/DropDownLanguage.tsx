@@ -6,7 +6,7 @@ import { LanguageContext } from './LanguageProvider'
 import { LangType } from '@utils/constants'
 import useTranslation from 'hooks/useTranslation'
 
-export default function () {
+export default function DropDownLanguage() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const { t } = useTranslation()

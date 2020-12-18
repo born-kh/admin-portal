@@ -26,13 +26,14 @@ import { RootState, AppDispatch } from '@store/reducers'
 //react-redux hooks
 import { useDispatch, useSelector } from 'react-redux'
 //styles
-import { useStyles } from './styles'
+
 import useTranslation from 'hooks/useTranslation'
 import Title from '@components/common/Title'
+import { useStylesLogin } from 'styles/login-styles'
 
 /* Login Component */
-export default function () {
-  const classes = useStyles()
+export default function Login() {
+  const classes = useStylesLogin()
   const [loading, setLoading] = useState(false)
   const dispatch: AppDispatch = useDispatch()
   const router = useRouter()

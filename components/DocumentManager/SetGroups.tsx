@@ -10,7 +10,7 @@ import ImageComponent from '@components/common/ImageComponent'
 import useTranslation from 'hooks/useTranslation'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
 
-export default function (props: SetGroupsProps) {
+export default function Setgroups(props: SetGroupsProps) {
   const { t } = useTranslation()
 
   let setGroups = _.values(_.groupBy(props.documents, 'documenSet.ID')).map((d) => {
