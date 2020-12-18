@@ -75,7 +75,7 @@ export default function ApplicationTable(props: ApplicationTableProps) {
                   let query = {
                     id: rowData.applicationID,
                     applications: router.query.applications,
-                  }
+                  } as any
 
                   if (isUserManagerPage) {
                     query.accountID = router.query.id

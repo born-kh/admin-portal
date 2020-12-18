@@ -42,17 +42,16 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
   }, [state.authStatus])
 
   useEffect(() => {
-    let cleanUpFunction = false
-    if (!cleanUpFunction) {
-      dispatch(checkAuth())
-    }
+    // if (!cleanUpFunction) {
+    dispatch(checkAuth())
+    // }
 
     const jssStyles = document.querySelector('#jss-server-side')
     if (jssStyles && jssStyles.parentNode) {
       jssStyles.parentNode.removeChild(jssStyles)
     }
 
-    return () => (cleanUpFunction = true)
+    // return (cleanUpFunction = true)
   }, [])
 
   if (router.pathname.startsWith('/login')) {
