@@ -20,6 +20,7 @@ import { Application } from '@interfaces/document-manager'
 import { useStylesUserManager } from 'styles/user-manager-styles'
 import TabPanel from '@components/common/TabPanel'
 import useTranslation from 'hooks/useTranslation'
+import { SystemSettings } from '@interfaces/settings'
 
 /* User Manager Detail Info Component */
 export default function UserManagerDetail() {
@@ -28,6 +29,7 @@ export default function UserManagerDetail() {
   const [applications, setApplications] = useState<Application[]>([])
   const [isLoadingApplications, setIsLoadingApplications] = useState(false)
   const [value, setValue] = useState(0)
+  const [systemSettingsAccount, setSystemSettingsAccount] = useState<SystemSettings>({ description: '' })
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const { t } = useTranslation()
@@ -83,8 +85,36 @@ export default function UserManagerDetail() {
         .catch(() => {
           setIsLoadingApplications(false)
         })
+
+      userAPI
+        .systemGetAccountSettings({ accountID: account.accountID })
+        .then((res) => {
+          console.log(res.data)
+          setSystemSettingsAccount(res.data)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
     }
   }, [account])
+
+  const handleChangeSettings = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.persist()
+    console.log(e.target.value)
+    if (e.target.name === 'description') {
+      setSystemSettingsAccount((prev) => ({ ...prev, description: e.target.value }))
+    } else if (e.target.name === 'autoDeleteDays') {
+      setSystemSettingsAccount((prev) => ({
+        ...prev,
+        user: { autoDelete: { enabled: prev.user?.autoDelete.enabled || false, days: parseInt(e.target.value) } },
+      }))
+    } else {
+      setSystemSettingsAccount((prev) => ({
+        ...prev,
+        user: { autoDelete: { days: prev.user?.autoDelete.days || 0, enabled: e.target.checked } },
+      }))
+    }
+  }
 
   return (
     <>
@@ -118,7 +148,13 @@ export default function UserManagerDetail() {
 
           <TabPanel value={value} index={0}>
             <Grid item xs={12} md={12} lg={12} className={classes.accountProfile}>
-              {account && <AccountInfo account={account} />}
+              {account && (
+                <AccountInfo
+                  account={account}
+                  settings={systemSettingsAccount}
+                  handleChangeSetings={handleChangeSettings}
+                />
+              )}
             </Grid>
           </TabPanel>
           <TabPanel value={value} index={1}>

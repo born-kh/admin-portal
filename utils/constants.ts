@@ -121,6 +121,8 @@ export const permissions = [
   'TAP_GET_AUTH_CODE_LIST',
   'TAP_RESEND_CODE',
   'TAP_GET_USER_LOGS',
+  'TAP_SYSTEM_GET_ACCOUNT_SETTINGS',
+  'TAP_SYSTEM_SET_ACCOUNT_SETTINGS',
 ]
 export enum USER_PERMISSION_TYPE {
   allow = 'ALLOW',
@@ -201,6 +203,8 @@ export const API_URLS = {
   GET_AUTH_CODES: 'getauthcodelist',
   RESEND_CODE: 'resendcode',
   GET_USER_LOGS: 'getuserlogs',
+  SYSTEM_GET_ACCOUNT_SETTINGS: 'systemgetaccountsettings',
+  SYSTEM_SET_ACCOUNT_SETTINGS: 'systemsetaccountsettings',
 }
 
 export const rejectMessages = [

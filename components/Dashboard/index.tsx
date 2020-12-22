@@ -28,6 +28,7 @@ import Brightness3Icon from '@material-ui/icons/Brightness3'
 import Brightness7Icon from '@material-ui/icons/Brightness7'
 import useTranslation from 'hooks/useTranslation'
 import { authAPI } from 'service/api'
+import { logout } from '@store/auth/actions'
 
 export default function Dashboard(props: any) {
   const classes = useStyles()
@@ -52,14 +53,7 @@ export default function Dashboard(props: any) {
   }
 
   const handleLogout = () => {
-    authAPI
-      .logout()
-      .then(() => {
-        router.push('/login')
-      })
-      .catch(() => {
-        router.push('/login')
-      })
+    dispatch(logout())
   }
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)

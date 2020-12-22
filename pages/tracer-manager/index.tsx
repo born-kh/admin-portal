@@ -72,6 +72,7 @@ export default function Tracermanager() {
         })
     },
   })
+  
   const searchError = formik.errors.search !== undefined && formik.touched.search
   return (
     <>
@@ -92,7 +93,6 @@ export default function Tracermanager() {
           <TextField
             variant="outlined"
             margin="normal"
-            required
             fullWidth
             id="search"
             label={t('searchTracer')}

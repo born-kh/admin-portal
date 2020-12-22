@@ -10,7 +10,7 @@ export default function useTranslation() {
   }
 
   function t(key: string) {
-    if (!LangStrings[locale][key]) {
+    if (!LangStrings[locale][key || '']) {
       console.warn(`No string '${key}' for locale '${locale}'`)
     }
 

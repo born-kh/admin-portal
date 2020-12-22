@@ -47,7 +47,8 @@ export const useStylesUserManager = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'row',
       flexWrap: 'wrap',
-      justifyContent: 'space-around',
+      justifyContent: 'space-between',
+      padding: 10,
     },
   })
 )

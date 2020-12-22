@@ -22,6 +22,7 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
       username: state.auth.username,
     }
   })
+
   const dispatch: AppDispatch = useDispatch()
   const darkTheme = createMuiTheme({
     palette: {
@@ -64,7 +65,7 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
     )
   }
   if (state.authStatus !== AUTH_STATUS.loggedOn) {
-    return <Loader size={100} />
+    return <Loader size={80} />
   }
   return (
     <React.StrictMode>

@@ -1,4 +1,5 @@
 import { Dictionary } from 'lodash'
+import { UserSettings } from './user-manager'
 
 /* Auth Settings */
 export interface AuthSettings {
@@ -23,6 +24,7 @@ export interface SystemSettings {
   id?: number
   voip?: WebRTCSettings
   network?: Network
+  user?: UserSettings
   description: String
 }
 export interface GetSystemSettingsResponse {

@@ -156,6 +156,12 @@ const LangStrings: Record<LangType, any> = {
     send: 'Send',
     data: 'Data',
     userLogs: 'User logs',
+    auth: 'Auth',
+    yes: 'Yes',
+    no: 'No',
+    days: 'Days',
+    autoDelete: 'Auto Delete',
+    description: 'Description',
   },
   ru: {
     settings: 'Настройка',
@@ -310,6 +316,12 @@ const LangStrings: Record<LangType, any> = {
     send: 'Отправить',
     data: 'Дата',
     userLogs: ' История пользователей',
+    auth: 'Авторизация',
+    yes: 'Да',
+    no: 'Нет',
+    days: 'Дней',
+    autoDelete: 'Автоматическое удаление',
+    description: 'Описание',
   },
 }
 export default LangStrings

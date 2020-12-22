@@ -16,7 +16,7 @@ export default function DropDownLanguage() {
   }
 
   const handleLangClick = (lng: LangType) => {
-    if (langContext) {
+    if (langContext && (lng === LangType.en || lng === LangType.ru)) {
       const lang = localStorage.getItem('LANG') as LangType
       if (lng && lang !== lng) {
         localStorage.setItem('LANG', lng)

@@ -174,3 +174,12 @@ export interface IUserLog {
   ip: string
   ts: string
 }
+
+export interface UserSettings {
+  autoDelete: AutoDelete
+}
+
+export interface AutoDelete {
+  enabled: boolean
+  days: number
+}

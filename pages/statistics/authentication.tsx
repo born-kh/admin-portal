@@ -2,20 +2,20 @@ import { useState, useEffect } from 'react'
 import { IAuthCode } from '@interfaces/statistics'
 import MaterialTable from 'material-table'
 import useTranslation from 'hooks/useTranslation'
-import { statisticsAPI, userAPI } from 'service/api'
+import { statisticsAPI } from 'service/api'
 import moment from 'moment'
 import { Paper, Button, TextField } from '@material-ui/core'
-import Title from '@components/common/Title'
 import SendIcon from '@material-ui/icons/Send'
+import * as Yup from 'yup'
 
 import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
 import { initialAlertData, LangType } from '@utils/constants'
 import { useStylesStatistics } from 'styles/statistics-styles'
+import { useFormik } from 'formik'
 export default function Authencation() {
   const classes = useStylesStatistics()
   const [authCodes, setAuthCodes] = useState<IAuthCode[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const [search, setSearch] = useState('')
   const [resendCodeId, setResendCodeId] = useState<string | null>(null)
 
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
@@ -30,9 +30,22 @@ export default function Authencation() {
     hanldeFetchData({})
   }, [])
 
+  const formik = useFormik({
+    initialValues: {
+      search: '',
+    },
+    validationSchema: Yup.object().shape({
+      search: Yup.string().min(5, 'Too Short!').max(15, 'Too Long!').required('Required'),
+    }),
+
+    onSubmit: (values) => {
+      hanldeFetchData({ identifier: values.search })
+    },
+  })
+
   const hanldeFetchData = (params: { identifier?: string }) => {
-    setAuthCodes([])
     setIsLoading(true)
+    setAuthCodes([])
     statisticsAPI
       .getAuthCodes(params)
       .then((response) => {
@@ -47,7 +60,6 @@ export default function Authencation() {
   }
 
   const handleSendResendSMS = (codeId: string, phoneNumber: string) => {
-    console.log(codeId, phoneNumber)
     setResendCodeId(codeId)
     statisticsAPI
       .resendCode({ lang: 'en', codeId, phoneNumber, sms: true })
@@ -61,35 +73,32 @@ export default function Authencation() {
   }
 
   const { t } = useTranslation()
+  const searchError = formik.errors.search !== undefined && formik.touched.search
 
   return (
     <>
       <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
-      <Paper className={classes.paper}>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          id="search"
-          label={t('search')}
-          name="search"
-          className={classes.textField}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
-          value={search}
-        />
+      <form onSubmit={formik.handleSubmit}>
+        <Paper className={classes.paper}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            id="search"
+            label={t('search')}
+            name="search"
+            className={classes.textField}
+            onChange={formik.handleChange}
+            value={formik.values.search}
+            error={searchError}
+            helperText={searchError ? formik.errors.search : null}
+          />
 
-        <Button
-          variant="contained"
-          className={classes.button}
-          color="primary"
-          type="button"
-          onClick={() => {
-            hanldeFetchData(search.trim().length > 0 ? { identifier: search } : {})
-          }}
-        >
-          {t('search')}
-        </Button>
-      </Paper>
+          <Button variant="contained" className={classes.button} color="primary" type="submit">
+            {t('search')}
+          </Button>
+        </Paper>
+      </form>
       <MaterialTable
         title={t('authCodes')}
         isLoading={isLoading}

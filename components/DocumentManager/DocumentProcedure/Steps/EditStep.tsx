@@ -188,14 +188,14 @@ export default function EditStep(props: EditStepProps) {
             </FormControl>
 
             <TextField
-              label={t('issuingAuth')}
-              type="date"
-              name="fields.passport.issuingAuth"
+              variant="outlined"
+              margin="normal"
+              required
+              type="text"
               id="fields.passport.issuingAuth"
+              label={t('issuingAuth')}
+              name="fields.passport.issuingAuth"
               className={classes.textField}
-              InputLabelProps={{
-                shrink: true,
-              }}
               onChange={handleOnChange}
               value={fields.passport?.issuingAuth}
             />

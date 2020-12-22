@@ -93,7 +93,7 @@ export const userAPI = {
 
     return accounts
   },
-  async setPassword(params: any) {
+  async setPassword(params: { accountID: string }) {
     const response = await axios.post<SetPasswordResponse>(API_URLS.SET_PASSWORD, params)
     return response
   },
@@ -103,6 +103,15 @@ export const userAPI = {
   },
   async getUserLogs(params: TracerSearchParamsType) {
     const response = await axios.post<IUserLog[]>(API_URLS.GET_USER_LOGS, params)
+    return response
+  },
+
+  async systemGetAccountSettings(params: { accountID: string }) {
+    const response = await axios.post<SystemSettings>(API_URLS.SYSTEM_GET_ACCOUNT_SETTINGS, params)
+    return response
+  },
+  async systemSetAccountSettings(params: { accountID: string; settings: SystemSettings }) {
+    const response = await axios.post(API_URLS.SYSTEM_SET_ACCOUNT_SETTINGS, params)
     return response
   },
 }
