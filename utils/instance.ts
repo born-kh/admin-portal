@@ -1,8 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { SESSION_TOKEN } from './constants'
-// import * as authAPI from 'service/authAPI'
-import { AuthActionsTypes } from '@store/auth/types'
-import { Dispatch } from 'react'
 
 const config: AxiosRequestConfig = {
   baseURL: process.env.NEXT_PUBLIC_API_GATEWAY_URL,
@@ -27,14 +24,15 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
   (response) => {
-    return Promise.resolve(response)
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(response)
+      }, 1000)
+    })
   },
   (error) => {
     console.log(error)
     if (error.response && error.response.status === 401) {
-      return async (dispatch: Dispatch<AuthActionsTypes>) => {
-        // dispatch(authAPI.logout())
-      }
     }
     return Promise.reject(error)
   }

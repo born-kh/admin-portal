@@ -18,7 +18,7 @@ export default function ApplicationTable(props: ApplicationTableProps) {
   const { t } = useTranslation()
   const { data, handleChangePage, handleChangePageSize } = props
   const isUserManagerPage = router.route.includes(NAVIGATOR.userManager.path)
-
+  console.log(props)
   return (
     <MaterialTable
       title={props.title}
@@ -44,18 +44,18 @@ export default function ApplicationTable(props: ApplicationTableProps) {
         { title: t('status'), field: 'status' },
         { title: t('countryIsoCode'), field: 'countryISOCode' },
 
-        {
-          title: t('createdAt'),
-          field: 'createdAt',
+        // {
+        //   title: t('createdAt'),
+        //   field: 'createdAt',
 
-          render: (rowData) => rowData.createdAt && moment(rowData.createdAt).format('DD MMM YYYY HH:mm'),
-        },
-        {
-          title: t('updatedAt'),
-          field: 'updatedAt',
+        //   render: (rowData) => rowData.createdAt && moment(rowData.createdAt).format('DD MMM YYYY HH:mm'),
+        // },
+        // {
+        //   title: t('updatedAt'),
+        //   field: 'updatedAt',
 
-          render: (rowData) => rowData.updatedAt && moment(rowData.updatedAt).format('DD MMM YYYY HH:mm'),
-        },
+        //   render: (rowData) => rowData.updatedAt && moment(rowData.updatedAt).format('DD MMM YYYY HH:mm'),
+        // },
         {
           title: t('submittedAt'),
           field: 'submittedAt',

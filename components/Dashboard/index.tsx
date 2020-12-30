@@ -107,9 +107,9 @@ export default function Dashboard(props: any) {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems()}</List>
+        <List className={classes.list}>{mainListItems()}</List>
         <Divider style={{ width: 240 }} />
-        <List>{secondaryListItems()}</List>
+        <List className={classes.list}>{secondaryListItems()}</List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />

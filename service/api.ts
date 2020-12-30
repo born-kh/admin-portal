@@ -47,7 +47,7 @@ import {
   GetAllQuestionsResponse,
   Question,
 } from '@interfaces/settings'
-import { FetchAuthCodesResponse, ResendCodeParams } from '@interfaces/statistics'
+import { FetchAuthCodesResponse, ResendCodeParams, GetCDRCallResponse } from '@interfaces/statistics'
 
 /* AUTH API */
 
@@ -309,6 +309,21 @@ export const statisticsAPI = {
   async resendCode(params: ResendCodeParams) {
     console.log(params)
     return axios.post(API_URLS.RESEND_CODE, params).then((response) => {
+      return response
+    })
+  },
+  async callGetAll() {
+    return axios.post<GetCDRCallResponse>(API_URLS.CALL_GET_ALL, {}).then((response) => {
+      return response
+    })
+  },
+  async callGetAllAccountById(params: {}) {
+    return axios.post(API_URLS.CALL_GET_BY_ACCOUNT_ID, params).then((response) => {
+      return response
+    })
+  },
+  async callGetByIds(params: {}) {
+    return axios.post(API_URLS.CALL_GET_BY_IDS, params).then((response) => {
       return response
     })
   },

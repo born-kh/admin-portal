@@ -14,8 +14,10 @@ import Dashboard from '@components/Dashboard'
 import { CustomDialogTitle, CustomDialogContent, CustomDialogActions } from '@components/common/Modal'
 //constants
 import { initialAlertData } from '@utils/constants'
+
 //json-editor lib
-// import { JSONEditor } from 'react-json-editor-viewer'
+import dynamic from 'next/dynamic'
+const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 /* SYSTEM SETTINGS */
 export default function SystemSettingsComponent() {
@@ -36,7 +38,9 @@ export default function SystemSettingsComponent() {
   }
 
   const openEditModal = (data: SystemSettings) => {
-    setSystemSettingsData(data)
+    let settingsData = { ...data }
+    delete settingsData.tableData
+    setSystemSettingsData(settingsData)
     setIsOpen(true)
   }
   const handleEdit = () => {
@@ -79,6 +83,17 @@ export default function SystemSettingsComponent() {
   const onChangeVoip = (key: string, value: string, parent: WebRTCSettings, data: WebRTCSettings) => {
     // setSystemSettingsData((prevSystemSettingsData: SystemSettings) => ({ ...prevSystemSettingsData, voip: data }))
   }
+  const onEdit = (e: any) => {
+    console.log(e)
+    setSystemSettingsData(e.updated_src)
+  }
+  const handleAdd = (e: any) => {
+    console.log(e)
+  }
+
+  // onDelete = e => {
+  //   setSystemSettingsData{ src: e.updated_src });
+  // };
 
   return (
     <Fragment>
@@ -122,7 +137,7 @@ export default function SystemSettingsComponent() {
           Edit system settings
         </CustomDialogTitle>
         <CustomDialogContent dividers style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-          {/* <JSONEditor data={systemSettingsData} collapsible onChange={onChangeSettingsData} /> */}
+          <ReactJson src={systemSettingsData || {}} onEdit={onEdit} />
         </CustomDialogContent>
         <CustomDialogActions>
           <Button autoFocus onClick={handleClose} color="primary">

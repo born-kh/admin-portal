@@ -88,4 +88,7 @@ export const useStyles = makeStyles((theme) => ({
   copyRight: {
     marginBottom: 20,
   },
+  list: {
+    padding: 5,
+  },
 }))

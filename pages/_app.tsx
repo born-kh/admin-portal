@@ -9,7 +9,7 @@ import LanguageProvider from '@components/common/LanguageProvider'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState, AppDispatch } from '@store/reducers'
-import Dashboard from '@components/Dashboard'
+import Dashboard from '@components/DashboardLayout'
 import { AUTH_STATUS } from '@utils/constants'
 import Loader from '@components/common/Loader'
 import { checkAuth } from '@store/auth/actions'
@@ -65,7 +65,7 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
     )
   }
   if (state.authStatus !== AUTH_STATUS.loggedOn) {
-    return <Loader size={80} />
+    return <Loader size={70} />
   }
   return (
     <React.StrictMode>

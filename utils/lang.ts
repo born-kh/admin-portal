@@ -22,6 +22,7 @@ const LangStrings: Record<LangType, any> = {
     platform: 'Platform',
     accountId: 'Account ID',
     detail: 'Detail',
+    backendSettingsPage: 'Backend settings',
 
     status: 'Status',
     firstName: 'First Name',
@@ -162,6 +163,8 @@ const LangStrings: Record<LangType, any> = {
     days: 'Days',
     autoDelete: 'Auto Delete',
     description: 'Description',
+    cdr: 'Call detail records',
+    app: 'Application',
   },
   ru: {
     settings: 'Настройка',
@@ -315,13 +318,16 @@ const LangStrings: Record<LangType, any> = {
     resendCode: 'Отправить код',
     send: 'Отправить',
     data: 'Дата',
-    userLogs: ' История пользователей',
+    userLogs: 'История пользователей',
     auth: 'Авторизация',
     yes: 'Да',
     no: 'Нет',
     days: 'Дней',
     autoDelete: 'Автоматическое удаление',
     description: 'Описание',
+    backendSettingsPage: 'Настрйка бекэнда',
+    cdr: 'Записи о звонках',
+    app: 'Application',
   },
 }
 export default LangStrings

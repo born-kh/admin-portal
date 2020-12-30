@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 //next router
 import { useRouter } from 'next/router'
 //material ui components
-import { Grid, Paper, Tabs, Tab, Badge } from '@material-ui/core'
+import { Grid, Paper, Tabs, Tab, Badge, Card, CardContent } from '@material-ui/core'
 //custom components
 import Dashboard from '@components/Dashboard'
 import AccountsSessions from '@components/AccountsSessions'
@@ -17,10 +17,12 @@ import { userAPI, documentAPI, sessionAPI } from 'service/api'
 import { SearchType, Account } from '@interfaces/user-manager'
 import { Application } from '@interfaces/document-manager'
 //styles
-import { useStylesUserManager } from 'styles/user-manager-styles'
+import { useStylesUserManager, JsonViewerStyles } from 'styles/user-manager-styles'
 import TabPanel from '@components/common/TabPanel'
 import useTranslation from 'hooks/useTranslation'
 import { SystemSettings } from '@interfaces/settings'
+import dynamic from 'next/dynamic'
+const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 /* User Manager Detail Info Component */
 export default function UserManagerDetail() {
@@ -144,6 +146,13 @@ export default function UserManagerDetail() {
                 </Badge>
               }
             />
+            <Tab
+              label={
+                <Badge badgeContent={0} color="secondary">
+                  Settings Info
+                </Badge>
+              }
+            />
           </Tabs>
 
           <TabPanel value={value} index={0}>
@@ -167,6 +176,15 @@ export default function UserManagerDetail() {
               isLoading={isLoadingApplications}
               applications={applications}
             />
+          </TabPanel>
+          <TabPanel value={value} index={3}>
+            <Grid item xs={12} md={12} lg={12}>
+              <Card>
+                <CardContent>
+                  <ReactJson src={systemSettingsAccount} />
+                </CardContent>
+              </Card>
+            </Grid>
           </TabPanel>
         </Paper>
       )}
