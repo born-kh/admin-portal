@@ -39,7 +39,12 @@ export interface ResendCodeParams {
 }
 
 export interface GetCDRCallResponse {
-  calls: Call[]
+  items: Call[]
+  metadata: {
+    page: number
+    per: number
+    total: number
+  }
 }
 
 export interface Call {
@@ -67,6 +72,7 @@ export interface Call {
 }
 
 export enum CallType {
+  ALL = 'ALL',
   conference = 'conference',
   peer2peer = 'peer2peer',
   peer2PSDN = 'peer2PSDN',
@@ -75,9 +81,11 @@ export enum CallType {
 export enum CallState {
   active = 'active',
   ended = 'ended',
+  all = 'all',
 }
 
 export enum EndpointState {
+  ALL = 'ALL',
   INITIATED = 'INITIATED',
   CREATED = 'CREATED',
   RINGING = 'RINGING',
@@ -112,4 +120,40 @@ export enum Video {
 export enum Screen {
   active = 'active',
   inactive = 'inactive',
+}
+
+export interface FilterCallDetailRecords {
+  originationNumber?: FiltertText
+  destinationNumber?: FiltertText
+  callID?: FiltertText
+  callType?: CallType
+  callState?: CallState
+  range?: FilterDateRange
+}
+export interface FilterCallDetailRecordsParams {
+  filter: FilterCallDetailRecords
+  page: number
+  limit: number
+}
+
+export interface FilterDateRange {
+  from: string
+  to: string
+}
+export interface FiltertText {
+  text: string
+  type: FilterTextType
+  filterType: FilterType
+}
+
+export enum FilterType {
+  and = 'and',
+  or = 'or',
+}
+
+export enum FilterTextType {
+  EXACT = 'EXACT',
+  BEGINS_WITH = 'BEGINS_WITH',
+  CONTAINS = 'CONTAINS',
+  ENDS_WITH = 'ENDS_WITH',
 }

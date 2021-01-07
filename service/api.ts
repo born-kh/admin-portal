@@ -47,7 +47,12 @@ import {
   GetAllQuestionsResponse,
   Question,
 } from '@interfaces/settings'
-import { FetchAuthCodesResponse, ResendCodeParams, GetCDRCallResponse } from '@interfaces/statistics'
+import {
+  FetchAuthCodesResponse,
+  ResendCodeParams,
+  GetCDRCallResponse,
+  FilterCallDetailRecordsParams,
+} from '@interfaces/statistics'
 
 /* AUTH API */
 
@@ -312,8 +317,8 @@ export const statisticsAPI = {
       return response
     })
   },
-  async callGetAll() {
-    return axios.post<GetCDRCallResponse>(API_URLS.CALL_GET_ALL, {}).then((response) => {
+  async callGetAll(params: FilterCallDetailRecordsParams) {
+    return axios.post<GetCDRCallResponse>(API_URLS.CALL_GET_ALL, params).then((response) => {
       return response
     })
   },
