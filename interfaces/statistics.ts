@@ -128,6 +128,7 @@ export interface FilterCallDetailRecords {
   callID?: FiltertText
   callType?: CallType
   callState?: CallState
+  endpointState?: EndpointState
   range?: FilterDateRange
 }
 export interface FilterCallDetailRecordsParams {

@@ -72,7 +72,8 @@ export default function Tracermanager() {
         })
     },
   })
-  
+
+  console.log(formik.errors, formik.touched)
   const searchError = formik.errors.search !== undefined && formik.touched.search
   return (
     <>
