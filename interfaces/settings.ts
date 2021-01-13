@@ -25,6 +25,7 @@ export interface SystemSettings {
   network?: Network
   user?: UserSettings
   description: String
+  tableData?: any
 }
 export interface GetSystemSettingsResponse {
   settings: SystemSettings[]

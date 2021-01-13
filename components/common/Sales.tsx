@@ -6,7 +6,7 @@ import { Box, Button, Card, CardContent, CardHeader, Divider, useTheme, makeStyl
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 import { statisticsData } from '@utils/statistics-data'
-import * as moment from 'moment'
+import moment from 'moment'
 import _ from 'lodash'
 
 const useStyles = makeStyles(() => ({
@@ -34,10 +34,10 @@ const Sales = ({ className, ...rest }: any) => {
   })
   console.log(statistics)
 
-  _.values(_.groupBy(statistics, 'createdAt')).map((d) => {
-    data.datasets[0].data.push(d.length)
-    data.labels.push(d[0].createdAt)
-  })
+  // _.values(_.groupBy(statistics, 'createdAt')).map((d) => {
+  //   data.datasets[0].data.push(d.length)
+  //   data.labels.push(d[0].createdAt)
+  // })
 
   const options = {
     animation: false,

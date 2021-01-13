@@ -87,9 +87,9 @@ export const TrafficByDevice = ({ className, ...rest }: any) => {
     }
     const value: number = (d.length / statisticsData.length) * 100
 
-    data.datasets[0].data.push(value.toFixed(1))
-    data.datasets[0].backgroundColor.push(color)
-    data.labels.push(d[0].Platform)
+    // data.datasets[0].data.push(value.toFixed(1))
+    // data.datasets[0].backgroundColor.push(color)
+    // data.labels.push(d[0].Platform)
     return {
       title: d[0].Platform,
       icon,
@@ -118,7 +118,7 @@ export const TrafficByDevice = ({ className, ...rest }: any) => {
               </Typography>
             </Box>
           ))}
-        </Box>  
+        </Box>
       </CardContent>
     </Card>
   )

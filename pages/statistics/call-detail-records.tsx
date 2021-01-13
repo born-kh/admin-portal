@@ -575,9 +575,9 @@ export default function UserLogs() {
                             name="callType"
                             onChange={formik.handleChange}
                           >
-                            {Object.keys(CallType).map((key: string) => (
-                              <MenuItem key={CallType[key]} value={CallType[key]}>
-                                {CallType[key]}
+                            {Object.values(CallType).map((value: string) => (
+                              <MenuItem key={value} value={value}>
+                                {value}
                               </MenuItem>
                             ))}
                           </Select>
@@ -597,9 +597,9 @@ export default function UserLogs() {
                             name="endpointState"
                             onChange={formik.handleChange}
                           >
-                            {Object.keys(EndpointState).map((key: string) => (
-                              <MenuItem key={EndpointState[key]} value={EndpointState[key]}>
-                                {EndpointState[key]}
+                            {Object.values(EndpointState).map((value: string) => (
+                              <MenuItem key={value} value={value}>
+                                {value}
                               </MenuItem>
                             ))}
                           </Select>
@@ -619,9 +619,9 @@ export default function UserLogs() {
                             name="callState"
                             onChange={formik.handleChange}
                           >
-                            {Object.keys(CallState).map((key: string) => (
-                              <MenuItem key={CallState[key]} value={CallState[key]}>
-                                {CallState[key]}
+                            {Object.values(CallState).map((value: string) => (
+                              <MenuItem key={value} value={value}>
+                                {value}
                               </MenuItem>
                             ))}
                           </Select>
