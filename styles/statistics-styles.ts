@@ -9,7 +9,7 @@ export const useStylesStatistics = makeStyles((theme: Theme) =>
 
       alignContent: 'center',
       justifyContent: 'center',
-      padding: '16px 40px',
+      padding: '16px 0px 16px 0px',
       marginBottom: 20,
       width: '100%',
     },

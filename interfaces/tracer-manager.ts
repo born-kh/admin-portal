@@ -2,6 +2,7 @@ export interface TracerSearchParamsType {
   search?: string
   fromTS: string
   toTS: string
+  accountID?: string
 }
 
 export interface Tracer {

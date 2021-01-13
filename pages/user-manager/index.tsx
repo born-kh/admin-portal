@@ -172,7 +172,7 @@ export default function UserManager() {
               value={formik.values.searchList[5].search}
             />
 
-            <Button variant="contained" className={classes.button} color="primary" type="submit">
+            <Button variant="contained" className={classes.button} color="primary" type="submit" disabled={isLoading}>
               {t('search')}
             </Button>
           </form>
@@ -225,6 +225,7 @@ export default function UserManager() {
               color="primary"
               type="button"
               onClick={handleFilterAccounts}
+              disabled={isLoading}
             >
               {t('search')}
             </Button>

@@ -25,6 +25,11 @@ import { IUserLog } from '@interfaces/user-manager'
 import { userAPI } from 'service/api'
 import MaterialTable from 'material-table'
 import { useStylesUserManager } from 'styles/user-manager-styles'
+import { checkGetAllUserLogs } from '@utils/helpers'
+import { useSelector } from 'react-redux'
+import { RootState } from '@store/reducers'
+import dynamic from 'next/dynamic'
+const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 /* Tracer Manager Component */
 export default function UserLogs() {
@@ -44,12 +49,21 @@ export default function UserLogs() {
   const [userLogs, setUserLogs] = useState<IUserLog[]>([])
 
   const [isLoading, setIsLoading] = useState(false)
+
+  const state = useSelector((state: RootState) => {
+    return {
+      username: state.auth.username,
+    }
+  })
+
   const { t, locale } = useTranslation()
 
   moment.locale(locale)
+
   useEffect(() => {
     handeFetchUserLogs()
   }, [])
+
   const handeFetchUserLogs = () => {
     setIsLoading(true)
     const params: TracerSearchParamsType = {
@@ -57,6 +71,11 @@ export default function UserLogs() {
       fromTS: dateRange.startDate.toISOString().split('.')[0] + 'Z',
       toTS: dateRange.endDate.toISOString().split('.')[0] + 'Z',
     }
+    const checkPermission = checkGetAllUserLogs()
+    if (!checkPermission) {
+      params.accountID = state.username
+    }
+
     userAPI
       .getUserLogs(params)
       .then((result) => {
@@ -92,13 +111,18 @@ export default function UserLogs() {
             id="search"
             label={t('search')}
             name="search"
-            className={classes.textField}
             autoFocus
             onChange={(e) => setSearch(e.target.value)}
             value={search}
           />
 
-          <Button variant="contained" className={classes.button} color="primary" onClick={handeFetchUserLogs}>
+          <Button
+            variant="contained"
+            className={classes.button}
+            color="primary"
+            onClick={handeFetchUserLogs}
+            disabled={isLoading}
+          >
             {t('search')}
           </Button>
         </form>
@@ -110,19 +134,34 @@ export default function UserLogs() {
         columns={[
           { title: t('username'), field: 'account_id' },
           { title: t('method'), field: 'method' },
-          { title: t('data'), field: 'data' },
+
           { title: t('ip'), field: 'ip' },
 
           {
-            title: t('datetime'),
+            title: t('dateTime'),
             field: 'ts',
             render: (rowData) => rowData.ts && moment(rowData.ts).format('DD MMM YYYY HH:mm'),
+          },
+          {
+            title: t('data'),
+            field: 'data',
+            render: (rowData) =>
+              rowData.data && (
+                <ReactJson
+                  src={JSON.parse(rowData.data)}
+                  displayObjectSize={false}
+                  displayDataTypes={false}
+                  collapsed={0}
+                  enableClipboard={false}
+                  name={false}
+                />
+              ),
           },
         ]}
         data={userLogs}
         options={{
           sorting: false,
-          pageSize: 20,
+          pageSize: 10,
         }}
       />
       <DatePicker

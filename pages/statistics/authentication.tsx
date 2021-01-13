@@ -94,7 +94,7 @@ export default function Authencation() {
             helperText={searchError ? formik.errors.search : null}
           />
 
-          <Button variant="contained" className={classes.button} color="primary" type="submit">
+          <Button variant="contained" className={classes.button} color="primary" type="submit" disabled={isLoading}>
             {t('search')}
           </Button>
         </Paper>
@@ -144,8 +144,8 @@ export default function Authencation() {
         ]}
         data={authCodes}
         options={{
+          pageSize: 10,
           sorting: false,
-          paging: false,
         }}
       />
     </>

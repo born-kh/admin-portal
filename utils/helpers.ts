@@ -104,6 +104,11 @@ export const getUsername = () => {
   return localStorage.getItem(USER_NAME) || ''
 }
 
+export const checkGetAllUserLogs = () => {
+  let permissions = JSON.parse(localStorage.getItem(USER_PERMISSION) || '') || []
+  return USER_PERMISSION_TYPE.allow === permissions.TAP_GET_USER_ALL_LOGS
+}
+
 export const getNavbarItems = () => {
   let permissions = JSON.parse(localStorage.getItem(USER_PERMISSION) || '') || []
   const { userManager, tracerManager, documentManager, apiKeyManager, statistics, settings } = NAVIGATOR

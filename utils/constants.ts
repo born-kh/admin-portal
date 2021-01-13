@@ -139,6 +139,7 @@ export const permissions = [
   'TAP_CALL_GET_ALL',
   'TAP_CALL_GET_BY_ACCOUNT_ID',
   'TAP_CALL_GET_BY_IDS',
+  'TAP_GET_USER_ALL_LOGS',
 ]
 export enum USER_PERMISSION_TYPE {
   allow = 'ALLOW',
