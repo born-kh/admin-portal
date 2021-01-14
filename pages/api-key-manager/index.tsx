@@ -24,7 +24,7 @@ import { apiKeyAPI } from 'service/api'
 // apiKey-manager interfaces
 import { ApiKey, ApiKeyUpdateParams, ApiKeyCreateParams, Platforms } from '@interfaces/apiKey-manager'
 import useTranslation from 'hooks/useTranslation'
-
+import moment from 'moment'
 ///api-key-manager component
 export default function ApiKeyManager() {
   const [apiKeys, setAPiKeys] = useState<ApiKey[]>([])
@@ -130,8 +130,17 @@ export default function ApiKeyManager() {
           { title: t('ApiKey'), field: 'apiKey' },
           { title: t('platform'), field: 'platform' },
           { title: t('version'), field: 'version' },
-          { title: t('validFrom'), field: 'validFrom' },
-          { title: t('validTo'), field: 'validTo' },
+          {
+            title: t('validFrom'),
+            field: 'validFrom',
+            render: (rowData) => rowData.validFrom && moment(rowData.validFrom).format('DD MMM YYYY HH:mm'),
+          },
+
+          {
+            title: t('validTo'),
+            field: 'validTo',
+            render: (rowData) => rowData.validTo && moment(rowData.validTo).format('DD MMM YYYY HH:mm'),
+          },
 
           {
             title: t('expiration'),
@@ -140,6 +149,7 @@ export default function ApiKeyManager() {
           {
             title: t('createdAt'),
             field: 'createdAt',
+            render: (rowData) => rowData.createdAt && moment(rowData.createdAt).format('DD MMM YYYY HH:mm'),
           },
           {
             title: t('enabled'),

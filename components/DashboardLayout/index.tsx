@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { makeStyles, Container, Box, Theme, createStyles } from '@material-ui/core'
+import { makeStyles, Container, Box, Theme, createStyles, Paper } from '@material-ui/core'
 import NavBar from './NavBar'
 import TopBar from './TopBar'
 import CopyRight from '@components/CopyRight'
@@ -49,16 +49,16 @@ const DashboardLayout = (props: any) => {
     <div className={classes.root}>
       <TopBar onMobileNavOpen={() => setMobileNavOpen(true)} />
       <NavBar onMobileClose={() => setMobileNavOpen(false)} openMobile={isMobileNavOpen} />
-      <main className={classes.wrapper}>
+      <Paper className={classes.wrapper} elevation={0}>
         <div className={classes.content}>
-          <Container maxWidth="lg" className={classes.container}>
+          <Container style={{ maxWidth: '100%' }} className={classes.container}>
             {props.children}
           </Container>
           <Box pt={4}>
             <CopyRight />
           </Box>
         </div>
-      </main>
+      </Paper>
     </div>
   )
 }

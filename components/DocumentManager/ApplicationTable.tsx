@@ -39,7 +39,8 @@ export default function ApplicationTable(props: ApplicationTableProps) {
           title: t('fullName'),
           field: 'firstName',
           searchable: true,
-          render: (rowData) => rowData && `${rowData.firstName || ''}  ${rowData.lastName || ''}`,
+          render: (rowData) =>
+            !rowData.firstName && !rowData.lastName ? '-' : `${rowData.firstName || ''}  ${rowData.lastName || ''}`,
         },
         { title: t('status'), field: 'status' },
         { title: t('countryIsoCode'), field: 'countryISOCode' },

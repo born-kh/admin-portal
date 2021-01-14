@@ -98,6 +98,7 @@ export default function UserManager() {
     return <Loader />
   }
 
+  console.log(users)
   return (
     <>
       <div className={classes.root}>
@@ -259,9 +260,19 @@ export default function UserManager() {
               ),
             },
 
+            {
+              title: t('fullName'),
+              field: 'firstName',
+              align: 'center',
+              render: (rowData) => rowData && rowData.firstName + ' ' + rowData.lastName,
+            },
             { title: t('username'), field: 'username', align: 'center' },
-            { title: t('firstName'), field: 'firstName', align: 'center' },
-            { title: t('lastName'), field: 'lastName', align: 'center' },
+            {
+              title: t('phoneNumber'),
+              field: 'phoneNumber',
+              align: 'center',
+              render: (rowData) => rowData.phones && rowData.phones.length > 0 && rowData.phones[0].number,
+            },
             { title: t('status'), field: 'status', align: 'center' },
 
             {

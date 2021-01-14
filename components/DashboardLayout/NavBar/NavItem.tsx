@@ -72,7 +72,9 @@ const NavItem = ({ className, href, icon: Icon, title, ...rest }: PropsType) => 
           classes={router.pathname.includes(href) ? { root: classes.active } : { root: undefined }}
         >
           {Icon && <Icon className={classes.icon} size={20} />}
-          <span className={classes.title}>{t(title)}</span>
+          <span className={classes.title} style={{ textAlign: 'left' }}>
+            {t(title)}
+          </span>
         </Button>
       </ListItem>
     </Link>

@@ -265,7 +265,7 @@ export default function UserLogs() {
                     onChange={formik.handleChange}
                     size="small"
                     fullWidth
-                    style={{ margin: 0, width: 250 }}
+                    style={{ margin: 0, width: 220 }}
                     error={!!formik.errors.originationNumber && !!formik.touched.originationNumber}
                     helperText={
                       formik.errors.originationNumber && formik.touched.originationNumber
@@ -300,7 +300,7 @@ export default function UserLogs() {
                         />
                       </RadioGroup>
                     }
-                    label="Filter type:"
+                    label="type:"
                     labelPlacement="start"
                   />
                 </TableCell>
@@ -349,7 +349,7 @@ export default function UserLogs() {
                         />
                       </RadioGroup>
                     }
-                    label="Filter text type:"
+                    label="text type:"
                     labelPlacement="start"
                   />
                 </TableCell>
@@ -367,7 +367,7 @@ export default function UserLogs() {
                     variant="outlined"
                     margin="normal"
                     size="small"
-                    style={{ width: 250, margin: 0 }}
+                    style={{ width: 220, margin: 0 }}
                     error={!!formik.errors.destinationNumber && !!formik.touched.destinationNumber}
                     helperText={
                       formik.errors.destinationNumber && formik.touched.destinationNumber
@@ -403,7 +403,7 @@ export default function UserLogs() {
                         />
                       </RadioGroup>
                     }
-                    label="Filter type:"
+                    label="type:"
                     labelPlacement="start"
                   />
                 </TableCell>
@@ -458,7 +458,7 @@ export default function UserLogs() {
                         />
                       </RadioGroup>
                     }
-                    label="Filter text type:"
+                    label="text type:"
                     labelPlacement="start"
                   />
                 </TableCell>
@@ -475,7 +475,7 @@ export default function UserLogs() {
                     variant="outlined"
                     margin="normal"
                     size="small"
-                    style={{ width: 250, margin: 0 }}
+                    style={{ width: 220, margin: 0 }}
                   />
 
                   <FormControlLabel
@@ -505,7 +505,7 @@ export default function UserLogs() {
                         />
                       </RadioGroup>
                     }
-                    label="Filter type:"
+                    label="type:"
                     labelPlacement="start"
                   />
                 </TableCell>
@@ -554,7 +554,7 @@ export default function UserLogs() {
                         />
                       </RadioGroup>
                     }
-                    label="Filter text type:"
+                    label="text type:"
                     labelPlacement="start"
                   />
                 </TableCell>
@@ -570,7 +570,7 @@ export default function UserLogs() {
                       control={
                         <FormControl variant="outlined" size="small">
                           <Select
-                            style={{ width: 250, margin: '0px 0px 0px 40px' }}
+                            style={{ width: 220, margin: '0px 0px 0px 40px' }}
                             value={formik.values.callType}
                             name="callType"
                             onChange={formik.handleChange}
@@ -592,7 +592,7 @@ export default function UserLogs() {
                       control={
                         <FormControl variant="outlined" size="small">
                           <Select
-                            style={{ width: 250, margin: '0px 0px 0px 10px' }}
+                            style={{ width: 220, margin: '0px 0px 0px 10px' }}
                             value={formik.values.endpointState}
                             name="endpointState"
                             onChange={formik.handleChange}
@@ -614,7 +614,7 @@ export default function UserLogs() {
                       control={
                         <FormControl variant="outlined" size="small">
                           <Select
-                            style={{ width: 250, margin: '0px 0px 0px 38px' }}
+                            style={{ width: 220, margin: '0px 0px 0px 38px' }}
                             value={formik.values.callState}
                             name="callState"
                             onChange={formik.handleChange}
