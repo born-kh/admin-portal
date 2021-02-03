@@ -9,15 +9,15 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
-      height: '100%',
-      overflow: 'hidden',
+      height: '100vh',
+
       width: '100%',
       minWidth: 800,
     },
     wrapper: {
       display: 'flex',
       flex: '1 1 auto',
-      overflow: 'hidden',
+
       paddingTop: 64,
       [theme.breakpoints.up('lg')]: {
         paddingLeft: 256,
@@ -31,7 +31,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
     content: {
       flexGrow: 1,
-      height: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+
       overflow: 'auto',
     },
     container: {
@@ -54,7 +57,7 @@ const DashboardLayout = (props: any) => {
           <Container style={{ maxWidth: '100%' }} className={classes.container}>
             {props.children}
           </Container>
-          <Box pt={4}>
+          <Box pt={4} style={{ marginBottom: 50 }}>
             <CopyRight />
           </Box>
         </div>

@@ -19,6 +19,7 @@ import {
   TablePagination,
   FormLabel,
   TableHead,
+  Grid,
 } from '@material-ui/core'
 //moment js
 import moment from 'moment'
@@ -49,6 +50,9 @@ import DatePicker from '@components/common/DatePicker'
 import dynamic from 'next/dynamic'
 
 import DateRangeIcon from '@material-ui/icons/DateRange'
+import { useRouter } from 'next/router'
+
+import StarsCall from '@components/common/StarsCall'
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 const theme = createMuiTheme({
@@ -102,6 +106,7 @@ export default function UserLogs() {
       key: 'selection',
     }
   })
+  const router = useRouter()
   const [withDateRange, setWithDateRange] = useState(false)
 
   const formik = useFormik({
@@ -119,7 +124,7 @@ export default function UserLogs() {
       callType: CallType.ALL,
       endpointState: EndpointState.ALL,
       limit: 10,
-      page: 1,
+      page: 0,
     },
     validationSchema: Yup.object().shape({
       originationNumber: Yup.string().min(3, 'Too Short!').max(13, 'Too Long!'),
@@ -136,7 +141,7 @@ export default function UserLogs() {
     formik.setValues({ ...formik.values, page })
   }
   const handleChangePageSize = (limit: number) => {
-    formik.setValues({ ...formik.values, limit })
+    formik.setValues({ ...formik.values, page: 0, limit })
   }
   moment.locale(locale)
 
@@ -161,7 +166,7 @@ export default function UserLogs() {
   const handleOnSubmit = () => {
     if (!formik.errors.originationNumber && !formik.errors.destinationNumber && !formik.errors.callID) {
       let params: FilterCallDetailRecordsParams = {
-        page: formik.values.page,
+        page: formik.values.page + 1,
         limit: formik.values.limit,
         filter: {},
       }
@@ -222,545 +227,605 @@ export default function UserLogs() {
 
   return (
     <MuiThemeProvider theme={theme}>
-      <form onSubmit={formik.handleSubmit}>
-        <TableContainer component={Paper} style={{ marginBottom: 20 }}>
-          <Table aria-label="simple table" style={{ padding: 10 }}>
-            <TableBody>
-              <TableRow>
-                <TableCell align="left" width={150}>
-                  Date
-                </TableCell>
+      <Grid container spacing={3}>
+        <Grid item lg={8} md={4}>
+          <TableContainer component={Paper} style={{ height: '100%' }}>
+            <Table aria-label="simple table" style={{ padding: 10 }}>
+              <TableBody>
+                <TableRow>
+                  <TableCell align="left" width={150}>
+                    Date
+                  </TableCell>
 
-                <TableCell align="left">
-                  <Checkbox
-                    checked={withDateRange}
-                    color="primary"
-                    onChange={() => setWithDateRange(!withDateRange)}
-                    inputProps={{ 'aria-label': 'primary checkbox' }}
-                  />
-                  <Chip
-                    variant="outlined"
-                    size="medium"
-                    icon={<DateRangeIcon />}
-                    label={`${t('from')}: ${moment(dateRange.startDate).format('DD MMMM YYYY HH:mm')}   ${t(
-                      'to'
-                    )}: ${moment(dateRange.endDate).format('DD MMMM YYYY HH:mm')}`}
-                    clickable
-                    color="primary"
-                    onClick={() => setOpenDateRange(true)}
-                  />
-                </TableCell>
-                <TableCell align="left"></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell align="left" width={150}>
-                  Origination Number
-                </TableCell>
-                <TableCell align="left">
-                  <TextField
-                    variant="outlined"
-                    margin="normal"
-                    value={formik.values.originationNumber}
-                    name="originationNumber"
-                    onChange={formik.handleChange}
-                    size="small"
-                    fullWidth
-                    style={{ margin: 0, width: 220 }}
-                    error={!!formik.errors.originationNumber && !!formik.touched.originationNumber}
-                    helperText={
-                      formik.errors.originationNumber && formik.touched.originationNumber
-                        ? formik.errors.originationNumber
-                        : null
-                    }
-                  />
-                  <FormControlLabel
-                    control={
-                      <RadioGroup
-                        aria-label="position"
-                        name="position"
-                        defaultValue="top"
-                        row
-                        style={{ marginLeft: 10 }}
-                      >
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.originationNumberFilterType === FilterType.or}
-                          control={<Radio size="small" color="primary" />}
-                          onChange={() => handleOnChangeFilterType('originationNumberFilterType', FilterType.or)}
-                          label="or"
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.originationNumberFilterType === FilterType.and}
-                          onChange={() => handleOnChangeFilterType('originationNumberFilterType', FilterType.and)}
-                          control={<Radio size="small" color="primary" />}
-                          label="and"
-                          labelPlacement="end"
-                        />
-                      </RadioGroup>
-                    }
-                    label="type:"
-                    labelPlacement="start"
-                  />
-                </TableCell>
-
-                <TableCell align="right" style={{ display: 'flex', flexDirection: 'row' }}>
-                  <FormControlLabel
-                    control={
-                      <RadioGroup row aria-label="position" name="position" style={{ marginLeft: 10 }}>
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.originationNumberType === FilterTextType.EXACT}
-                          control={<Radio size="small" color="primary" />}
-                          onChange={() => handleOnChangeFilterTextType('originationNumberType', FilterTextType.EXACT)}
-                          label="Exact"
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.originationNumberType === FilterTextType.BEGINS_WITH}
-                          onChange={() =>
-                            handleOnChangeFilterTextType('originationNumberType ', FilterTextType.BEGINS_WITH)
-                          }
-                          control={<Radio size="small" color="primary" />}
-                          label="Begins With"
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.originationNumberType === FilterTextType.CONTAINS}
-                          onChange={() =>
-                            handleOnChangeFilterTextType('originationNumberType ', FilterTextType.CONTAINS)
-                          }
-                          control={<Radio size="small" color="primary" />}
-                          label="Contains"
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.originationNumberType === FilterTextType.ENDS_WITH}
-                          onChange={() =>
-                            handleOnChangeFilterTextType('originationNumberType ', FilterTextType.ENDS_WITH)
-                          }
-                          control={<Radio size="small" color="primary" />}
-                          label="Ends With"
-                          labelPlacement="end"
-                        />
-                      </RadioGroup>
-                    }
-                    label="text type:"
-                    labelPlacement="start"
-                  />
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell align="left" width={150}>
-                  Destination Number
-                </TableCell>
-                <TableCell align="left">
-                  <TextField
-                    value={formik.values.destinationNumber}
-                    name="destinationNumber"
-                    onChange={formik.handleChange}
-                    variant="outlined"
-                    margin="normal"
-                    size="small"
-                    style={{ width: 220, margin: 0 }}
-                    error={!!formik.errors.destinationNumber && !!formik.touched.destinationNumber}
-                    helperText={
-                      formik.errors.destinationNumber && formik.touched.destinationNumber
-                        ? formik.errors.destinationNumber
-                        : null
-                    }
-                  />
-
-                  <FormControlLabel
-                    control={
-                      <RadioGroup
-                        aria-label="position"
-                        name="position"
-                        defaultValue="top"
-                        row
-                        style={{ marginLeft: 10 }}
-                      >
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.destinationNumberFilterType === FilterType.or}
-                          control={<Radio size="small" color="primary" />}
-                          onChange={() => handleOnChangeFilterType('destinationNumberFilterType', FilterType.or)}
-                          label="or"
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.destinationNumberFilterType === FilterType.and}
-                          onChange={() => handleOnChangeFilterType('destinationNumberFilterType', FilterType.and)}
-                          control={<Radio size="small" color="primary" />}
-                          label="and"
-                          labelPlacement="end"
-                        />
-                      </RadioGroup>
-                    }
-                    label="type:"
-                    labelPlacement="start"
-                  />
-                </TableCell>
-
-                <TableCell align="left">
-                  <FormControlLabel
-                    control={
-                      <RadioGroup
-                        row
-                        aria-label="position"
-                        name="position"
-                        defaultValue="top"
-                        style={{ marginLeft: 10 }}
-                      >
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.destinationNumberType === FilterTextType.EXACT}
-                          onChange={() => handleOnChangeFilterTextType('destinationNumberType', FilterTextType.EXACT)}
-                          control={<Radio size="small" color="primary" />}
-                          label="Exact"
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.destinationNumberType === FilterTextType.BEGINS_WITH}
-                          onChange={() =>
-                            handleOnChangeFilterTextType('destinationNumberType', FilterTextType.BEGINS_WITH)
-                          }
-                          control={<Radio size="small" color="primary" />}
-                          label="Begins With"
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.destinationNumberType === FilterTextType.CONTAINS}
-                          onChange={() =>
-                            handleOnChangeFilterTextType('destinationNumberType', FilterTextType.CONTAINS)
-                          }
-                          control={<Radio size="small" color="primary" />}
-                          label="Contains"
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.destinationNumberType === FilterTextType.ENDS_WITH}
-                          onChange={() =>
-                            handleOnChangeFilterTextType('destinationNumberType', FilterTextType.ENDS_WITH)
-                          }
-                          control={<Radio size="small" color="primary" />}
-                          label="Ends With"
-                          labelPlacement="end"
-                        />
-                      </RadioGroup>
-                    }
-                    label="text type:"
-                    labelPlacement="start"
-                  />
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell align="left" width={150}>
-                  Call ID
-                </TableCell>
-                <TableCell align="left">
-                  <TextField
-                    value={formik.values.callID}
-                    name="callID"
-                    onChange={formik.handleChange}
-                    variant="outlined"
-                    margin="normal"
-                    size="small"
-                    style={{ width: 220, margin: 0 }}
-                  />
-
-                  <FormControlLabel
-                    control={
-                      <RadioGroup
-                        aria-label="position"
-                        name="position"
-                        defaultValue="top"
-                        row
-                        style={{ marginLeft: 10 }}
-                      >
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.callIDFilterType === FilterType.or}
-                          control={<Radio size="small" color="primary" />}
-                          onChange={() => handleOnChangeFilterType('callIDFilterType', FilterType.or)}
-                          label="or"
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.callIDFilterType === FilterType.and}
-                          onChange={() => handleOnChangeFilterType('callIDFilterType', FilterType.and)}
-                          control={<Radio size="small" color="primary" />}
-                          label="and"
-                          labelPlacement="end"
-                        />
-                      </RadioGroup>
-                    }
-                    label="type:"
-                    labelPlacement="start"
-                  />
-                </TableCell>
-
-                <TableCell align="left">
-                  <FormControlLabel
-                    control={
-                      <RadioGroup
-                        row
-                        aria-label="position"
-                        name="position"
-                        defaultValue="top"
-                        style={{ marginLeft: 10 }}
-                      >
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.callIDType === FilterTextType.EXACT}
-                          onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.EXACT)}
-                          control={<Radio size="small" color="primary" />}
-                          label="Exact"
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.callIDType === FilterTextType.BEGINS_WITH}
-                          onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.BEGINS_WITH)}
-                          control={<Radio size="small" color="primary" />}
-                          label="Begins With"
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.callIDType === FilterTextType.CONTAINS}
-                          onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.CONTAINS)}
-                          control={<Radio size="small" color="primary" />}
-                          label="Contains"
-                          labelPlacement="end"
-                        />
-                        <FormControlLabel
-                          value="start"
-                          checked={formik.values.callIDType === FilterTextType.ENDS_WITH}
-                          onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.ENDS_WITH)}
-                          control={<Radio size="small" color="primary" />}
-                          label="Ends With"
-                          labelPlacement="end"
-                        />
-                      </RadioGroup>
-                    }
-                    label="text type:"
-                    labelPlacement="start"
-                  />
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell align="left" width={150}>
-                  Options
-                </TableCell>
-                <TableCell align="left">
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                    <FormControlLabel
-                      control={
-                        <FormControl variant="outlined" size="small">
-                          <Select
-                            style={{ width: 220, margin: '0px 0px 0px 40px' }}
-                            value={formik.values.callType}
-                            name="callType"
-                            onChange={formik.handleChange}
-                          >
-                            {Object.values(CallType).map((value: string) => (
-                              <MenuItem key={value} value={value}>
-                                {value}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      }
-                      label="Call Type:"
-                      labelPlacement="start"
-                      style={{ marginBottom: 5 }}
+                  <TableCell align="left">
+                    <Checkbox
+                      checked={withDateRange}
+                      color="primary"
+                      onChange={() => setWithDateRange(!withDateRange)}
+                      inputProps={{ 'aria-label': 'primary checkbox' }}
                     />
-
-                    <FormControlLabel
-                      control={
-                        <FormControl variant="outlined" size="small">
-                          <Select
-                            style={{ width: 220, margin: '0px 0px 0px 10px' }}
-                            value={formik.values.endpointState}
-                            name="endpointState"
-                            onChange={formik.handleChange}
-                          >
-                            {Object.values(EndpointState).map((value: string) => (
-                              <MenuItem key={value} value={value}>
-                                {value}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      }
-                      label="Endpoint State:"
-                      style={{ marginBottom: 5 }}
-                      labelPlacement="start"
+                    <Chip
+                      variant="outlined"
+                      size="medium"
+                      icon={<DateRangeIcon />}
+                      label={`${t('from')}: ${moment(dateRange.startDate).format('DD MMMM YYYY HH:mm')}   ${t(
+                        'to'
+                      )}: ${moment(dateRange.endDate).format('DD MMMM YYYY HH:mm')}`}
+                      clickable
+                      color="primary"
+                      onClick={() => setOpenDateRange(true)}
                     />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align="left" width={150}>
+                    Origination Number
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    colSpan={2}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
 
-                    <FormControlLabel
-                      control={
-                        <FormControl variant="outlined" size="small">
-                          <Select
-                            style={{ width: 220, margin: '0px 0px 0px 38px' }}
-                            value={formik.values.callState}
-                            name="callState"
-                            onChange={formik.handleChange}
-                          >
-                            {Object.values(CallState).map((value: string) => (
-                              <MenuItem key={value} value={value}>
-                                {value}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      }
-                      label="Call State:"
-                      style={{ marginBottom: 5 }}
-                      labelPlacement="start"
-                    />
-
-                    <FormControlLabel
-                      control={
-                        <FormControl variant="outlined" size="small" style={{ display: 'flex', flexDirection: 'row' }}>
-                          <FormControlLabel
-                            value="start"
-                            control={<Radio size="small" color="primary" />}
-                            label="mins"
-                            labelPlacement="start"
-                          />
-                          <FormControlLabel
-                            value="start"
-                            control={<Radio size="small" color="primary" />}
-                            label="secs"
-                            labelPlacement="start"
-                          />
-                        </FormControl>
-                      }
-                      label="Result:"
-                      labelPlacement="start"
-                    />
-                  </div>
-                </TableCell>
-
-                <TableCell align="center">
-                  {' '}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                    disabled={isLoading}
-                    startIcon={<SearchIcon />}
-                    // onClick={handleOnSubmit}
+                      alignItems: 'end',
+                    }}
                   >
-                    {t('search')}
-                  </Button>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
+                    <div>
+                      <TextField
+                        variant="outlined"
+                        margin="normal"
+                        value={formik.values.originationNumber}
+                        name="originationNumber"
+                        onChange={formik.handleChange}
+                        size="small"
+                        fullWidth
+                        style={{ margin: 0, width: 220 }}
+                        error={!!formik.errors.originationNumber && !!formik.touched.originationNumber}
+                        helperText={
+                          formik.errors.originationNumber && formik.touched.originationNumber
+                            ? formik.errors.originationNumber
+                            : null
+                        }
+                      />
+                      <FormControlLabel
+                        control={
+                          <RadioGroup
+                            aria-label="position"
+                            name="position"
+                            defaultValue="top"
+                            row
+                            style={{ marginLeft: 10 }}
+                          >
+                            <FormControlLabel
+                              value="start"
+                              checked={formik.values.originationNumberFilterType === FilterType.or}
+                              control={<Radio size="small" color="primary" />}
+                              onChange={() => handleOnChangeFilterType('originationNumberFilterType', FilterType.or)}
+                              label="or"
+                              labelPlacement="end"
+                            />
+                            <FormControlLabel
+                              value="start"
+                              checked={formik.values.originationNumberFilterType === FilterType.and}
+                              onChange={() => handleOnChangeFilterType('originationNumberFilterType', FilterType.and)}
+                              control={<Radio size="small" color="primary" />}
+                              label="and"
+                              labelPlacement="end"
+                            />
+                          </RadioGroup>
+                        }
+                        label="type:"
+                        labelPlacement="start"
+                      />
+                    </div>
+                    <FormControlLabel
+                      control={
+                        <RadioGroup row aria-label="position" name="position" style={{ marginLeft: 10 }}>
+                          <FormControlLabel
+                            value="start"
+                            checked={formik.values.originationNumberType === FilterTextType.EXACT}
+                            control={<Radio size="small" color="primary" />}
+                            onChange={() => handleOnChangeFilterTextType('originationNumberType', FilterTextType.EXACT)}
+                            label="Exact"
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value="start"
+                            checked={formik.values.originationNumberType === FilterTextType.BEGINS_WITH}
+                            onChange={() =>
+                              handleOnChangeFilterTextType('originationNumberType ', FilterTextType.BEGINS_WITH)
+                            }
+                            control={<Radio size="small" color="primary" />}
+                            label="Begins With"
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value="start"
+                            checked={formik.values.originationNumberType === FilterTextType.CONTAINS}
+                            onChange={() =>
+                              handleOnChangeFilterTextType('originationNumberType ', FilterTextType.CONTAINS)
+                            }
+                            control={<Radio size="small" color="primary" />}
+                            label="Contains"
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value="start"
+                            checked={formik.values.originationNumberType === FilterTextType.ENDS_WITH}
+                            onChange={() =>
+                              handleOnChangeFilterTextType('originationNumberType ', FilterTextType.ENDS_WITH)
+                            }
+                            control={<Radio size="small" color="primary" />}
+                            label="Ends With"
+                            labelPlacement="end"
+                          />
+                        </RadioGroup>
+                      }
+                      label="text type:"
+                      labelPlacement="start"
+                    />
+                  </TableCell>
+                </TableRow>
 
-        <MaterialTable
-          title={'Call Logs'}
-          isLoading={isLoading}
-          localization={{ body: { emptyDataSourceMessage: '' } }}
-          columns={[
-            { title: 'Call ID', field: 'id' },
-            {
-              title: 'Origination Number',
-              field: '',
-              render: (rowData) => (rowData && rowData.originationNumber) || '-',
-              width: 150,
-              align: 'center',
-            },
-            {
-              title: 'Destination Number',
-              field: '',
-              render: (rowData) => (rowData && rowData.destinationNumber) || '-',
-              width: 150,
-              align: 'center',
-            },
-            { title: 'Call Type', field: 'type', width: 150 },
-            { title: 'Call State', field: 'callState', width: 150 },
-            { title: 'Duration', field: '', render: (rowData) => rowData && rowData.connectedAt && 0 },
-            { title: 'Account ID', field: 'accountID' },
-            { title: 'Connected At', field: 'connectedAt' },
-          ]}
-          data={callData.items}
-          options={{
-            sorting: false,
-            pageSize: formik.values.limit,
-          }}
-          components={{
-            Pagination: (props) => {
-              return (
-                <TablePagination
-                  {...props}
-                  rowsPerPage={formik.values.limit}
-                  count={callData.totalCount}
-                  page={formik.values.page}
-                  onChangePage={(e, page) => handleChangePage(page)}
-                />
-              )
-            },
-          }}
-          onChangeRowsPerPage={(pageSize) => {
-            handleChangePageSize(pageSize)
-          }}
-          style={{ fontSize: 12 }}
-          detailPanel={[
-            {
-              tooltip: t('showDetail'),
+                <TableRow>
+                  <TableCell align="left" width={150}>
+                    Destination Number
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    colSpan={2}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
 
-              render: (d) => {
+                      alignItems: 'end',
+                    }}
+                  >
+                    <div>
+                      <TextField
+                        value={formik.values.destinationNumber}
+                        name="destinationNumber"
+                        onChange={formik.handleChange}
+                        variant="outlined"
+                        margin="normal"
+                        size="small"
+                        style={{ width: 220, margin: 0 }}
+                        error={!!formik.errors.destinationNumber && !!formik.touched.destinationNumber}
+                        helperText={
+                          formik.errors.destinationNumber && formik.touched.destinationNumber
+                            ? formik.errors.destinationNumber
+                            : null
+                        }
+                      />
+
+                      <FormControlLabel
+                        control={
+                          <RadioGroup
+                            aria-label="position"
+                            name="position"
+                            defaultValue="top"
+                            row
+                            style={{ marginLeft: 10 }}
+                          >
+                            <FormControlLabel
+                              value="start"
+                              checked={formik.values.destinationNumberFilterType === FilterType.or}
+                              control={<Radio size="small" color="primary" />}
+                              onChange={() => handleOnChangeFilterType('destinationNumberFilterType', FilterType.or)}
+                              label="or"
+                              labelPlacement="end"
+                            />
+                            <FormControlLabel
+                              value="start"
+                              checked={formik.values.destinationNumberFilterType === FilterType.and}
+                              onChange={() => handleOnChangeFilterType('destinationNumberFilterType', FilterType.and)}
+                              control={<Radio size="small" color="primary" />}
+                              label="and"
+                              labelPlacement="end"
+                            />
+                          </RadioGroup>
+                        }
+                        label="type:"
+                        labelPlacement="start"
+                      />
+                    </div>
+
+                    <FormControlLabel
+                      control={
+                        <RadioGroup
+                          row
+                          aria-label="position"
+                          name="position"
+                          defaultValue="top"
+                          style={{ marginLeft: 10 }}
+                        >
+                          <FormControlLabel
+                            value="start"
+                            checked={formik.values.destinationNumberType === FilterTextType.EXACT}
+                            onChange={() => handleOnChangeFilterTextType('destinationNumberType', FilterTextType.EXACT)}
+                            control={<Radio size="small" color="primary" />}
+                            label="Exact"
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value="start"
+                            checked={formik.values.destinationNumberType === FilterTextType.BEGINS_WITH}
+                            onChange={() =>
+                              handleOnChangeFilterTextType('destinationNumberType', FilterTextType.BEGINS_WITH)
+                            }
+                            control={<Radio size="small" color="primary" />}
+                            label="Begins With"
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value="start"
+                            checked={formik.values.destinationNumberType === FilterTextType.CONTAINS}
+                            onChange={() =>
+                              handleOnChangeFilterTextType('destinationNumberType', FilterTextType.CONTAINS)
+                            }
+                            control={<Radio size="small" color="primary" />}
+                            label="Contains"
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value="start"
+                            checked={formik.values.destinationNumberType === FilterTextType.ENDS_WITH}
+                            onChange={() =>
+                              handleOnChangeFilterTextType('destinationNumberType', FilterTextType.ENDS_WITH)
+                            }
+                            control={<Radio size="small" color="primary" />}
+                            label="Ends With"
+                            labelPlacement="end"
+                          />
+                        </RadioGroup>
+                      }
+                      label="text type:"
+                      labelPlacement="start"
+                    />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell align="left" width={150}>
+                    Call ID
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+
+                      alignItems: 'end',
+                    }}
+                  >
+                    <div>
+                      <TextField
+                        value={formik.values.callID}
+                        name="callID"
+                        onChange={formik.handleChange}
+                        variant="outlined"
+                        margin="normal"
+                        size="small"
+                        style={{ width: 220, margin: 0 }}
+                      />
+
+                      <FormControlLabel
+                        control={
+                          <RadioGroup
+                            aria-label="position"
+                            name="position"
+                            defaultValue="top"
+                            row
+                            style={{ marginLeft: 10 }}
+                          >
+                            <FormControlLabel
+                              value="start"
+                              checked={formik.values.callIDFilterType === FilterType.or}
+                              control={<Radio size="small" color="primary" />}
+                              onChange={() => handleOnChangeFilterType('callIDFilterType', FilterType.or)}
+                              label="or"
+                              labelPlacement="end"
+                            />
+                            <FormControlLabel
+                              value="start"
+                              checked={formik.values.callIDFilterType === FilterType.and}
+                              onChange={() => handleOnChangeFilterType('callIDFilterType', FilterType.and)}
+                              control={<Radio size="small" color="primary" />}
+                              label="and"
+                              labelPlacement="end"
+                            />
+                          </RadioGroup>
+                        }
+                        label="type:"
+                        labelPlacement="start"
+                      />
+                    </div>
+
+                    <FormControlLabel
+                      control={
+                        <RadioGroup
+                          row
+                          aria-label="position"
+                          name="position"
+                          defaultValue="top"
+                          style={{ marginLeft: 10 }}
+                        >
+                          <FormControlLabel
+                            value="start"
+                            checked={formik.values.callIDType === FilterTextType.EXACT}
+                            onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.EXACT)}
+                            control={<Radio size="small" color="primary" />}
+                            label="Exact"
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value="start"
+                            checked={formik.values.callIDType === FilterTextType.BEGINS_WITH}
+                            onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.BEGINS_WITH)}
+                            control={<Radio size="small" color="primary" />}
+                            label="Begins With"
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value="start"
+                            checked={formik.values.callIDType === FilterTextType.CONTAINS}
+                            onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.CONTAINS)}
+                            control={<Radio size="small" color="primary" />}
+                            label="Contains"
+                            labelPlacement="end"
+                          />
+                          <FormControlLabel
+                            value="start"
+                            checked={formik.values.callIDType === FilterTextType.ENDS_WITH}
+                            onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.ENDS_WITH)}
+                            control={<Radio size="small" color="primary" />}
+                            label="Ends With"
+                            labelPlacement="end"
+                          />
+                        </RadioGroup>
+                      }
+                      label="text type:"
+                      labelPlacement="start"
+                    />
+                  </TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableCell align="left" width={150}>
+                    Options
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-end',
+                    }}
+                  >
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                      <FormControlLabel
+                        control={
+                          <FormControl variant="outlined" size="small">
+                            <Select
+                              style={{ width: 220, margin: '0px 0px 0px 40px' }}
+                              value={formik.values.callType}
+                              name="callType"
+                              onChange={formik.handleChange}
+                            >
+                              {Object.values(CallType).map((value: string) => (
+                                <MenuItem key={value} value={value}>
+                                  {value}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        }
+                        label="Call Type:"
+                        labelPlacement="start"
+                        style={{ marginBottom: 5 }}
+                      />
+
+                      <FormControlLabel
+                        control={
+                          <FormControl variant="outlined" size="small">
+                            <Select
+                              style={{ width: 220, margin: '0px 0px 0px 10px' }}
+                              value={formik.values.endpointState}
+                              name="endpointState"
+                              onChange={formik.handleChange}
+                            >
+                              {Object.values(EndpointState).map((value: string) => (
+                                <MenuItem key={value} value={value}>
+                                  {value}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        }
+                        label="Endpoint State:"
+                        style={{ marginBottom: 5 }}
+                        labelPlacement="start"
+                      />
+
+                      <FormControlLabel
+                        control={
+                          <FormControl variant="outlined" size="small">
+                            <Select
+                              style={{ width: 220, margin: '0px 0px 0px 38px' }}
+                              value={formik.values.callState}
+                              name="callState"
+                              onChange={formik.handleChange}
+                            >
+                              {Object.values(CallState).map((value: string) => (
+                                <MenuItem key={value} value={value}>
+                                  {value}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        }
+                        label="Call State:"
+                        style={{ marginBottom: 5 }}
+                        labelPlacement="start"
+                      />
+
+                      <FormControlLabel
+                        control={
+                          <FormControl
+                            variant="outlined"
+                            size="small"
+                            style={{ display: 'flex', flexDirection: 'row' }}
+                          >
+                            <FormControlLabel
+                              value="start"
+                              control={<Radio size="small" color="primary" />}
+                              label="mins"
+                              labelPlacement="start"
+                            />
+                            <FormControlLabel
+                              value="start"
+                              control={<Radio size="small" color="primary" />}
+                              label="secs"
+                              labelPlacement="start"
+                            />
+                          </FormControl>
+                        }
+                        label="Result:"
+                        labelPlacement="start"
+                      />
+                    </div>
+                    <Button
+                      size="medium"
+                      style={{ height: 40, marginBottom: 10, marginRight: 10 }}
+                      variant="contained"
+                      color="primary"
+                      type="submit"
+                      disabled={isLoading}
+                      startIcon={<SearchIcon />}
+                      // onClick={handleOnSubmit}
+                    >
+                      {t('search')}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+        <Grid item lg={4} md={4}>
+          <StarsCall />
+        </Grid>
+
+        <Grid item lg={12}>
+          <MaterialTable
+            title={'Call Logs'}
+            isLoading={isLoading}
+            localization={{ body: { emptyDataSourceMessage: '' } }}
+            columns={[
+              { title: '№', field: '', render: (rowData) => rowData && rowData.tableData.id + 1, width: 75 },
+              { title: 'Call ID', field: 'id' },
+              {
+                title: 'Origination Number',
+                field: '',
+                render: (rowData) => (rowData && rowData.originationNumber) || '-',
+                width: 150,
+                align: 'center',
+              },
+              {
+                title: 'Destination Number',
+                field: '',
+                render: (rowData) => (rowData && rowData.destinationNumber) || '-',
+                width: 150,
+                align: 'center',
+              },
+              { title: 'Call Type', field: 'type', width: 150 },
+              { title: 'Call State', field: 'callState', width: 150 },
+              { title: 'Duration', field: '', render: (rowData) => rowData && rowData.connectedAt && 0 },
+              { title: 'Account ID', field: 'accountID' },
+              { title: 'Connected At', field: 'connectedAt' },
+              {
+                title: t('detailInfo'),
+                field: '',
+
+                render: (rowData) =>
+                  rowData && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      disabled={!rowData.accountID}
+                      onClick={() => window.open('/user-manager/' + rowData.accountID, '_blank')}
+                    >
+                      {t('detail')}
+                    </Button>
+                  ),
+              },
+            ]}
+            data={callData.items}
+            options={{
+              sorting: false,
+              pageSize: formik.values.limit,
+              exportButton: true,
+            }}
+            components={{
+              Pagination: (props) => {
                 return (
-                  d && (
-                    <Table aria-label="simple table" style={{ padding: 10, marginLeft: 20 }}>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>participantState</TableCell>
-                          <TableCell>direction</TableCell>
-                          <TableCell>lastActiveces</TableCell>
-                          <TableCell>audio</TableCell>
-                          <TableCell>video</TableCell>
-                          <TableCell>screen</TableCell>
-                          <TableCell>role</TableCell>
-                        </TableRow>
-                      </TableHead>
-
-                      <TableBody>
-                        <TableRow>
-                          <TableCell>{d.participantState && d.lastActives.map((text) => <p>{text}</p>)}</TableCell>
-                          <TableCell>{d.lastActives && d.lastActives.map((text) => <p>{text}</p>)}</TableCell>
-                          <TableCell>{d.direction && d.direction.map((text) => <p>{text}</p>)}</TableCell>
-                          <TableCell>{d.audio && d.audio.map((text) => <p>{text}</p>)}</TableCell>
-                          <TableCell>{d.video && d.video.map((text) => <p>{text}</p>)}</TableCell>
-                          <TableCell>{d.screen && d.screen.map((text) => <p>{text}</p>)}</TableCell>
-                          <TableCell>{d.role && d.role.map((text) => <p>{text}</p>)}</TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  )
+                  <TablePagination
+                    {...props}
+                    rowsPerPage={formik.values.limit}
+                    count={callData.totalCount}
+                    page={formik.values.page}
+                    onChangePage={(e, page) => handleChangePage(page)}
+                  />
                 )
               },
-            },
-          ]}
-        />
-      </form>
+            }}
+            onChangeRowsPerPage={(pageSize) => {
+              handleChangePageSize(pageSize)
+            }}
+            style={{ fontSize: 12 }}
+            detailPanel={[
+              {
+                tooltip: t('showDetail'),
 
+                render: (d) => {
+                  return (
+                    d && (
+                      <Table aria-label="simple table" style={{ padding: 10, marginLeft: 20 }}>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>participantState</TableCell>
+                            <TableCell>direction</TableCell>
+                            <TableCell>lastActiveces</TableCell>
+                            <TableCell>audio</TableCell>
+                            <TableCell>video</TableCell>
+                            <TableCell>screen</TableCell>
+                            <TableCell>role</TableCell>
+                          </TableRow>
+                        </TableHead>
+
+                        <TableBody>
+                          <TableRow>
+                            <TableCell>
+                              {d.participantState && d.participantState.map((text) => <p>{text}</p>)}
+                            </TableCell>
+                            <TableCell>{d.lastActives && d.lastActives.map((text) => <p>{text}</p>)}</TableCell>
+                            <TableCell>{d.direction && d.direction.map((text) => <p>{text}</p>)}</TableCell>
+                            <TableCell>{d.audio && d.audio.map((text) => <p>{text}</p>)}</TableCell>
+                            <TableCell>{d.video && d.video.map((text) => <p>{text}</p>)}</TableCell>
+                            <TableCell>{d.screen && d.screen.map((text) => <p>{text}</p>)}</TableCell>
+                            <TableCell>{d.role && d.role.map((text) => <p>{text}</p>)}</TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    )
+                  )
+                },
+              },
+            ]}
+          />
+        </Grid>
+      </Grid>
       <DatePicker
         ranges={dateRange}
         open={openDateRange}

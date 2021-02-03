@@ -35,6 +35,7 @@ export default function ApplicationTable(props: ApplicationTableProps) {
         },
       }}
       columns={[
+        { title: '№', field: '', render: (rowData) => rowData && rowData.tableData.id + 1, width: 75 },
         {
           title: t('fullName'),
           field: 'firstName',

@@ -19,6 +19,7 @@ import TabletIcon from '@material-ui/icons/Tablet'
 import TabletMacIcon from '@material-ui/icons/TabletMac'
 import LaptopWindowsIcon from '@material-ui/icons/LaptopWindows'
 import PhoneIphoneIcon from '@material-ui/icons/PhoneIphone'
+import StarIcon from '@material-ui/icons/Star'
 import _ from 'lodash'
 import { statisticsData } from '@utils/statistics-data'
 const useStyles = makeStyles(() => ({
@@ -27,7 +28,7 @@ const useStyles = makeStyles(() => ({
   },
 }))
 
-export const TrafficByDevice = ({ className, ...rest }: any) => {
+export const StarsCall = ({ className, ...rest }: any) => {
   const classes = useStyles()
   const theme = useTheme()
 
@@ -63,35 +64,38 @@ export const TrafficByDevice = ({ className, ...rest }: any) => {
         hoverBorderColor: colors.common.white,
       },
     ],
-    labels: [] as string[],
+    labels: [] as number[],
   }
 
+  let stars = 0
   let deviceGroups = _.values(_.groupBy(statisticsData, 'Platform')).map((d) => {
+    stars++
+
     let icon = PhoneIphoneIcon
     let color: string = colors.indigo[500]
     if (d[0].Platform === 'android') {
       icon = PhoneAndroidIcon
-      color = colors.red[600]
+      color = colors.grey[600]
     } else if (d[0].Platform === 'macOS') {
       icon = LaptopMacIcon
-      color = colors.orange[600]
+      color = colors.indigo[500]
     } else if (d[0].Platform === 'windows') {
       icon = LaptopWindowsIcon
-      color = colors.lightGreen[600]
+      color = colors.orange[600]
     } else if (d[0].Platform === 'ios') {
       icon = PhoneIphoneIcon
-      color = colors.indigo[500]
+      color = colors.red[600]
     } else {
       icon = LaptopWindowsIcon
-      color = colors.grey[600]
+      color = colors.lightGreen[600]
     }
     const value: number = (d.length / statisticsData.length) * 100
 
     data.datasets[0].data.push(value)
     data.datasets[0].backgroundColor.push(color)
-    data.labels.push(d[0].Platform)
+    data.labels.push(stars)
     return {
-      title: d[0].Platform,
+      title: stars,
       icon,
       color,
       value: value.toFixed(1),
@@ -100,7 +104,7 @@ export const TrafficByDevice = ({ className, ...rest }: any) => {
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
-      <CardHeader title="Install by Device" />
+      <CardHeader title="Call Stars" />
       <Divider />
       <CardContent>
         <Box height={300} position="relative">
@@ -109,10 +113,11 @@ export const TrafficByDevice = ({ className, ...rest }: any) => {
         <Box display="flex" justifyContent="center" mt={2}>
           {deviceGroups.map(({ color, icon: Icon, title, value }) => (
             <Box key={title} p={1} textAlign="center">
-              <Icon color="action" />
-              <Typography color="textPrimary" variant="body1">
+              {/* <Icon color="action" /> */}
+              <StarIcons star={title} color={color} />
+              {/* <Typography color="textPrimary" variant="body1">
                 {title}
-              </Typography>
+              </Typography> */}
               <Typography style={{ color }} variant="h5">
                 {value}%
               </Typography>
@@ -124,6 +129,56 @@ export const TrafficByDevice = ({ className, ...rest }: any) => {
   )
 }
 
-TrafficByDevice.propTypes = {
+StarsCall.propTypes = {
   className: PropTypes.string,
+}
+export default StarsCall
+
+const StarIcons = (props: { star: number; color: any }) => {
+  let StarIcons: any
+  let { color } = props
+  switch (props.star) {
+    case 1:
+      return (
+        <div>
+          <StarIcon style={{ color }} />
+        </div>
+      )
+    case 2:
+      return (
+        <div>
+          <StarIcon style={{ color }} />
+          <StarIcon style={{ color }} />
+        </div>
+      )
+    case 3:
+      return (
+        <div>
+          <StarIcon style={{ color }} />
+          <StarIcon style={{ color }} />
+          <StarIcon style={{ color }} />
+        </div>
+      )
+    case 4:
+      return (
+        <div>
+          <StarIcon style={{ color }} />
+          <StarIcon style={{ color }} />
+          <StarIcon style={{ color }} />
+          <StarIcon style={{ color }} />
+        </div>
+      )
+    case 5:
+      return (
+        <div>
+          <StarIcon style={{ color }} />
+          <StarIcon style={{ color }} />
+          <StarIcon style={{ color }} />
+          <StarIcon style={{ color }} />
+          <StarIcon style={{ color }} />
+        </div>
+      )
+    default:
+      return null
+  }
 }

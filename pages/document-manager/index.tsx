@@ -90,7 +90,7 @@ export default function DocumentManger(props: any) {
   }
 
   const handleChangeAnyPageSize = (value: number) => {
-    fetchAnyApplications(anyApplication.page, value)
+    fetchAnyApplications(0, value)
   }
 
   const handleChangeNewPage = (value: number) => {
@@ -98,7 +98,7 @@ export default function DocumentManger(props: any) {
   }
 
   const handleChangeNewPageSize = (value: number) => {
-    fetchNewApplications(state.newApplication.page, value)
+    fetchNewApplications(0, value)
   }
 
   useEffect(() => {

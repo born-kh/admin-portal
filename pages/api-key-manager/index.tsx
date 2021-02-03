@@ -27,8 +27,10 @@ import useTranslation from 'hooks/useTranslation'
 import moment from 'moment'
 ///api-key-manager component
 export default function ApiKeyManager() {
-  const [apiKeys, setAPiKeys] = useState<ApiKey[]>([])
+  const [apiKeys, setApiKeys] = useState<ApiKey[]>([])
+  const [filterApiKeys, setFilterApiKeys] = useState<ApiKey[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [selectedPlatform, setSelectedPlatform] = useState<Platforms>(Platforms.ALL)
   const [isOpen, setIsOpen] = useState(false)
   const { t } = useTranslation()
   const formik = useFormik({
@@ -46,6 +48,7 @@ export default function ApiKeyManager() {
   const handleClose = () => {
     setIsOpen(false)
   }
+
   const handleUpdateApiKey = (id: number) => {
     const apiKey = apiKeys.find((item) => item.id === id)
     if (apiKey) {
@@ -62,7 +65,7 @@ export default function ApiKeyManager() {
       apiKeyAPI
         .updateApiKey(params)
         .then((response) => {
-          setAPiKeys((prevApiKeys) => {
+          setApiKeys((prevApiKeys) => {
             return prevApiKeys.map((item) => {
               if (item.id === id) {
                 return { ...item, ...apiKey }
@@ -76,6 +79,13 @@ export default function ApiKeyManager() {
         })
     }
   }
+  useEffect(() => {
+    if (selectedPlatform !== Platforms.ALL) {
+      setFilterApiKeys(apiKeys.filter((apiKey) => apiKey.platform === selectedPlatform))
+    } else {
+      setFilterApiKeys(apiKeys)
+    }
+  }, [selectedPlatform, apiKeys])
 
   const handleCreateApiKey = () => {
     console.log(formik.values)
@@ -86,7 +96,7 @@ export default function ApiKeyManager() {
         validFrom: new Date(formik.values.validFrom).toISOString().split('.')[0] + 'Z',
       })
       .then((response) => {
-        setAPiKeys((prevApiKeys) => {
+        setApiKeys((prevApiKeys) => {
           return [...prevApiKeys, response.data.apiKey]
         })
         setIsOpen(false)
@@ -103,7 +113,7 @@ export default function ApiKeyManager() {
       .then((response) => {
         console.log(response)
         if (response.status === 200) {
-          setAPiKeys(response.data.apiKeys)
+          setApiKeys(response.data.apiKeys.sort((x, y) => +new Date(y.createdAt) - +new Date(x.createdAt)))
         }
         setIsLoading(false)
       })
@@ -122,11 +132,35 @@ export default function ApiKeyManager() {
   }
   return (
     <>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+        <FormControlLabel
+          control={
+            <FormControl variant="outlined" size="small">
+              <Select
+                style={{ width: 220, margin: '0px 0px 0px 40px' }}
+                value={selectedPlatform}
+                name="callType"
+                onChange={(e) => setSelectedPlatform(e.target.value as Platforms)}
+              >
+                {Object.values(Platforms).map((value: string) => (
+                  <MenuItem key={value} value={value}>
+                    {value}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          }
+          label="Plaform:"
+          labelPlacement="start"
+          style={{ marginBottom: 5 }}
+        />
+      </div>
       <MaterialTable
         title={t('apiKeys')}
         isLoading={isLoading}
         localization={{ body: { emptyDataSourceMessage: t('noApiKeys') } }}
         columns={[
+          { title: '№', field: '', render: (rowData) => rowData && rowData.tableData.id + 1, width: 75 },
           { title: t('ApiKey'), field: 'apiKey' },
           { title: t('platform'), field: 'platform' },
           { title: t('version'), field: 'version' },
@@ -178,10 +212,11 @@ export default function ApiKeyManager() {
             },
           },
         ]}
-        data={apiKeys}
+        data={filterApiKeys}
         options={{
           sorting: false,
           search: false,
+          pageSize: 10,
         }}
       />
 
@@ -221,9 +256,10 @@ export default function ApiKeyManager() {
             label={t('validFrom')}
             type="date"
             fullWidth
+            variant="outlined"
             name="validFrom"
             id="validFrom"
-            style={{ width: 300 }}
+            style={{ width: 300, marginBottom: 20 }}
             InputLabelProps={{
               shrink: true,
             }}
@@ -236,6 +272,7 @@ export default function ApiKeyManager() {
             fullWidth
             name="validTo"
             style={{ width: 300 }}
+            variant="outlined"
             id="validTo"
             InputLabelProps={{
               shrink: true,

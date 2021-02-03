@@ -21,11 +21,11 @@ const Sales = ({ className, ...rest }: any) => {
     datasets: [
       {
         backgroundColor: colors.indigo[500],
-        data: [],
+        data: [] as number[],
         label: 'This year',
       },
     ],
-    labels: [],
+    labels: [] as string[],
   }
 
   const statistics = statisticsData.map((item) => {
@@ -34,10 +34,10 @@ const Sales = ({ className, ...rest }: any) => {
   })
   console.log(statistics)
 
-  // _.values(_.groupBy(statistics, 'createdAt')).map((d) => {
-  //   data.datasets[0].data.push(d.length)
-  //   data.labels.push(d[0].createdAt)
-  // })
+  _.values(_.groupBy(statistics, 'createdAt')).map((d) => {
+    data.datasets[0].data.push(d.length)
+    data.labels.push(d[0].createdAt)
+  })
 
   const options = {
     animation: false,

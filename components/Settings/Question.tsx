@@ -1,6 +1,17 @@
 import React, { useState, useEffect, Fragment } from 'react'
 //material ui components
-import { TextField, Dialog, MenuItem, InputLabel, FormControl, Button, Select, Paper } from '@material-ui/core'
+import {
+  TextField,
+  Dialog,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Button,
+  Select,
+  Paper,
+  FormControlLabel,
+  colors,
+} from '@material-ui/core'
 //material table lib
 import MaterialTable from 'material-table'
 //useformik hook
@@ -15,73 +26,62 @@ import { settingsAPI } from 'service/api'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
 //settings interfaces
-import { AuthSettings, PermissionType, Question } from '@interfaces/settings'
+import { AuthSettings, PermissionType, Question, QuestionType, QuestionLanguage, Language } from '@interfaces/settings'
 //constants
 import { initialAlertData } from '@utils/constants'
-
+import AddIcon from '@material-ui/icons/Add'
+type LangaugeStrings = keyof typeof Language
 /* AUTH Component */
 export default function QuestionComponent() {
   const [questions, setQuestions] = useState<Question[]>([])
+
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
     initialAlertData
   )
   const [isLoading, setIsLoading] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
 
-  const formik = useFormik({
-    initialValues: {} as Question,
-
-    onSubmit: (values) => {},
-  })
   const handleCloseAlert = () => {
     setAlertData(initialAlertData)
   }
 
-  const handleClose = () => {
-    setIsOpen(false)
+  const handleCreateQuestion = async (data: Question) => {
+    console.log(data)
+    return settingsAPI
+      .createQuestion({ ...data, maxLen: Number(data.maxLen) })
+      .then((response) => {
+        setQuestions((prevQuestions) => [...prevQuestions, response.data.question])
+        setAlertData({ message: `Question created`, type: AlertMessageType.sucess, open: true })
+      })
+      .catch((error) => {
+        setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
+      })
   }
-  const handleDelete = (id: string) => {
-    settingsAPI
+
+  const handleUpdateQuestion = async (data: Question) => {
+    console.log(data)
+    return settingsAPI
+      .updateQuestion({ ...data })
+      .then(() => {
+        setQuestions(questions.map((item) => (item.id === data.id ? { ...data } : item)))
+
+        setAlertData({ message: `Question updated.`, type: AlertMessageType.sucess, open: true })
+      })
+      .catch((error) => {
+        setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
+      })
+  }
+
+  const handleDeleteQuestion = async (id: string) => {
+    console.log(id)
+    return settingsAPI
       .deleteQuestion({ id })
       .then(() => {
         setQuestions(questions.filter((item) => item.id !== id))
-
         setAlertData({ message: `Qestion deleted`, type: AlertMessageType.sucess, open: true })
       })
       .catch((error) => {
-        setAlertData({ message: `Question ${error.message}`, type: AlertMessageType.error, open: true })
+        setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
       })
-  }
-
-  const openEditModal = (data: Question) => {
-    formik.setValues(data)
-    setIsOpen(true)
-  }
-  const handleCraete = () => {
-    if (formik.values.id) {
-      settingsAPI
-        .updateQuestion(formik.values)
-        .then(() => {
-          setQuestions(questions.map((item) => (item.id === formik.values.id ? formik.values : item)))
-          handleClose()
-          setAlertData({ message: `Question updated.`, type: AlertMessageType.sucess, open: true })
-        })
-        .catch((error) => {
-          handleClose()
-          setAlertData({ message: `Question ${error.message}`, type: AlertMessageType.error, open: true })
-        })
-    } else {
-      settingsAPI
-        .createQuestion(formik.values)
-        .then((response) => {
-          setQuestions((prevQuestions) => [...prevQuestions, response.data.question])
-          setAlertData({ message: `Question created`, type: AlertMessageType.sucess, open: true })
-        })
-        .catch((error) => {
-          handleClose()
-          setAlertData({ message: `Create Question ${error.message}`, type: AlertMessageType.error, open: true })
-        })
-    }
   }
 
   useEffect(() => {
@@ -89,7 +89,9 @@ export default function QuestionComponent() {
     settingsAPI
       .getAllQuestions()
       .then((response) => {
+        console.log(response)
         if (response.status === 200) {
+          console.log(response.data.questions)
           setQuestions(response.data.questions)
         }
         setIsLoading(false)
@@ -107,125 +109,178 @@ export default function QuestionComponent() {
         isLoading={isLoading}
         localization={{ body: { emptyDataSourceMessage: 'There are no questions' } }}
         columns={[
-          { title: 'ID', field: 'id' },
-          { title: 'Text', field: 'text' },
-          { title: 'Type', field: 'type' },
-          { title: 'bgtext', field: 'bgtext' },
-          {
-            title: 'Edit',
-            field: '',
+          { title: 'Type', field: 'type', lookup: QuestionType, initialEditValue: QuestionType.checkbox },
 
-            render: (rowData) =>
-              rowData && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<EditIcon />}
-                  onClick={() => openEditModal(rowData)}
-                >
-                  Edit
-                </Button>
-              ),
-          },
-
-          {
-            title: 'Delete',
-            field: '',
-            render: (rowData) =>
-              rowData && (
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  startIcon={<DeleteIcon />}
-                  onClick={() => rowData.id && handleDelete(rowData.id)}
-                >
-                  Delete
-                </Button>
-              ),
-          },
-        ]}
-        actions={[
-          {
-            icon: 'add_box',
-            tooltip: 'Create question',
-            position: 'toolbar',
-            onClick: () => {
-              formik.setValues({})
-              setIsOpen(true)
-            },
-          },
+          { title: 'Backgruund text', field: 'bgText' },
+          { title: 'Max Len', field: 'maxLen', type: 'numeric' },
         ]}
         data={questions}
         components={{
           Container: (props) => <Paper {...props} elevation={0} />,
         }}
+        editable={{
+          onRowAdd: (newData) =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                handleCreateQuestion({ ...newData }).then(() => {
+                  resolve()
+                })
+              }, 100)
+            }),
+          onRowUpdate: (newData, oldData) =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                handleUpdateQuestion({ ...newData }).then(() => {
+                  resolve()
+                })
+              }, 100)
+            }),
+          onRowDelete: (oldData) =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                if (oldData.id) {
+                  handleDeleteQuestion(oldData.id).then(() => {
+                    resolve()
+                  })
+                } else {
+                  resolve()
+                }
+              }, 100)
+            }),
+        }}
+        detailPanel={[
+          {
+            tooltip: 'Question languages',
+
+            render: (rowData) => rowData.id && <QuestioLaguageComponent questionId={rowData.id} />,
+          },
+        ]}
         options={{
           sorting: false,
           search: false,
         }}
       />
-
-      <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={isOpen} fullWidth maxWidth="xs">
-        <CustomDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Question
-        </CustomDialogTitle>
-        <CustomDialogContent dividers style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            style={{ width: 300 }}
-            id="text"
-            name="text"
-            label="text"
-            onChange={formik.handleChange}
-            value={formik.values.text}
-          />
-
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            style={{ width: 300 }}
-            id="type"
-            name="type"
-            label="type"
-            onChange={formik.handleChange}
-            value={formik.values.type}
-          />
-
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            style={{ width: 300 }}
-            id="bgText"
-            name="bgText"
-            label="bgText"
-            onChange={formik.handleChange}
-            value={formik.values.bgtext}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            style={{ width: 300 }}
-            id="maxlen"
-            name="maxlen"
-            label="maxlen"
-            onChange={formik.handleChange}
-            value={formik.values.maxlen}
-          />
-        </CustomDialogContent>
-        <CustomDialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button autoFocus onClick={() => {}} color="primary">
-            OK
-          </Button>
-        </CustomDialogActions>
-      </Dialog>
     </Fragment>
+  )
+}
+
+const QuestioLaguageComponent = (props: { questionId: string }) => {
+  const [isLoadingLanguages, setIsLoadingLanguages] = useState(false)
+
+  const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
+    initialAlertData
+  )
+
+  const [questionLanguages, setQuestionLanguages] = useState<QuestionLanguage[]>([])
+
+  const handleCloseAlert = () => {
+    setAlertData(initialAlertData)
+  }
+  useEffect(() => {
+    setIsLoadingLanguages(true)
+    settingsAPI
+      .getAllQuestionLanguage({ questionId: props.questionId })
+      .then((response) => {
+        if (response.status === 200) {
+          setQuestionLanguages(response.data)
+        }
+        setIsLoadingLanguages(false)
+      })
+      .catch(() => {
+        setIsLoadingLanguages(false)
+      })
+  }, [props.questionId])
+
+  const handleCreateQuestionLanguage = async (data: QuestionLanguage) => {
+    return settingsAPI
+      .createQuestionLanguage({ ...data, lang: Language.English })
+      .then((response) => {
+        setAlertData({ message: `Question language created`, type: AlertMessageType.sucess, open: true })
+      })
+      .catch((error) => {
+        setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
+      })
+  }
+
+  const handleUpdateQuestionLanguage = async (data: QuestionLanguage) => {
+    return settingsAPI
+      .updateQuestionLanguage({ ...data })
+      .then(() => {
+        setQuestionLanguages(questionLanguages.map((item) => (item.id === data.id ? { ...data } : item)))
+
+        setAlertData({ message: `Question  languageupdated.`, type: AlertMessageType.sucess, open: true })
+      })
+      .catch((error) => {
+        setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
+      })
+  }
+
+  const handleDeleteQuestionLanguage = async (id: string) => {
+    return settingsAPI
+      .deleteQuestion({ id })
+      .then(() => {
+        setQuestionLanguages(questionLanguages.filter((item) => item.id !== id))
+        setAlertData({ message: `Qestion deleted`, type: AlertMessageType.sucess, open: true })
+      })
+      .catch((error) => {
+        setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
+      })
+  }
+
+  return (
+    <div>
+      <MaterialTable
+        title="Languages"
+        isLoading={isLoadingLanguages}
+        localization={{ body: { emptyDataSourceMessage: 'There are no lanhuages' } }}
+        columns={[
+          { title: 'lang', field: 'lang', lookup: Language, initialEditValue: 'Russian' },
+          { title: 'text', field: 'text' },
+        ]}
+        editable={{
+          onRowAdd: (newData) =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                handleCreateQuestionLanguage({ ...newData, questionId: props.questionId }).then(() => {
+                  resolve()
+                })
+              }, 100)
+            }),
+          onRowUpdate: (newData, oldData) =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                handleUpdateQuestionLanguage({ ...newData }).then(() => {
+                  resolve()
+                })
+              }, 100)
+            }),
+          onRowDelete: (oldData) =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                if (oldData.id) {
+                  handleDeleteQuestionLanguage(oldData.id).then(() => {
+                    resolve()
+                  })
+                } else {
+                  resolve()
+                }
+              }, 100)
+            }),
+        }}
+        data={questionLanguages}
+        components={{
+          Container: (props) => <Paper {...props} elevation={0} />,
+        }}
+        options={{
+          rowStyle: {
+            backgroundColor: '#EEE',
+          },
+          sorting: false,
+          search: false,
+          paging: false,
+        }}
+      />
+      <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
+    </div>
   )
 }

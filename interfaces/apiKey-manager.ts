@@ -10,9 +10,11 @@ export interface ApiKey {
   enabled: boolean
   version: string
   cacheExpiration: number
+  tableData?: any
 }
 
 export enum Platforms {
+  ALL = 'ALL',
   android = 'android',
   ios = 'ios',
   windows = 'windows',

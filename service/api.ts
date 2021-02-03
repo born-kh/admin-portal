@@ -46,6 +46,8 @@ import {
   CallQuality,
   GetAllQuestionsResponse,
   Question,
+  GetQuestionLanguagesResponse,
+  QuestionLanguage,
 } from '@interfaces/settings'
 import {
   FetchAuthCodesResponse,
@@ -267,6 +269,7 @@ export const settingsAPI = {
     })
   },
   async createCallQulaity(params: CallQuality) {
+    console.log(params)
     return axios.post(API_URLS.CREATE_CALL_QUALITY, params).then((response) => {
       return response
     })
@@ -294,12 +297,33 @@ export const settingsAPI = {
     })
   },
   async updateQuestion(params: Question) {
-    return axios.post(API_URLS.DELETE_QUESTION, params).then((response) => {
+    return axios.post(API_URLS.UPDATE_QUESTION, params).then((response) => {
       return response
     })
   },
   async deleteQuestion(params: { id: string }) {
     return axios.post(API_URLS.DELETE_QUESTION, params).then((response) => {
+      return response
+    })
+  },
+
+  async getAllQuestionLanguage(params: { questionId: string }) {
+    return axios.post<QuestionLanguage[]>(API_URLS.QUESTION_LANGUAGE_GET, params).then((response) => {
+      return response
+    })
+  },
+  async createQuestionLanguage(params: QuestionLanguage) {
+    return axios.post(API_URLS.QUESTION_LANGUAGE_CREATE, params).then((response) => {
+      return response
+    })
+  },
+  async updateQuestionLanguage(params: QuestionLanguage) {
+    return axios.post(API_URLS.QUESTION_LANGUAGE_UPDATE, params).then((response) => {
+      return response
+    })
+  },
+  async deleteQuestionLanguage(params: { id: string }) {
+    return axios.post(API_URLS.QUESTION_LANGUAGE_DELETE, params).then((response) => {
       return response
     })
   },

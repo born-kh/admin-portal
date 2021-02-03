@@ -104,6 +104,7 @@ export default function Authencation() {
         isLoading={isLoading}
         localization={{ body: { emptyDataSourceMessage: '' } }}
         columns={[
+          { title: '№', field: '', render: (rowData) => rowData && rowData.tableData.id + 1, width: 75 },
           { title: t('identifier'), field: 'identifier' },
           { title: t('type'), field: 'type' },
           { title: t('ip'), field: 'ip' },
@@ -146,6 +147,7 @@ export default function Authencation() {
         options={{
           pageSize: 10,
           sorting: false,
+          exportButton: true,
         }}
       />
     </>

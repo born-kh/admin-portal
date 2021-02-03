@@ -24,7 +24,7 @@ const ActiveUsers = ({ className, ...rest }: any) => {
     (item) => moment(Number(item['Last Active'])).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')
   )
 
-  // const value: number = (activeUsers.length / statisticsData.length) * 100
+  const value: number = (activeUsers.length / statisticsData.length) * 100
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>

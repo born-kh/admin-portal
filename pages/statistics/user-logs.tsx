@@ -132,6 +132,7 @@ export default function UserLogs() {
         isLoading={isLoading}
         localization={{ body: { emptyDataSourceMessage: '' } }}
         columns={[
+          { title: '№', field: '', render: (rowData) => rowData && rowData.tableData.id + 1, width: 75 },
           { title: t('username'), field: 'account_id' },
           { title: t('method'), field: 'method' },
 
@@ -162,6 +163,7 @@ export default function UserLogs() {
         options={{
           sorting: false,
           pageSize: 10,
+          exportButton: true,
         }}
       />
       <DatePicker

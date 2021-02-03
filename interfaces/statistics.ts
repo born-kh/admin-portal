@@ -12,6 +12,7 @@ export interface IAuthCode {
   createdAt: Date // Show
   updatedAt: Date // Not
   activated: boolean // Show
+  tableData?: any
 }
 
 export enum DeliveryType {

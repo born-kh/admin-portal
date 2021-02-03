@@ -22,6 +22,7 @@ export interface AccountSessionsData {
   ios?: Push
   iosvoip?: Push
   isConnected: boolean
+  tableData?: any
 }
 
 export interface PhoneInfo {
@@ -173,6 +174,7 @@ export interface IUserLog {
   data: string
   ip: string
   ts: string
+  tableData?: any
 }
 
 export interface UserSettings {

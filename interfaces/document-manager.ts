@@ -12,6 +12,7 @@ export interface Application {
   createdAt?: Date
   updatedAt?: Date
   submittedAt?: Date
+  tableData?: any
 }
 
 export interface Document {

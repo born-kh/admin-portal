@@ -35,6 +35,7 @@ export default function TracerTable(props: TracerTableProps) {
       }}
       options={{
         showTitle: false,
+        exportButton: true,
       }}
       detailPanel={[
         {

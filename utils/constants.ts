@@ -140,6 +140,10 @@ export const permissions = [
   'TAP_CALL_GET_BY_ACCOUNT_ID',
   'TAP_CALL_GET_BY_IDS',
   'TAP_GET_USER_ALL_LOGS',
+  'TAP_QUESTION_LANGUAGE_CREATE',
+  'TAP_QUESTION_LANGUAGE_UPDATE',
+  'TAP_QUESTION_LANGUAGE_DELETE',
+  'TAP_QUESTION_LANGUAGE_GET',
 ]
 export enum USER_PERMISSION_TYPE {
   allow = 'ALLOW',
@@ -225,6 +229,10 @@ export const API_URLS = {
   CALL_GET_ALL: '/callgetalll',
   CALL_GET_BY_IDS: '/callgetbyids',
   CALL_GET_BY_ACCOUNT_ID: '/callgetbyaccuntid',
+  QUESTION_LANGUAGE_CREATE: '/question.language.create',
+  QUESTION_LANGUAGE_UPDATE: '/question.language.update',
+  QUESTION_LANGUAGE_DELETE: '/question.language.delete',
+  QUESTION_LANGUAGE_GET: '/question.language.get',
 }
 
 export const rejectMessages = [

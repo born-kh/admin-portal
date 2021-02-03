@@ -158,6 +158,7 @@ export default function AccountSessions() {
           },
         }}
         columns={[
+          { title: '№', field: '', render: (rowData) => rowData && rowData.tableData.id + 1, width: 75 },
           { title: t('deviceName'), field: 'meta.deviceName' },
           { title: t('platform'), field: 'meta.platform' },
           { title: t('ip'), field: 'meta.ip' },
