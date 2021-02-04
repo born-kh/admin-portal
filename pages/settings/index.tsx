@@ -5,6 +5,7 @@ import AuthSettings from '@components/Settings/AuthSettings'
 import SystemSettings from '@components/Settings/SystemSettings'
 import CallQuality from '@components/Settings/CallQuality'
 import Question from '@components/Settings/Question'
+import useTranslation from 'hooks/useTranslation'
 
 export default function Settings() {
   const [value, setValue] = useState(0)
@@ -12,6 +13,7 @@ export default function Settings() {
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue)
   }
+  const { t } = useTranslation()
   return (
     <>
       <Paper style={{ paddingTop: 10 }}>
@@ -25,14 +27,14 @@ export default function Settings() {
           <Tab
             label={
               <Badge badgeContent={0} color="secondary">
-                Auth Settings
+                {t('authSettings')}
               </Badge>
             }
           />
           <Tab
             label={
               <Badge badgeContent={0} color="secondary">
-                System Settings
+                {t('systemSettings')}
               </Badge>
             }
           />
@@ -40,14 +42,14 @@ export default function Settings() {
           <Tab
             label={
               <Badge badgeContent={0} color="secondary">
-                Call Quality
+                {t('callQuality')}
               </Badge>
             }
           />
           <Tab
             label={
               <Badge badgeContent={0} color="secondary">
-                Question
+                {t('questions')}
               </Badge>
             }
           />

@@ -17,6 +17,7 @@ import { initialAlertData } from '@utils/constants'
 
 //json-editor lib
 import dynamic from 'next/dynamic'
+import useTranslation from 'hooks/useTranslation'
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 /* SYSTEM SETTINGS */
@@ -28,6 +29,7 @@ export default function SystemSettingsComponent() {
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
     initialAlertData
   )
+  const { t } = useTranslation()
 
   const handleCloseAlert = () => {
     setAlertData(initialAlertData)
@@ -52,11 +54,11 @@ export default function SystemSettingsComponent() {
             prevSystemSettings.map((item) => (item.id === systemSettingsData.id ? systemSettingsData : item))
           )
           handleClose()
-          setAlertData({ message: `System settings updated`, type: AlertMessageType.sucess, open: true })
+          setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
         })
         .catch((error) => {
           handleClose()
-          setAlertData({ message: `Update Auth Settings ${error.message}`, type: AlertMessageType.error, open: true })
+          setAlertData({ message: ` ${error.message}`, type: AlertMessageType.error, open: true })
         })
     }
   }
@@ -99,14 +101,14 @@ export default function SystemSettingsComponent() {
     <Fragment>
       <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
       <MaterialTable
-        title="System Settings"
+        title={t('systemSettings')}
         isLoading={isLoading}
-        localization={{ body: { emptyDataSourceMessage: 'There are no system settings' } }}
+        // localization={{ body: { emptyDataSourceMessage: 'There are no system settings' } }}
         columns={[
           { title: 'ID', field: 'id' },
-          { title: 'Description', field: 'description' },
+          { title: t('description'), field: 'description' },
           {
-            title: 'Edit',
+            title: t('edit'),
             field: '',
 
             render: (rowData) =>
@@ -117,7 +119,7 @@ export default function SystemSettingsComponent() {
                   startIcon={<EditIcon />}
                   onClick={() => openEditModal(rowData)}
                 >
-                  Edit
+                  {t('edit')}
                 </Button>
               ),
           },
@@ -134,17 +136,17 @@ export default function SystemSettingsComponent() {
 
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={isOpen} fullWidth maxWidth="md">
         <CustomDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Edit system settings
+          {t('systemSettings')}
         </CustomDialogTitle>
         <CustomDialogContent dividers style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
           <ReactJson src={systemSettingsData || {}} onEdit={onEdit} />
         </CustomDialogContent>
         <CustomDialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
-            Cancel
+            {t('cancel')}
           </Button>
           <Button autoFocus onClick={handleEdit} color="primary">
-            OK
+            {t('ok')}
           </Button>
         </CustomDialogActions>
       </Dialog>

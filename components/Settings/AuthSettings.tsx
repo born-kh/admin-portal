@@ -18,6 +18,7 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import { AuthSettings, PermissionType } from '@interfaces/settings'
 //constants
 import { initialAlertData } from '@utils/constants'
+import useTranslation from 'hooks/useTranslation'
 
 /* AUTH Component */
 export default function AuthSettingsComponent() {
@@ -27,7 +28,7 @@ export default function AuthSettingsComponent() {
   )
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
-
+  const { t } = useTranslation()
   const formik = useFormik({
     initialValues: {
       prefix: '',
@@ -51,11 +52,11 @@ export default function AuthSettingsComponent() {
         handleClose()
         setAllAuthSettings(allAuthSeetings.filter((item: AuthSettings) => item.id !== id))
 
-        setAlertData({ message: `Auth settings deleted`, type: AlertMessageType.sucess, open: true })
+        setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
       })
       .catch((error) => {
         handleClose()
-        setAlertData({ message: `Auth settings ${error.message}`, type: AlertMessageType.error, open: true })
+        setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
       })
   }
 
@@ -72,22 +73,22 @@ export default function AuthSettingsComponent() {
             allAuthSeetings.map((item: AuthSettings) => (item.id === formik.values.id ? formik.values : item))
           )
           handleClose()
-          setAlertData({ message: `Auth settings updated.`, type: AlertMessageType.sucess, open: true })
+          setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
         })
         .catch((error) => {
           handleClose()
-          setAlertData({ message: `Update Auth Settings ${error.message}`, type: AlertMessageType.error, open: true })
+          setAlertData({ message: ` ${error.message}`, type: AlertMessageType.error, open: true })
         })
     } else {
       settingsAPI
         .createAuthSettings(formik.values)
         .then((response) => {
           setAllAuthSettings([...allAuthSeetings, { ...formik.values }])
-          setAlertData({ message: `Auth settings created`, type: AlertMessageType.sucess, open: true })
+          setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
         })
         .catch((error) => {
           handleClose()
-          setAlertData({ message: `Create Auth Settings ${error.message}`, type: AlertMessageType.error, open: true })
+          setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
         })
     }
   }
@@ -111,16 +112,16 @@ export default function AuthSettingsComponent() {
     <Fragment>
       <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
       <MaterialTable
-        title="Auth Settings"
+        title={t('authSettins')}
         isLoading={isLoading}
-        localization={{ body: { emptyDataSourceMessage: 'There are no auth settings' } }}
+        // localization={{ body: { emptyDataSourceMessage: 'There are no auth settings' } }}
         columns={[
           { title: 'ID', field: 'id' },
-          { title: 'Prefix', field: 'prefix' },
-          { title: 'Permission', field: 'permissionType' },
-          { title: 'Description', field: 'description' },
+          { title: t('prefix'), field: 'prefix' },
+          { title: t('permissionType'), field: 'permissionType' },
+          { title: t('description'), field: 'description' },
           {
-            title: 'Edit',
+            title: t('edit'),
             field: '',
 
             render: (rowData) =>
@@ -131,13 +132,13 @@ export default function AuthSettingsComponent() {
                   startIcon={<EditIcon />}
                   onClick={() => openEditModal(rowData)}
                 >
-                  Edit
+                  {t('edit')}
                 </Button>
               ),
           },
 
           {
-            title: 'Delete',
+            title: t('remove'),
             field: '',
             render: (rowData) =>
               rowData && (
@@ -147,7 +148,7 @@ export default function AuthSettingsComponent() {
                   startIcon={<DeleteIcon />}
                   onClick={() => rowData.id && handleDelete(rowData.id)}
                 >
-                  Delete
+                  {t('remove')}
                 </Button>
               ),
           },
@@ -155,7 +156,7 @@ export default function AuthSettingsComponent() {
         actions={[
           {
             icon: 'add_box',
-            tooltip: 'Create auth settings',
+            tooltip: t('create'),
             position: 'toolbar',
             onClick: () => {
               formik.setValues({ prefix: '', permissionType: PermissionType.allow, description: '' })
@@ -175,7 +176,7 @@ export default function AuthSettingsComponent() {
 
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={isOpen} fullWidth maxWidth="xs">
         <CustomDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Auth Settings
+          {t('authSettings')}
         </CustomDialogTitle>
         <CustomDialogContent dividers style={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
           <TextField
@@ -185,7 +186,7 @@ export default function AuthSettingsComponent() {
             style={{ width: 300 }}
             id="prefix"
             name="prefix"
-            label="Prefix"
+            label={t('prefix')}
             onChange={formik.handleChange}
             value={formik.values.prefix}
           />
@@ -200,7 +201,7 @@ export default function AuthSettingsComponent() {
               style={{ width: 300 }}
               value={formik.values.permissionType}
               onChange={formik.handleChange}
-              label="Permission"
+              label={t('permission')}
             >
               <MenuItem key={PermissionType.allow} value={PermissionType.allow}>
                 Allow
@@ -217,17 +218,17 @@ export default function AuthSettingsComponent() {
             style={{ width: 300 }}
             id="description"
             name="description"
-            label="Description"
+            label={t('description')}
             onChange={formik.handleChange}
             value={formik.values.description}
           />
         </CustomDialogContent>
         <CustomDialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
-            Cancel
+            {t('cancel')}
           </Button>
           <Button autoFocus onClick={handleCraete} color="primary">
-            OK
+            {t('ok')}
           </Button>
         </CustomDialogActions>
       </Dialog>

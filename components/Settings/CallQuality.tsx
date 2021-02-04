@@ -42,6 +42,7 @@ import { AuthSettings, PermissionType, CallQuality, Question } from '@interfaces
 //constants
 import { initialAlertData } from '@utils/constants'
 import AddIcon from '@material-ui/icons/AddBoxRounded'
+import useTranslation from 'hooks/useTranslation'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,7 +71,7 @@ function intersection(a: Question[], b: Question[]) {
 /* AUTH Component */
 export default function CallQualityComponent() {
   const [callQualities, setCallQualities] = useState<CallQuality[]>([])
-
+  const { t } = useTranslation()
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
     initialAlertData
   )
@@ -145,10 +146,10 @@ export default function CallQualityComponent() {
       .then(() => {
         setCallQualities(callQualities.filter((item) => item.id !== id))
 
-        setAlertData({ message: `Call quality deleted`, type: AlertMessageType.sucess, open: true })
+        setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
       })
       .catch((error) => {
-        setAlertData({ message: `Call quality ${error.message}`, type: AlertMessageType.error, open: true })
+        setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
       })
   }
 
@@ -223,11 +224,11 @@ export default function CallQualityComponent() {
         .then(() => {
           setCallQualities(callQualities.map((item) => (item.id === formik.values.id ? formik.values : item)))
           handleClose()
-          setAlertData({ message: `Call qulaity updated.`, type: AlertMessageType.sucess, open: true })
+          setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
         })
         .catch((error) => {
           handleClose()
-          setAlertData({ message: `Update Call quality ${error.message}`, type: AlertMessageType.error, open: true })
+          setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
         })
     } else {
       settingsAPI
@@ -235,11 +236,11 @@ export default function CallQualityComponent() {
         .then((response) => {
           handleClose()
           setCallQualities([...callQualities, response.data.callQuality])
-          setAlertData({ message: `Call quality created`, type: AlertMessageType.sucess, open: true })
+          setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
         })
         .catch((error) => {
           handleClose()
-          setAlertData({ message: `Create call qulaity ${error.message}`, type: AlertMessageType.error, open: true })
+          setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
         })
     }
   }
@@ -311,16 +312,16 @@ export default function CallQualityComponent() {
     <Fragment>
       <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
       <MaterialTable
-        title="Call Quality"
+        title={t('callQuality')}
         isLoading={isLoading}
-        localization={{ body: { emptyDataSourceMessage: 'There are no call qulaity' } }}
+        // localization={{ body: { emptyDataSourceMessage: 'There are no call qulaity' } }}
         columns={[
           { title: 'ID', field: 'id' },
-          { title: 'Ask', field: 'ask' },
-          { title: 'Ask Duration', field: 'askDuration' },
-          { title: 'Description', field: 'description' },
+          { title: t('ask'), field: 'ask' },
+          { title: t('askDuration'), field: 'askDuration' },
+          { title: t('description'), field: 'description' },
           {
-            title: 'Edit',
+            title: t('edit'),
             field: '',
 
             render: (rowData) =>
@@ -331,13 +332,13 @@ export default function CallQualityComponent() {
                   startIcon={<EditIcon />}
                   onClick={() => openEditModal(rowData)}
                 >
-                  Edit
+                  {t('edit')}
                 </Button>
               ),
           },
 
           {
-            title: 'Delete',
+            title: t('remove'),
             field: '',
             render: (rowData) =>
               rowData && (
@@ -347,7 +348,7 @@ export default function CallQualityComponent() {
                   startIcon={<DeleteIcon />}
                   onClick={() => rowData.id && handleDelete(rowData.id)}
                 >
-                  Delete
+                  {t('remove')}
                 </Button>
               ),
           },
@@ -355,7 +356,7 @@ export default function CallQualityComponent() {
         actions={[
           {
             icon: 'add_box',
-            tooltip: 'Create auth settings',
+            tooltip: t('create'),
             position: 'toolbar',
             onClick: () => {
               formik.setValues({ ask: true, askDuration: 0, askIf: {}, questions: {} })
@@ -375,7 +376,7 @@ export default function CallQualityComponent() {
 
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={isOpen} fullWidth maxWidth="md">
         <CustomDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Call quality
+          {t('callQuality')}
         </CustomDialogTitle>
         <CustomDialogContent dividers>
           <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
@@ -387,7 +388,7 @@ export default function CallQualityComponent() {
                   role="list"
                   subheader={
                     <ListSubheader component="div" id="nested-list-subheader">
-                      Questons{'  '}
+                      {'questions'}
                       <IconButton onClick={handleAddQuestion}>
                         {' '}
                         <AddIcon />
@@ -446,13 +447,13 @@ export default function CallQualityComponent() {
           </Grid>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <FormControl variant="outlined" margin="normal" style={{ width: 100, marginRight: 20 }}>
-              <InputLabel id="sources">Ask if length</InputLabel>
+              <InputLabel id="sources">{t('questionsCount')}</InputLabel>
 
               <Select
                 name="sources"
                 labelId="AskIfLength"
                 id="AskIfLength"
-                label={'Ask if length'}
+                label={t('questionsCount')}
                 value={askIfLength}
                 onChange={handleChangeAskIfLength}
               >
@@ -469,7 +470,7 @@ export default function CallQualityComponent() {
               type="number"
               id="askDuration"
               onChange={formik.handleChange}
-              label={'Ask duration'}
+              label={t('duration')}
               name="askDuration"
               value={formik.values.askDuration}
             />
@@ -484,17 +485,17 @@ export default function CallQualityComponent() {
                   color="primary"
                 />
               }
-              label={'Ask'}
+              label={t('ask')}
               labelPlacement="start"
             />
           </div>
         </CustomDialogContent>
         <CustomDialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
-            Cancel
+            {t('cancel')}
           </Button>
           <Button autoFocus onClick={handleCraete} color="primary">
-            OK
+            {t('ok')}
           </Button>
         </CustomDialogActions>
       </Dialog>

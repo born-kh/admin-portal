@@ -182,15 +182,15 @@ export const getNavbarItems = () => {
   }
 
   if (managmentItems.length > 0) {
-    navItems.push({ title: 'Managment', items: managmentItems })
+    navItems.push({ title: 'managment', items: managmentItems })
   }
 
   if (managmentItems.length > 0) {
-    navItems.push({ title: 'Settings', items: settingsItems })
+    navItems.push({ title: 'settings', items: settingsItems })
   }
 
   if (managmentItems.length > 0) {
-    navItems.push({ title: 'Statistics', items: statisticsItems })
+    navItems.push({ title: 'statistics', items: statisticsItems })
   }
 
   return navItems

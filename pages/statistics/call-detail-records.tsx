@@ -20,6 +20,8 @@ import {
   FormLabel,
   TableHead,
   Grid,
+  colors,
+  Card,
 } from '@material-ui/core'
 //moment js
 import moment from 'moment'
@@ -53,6 +55,7 @@ import DateRangeIcon from '@material-ui/icons/DateRange'
 import { useRouter } from 'next/router'
 
 import StarsCall from '@components/common/StarsCall'
+import { HorizontalBar } from 'react-chartjs-2'
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 const theme = createMuiTheme({
@@ -106,8 +109,22 @@ export default function UserLogs() {
       key: 'selection',
     }
   })
+
   const router = useRouter()
   const [withDateRange, setWithDateRange] = useState(false)
+  const dataHorBar = {
+    labels: ['5', '4', '3', '2', '1'],
+    datasets: [
+      {
+        label: 'Call Stars',
+        backgroundColor: ['#57bb8a', '#9ace6a', '#ffcf02', '#ff9f02', '#ff6f31'],
+        borderWidth: 1,
+        borderColor: colors.common.white,
+        hoverBorderColor: colors.common.white,
+        data: [65, 59, 80, 81, 100],
+      },
+    ],
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -234,7 +251,7 @@ export default function UserLogs() {
               <TableBody>
                 <TableRow>
                   <TableCell align="left" width={150}>
-                    Date
+                    {t('date')}
                   </TableCell>
 
                   <TableCell align="left">
@@ -259,7 +276,7 @@ export default function UserLogs() {
                 </TableRow>
                 <TableRow>
                   <TableCell align="left" width={150}>
-                    Origination Number
+                    {t('originationNumber')}
                   </TableCell>
                   <TableCell
                     align="left"
@@ -302,7 +319,7 @@ export default function UserLogs() {
                               checked={formik.values.originationNumberFilterType === FilterType.or}
                               control={<Radio size="small" color="primary" />}
                               onChange={() => handleOnChangeFilterType('originationNumberFilterType', FilterType.or)}
-                              label="or"
+                              label={t('or')}
                               labelPlacement="end"
                             />
                             <FormControlLabel
@@ -310,12 +327,12 @@ export default function UserLogs() {
                               checked={formik.values.originationNumberFilterType === FilterType.and}
                               onChange={() => handleOnChangeFilterType('originationNumberFilterType', FilterType.and)}
                               control={<Radio size="small" color="primary" />}
-                              label="and"
+                              label={t('and')}
                               labelPlacement="end"
                             />
                           </RadioGroup>
                         }
-                        label="type:"
+                        label={`${t('type')}:`}
                         labelPlacement="start"
                       />
                     </div>
@@ -327,7 +344,7 @@ export default function UserLogs() {
                             checked={formik.values.originationNumberType === FilterTextType.EXACT}
                             control={<Radio size="small" color="primary" />}
                             onChange={() => handleOnChangeFilterTextType('originationNumberType', FilterTextType.EXACT)}
-                            label="Exact"
+                            label={t('exact')}
                             labelPlacement="end"
                           />
                           <FormControlLabel
@@ -337,7 +354,7 @@ export default function UserLogs() {
                               handleOnChangeFilterTextType('originationNumberType ', FilterTextType.BEGINS_WITH)
                             }
                             control={<Radio size="small" color="primary" />}
-                            label="Begins With"
+                            label={t('beginsWith')}
                             labelPlacement="end"
                           />
                           <FormControlLabel
@@ -347,7 +364,7 @@ export default function UserLogs() {
                               handleOnChangeFilterTextType('originationNumberType ', FilterTextType.CONTAINS)
                             }
                             control={<Radio size="small" color="primary" />}
-                            label="Contains"
+                            label={t('contains')}
                             labelPlacement="end"
                           />
                           <FormControlLabel
@@ -357,12 +374,12 @@ export default function UserLogs() {
                               handleOnChangeFilterTextType('originationNumberType ', FilterTextType.ENDS_WITH)
                             }
                             control={<Radio size="small" color="primary" />}
-                            label="Ends With"
+                            label={t('endsWith')}
                             labelPlacement="end"
                           />
                         </RadioGroup>
                       }
-                      label="text type:"
+                      label={`${t('textType')}:`}
                       labelPlacement="start"
                     />
                   </TableCell>
@@ -370,7 +387,7 @@ export default function UserLogs() {
 
                 <TableRow>
                   <TableCell align="left" width={150}>
-                    Destination Number
+                    {t('destinationNumber')}
                   </TableCell>
                   <TableCell
                     align="left"
@@ -413,7 +430,7 @@ export default function UserLogs() {
                               checked={formik.values.destinationNumberFilterType === FilterType.or}
                               control={<Radio size="small" color="primary" />}
                               onChange={() => handleOnChangeFilterType('destinationNumberFilterType', FilterType.or)}
-                              label="or"
+                              label={t('or')}
                               labelPlacement="end"
                             />
                             <FormControlLabel
@@ -421,7 +438,7 @@ export default function UserLogs() {
                               checked={formik.values.destinationNumberFilterType === FilterType.and}
                               onChange={() => handleOnChangeFilterType('destinationNumberFilterType', FilterType.and)}
                               control={<Radio size="small" color="primary" />}
-                              label="and"
+                              label={t('and')}
                               labelPlacement="end"
                             />
                           </RadioGroup>
@@ -445,7 +462,7 @@ export default function UserLogs() {
                             checked={formik.values.destinationNumberType === FilterTextType.EXACT}
                             onChange={() => handleOnChangeFilterTextType('destinationNumberType', FilterTextType.EXACT)}
                             control={<Radio size="small" color="primary" />}
-                            label="Exact"
+                            label={t('exact')}
                             labelPlacement="end"
                           />
                           <FormControlLabel
@@ -455,7 +472,7 @@ export default function UserLogs() {
                               handleOnChangeFilterTextType('destinationNumberType', FilterTextType.BEGINS_WITH)
                             }
                             control={<Radio size="small" color="primary" />}
-                            label="Begins With"
+                            label={t('beginsWith')}
                             labelPlacement="end"
                           />
                           <FormControlLabel
@@ -465,7 +482,7 @@ export default function UserLogs() {
                               handleOnChangeFilterTextType('destinationNumberType', FilterTextType.CONTAINS)
                             }
                             control={<Radio size="small" color="primary" />}
-                            label="Contains"
+                            label={t('contains')}
                             labelPlacement="end"
                           />
                           <FormControlLabel
@@ -475,19 +492,19 @@ export default function UserLogs() {
                               handleOnChangeFilterTextType('destinationNumberType', FilterTextType.ENDS_WITH)
                             }
                             control={<Radio size="small" color="primary" />}
-                            label="Ends With"
+                            label={t('endsWith')}
                             labelPlacement="end"
                           />
                         </RadioGroup>
                       }
-                      label="text type:"
+                      label={t('textType')}
                       labelPlacement="start"
                     />
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell align="left" width={150}>
-                    Call ID
+                    {t('callID')}
                   </TableCell>
                   <TableCell
                     align="left"
@@ -523,7 +540,7 @@ export default function UserLogs() {
                               checked={formik.values.callIDFilterType === FilterType.or}
                               control={<Radio size="small" color="primary" />}
                               onChange={() => handleOnChangeFilterType('callIDFilterType', FilterType.or)}
-                              label="or"
+                              label={t('or')}
                               labelPlacement="end"
                             />
                             <FormControlLabel
@@ -531,12 +548,12 @@ export default function UserLogs() {
                               checked={formik.values.callIDFilterType === FilterType.and}
                               onChange={() => handleOnChangeFilterType('callIDFilterType', FilterType.and)}
                               control={<Radio size="small" color="primary" />}
-                              label="and"
+                              label={t('and')}
                               labelPlacement="end"
                             />
                           </RadioGroup>
                         }
-                        label="type:"
+                        label={t('type')}
                         labelPlacement="start"
                       />
                     </div>
@@ -555,7 +572,7 @@ export default function UserLogs() {
                             checked={formik.values.callIDType === FilterTextType.EXACT}
                             onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.EXACT)}
                             control={<Radio size="small" color="primary" />}
-                            label="Exact"
+                            label={t('exact')}
                             labelPlacement="end"
                           />
                           <FormControlLabel
@@ -563,7 +580,7 @@ export default function UserLogs() {
                             checked={formik.values.callIDType === FilterTextType.BEGINS_WITH}
                             onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.BEGINS_WITH)}
                             control={<Radio size="small" color="primary" />}
-                            label="Begins With"
+                            label={t('beginsWith')}
                             labelPlacement="end"
                           />
                           <FormControlLabel
@@ -571,7 +588,7 @@ export default function UserLogs() {
                             checked={formik.values.callIDType === FilterTextType.CONTAINS}
                             onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.CONTAINS)}
                             control={<Radio size="small" color="primary" />}
-                            label="Contains"
+                            label={t('contains')}
                             labelPlacement="end"
                           />
                           <FormControlLabel
@@ -579,12 +596,12 @@ export default function UserLogs() {
                             checked={formik.values.callIDType === FilterTextType.ENDS_WITH}
                             onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.ENDS_WITH)}
                             control={<Radio size="small" color="primary" />}
-                            label="Ends With"
+                            label={t('endsWith')}
                             labelPlacement="end"
                           />
                         </RadioGroup>
                       }
-                      label="text type:"
+                      label={t('textType')}
                       labelPlacement="start"
                     />
                   </TableCell>
@@ -592,7 +609,7 @@ export default function UserLogs() {
 
                 <TableRow>
                   <TableCell align="left" width={150}>
-                    Options
+                    {t('options')}
                   </TableCell>
                   <TableCell
                     align="left"
@@ -621,7 +638,7 @@ export default function UserLogs() {
                             </Select>
                           </FormControl>
                         }
-                        label="Call Type:"
+                        label={`${t('callType')}:`}
                         labelPlacement="start"
                         style={{ marginBottom: 5 }}
                       />
@@ -643,7 +660,7 @@ export default function UserLogs() {
                             </Select>
                           </FormControl>
                         }
-                        label="Endpoint State:"
+                        label={`${t('endpointState')}:`}
                         style={{ marginBottom: 5 }}
                         labelPlacement="start"
                       />
@@ -665,7 +682,7 @@ export default function UserLogs() {
                             </Select>
                           </FormControl>
                         }
-                        label="Call State:"
+                        label={`${t('callState')}:`}
                         style={{ marginBottom: 5 }}
                         labelPlacement="start"
                       />
@@ -691,7 +708,7 @@ export default function UserLogs() {
                             />
                           </FormControl>
                         }
-                        label="Result:"
+                        label={`${t('result')}:`}
                         labelPlacement="start"
                       />
                     </div>
@@ -714,36 +731,59 @@ export default function UserLogs() {
           </TableContainer>
         </Grid>
         <Grid item lg={4} md={4}>
-          <StarsCall />
+          <Card>
+            <HorizontalBar
+              data={dataHorBar}
+              options={{
+                scales: {
+                  xAxes: [
+                    {
+                      display: false,
+                      gridLines: {
+                        display: false,
+                      },
+                    },
+                  ],
+                  yAxes: [
+                    {
+                      gridLines: {
+                        display: false,
+                      },
+                    },
+                  ],
+                },
+              }}
+            />
+          </Card>
         </Grid>
 
         <Grid item lg={12}>
           <MaterialTable
-            title={'Call Logs'}
+            title={t('callLogs')}
             isLoading={isLoading}
             localization={{ body: { emptyDataSourceMessage: '' } }}
             columns={[
               { title: '№', field: '', render: (rowData) => rowData && rowData.tableData.id + 1, width: 75 },
-              { title: 'Call ID', field: 'id' },
+              { title: t('callID'), field: 'id' },
               {
-                title: 'Origination Number',
+                title: t('originationNumber'),
                 field: '',
                 render: (rowData) => (rowData && rowData.originationNumber) || '-',
                 width: 150,
                 align: 'center',
               },
               {
-                title: 'Destination Number',
+                title: t('destinationNumber'),
                 field: '',
                 render: (rowData) => (rowData && rowData.destinationNumber) || '-',
                 width: 150,
                 align: 'center',
               },
-              { title: 'Call Type', field: 'type', width: 150 },
-              { title: 'Call State', field: 'callState', width: 150 },
-              { title: 'Duration', field: '', render: (rowData) => rowData && rowData.connectedAt && 0 },
-              { title: 'Account ID', field: 'accountID' },
-              { title: 'Connected At', field: 'connectedAt' },
+              { title: t('callType'), field: 'type', width: 150 },
+              { title: t('callState'), field: 'callState', width: 150 },
+              { title: t('duration'), field: '', render: (rowData) => rowData && rowData.connectedAt && 0 },
+              { title: t('accountId'), field: 'accountID' },
+              { title: t('connectedAt'), field: 'connectedAt' },
               {
                 title: t('detailInfo'),
                 field: '',
@@ -794,13 +834,13 @@ export default function UserLogs() {
                       <Table aria-label="simple table" style={{ padding: 10, marginLeft: 20 }}>
                         <TableHead>
                           <TableRow>
-                            <TableCell>participantState</TableCell>
-                            <TableCell>direction</TableCell>
-                            <TableCell>lastActiveces</TableCell>
-                            <TableCell>audio</TableCell>
-                            <TableCell>video</TableCell>
-                            <TableCell>screen</TableCell>
-                            <TableCell>role</TableCell>
+                            <TableCell> participantState</TableCell>
+                            <TableCell> direction</TableCell>
+                            <TableCell> lastActiveces</TableCell>
+                            <TableCell> audio</TableCell>
+                            <TableCell> video</TableCell>
+                            <TableCell> screen</TableCell>
+                            <TableCell> role</TableCell>
                           </TableRow>
                         </TableHead>
 

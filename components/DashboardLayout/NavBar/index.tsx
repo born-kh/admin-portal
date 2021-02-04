@@ -16,6 +16,7 @@ import {
 
 import NavItem, { NavItemType } from './NavItem'
 import { getNavbarItems } from '@utils/helpers'
+import useTranslation from 'hooks/useTranslation'
 
 const user = {
   avatar: '/static/images/avatars/avatar_6.png',
@@ -53,6 +54,7 @@ const NavBar = ({ onMobileClose = () => {}, openMobile = false }: PropsType) => 
   const [navItems, setNavItems] = useState<NavItemsType[]>(() => {
     return getNavbarItems() as NavItemsType[]
   })
+  const { t } = useTranslation()
 
   // const location = useLocation()
 
@@ -71,7 +73,7 @@ const NavBar = ({ onMobileClose = () => {}, openMobile = false }: PropsType) => 
           <List
             subheader={
               <ListSubheader component="div" id="nested-list-subheader">
-                {item.title}
+                {t(item.title)}
               </ListSubheader>
             }
           >

@@ -30,6 +30,7 @@ import { AuthSettings, PermissionType, Question, QuestionType, QuestionLanguage,
 //constants
 import { initialAlertData } from '@utils/constants'
 import AddIcon from '@material-ui/icons/Add'
+import useTranslation from 'hooks/useTranslation'
 type LangaugeStrings = keyof typeof Language
 /* AUTH Component */
 export default function QuestionComponent() {
@@ -38,11 +39,13 @@ export default function QuestionComponent() {
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
     initialAlertData
   )
+
   const [isLoading, setIsLoading] = useState(false)
 
   const handleCloseAlert = () => {
     setAlertData(initialAlertData)
   }
+  const { t } = useTranslation()
 
   const handleCreateQuestion = async (data: Question) => {
     console.log(data)
@@ -105,14 +108,51 @@ export default function QuestionComponent() {
     <Fragment>
       <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
       <MaterialTable
-        title="Questions"
+        title={t('questions')}
         isLoading={isLoading}
-        localization={{ body: { emptyDataSourceMessage: 'There are no questions' } }}
+        // localization={{ body: { emptyDataSourceMessage: 'There are no questions' } }}
         columns={[
-          { title: 'Type', field: 'type', lookup: QuestionType, initialEditValue: QuestionType.checkbox },
+          {
+            title: t('type'),
+            field: 'type',
+            initialEditValue: QuestionType.checkbox,
+            editComponent: (props) => {
+              return (
+                <Select
+                  value={props.value}
+                  name="questionType"
+                  margin="dense"
+                  variant="outlined"
+                  onChange={(e) => props.onChange(e.target.value)}
+                >
+                  {Object.keys(QuestionType).map((key: string) => (
+                    <MenuItem key={QuestionType[key]} value={QuestionType[key]}>
+                      {key}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )
+            },
+          },
 
-          { title: 'Backgruund text', field: 'bgText' },
-          { title: 'Max Len', field: 'maxLen', type: 'numeric' },
+          {
+            title: t('backgroundText'),
+            field: 'bgText',
+            editComponent: (props) => {
+              return (
+                <TextField
+                  value={props.value}
+                  fullWidth
+                  name="bgText"
+                  onChange={(e) => props.onChange(e.target.value)}
+                  variant="outlined"
+                  margin="normal"
+                  size="small"
+                />
+              )
+            },
+          },
+          { title: t('maxLen'), field: 'maxLen', type: 'numeric' },
         ]}
         data={questions}
         components={{
@@ -150,7 +190,7 @@ export default function QuestionComponent() {
         }}
         detailPanel={[
           {
-            tooltip: 'Question languages',
+            tooltip: t('questionLanguages'),
 
             render: (rowData) => rowData.id && <QuestioLaguageComponent questionId={rowData.id} />,
           },
@@ -170,9 +210,9 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
     initialAlertData
   )
-
+  const { t } = useTranslation()
   const [questionLanguages, setQuestionLanguages] = useState<QuestionLanguage[]>([])
-
+  const [selectedLanguage, setSelectedLanguage] = useState<Language | null>(null)
   const handleCloseAlert = () => {
     setAlertData(initialAlertData)
   }
@@ -192,10 +232,12 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
   }, [props.questionId])
 
   const handleCreateQuestionLanguage = async (data: QuestionLanguage) => {
+    const langData = { ...data, lang: selectedLanguage || data.lang }
+    console.log(data)
     return settingsAPI
-      .createQuestionLanguage({ ...data, lang: Language.English })
+      .createQuestionLanguage({ ...data })
       .then((response) => {
-        setAlertData({ message: `Question language created`, type: AlertMessageType.sucess, open: true })
+        setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
       })
       .catch((error) => {
         setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
@@ -208,7 +250,7 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
       .then(() => {
         setQuestionLanguages(questionLanguages.map((item) => (item.id === data.id ? { ...data } : item)))
 
-        setAlertData({ message: `Question  languageupdated.`, type: AlertMessageType.sucess, open: true })
+        setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
       })
       .catch((error) => {
         setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
@@ -220,22 +262,71 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
       .deleteQuestion({ id })
       .then(() => {
         setQuestionLanguages(questionLanguages.filter((item) => item.id !== id))
-        setAlertData({ message: `Qestion deleted`, type: AlertMessageType.sucess, open: true })
+        setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
       })
       .catch((error) => {
         setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
       })
   }
+  let langObject: any
+  // let langObject = Object.keys(Language).map((key) => {
+  //   return { [Language[key]]: key }
+  // })
+
+  // for (let key in Language) {
+  //   // if (isNaN(Number(item))) {
+  //   //     console.log(item);
+  //   // }
+  //   // langObject[Language[key]] = key
+  //   console.log(Language[key])
+  // }
 
   return (
     <div>
       <MaterialTable
-        title="Languages"
+        title={t('languages')}
         isLoading={isLoadingLanguages}
-        localization={{ body: { emptyDataSourceMessage: 'There are no lanhuages' } }}
+        // localization={{ body: { emptyDataSourceMessage: 'There are no lanhuages' } }}
         columns={[
-          { title: 'lang', field: 'lang', lookup: Language, initialEditValue: 'Russian' },
-          { title: 'text', field: 'text' },
+          {
+            title: t('language'),
+            field: 'lang',
+            initialEditValue: Language.Russian,
+            editComponent: (props) => {
+              return (
+                <Select
+                  value={props.value}
+                  name="language"
+                  margin="dense"
+                  variant="outlined"
+                  onChange={(e) => props.onChange(e.target.value)}
+                >
+                  {Object.keys(Language).map((key: string) => (
+                    <MenuItem key={Language[key]} value={Language[key]}>
+                      {key}
+                    </MenuItem>
+                  ))}
+                </Select>
+              )
+            },
+          },
+          {
+            title: t('questionText'),
+            field: 'text',
+            editComponent: (props) => {
+              return (
+                <TextField
+                  value={props.value}
+                  name="text"
+                  fullWidth
+                  onChange={(e) => props.onChange(e.target.value)}
+                  variant="outlined"
+                  margin="normal"
+                  size="small"
+                />
+              )
+            },
+          },
         ]}
         editable={{
           onRowAdd: (newData) =>
