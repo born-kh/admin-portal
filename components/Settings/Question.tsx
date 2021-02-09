@@ -125,8 +125,8 @@ export default function QuestionComponent() {
                   variant="outlined"
                   onChange={(e) => props.onChange(e.target.value)}
                 >
-                  {Object.keys(QuestionType).map((key: string) => (
-                    <MenuItem key={QuestionType[key]} value={QuestionType[key]}>
+                  {Object.entries(QuestionType).map(([key, value]) => (
+                    <MenuItem key={QuestionType[value]} value={value}>
                       {key}
                     </MenuItem>
                   ))}
@@ -268,25 +268,12 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
         setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
       })
   }
-  let langObject: any
-  // let langObject = Object.keys(Language).map((key) => {
-  //   return { [Language[key]]: key }
-  // })
-
-  // for (let key in Language) {
-  //   // if (isNaN(Number(item))) {
-  //   //     console.log(item);
-  //   // }
-  //   // langObject[Language[key]] = key
-  //   console.log(Language[key])
-  // }
 
   return (
     <div>
       <MaterialTable
         title={t('languages')}
         isLoading={isLoadingLanguages}
-        // localization={{ body: { emptyDataSourceMessage: 'There are no lanhuages' } }}
         columns={[
           {
             title: t('language'),
@@ -301,11 +288,13 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
                   variant="outlined"
                   onChange={(e) => props.onChange(e.target.value)}
                 >
-                  {Object.keys(Language).map((key: string) => (
-                    <MenuItem key={Language[key]} value={Language[key]}>
-                      {key}
-                    </MenuItem>
-                  ))}
+                  {Object.entries(Language).map(([key, value]) => {
+                    return (
+                      <MenuItem key={value} value={value}>
+                        {key}
+                      </MenuItem>
+                    )
+                  })}
                 </Select>
               )
             },

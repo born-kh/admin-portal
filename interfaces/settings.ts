@@ -116,6 +116,10 @@ export enum QuestionType {
   inputline = 'inputline',
 }
 
+interface Map {
+  [key: string]: string | undefined
+}
+
 export enum Language {
   Abkhazian = 'ab',
   Afar = 'aa',
@@ -331,4 +335,6 @@ export enum Language {
   Zhuang = 'za',
   Chuang = 'za',
   Zulu = 'zu',
+
+,
 }
