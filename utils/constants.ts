@@ -144,6 +144,7 @@ export const permissions = [
   'TAP_QUESTION_LANGUAGE_UPDATE',
   'TAP_QUESTION_LANGUAGE_DELETE',
   'TAP_QUESTION_LANGUAGE_GET',
+  'TAP_CALL_QUALITY_GET_STARS',
 ]
 export enum USER_PERMISSION_TYPE {
   allow = 'ALLOW',
@@ -179,6 +180,7 @@ export const API_URLS = {
   SEARCH_USER: '/searchuser',
   GET_ACCOUNT_SESSIONS: '/getaccountsessions',
   LOGIN: '/login',
+  SIGN_IN: '/signin',
   GET_PRECENSE_INFO: '/getprecenseinfo',
   SUSPEND_SESSION: '/suspendsession',
   REMOVE_SESSION: '/removesession',
@@ -229,6 +231,7 @@ export const API_URLS = {
   CALL_GET_ALL: '/callgetalll',
   CALL_GET_BY_IDS: '/callgetbyids',
   CALL_GET_BY_ACCOUNT_ID: '/callgetbyaccuntid',
+  CALL_QUALITY_GET_STARS: '/callqualitygetstars',
   QUESTION_LANGUAGE_CREATE: '/question.language.create',
   QUESTION_LANGUAGE_UPDATE: '/question.language.update',
   QUESTION_LANGUAGE_DELETE: '/question.language.delete',

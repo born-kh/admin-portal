@@ -278,7 +278,7 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
           {
             title: t('language'),
             field: 'lang',
-            initialEditValue: Language.Russian,
+            initialEditValue: null,
             editComponent: (props) => {
               return (
                 <Select
@@ -289,11 +289,15 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
                   onChange={(e) => props.onChange(e.target.value)}
                 >
                   {Object.entries(Language).map(([key, value]) => {
-                    return (
-                      <MenuItem key={value} value={value}>
-                        {key}
-                      </MenuItem>
-                    )
+                    console.log(questionLanguages, props.value, value)
+                    const findIndex = questionLanguages.findIndex((item) => item.lang === key)
+                    if (findIndex === -1 || props.value === value) {
+                      return (
+                        <MenuItem key={value} value={value}>
+                          {key}
+                        </MenuItem>
+                      )
+                    }
                   })}
                 </Select>
               )

@@ -56,6 +56,7 @@ import { useRouter } from 'next/router'
 
 import StarsCall from '@components/common/StarsCall'
 import { HorizontalBar } from 'react-chartjs-2'
+import { CountStarts } from '@interfaces/settings'
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 const theme = createMuiTheme({
@@ -98,6 +99,8 @@ export default function UserLogs() {
   }>({ items: [], totalCount: 0 })
 
   const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingStars, setIsLoadingStars] = useState(false)
+  const [countStars, setCountStars] = useState<CountStarts>({})
   const [openDateRange, setOpenDateRange] = useState(false)
   const { t, locale } = useTranslation()
   var startDate = new Date()
@@ -239,9 +242,26 @@ export default function UserLogs() {
         .catch((e) => {
           setIsLoading(false)
         })
+
+      setIsLoadingStars(true)
+      statisticsAPI
+        .callQulalityGetStars({
+          from: dateRange.startDate.toISOString().split('.')[0] + 'Z',
+          to: dateRange.endDate.toISOString().split('.')[0] + 'Z',
+        })
+        .then((response) => {
+          console.log(response)
+          if (response.status === 200) {
+            setCountStars(response.data.counts)
+          }
+          setIsLoadingStars(false)
+        })
+        .catch((e) => {
+          setIsLoadingStars(false)
+        })
     }
   }
-
+  console.log(countStars)
   return (
     <MuiThemeProvider theme={theme}>
       <Grid container spacing={3}>

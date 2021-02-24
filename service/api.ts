@@ -48,6 +48,7 @@ import {
   Question,
   GetQuestionLanguagesResponse,
   QuestionLanguage,
+  CallQualityGetStarsResponse,
 } from '@interfaces/settings'
 import {
   FetchAuthCodesResponse,
@@ -353,6 +354,12 @@ export const statisticsAPI = {
   },
   async callGetByIds(params: {}) {
     return axios.post(API_URLS.CALL_GET_BY_IDS, params).then((response) => {
+      return response
+    })
+  },
+
+  async callQulalityGetStars(params: { from: string; to: string }) {
+    return axios.post<CallQualityGetStarsResponse>(API_URLS.CALL_QUALITY_GET_STARS, params).then((response) => {
       return response
     })
   },

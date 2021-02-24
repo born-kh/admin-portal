@@ -84,6 +84,14 @@ export interface CallQuality {
   questions: { [key: string]: string[] }
 }
 
+export interface CountStarts {
+  [key: number]: number[]
+}
+
+export interface CallQualityGetStarsResponse {
+  counts: CountStarts
+}
+
 export interface Question {
   id?: string
   type?: QuestionType
@@ -335,6 +343,4 @@ export enum Language {
   Zhuang = 'za',
   Chuang = 'za',
   Zulu = 'zu',
-
-,
 }
