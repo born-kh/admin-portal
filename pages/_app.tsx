@@ -64,9 +64,9 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
       </React.StrictMode>
     )
   }
-  if (state.authStatus !== AUTH_STATUS.loggedOn) {
-    return <Loader size={70} />
-  }
+  // if (state.authStatus !== AUTH_STATUS.loggedOn) {
+  //   return <Loader size={70} />
+  // }
   return (
     <React.StrictMode>
       <MuiThemeProvider theme={state.theme ? lightTheme : darkTheme}>
