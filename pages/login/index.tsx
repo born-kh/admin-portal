@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react'
 //material ui components
-import { Avatar, CssBaseline, TextField, Box, Typography, Container, FormControl, Select ,MenuItem} from '@material-ui/core'
+import {
+  Avatar,
+  CssBaseline,
+  TextField,
+  Box,
+  Typography,
+  Container,
+  FormControl,
+  Select,
+  MenuItem,
+} from '@material-ui/core'
 //material ui icons
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Alert from '@material-ui/lab/Alert'
@@ -42,7 +52,7 @@ export default function Login() {
   const router = useRouter()
   const [errorCode, setErrorCode] = useState('')
   const { t } = useTranslation()
-  const [errorText, setErrorText] = useState<string|null>(null)
+  const [errorText, setErrorText] = useState<string | null>(null)
   const [usernameType, setUsernameType] = useState<UserNameType>(UserNameType.USERNAME)
   const formik = useFormik({
     initialValues: {
@@ -136,27 +146,27 @@ export default function Login() {
           {t('admin')}
         </Typography>
         <form className={classes.form} noValidate onSubmit={formik.handleSubmit}>
-        <FormControl margin="normal" variant="outlined" fullWidth>
-          <Select
-            labelId="userNametype"
-            id="userNametype"
-            name="userNametype"
-            value={usernameType}
-            onChange={(e) => {
-              setUsernameType(e.target.value as UserNameType)
-            }}
-          >
-            <MenuItem value={UserNameType.USERNAME} key={UserNameType.USERNAME}>
-              {t('loginWithLogin')}
-            </MenuItem>
-            <MenuItem value={UserNameType.EMAIL} key={UserNameType.EMAIL}>
-              {t('loginWithEmail')}
-            </MenuItem>
-            <MenuItem value={UserNameType.PHONE} key={UserNameType.PHONE}>
-              {t('loginWithPhoneNumber')}
-            </MenuItem>
-          </Select>
-        </FormControl>
+          <FormControl margin="normal" variant="outlined" fullWidth>
+            <Select
+              labelId="userNametype"
+              id="userNametype"
+              name="userNametype"
+              value={usernameType}
+              onChange={(e) => {
+                setUsernameType(e.target.value as UserNameType)
+              }}
+            >
+              <MenuItem value={UserNameType.USERNAME} key={UserNameType.USERNAME}>
+                {t('loginWithLogin')}
+              </MenuItem>
+              <MenuItem value={UserNameType.EMAIL} key={UserNameType.EMAIL}>
+                {t('loginWithEmail')}
+              </MenuItem>
+              <MenuItem value={UserNameType.PHONE} key={UserNameType.PHONE}>
+                {t('loginWithPhoneNumber')}
+              </MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             variant="outlined"
             margin="normal"
@@ -199,7 +209,7 @@ export default function Login() {
             {t('login')}
           </ButtonLoader>
 
-          {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+          {errorText && <Alert severity="error">{errorText}</Alert>}
         </form>
       </div>
       <Box mt={4}>

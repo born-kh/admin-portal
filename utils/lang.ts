@@ -2,6 +2,9 @@ import { LangType } from './constants'
 
 const LangStrings: Record<LangType, any> = {
   en: {
+    loginWithLogin: 'Login with login and password',
+    loginWithEmail: 'Login with E-mail and password',
+    loginWithPhoneNumber: 'Login by phone number',
     usersPage: 'User Manager',
     users: 'Users',
     documentPage: 'Document Manager',
@@ -200,6 +203,9 @@ const LangStrings: Record<LangType, any> = {
     connectedAt: 'Connected At',
   },
   ru: {
+    loginWithLogin: 'Вход с помощью логина и пароля',
+    loginWithEmail: 'Вход с помощью E-mail и пароля',
+    loginWithPhoneNumber: 'Вход по номеру телефона',
     connectedAt: 'Подключен в',
     result: 'Резултать',
     date: 'Дата',
