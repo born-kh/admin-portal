@@ -11,19 +11,6 @@ export interface Account {
   createdAt: Date
 }
 
-export type AccountType = {
-  accountID: string
-  firstName?: string
-  lastName?: string
-  username?: string
-  avatar?: string
-  status: AccountStatus
-  phones: PhoneInfo[]
-  emails: EmailInfo[]
-  auth: AuthInfo
-  createdAt: Date
-}
-
 export interface AccountSessionsData {
   meta: Meta
   isTracing: boolean
@@ -199,3 +186,71 @@ export interface AutoDelete {
   days: number
 }
 
+export interface SystemSettings {
+  id?: number
+  voip?: WebRTCSettings
+  network?: Network
+  user?: UserSettings
+  description: String
+  tableData?: any
+}
+export interface GetSystemSettingsResponse {
+  settings: SystemSettings[]
+}
+
+export interface Network {
+  socketURL: string
+  contentServerURL: string
+  apiURL: string
+  appWebsiteURL?: string
+  inCallReconnect: number[]
+  generalReconnect: number[]
+  supportAccountID?: string
+  privacyPolicyURL: string
+  baseURL: string
+}
+
+export interface WebRTCSettings {
+  id: number
+  iceServers: [IceServer]
+  continualGatheringPolicy: number
+  activeResetSrtpParams: boolean
+  iceTransportPolicy: number
+  bundlePolicy: number
+  rtcpMuxPolicy: number
+  tcpCandidatePolicy: number
+  candidateNetworkPolicy: number
+  disableIPV6: boolean
+  disableIPV6OnWiFi: boolean
+  maxIPv6Networks: number
+  disableLinkLocalNetworks: number
+  sdpSemantics: number
+  rtcpAudioReportIntervalMs: number
+  rtcpVideoReportIntervalMs: number
+  iceCheckMinInterval?: number
+  shouldPruneTurnPorts: boolean
+  iceCandidatePoolSize: number
+  shouldPresumeWritableWhenFullyRelayed: boolean
+  shouldSurfaceIceCandidatesOnIceTransportTypeChanged: boolean
+  iceConnectionReceivingTimeout: number
+  iceBackupCandidatePairPingInterval: number
+}
+export interface IceServer {
+  url: string[]
+  username?: string
+  credentials?: string
+  tlsCERTPolicy?: number
+}
+export interface AccountSessionsData {
+  meta: Meta
+  isTracing: boolean
+  blocklist: string[]
+  isSuspended: boolean
+  lastActive: Date
+  geo?: GeoLocation
+  firebase?: Push
+  ios?: Push
+  iosvoip?: Push
+  isConnected: boolean
+  tableData?: any
+}

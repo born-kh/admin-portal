@@ -1,6 +1,8 @@
 // #region Interface Imports
 import instance from './instance'
 import { HttpModel } from './Http'
+import { HelpersUtils } from '@utils/helpers'
+import { APIConsts } from '@Definitions'
 // #endregion Interface Imports
 
 export const Http = {
@@ -23,7 +25,7 @@ export const Http = {
   Post: async <A>(url: string, params?: HttpModel.IRequestPayload): Promise<A> => {
     return new Promise((resolve, reject) => {
       instance
-        .post(url, params)
+        .post(url, { ...params, id: HelpersUtils.uuidv4(), version: APIConsts.Version })
         .then(async (response) => {
           if (response.status === 200) {
             return resolve(response.data)

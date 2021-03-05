@@ -37,49 +37,49 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
       type: 'light',
     },
   })
-  useEffect(() => {
-    ServiceWebsocket.start()
-    ServiceWebsocket.subscribe(newMessagehandlerCreater)
+  // useEffect(() => {
+  //   ServiceWebsocket.start()
+  //   ServiceWebsocket.subscribe(newMessagehandlerCreater)
 
-    return () => {
-      ServiceWebsocket.unsubscribe(newMessagehandlerCreater)
-      ServiceWebsocket.stop()
+  //   return () => {
+  //     ServiceWebsocket.unsubscribe(newMessagehandlerCreater)
+  //     ServiceWebsocket.stop()
+  //   }
+  // }, [])
+
+  // const newMessagehandlerCreater = (messages: any) => {
+  //   console.log('messages', messages)
+
+  //   if (messages.method === 'client.authorization') {
+  //     const params = {
+  //       id: HelpersUtils.uuidv4(),
+  //       method: 'gateway.system.apikey.get',
+  //       params: {},
+  //       version: 1,
+  //     }
+  //     ServiceWebsocket.sendMessage(params)
+  //   }
+  // }
+
+  useEffect(() => {
+    if (state.authStatus === AUTH_STATUS.loggedOut) {
+      router.push('/login')
     }
+  }, [state.authStatus])
+
+  useEffect(() => {
+    // if (!cleanUpFunction) {
+    dispatch(checkAuth())
+    // }
+
+    const jssStyles = document.querySelector('#jss-server-side')
+    if (jssStyles && jssStyles.parentNode) {
+      jssStyles.parentNode.removeChild(jssStyles)
+    }
+
+    // return (cleanUpFunction = true)
   }, [])
 
-  const newMessagehandlerCreater = (messages: any) => {
-    console.log('messages', messages)
-
-    if (messages.method === 'client.authorization') {
-      const params = {
-        id: HelpersUtils.uuidv4(),
-        method: 'gateway.system.apikey.get',
-        params: {},
-        version: 1,
-      }
-      ServiceWebsocket.sendMessage(params)
-    }
-  }
-
-  // useEffect(() => {
-  //   if (state.authStatus === AUTH_STATUS.loggedOut) {
-  //     router.push('/login')
-  //   }
-  // }, [state.authStatus])
-
-  // useEffect(() => {
-  //   // if (!cleanUpFunction) {
-  //   dispatch(checkAuth())
-  //   // }
-
-  //   const jssStyles = document.querySelector('#jss-server-side')
-  //   if (jssStyles && jssStyles.parentNode) {
-  //     jssStyles.parentNode.removeChild(jssStyles)
-  //   }
-
-  //   // return (cleanUpFunction = true)
-  // }, [])
-  return null
   if (router.pathname.startsWith('/login')) {
     return (
       <React.StrictMode>
@@ -89,9 +89,9 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
       </React.StrictMode>
     )
   }
-  // if (state.authStatus !== AUTH_STATUS.loggedOn) {
-  //   return <Loader size={70} />
-  // }
+  if (state.authStatus !== AUTH_STATUS.loggedOn) {
+    return <Loader size={70} />
+  }
   return (
     <React.StrictMode>
       <MuiThemeProvider theme={state.theme ? lightTheme : darkTheme}>

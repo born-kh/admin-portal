@@ -70,22 +70,22 @@ export default function Login() {
       password: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
     }),
     onSubmit: (values) => {
-      handleSignIn()
-      // setLoading(true)
-      // setErrorCode('')
-      // dispatch(login(values))
-      //   .then((response) => {
-      //     setLoading(false)
-      //   })
-      //   .catch((error: any) => {
-      //     if (error.response && error.response.status === 401) {
-      //       setErrorCode(ERROR_CODES.password.wrong)
-      //     } else {
-      //       setErrorCode(ERROR_CODES.unknown)
-      //     }
+      // handleSignIn()
+      setLoading(true)
+      setErrorCode('')
+      dispatch(login(values))
+        .then((response) => {
+          setLoading(false)
+        })
+        .catch((error: any) => {
+          if (error.response && error.response.status === 401) {
+            setErrorCode(ERROR_CODES.password.wrong)
+          } else {
+            setErrorCode(ERROR_CODES.unknown)
+          }
 
-      //     setLoading(false)
-      //   })
+          setLoading(false)
+        })
     },
   })
   const states = useSelector((state: RootState) => {
@@ -95,11 +95,31 @@ export default function Login() {
     }
   })
 
+  // useEffect(() => {
+  //   if (states.authStatus === AUTH_STATUS.loggedOn) {
+  //     router.push('/')
+  //   }
+  // }, [states.authStatus])
+
+  const [isChecking, setIsChecking] = useState(false)
+
   useEffect(() => {
-    if (states.authStatus === AUTH_STATUS.loggedOn) {
-      router.push('/')
+    if (jsCookie.get(LocalConsts.LocalStorage.token) && jsCookie.get(LocalConsts.LocalStorage.accountId)) {
+      console.log(111)
+      router
+        .push('/')
+        .then(() => {
+          setIsChecking(true)
+        })
+        .catch(() => {
+          setIsChecking(true)
+        })
+    } else {
+      setTimeout(() => {
+        setIsChecking(true)
+      }, 500)
     }
-  }, [states.authStatus])
+  }, [])
 
   const handleSignIn = () => {
     setErrorText(null)
@@ -130,7 +150,9 @@ export default function Login() {
   const errorMessage = getErrorMsgFromCode(errorCode)
   const passwordError = formik.errors.password !== undefined && formik.touched.password
   const usernameError = formik.errors.username !== undefined && formik.touched.username
-
+  if (!isChecking) {
+    return <></>
+  }
   return (
     <Container component="main" maxWidth="xs">
       <Head>
