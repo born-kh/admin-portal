@@ -15,23 +15,22 @@ import DetailsIcon from '@material-ui/icons/Details'
 import moment from 'moment'
 //next router
 import { useRouter } from 'next/router'
-//user-manager interfaces
-import { SearchType, SearchTypeParams, Account, AccountGetByDateParams, FilterType } from '@interfaces/user-manager'
-//user-manager REST APIS
-import { userAPI } from 'service/api'
+
 //styles
 import { useStylesUserManager } from 'styles/user-manager-styles'
 import useTranslation from 'hooks/useTranslation'
+import { SearchType, IAccount, UserManagerModel } from '@Interfaces'
+import { ServiceUserManager } from '@Services/API/UserManager'
 
 /* User Manager Component */
 export default function UserManager() {
   const classes = useStylesUserManager()
   const router = useRouter()
 
-  const [users, setUsers] = useState<Account[]>([])
-  const [filterParams, setFilterParams] = useState<AccountGetByDateParams>({
+  const [users, setUsers] = useState<IAccount[]>([])
+  const [filterParams, setFilterParams] = useState<UserManagerModel.AccountGetByDate.Params>({
     ts: '2020-11-12',
-    type: FilterType.around,
+    type: UserManagerModel.AccountGetByDate.FilterType.around,
   })
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
@@ -48,22 +47,19 @@ export default function UserManager() {
         { type: SearchType.lastname, search: '' },
         { type: SearchType.firstname, search: '' },
         { type: SearchType.accountID, search: '' },
-      ] as SearchTypeParams[],
+      ] as UserManagerModel.SearchAccount.Params[],
     },
 
     onSubmit: (values) => {
       const filterSearchList = values.searchList.filter((item) => item.search)
       setUsers([])
       setIsLoading(true)
-      userAPI
-        .searchUser(filterSearchList)
+      ServiceUserManager.searchAccount(filterSearchList)
         .then((accounts) => {
           setUsers(accounts)
-
           setIsLoading(false)
         })
         .catch((error) => {
-          console.log(error)
           setIsLoading(false)
         })
     },
@@ -79,11 +75,13 @@ export default function UserManager() {
   const handleFilterAccounts = () => {
     setUsers([])
     setIsLoading(true)
-    userAPI
-      .accountGetByDate({ ...filterParams, ts: new Date(filterParams.ts).toISOString().split('.')[0] + 'Z' })
+    ServiceUserManager.accountGetByDate({
+      ...filterParams,
+      ts: new Date(filterParams.ts).toISOString().split('.')[0] + 'Z',
+    })
       .then((response) => {
-        if (response.status === 200) {
-          setUsers(response.data.accounts)
+        if (response.result) {
+          setUsers(response.result.accounts)
         }
 
         setIsLoading(false)
@@ -205,17 +203,29 @@ export default function UserManager() {
                 onChange={handleOnChangeFilterParams}
                 label={t('type')}
               >
-                <MenuItem key={FilterType.after} value={FilterType.after}>
-                  {FilterType.after}
+                <MenuItem
+                  key={UserManagerModel.AccountGetByDate.FilterType.after}
+                  value={UserManagerModel.AccountGetByDate.FilterType.after}
+                >
+                  {UserManagerModel.AccountGetByDate.FilterType.after}
                 </MenuItem>
-                <MenuItem key={FilterType.before} value={FilterType.before}>
-                  {FilterType.before}
+                <MenuItem
+                  key={UserManagerModel.AccountGetByDate.FilterType.before}
+                  value={UserManagerModel.AccountGetByDate.FilterType.before}
+                >
+                  {UserManagerModel.AccountGetByDate.FilterType.before}
                 </MenuItem>
-                <MenuItem key={FilterType.exact} value={FilterType.exact}>
-                  {FilterType.exact}
+                <MenuItem
+                  key={UserManagerModel.AccountGetByDate.FilterType.exact}
+                  value={UserManagerModel.AccountGetByDate.FilterType.exact}
+                >
+                  {UserManagerModel.AccountGetByDate.FilterType.exact}
                 </MenuItem>
-                <MenuItem key={FilterType.around} value={FilterType.around}>
-                  {FilterType.around}
+                <MenuItem
+                  key={UserManagerModel.AccountGetByDate.FilterType.around}
+                  value={UserManagerModel.AccountGetByDate.FilterType.around}
+                >
+                  {UserManagerModel.AccountGetByDate.FilterType.around}
                 </MenuItem>
               </Select>
             </FormControl>

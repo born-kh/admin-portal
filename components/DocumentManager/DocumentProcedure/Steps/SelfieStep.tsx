@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 //material ui components
 import { Paper, Grid, Card, CardContent, IconButton, Button, CardHeader, CardActions } from '@material-ui/core'
-//document-manager interfaces
-import { Document, DocumentStatus, SelfieStepProps } from '@interfaces/document-manager'
 //custom image component
 import ImageComponent from '@components/common/ImageComponent'
 //constants
@@ -15,12 +13,13 @@ import dynamic from 'next/dynamic'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
 
 import useStyles from './style'
+import { ISelfieStepProps, IDocument, DocumentStatus } from '@Interfaces'
 
-export default function SelfieStep(props: SelfieStepProps) {
+export default function SelfieStep(props: ISelfieStepProps) {
   const classes = useStyles()
   const { document, passportDocuments, handleDeleteDocument, handleSetMapPosition } = props
-  const [selfie, setSelfie] = useState<Document | null>(null)
-  const [passport, setPassport] = useState<Document | null>(null)
+  const [selfie, setSelfie] = useState<IDocument | null>(null)
+  const [passport, setPassport] = useState<IDocument | null>(null)
   const [docID, setDocID] = useState<string | undefined>(undefined)
 
   useEffect(() => {

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 //material ui components
 import { Stepper, Step, Button, StepLabel, Box } from '@material-ui/core/'
-// material ui interfaces
-import { ApplicationStatus, DocumentStatus, MultiStepProps } from '@interfaces/document-manager'
+
 //styles
 import { ColorlibStepIcon, useStyles } from './styles'
 import useTranslation from 'hooks/useTranslation'
+import { IMultiStepProps, DocumentStatus, ApplicationStatus } from '@Interfaces'
 
-export default function MultiStep(props: MultiStepProps) {
+export default function MultiStep(props: IMultiStepProps) {
   const classes = useStyles()
   const {
     activeStep,

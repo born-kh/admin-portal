@@ -37,26 +37,26 @@ import SearchIcon from '@material-ui/icons/Search'
 import useTranslation from 'hooks/useTranslation'
 import { statisticsAPI } from 'service/api'
 import MaterialTable from 'material-table'
-import {
-  Call,
-  CallType,
-  EndpointState,
-  CallState,
-  FilterCallDetailRecordsParams,
-  FilterTextType,
-  FilterType,
-  FiltertText,
-} from '@interfaces/statistics'
 
 import DatePicker from '@components/common/DatePicker'
 import dynamic from 'next/dynamic'
 
 import DateRangeIcon from '@material-ui/icons/DateRange'
 import { useRouter } from 'next/router'
-
-import StarsCall from '@components/common/StarsCall'
 import { HorizontalBar } from 'react-chartjs-2'
-import { CountStarts } from '@interfaces/settings'
+
+import {
+  ICall,
+  ICountStarts,
+  FilterTextTypeCDR,
+  FilterTypeCDR,
+  EndpointState,
+  CallType,
+  CallState,
+  StatisticsManagerModel,
+} from '@Interfaces'
+import { ServiceStatisticsManager } from '@Services/API/StatisticsManager'
+
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 const theme = createMuiTheme({
@@ -94,13 +94,13 @@ const theme = createMuiTheme({
 /* Tracer Manager Component */
 export default function UserLogs() {
   const [callData, setCallData] = useState<{
-    items: Call[]
+    items: ICall[]
     totalCount: number
   }>({ items: [], totalCount: 0 })
 
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingStars, setIsLoadingStars] = useState(false)
-  const [countStars, setCountStars] = useState<CountStarts>({})
+  const [countStars, setCountStars] = useState<ICountStarts>({})
   const [openDateRange, setOpenDateRange] = useState(false)
   const { t, locale } = useTranslation()
   var startDate = new Date()
@@ -132,14 +132,14 @@ export default function UserLogs() {
   const formik = useFormik({
     initialValues: {
       originationNumber: '',
-      originationNumberType: FilterTextType.EXACT,
-      originationNumberFilterType: FilterType.or,
+      originationNumberType: FilterTextTypeCDR.EXACT,
+      originationNumberFilterType: FilterTypeCDR.or,
       destinationNumber: '',
-      destinationNumberType: FilterTextType.EXACT,
-      destinationNumberFilterType: FilterType.or,
+      destinationNumberType: FilterTextTypeCDR.EXACT,
+      destinationNumberFilterType: FilterTypeCDR.or,
       callID: '',
-      callIDType: FilterTextType.EXACT,
-      callIDFilterType: FilterType.or,
+      callIDType: FilterTextTypeCDR.EXACT,
+      callIDFilterType: FilterTypeCDR.or,
       callState: CallState.all,
       callType: CallType.ALL,
       endpointState: EndpointState.ALL,
@@ -165,14 +165,14 @@ export default function UserLogs() {
   }
   moment.locale(locale)
 
-  const handleOnChangeFilterTextType = (name: string, type: FilterTextType) => {
+  const handleOnChangeFilterTextType = (name: string, type: FilterTextTypeCDR) => {
     formik.setValues({
       ...formik.values,
       [name]: type,
     })
   }
 
-  const handleOnChangeFilterType = (name: string, filterType: FilterType) => {
+  const handleOnChangeFilterType = (name: string, filterType: FilterTypeCDR) => {
     formik.setValues({
       ...formik.values,
       [name]: filterType,
@@ -185,7 +185,7 @@ export default function UserLogs() {
 
   const handleOnSubmit = () => {
     if (!formik.errors.originationNumber && !formik.errors.destinationNumber && !formik.errors.callID) {
-      let params: FilterCallDetailRecordsParams = {
+      let params: StatisticsManagerModel.CDRCallGet.Params = {
         page: formik.values.page + 1,
         limit: formik.values.limit,
         filter: {},
@@ -231,28 +231,24 @@ export default function UserLogs() {
       }
 
       setIsLoading(true)
-      statisticsAPI
-        .callGetAll(params)
-        .then((response) => {
-          if (response.status === 200) {
-            setCallData({ items: response.data.items, totalCount: response.data.metadata.total })
+      ServiceStatisticsManager.cdrCallGet(params)
+        .then((res) => {
+          if (res.result) {
+            setCallData({ items: res.result.items, totalCount: res.result.metadata.total })
           }
           setIsLoading(false)
         })
         .catch((e) => {
           setIsLoading(false)
         })
-
       setIsLoadingStars(true)
-      statisticsAPI
-        .callQulalityGetStars({
-          from: dateRange.startDate.toISOString().split('.')[0] + 'Z',
-          to: dateRange.endDate.toISOString().split('.')[0] + 'Z',
-        })
-        .then((response) => {
-          console.log(response)
-          if (response.status === 200) {
-            setCountStars(response.data.counts)
+      ServiceStatisticsManager.cdrGetStars({
+        from: dateRange.startDate.toISOString().split('.')[0] + 'Z',
+        to: dateRange.endDate.toISOString().split('.')[0] + 'Z',
+      })
+        .then((res) => {
+          if (res.result) {
+            setCountStars(res.result.counts)
           }
           setIsLoadingStars(false)
         })
@@ -336,16 +332,18 @@ export default function UserLogs() {
                           >
                             <FormControlLabel
                               value="start"
-                              checked={formik.values.originationNumberFilterType === FilterType.or}
+                              checked={formik.values.originationNumberFilterType === FilterTypeCDR.or}
                               control={<Radio size="small" color="primary" />}
-                              onChange={() => handleOnChangeFilterType('originationNumberFilterType', FilterType.or)}
+                              onChange={() => handleOnChangeFilterType('originationNumberFilterType', FilterTypeCDR.or)}
                               label={t('or')}
                               labelPlacement="end"
                             />
                             <FormControlLabel
                               value="start"
-                              checked={formik.values.originationNumberFilterType === FilterType.and}
-                              onChange={() => handleOnChangeFilterType('originationNumberFilterType', FilterType.and)}
+                              checked={formik.values.originationNumberFilterType === FilterTypeCDR.and}
+                              onChange={() =>
+                                handleOnChangeFilterType('originationNumberFilterType', FilterTypeCDR.and)
+                              }
                               control={<Radio size="small" color="primary" />}
                               label={t('and')}
                               labelPlacement="end"
@@ -361,17 +359,19 @@ export default function UserLogs() {
                         <RadioGroup row aria-label="position" name="position" style={{ marginLeft: 10 }}>
                           <FormControlLabel
                             value="start"
-                            checked={formik.values.originationNumberType === FilterTextType.EXACT}
+                            checked={formik.values.originationNumberType === FilterTextTypeCDR.EXACT}
                             control={<Radio size="small" color="primary" />}
-                            onChange={() => handleOnChangeFilterTextType('originationNumberType', FilterTextType.EXACT)}
+                            onChange={() =>
+                              handleOnChangeFilterTextType('originationNumberType', FilterTextTypeCDR.EXACT)
+                            }
                             label={t('exact')}
                             labelPlacement="end"
                           />
                           <FormControlLabel
                             value="start"
-                            checked={formik.values.originationNumberType === FilterTextType.BEGINS_WITH}
+                            checked={formik.values.originationNumberType === FilterTextTypeCDR.BEGINS_WITH}
                             onChange={() =>
-                              handleOnChangeFilterTextType('originationNumberType ', FilterTextType.BEGINS_WITH)
+                              handleOnChangeFilterTextType('originationNumberType ', FilterTextTypeCDR.BEGINS_WITH)
                             }
                             control={<Radio size="small" color="primary" />}
                             label={t('beginsWith')}
@@ -379,9 +379,9 @@ export default function UserLogs() {
                           />
                           <FormControlLabel
                             value="start"
-                            checked={formik.values.originationNumberType === FilterTextType.CONTAINS}
+                            checked={formik.values.originationNumberType === FilterTextTypeCDR.CONTAINS}
                             onChange={() =>
-                              handleOnChangeFilterTextType('originationNumberType ', FilterTextType.CONTAINS)
+                              handleOnChangeFilterTextType('originationNumberType ', FilterTextTypeCDR.CONTAINS)
                             }
                             control={<Radio size="small" color="primary" />}
                             label={t('contains')}
@@ -389,9 +389,9 @@ export default function UserLogs() {
                           />
                           <FormControlLabel
                             value="start"
-                            checked={formik.values.originationNumberType === FilterTextType.ENDS_WITH}
+                            checked={formik.values.originationNumberType === FilterTextTypeCDR.ENDS_WITH}
                             onChange={() =>
-                              handleOnChangeFilterTextType('originationNumberType ', FilterTextType.ENDS_WITH)
+                              handleOnChangeFilterTextType('originationNumberType ', FilterTextTypeCDR.ENDS_WITH)
                             }
                             control={<Radio size="small" color="primary" />}
                             label={t('endsWith')}
@@ -447,16 +447,18 @@ export default function UserLogs() {
                           >
                             <FormControlLabel
                               value="start"
-                              checked={formik.values.destinationNumberFilterType === FilterType.or}
+                              checked={formik.values.destinationNumberFilterType === FilterTypeCDR.or}
                               control={<Radio size="small" color="primary" />}
-                              onChange={() => handleOnChangeFilterType('destinationNumberFilterType', FilterType.or)}
+                              onChange={() => handleOnChangeFilterType('destinationNumberFilterType', FilterTypeCDR.or)}
                               label={t('or')}
                               labelPlacement="end"
                             />
                             <FormControlLabel
                               value="start"
-                              checked={formik.values.destinationNumberFilterType === FilterType.and}
-                              onChange={() => handleOnChangeFilterType('destinationNumberFilterType', FilterType.and)}
+                              checked={formik.values.destinationNumberFilterType === FilterTypeCDR.and}
+                              onChange={() =>
+                                handleOnChangeFilterType('destinationNumberFilterType', FilterTypeCDR.and)
+                              }
                               control={<Radio size="small" color="primary" />}
                               label={t('and')}
                               labelPlacement="end"
@@ -479,17 +481,19 @@ export default function UserLogs() {
                         >
                           <FormControlLabel
                             value="start"
-                            checked={formik.values.destinationNumberType === FilterTextType.EXACT}
-                            onChange={() => handleOnChangeFilterTextType('destinationNumberType', FilterTextType.EXACT)}
+                            checked={formik.values.destinationNumberType === FilterTextTypeCDR.EXACT}
+                            onChange={() =>
+                              handleOnChangeFilterTextType('destinationNumberType', FilterTextTypeCDR.EXACT)
+                            }
                             control={<Radio size="small" color="primary" />}
                             label={t('exact')}
                             labelPlacement="end"
                           />
                           <FormControlLabel
                             value="start"
-                            checked={formik.values.destinationNumberType === FilterTextType.BEGINS_WITH}
+                            checked={formik.values.destinationNumberType === FilterTextTypeCDR.BEGINS_WITH}
                             onChange={() =>
-                              handleOnChangeFilterTextType('destinationNumberType', FilterTextType.BEGINS_WITH)
+                              handleOnChangeFilterTextType('destinationNumberType', FilterTextTypeCDR.BEGINS_WITH)
                             }
                             control={<Radio size="small" color="primary" />}
                             label={t('beginsWith')}
@@ -497,9 +501,9 @@ export default function UserLogs() {
                           />
                           <FormControlLabel
                             value="start"
-                            checked={formik.values.destinationNumberType === FilterTextType.CONTAINS}
+                            checked={formik.values.destinationNumberType === FilterTextTypeCDR.CONTAINS}
                             onChange={() =>
-                              handleOnChangeFilterTextType('destinationNumberType', FilterTextType.CONTAINS)
+                              handleOnChangeFilterTextType('destinationNumberType', FilterTextTypeCDR.CONTAINS)
                             }
                             control={<Radio size="small" color="primary" />}
                             label={t('contains')}
@@ -507,9 +511,9 @@ export default function UserLogs() {
                           />
                           <FormControlLabel
                             value="start"
-                            checked={formik.values.destinationNumberType === FilterTextType.ENDS_WITH}
+                            checked={formik.values.destinationNumberType === FilterTextTypeCDR.ENDS_WITH}
                             onChange={() =>
-                              handleOnChangeFilterTextType('destinationNumberType', FilterTextType.ENDS_WITH)
+                              handleOnChangeFilterTextType('destinationNumberType', FilterTextTypeCDR.ENDS_WITH)
                             }
                             control={<Radio size="small" color="primary" />}
                             label={t('endsWith')}
@@ -557,16 +561,16 @@ export default function UserLogs() {
                           >
                             <FormControlLabel
                               value="start"
-                              checked={formik.values.callIDFilterType === FilterType.or}
+                              checked={formik.values.callIDFilterType === FilterTypeCDR.or}
                               control={<Radio size="small" color="primary" />}
-                              onChange={() => handleOnChangeFilterType('callIDFilterType', FilterType.or)}
+                              onChange={() => handleOnChangeFilterType('callIDFilterType', FilterTypeCDR.or)}
                               label={t('or')}
                               labelPlacement="end"
                             />
                             <FormControlLabel
                               value="start"
-                              checked={formik.values.callIDFilterType === FilterType.and}
-                              onChange={() => handleOnChangeFilterType('callIDFilterType', FilterType.and)}
+                              checked={formik.values.callIDFilterType === FilterTypeCDR.and}
+                              onChange={() => handleOnChangeFilterType('callIDFilterType', FilterTypeCDR.and)}
                               control={<Radio size="small" color="primary" />}
                               label={t('and')}
                               labelPlacement="end"
@@ -589,32 +593,32 @@ export default function UserLogs() {
                         >
                           <FormControlLabel
                             value="start"
-                            checked={formik.values.callIDType === FilterTextType.EXACT}
-                            onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.EXACT)}
+                            checked={formik.values.callIDType === FilterTextTypeCDR.EXACT}
+                            onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextTypeCDR.EXACT)}
                             control={<Radio size="small" color="primary" />}
                             label={t('exact')}
                             labelPlacement="end"
                           />
                           <FormControlLabel
                             value="start"
-                            checked={formik.values.callIDType === FilterTextType.BEGINS_WITH}
-                            onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.BEGINS_WITH)}
+                            checked={formik.values.callIDType === FilterTextTypeCDR.BEGINS_WITH}
+                            onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextTypeCDR.BEGINS_WITH)}
                             control={<Radio size="small" color="primary" />}
                             label={t('beginsWith')}
                             labelPlacement="end"
                           />
                           <FormControlLabel
                             value="start"
-                            checked={formik.values.callIDType === FilterTextType.CONTAINS}
-                            onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.CONTAINS)}
+                            checked={formik.values.callIDType === FilterTextTypeCDR.CONTAINS}
+                            onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextTypeCDR.CONTAINS)}
                             control={<Radio size="small" color="primary" />}
                             label={t('contains')}
                             labelPlacement="end"
                           />
                           <FormControlLabel
                             value="start"
-                            checked={formik.values.callIDType === FilterTextType.ENDS_WITH}
-                            onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextType.ENDS_WITH)}
+                            checked={formik.values.callIDType === FilterTextTypeCDR.ENDS_WITH}
+                            onChange={() => handleOnChangeFilterTextType('callIDType', FilterTextTypeCDR.ENDS_WITH)}
                             control={<Radio size="small" color="primary" />}
                             label={t('endsWith')}
                             labelPlacement="end"

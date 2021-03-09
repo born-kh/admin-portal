@@ -19,16 +19,15 @@ import { useFormik } from 'formik'
 import MaterialTable from 'material-table'
 // custom modal components
 import { CustomDialogTitle, CustomDialogContent, CustomDialogActions } from '@components/common/Modal'
-// apiKey-manager REST APIS
-import { apiKeyAPI } from 'service/api'
-// apiKey-manager interfaces
-import { ApiKey, ApiKeyUpdateParams, ApiKeyCreateParams, Platforms } from '@interfaces/apiKey-manager'
+
 import useTranslation from 'hooks/useTranslation'
 import moment from 'moment'
+import { IApiKey, Platforms, IApiKeyCreateParams, IApiKeyUpdateParams } from '@Interfaces'
+import { ServiceApiKeyManager } from '@Services'
 ///api-key-manager component
 export default function ApiKeyManager() {
-  const [apiKeys, setApiKeys] = useState<ApiKey[]>([])
-  const [filterApiKeys, setFilterApiKeys] = useState<ApiKey[]>([])
+  const [apiKeys, setApiKeys] = useState<IApiKey[]>([])
+  const [filterApiKeys, setFilterApiKeys] = useState<IApiKey[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [selectedPlatform, setSelectedPlatform] = useState<Platforms>(Platforms.ALL)
   const [isOpen, setIsOpen] = useState(false)
@@ -40,7 +39,7 @@ export default function ApiKeyManager() {
       enabled: true,
       version: '',
       platform: Platforms.android,
-    } as ApiKeyCreateParams,
+    } as IApiKeyCreateParams,
 
     onSubmit: (values) => {},
   })
@@ -52,7 +51,7 @@ export default function ApiKeyManager() {
   const handleUpdateApiKey = (id: number) => {
     const apiKey = apiKeys.find((item) => item.id === id)
     if (apiKey) {
-      const params: ApiKeyUpdateParams = {
+      const params: IApiKeyUpdateParams = {
         id: apiKey.id,
         key: apiKey.apiKey,
         scopes: apiKey.scopes,
@@ -61,10 +60,8 @@ export default function ApiKeyManager() {
         enabled: !apiKey.enabled,
         cacheExpiration: apiKey.cacheExpiration,
       }
-
-      apiKeyAPI
-        .updateApiKey(params)
-        .then((response) => {
+      ServiceApiKeyManager.apiKeyUpdate(params)
+        .then(() => {
           setApiKeys((prevApiKeys) => {
             return prevApiKeys.map((item) => {
               if (item.id === id) {
@@ -89,16 +86,19 @@ export default function ApiKeyManager() {
 
   const handleCreateApiKey = () => {
     console.log(formik.values)
-    apiKeyAPI
-      .createApiKey({
-        ...formik.values,
-        validTo: new Date(formik.values.validTo).toISOString().split('.')[0] + 'Z',
-        validFrom: new Date(formik.values.validFrom).toISOString().split('.')[0] + 'Z',
-      })
-      .then((response) => {
-        setApiKeys((prevApiKeys) => {
-          return [...prevApiKeys, response.data.apiKey]
-        })
+    ServiceApiKeyManager.apiKeyCreate({
+      ...formik.values,
+      validTo: new Date(formik.values.validTo).toISOString().split('.')[0] + 'Z',
+      validFrom: new Date(formik.values.validFrom).toISOString().split('.')[0] + 'Z',
+    })
+
+      .then((res) => {
+        if (res.result) {
+          setApiKeys((prevApiKeys) => {
+            return [...prevApiKeys, res.result.apiKey]
+          })
+        }
+
         setIsOpen(false)
       })
       .catch((e) => {
@@ -108,12 +108,10 @@ export default function ApiKeyManager() {
   }
   useEffect(() => {
     setIsLoading(true)
-    apiKeyAPI
-      .getApiKeys()
-      .then((response) => {
-        console.log(response)
-        if (response.status === 200) {
-          setApiKeys(response.data.apiKeys.sort((x, y) => +new Date(y.createdAt) - +new Date(x.createdAt)))
+    ServiceApiKeyManager.apiKeyGet({})
+      .then((res) => {
+        if (res.result) {
+          setApiKeys(res.result.apiKeys.sort((x, y) => +new Date(y.createdAt) - +new Date(x.createdAt)))
         }
         setIsLoading(false)
       })

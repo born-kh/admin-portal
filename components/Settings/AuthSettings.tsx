@@ -9,20 +9,20 @@ import { useFormik } from 'formik'
 import { CustomDialogTitle, CustomDialogContent, CustomDialogActions } from '@components/common/Modal'
 import Dashboard from '@components/Dashboard'
 import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
-//settings REST APIS
-import { settingsAPI } from 'service/api'
+
 //material ui icons
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
-//settings interfaces
-import { AuthSettings, PermissionType } from '@interfaces/settings'
+
 //constants
 import { initialAlertData } from '@utils/constants'
 import useTranslation from 'hooks/useTranslation'
+import { IAuthSettings, PermissionTypeAuthSettings } from '@Interfaces'
+import { ServiceSettingsManager } from '@Services'
 
 /* AUTH Component */
 export default function AuthSettingsComponent() {
-  const [allAuthSeetings, setAllAuthSettings] = useState<AuthSettings[]>([])
+  const [allAuthSeetings, setAllAuthSettings] = useState<IAuthSettings[]>([])
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
     initialAlertData
   )
@@ -32,9 +32,9 @@ export default function AuthSettingsComponent() {
   const formik = useFormik({
     initialValues: {
       prefix: '',
-      permissionType: PermissionType.allow,
+      permissionType: PermissionTypeAuthSettings.allow,
       description: '',
-    } as AuthSettings,
+    } as IAuthSettings,
 
     onSubmit: (values) => {},
   })
@@ -46,12 +46,12 @@ export default function AuthSettingsComponent() {
     setIsOpen(false)
   }
   const handleDelete = (id: string) => {
-    settingsAPI
-      .deleteAuthSettings({ id })
+    ServiceSettingsManager.authSettingsDelete({ id })
+
       .then(() => {
         handleClose()
-        setAllAuthSettings(allAuthSeetings.filter((item: AuthSettings) => item.id !== id))
 
+        setAllAuthSettings(allAuthSeetings.filter((item: IAuthSettings) => item.id !== id))
         setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
       })
       .catch((error) => {
@@ -60,17 +60,16 @@ export default function AuthSettingsComponent() {
       })
   }
 
-  const openEditModal = (data: AuthSettings) => {
+  const openEditModal = (data: IAuthSettings) => {
     formik.setValues(data)
     setIsOpen(true)
   }
   const handleCraete = () => {
     if (formik.values.id) {
-      settingsAPI
-        .updateAuthSettings(formik.values)
+      ServiceSettingsManager.authSettingsUpdate(formik.values)
         .then(() => {
           setAllAuthSettings(
-            allAuthSeetings.map((item: AuthSettings) => (item.id === formik.values.id ? formik.values : item))
+            allAuthSeetings.map((item: IAuthSettings) => (item.id === formik.values.id ? formik.values : item))
           )
           handleClose()
           setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
@@ -80,8 +79,7 @@ export default function AuthSettingsComponent() {
           setAlertData({ message: ` ${error.message}`, type: AlertMessageType.error, open: true })
         })
     } else {
-      settingsAPI
-        .createAuthSettings(formik.values)
+      ServiceSettingsManager.authSettingsCreate(formik.values)
         .then((response) => {
           setAllAuthSettings([...allAuthSeetings, { ...formik.values }])
           setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
@@ -95,11 +93,10 @@ export default function AuthSettingsComponent() {
 
   useEffect(() => {
     setIsLoading(true)
-    settingsAPI
-      .getAllAuthSettings()
-      .then((response) => {
-        if (response.status === 200) {
-          setAllAuthSettings(response.data.allSettings)
+    ServiceSettingsManager.authSettingsGetAll({})
+      .then((res) => {
+        if (res.result) {
+          setAllAuthSettings(res.result.allSettings)
         }
         setIsLoading(false)
       })
@@ -159,7 +156,7 @@ export default function AuthSettingsComponent() {
             tooltip: t('create'),
             position: 'toolbar',
             onClick: () => {
-              formik.setValues({ prefix: '', permissionType: PermissionType.allow, description: '' })
+              formik.setValues({ prefix: '', permissionType: PermissionTypeAuthSettings.allow, description: '' })
               setIsOpen(true)
             },
           },
@@ -203,10 +200,10 @@ export default function AuthSettingsComponent() {
               onChange={formik.handleChange}
               label={t('permission')}
             >
-              <MenuItem key={PermissionType.allow} value={PermissionType.allow}>
+              <MenuItem key={PermissionTypeAuthSettings.allow} value={PermissionTypeAuthSettings.allow}>
                 Allow
               </MenuItem>
-              <MenuItem key={PermissionType.deny} value={PermissionType.deny}>
+              <MenuItem key={PermissionTypeAuthSettings.deny} value={PermissionTypeAuthSettings.deny}>
                 Deny
               </MenuItem>
             </Select>

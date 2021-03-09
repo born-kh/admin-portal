@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 //material ui components
 import { Button, TextField, InputLabel, FormControl, MenuItem, Paper, Grid, Select } from '@material-ui/core'
-//document-manager interface EditStepProps
-import { EditStepProps } from '@interfaces/document-manager'
+
 //constants
 import { genderOptions, typeOptions, nationOptions, DOCUMENT_FILE_URL } from '@utils/constants'
 //custom components
@@ -12,8 +11,9 @@ import dynamic from 'next/dynamic'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
 import useStyles from './style'
 import useTranslation from 'hooks/useTranslation'
+import { IEditStepProps } from '@Interfaces'
 
-export default function EditStep(props: EditStepProps) {
+export default function EditStep(props: IEditStepProps) {
   const classes = useStyles()
   const { documents, fields, handleOnChange, blocking, handleSumbit } = props
   const [selectID, setSelectID] = useState('')

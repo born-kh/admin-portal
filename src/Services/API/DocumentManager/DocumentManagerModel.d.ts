@@ -3,18 +3,14 @@ import {
   ApodPayload,
   ApodResponse,
   HttpModel,
-  SearchTypeParams,
-  Account,
-  SystemSettings,
-  AccountSessionsData,
-  Fields,
-  Application,
+  IAccount,
+  IFields,
+  IApplication,
   DocumentStatus,
   ApplicationStatus,
-  Document,
+  IDocument,
   DocumentTypes,
 } from '@Interfaces'
-import { DocumentSet } from '@interfaces/document-manager'
 
 // #endregion Interface Imports
 
@@ -46,7 +42,7 @@ declare namespace DocumentManagerModel {
   declare namespace DocumentSetFields {
     interface Params {
       documentID: string
-      fields: Fields
+      fields: IFields
     }
 
     interface Response {
@@ -63,7 +59,7 @@ declare namespace DocumentManagerModel {
 
     interface Response {
       result: {
-        applications: Application[]
+        applications: IApplication[]
         totalCount: number
       }
     }
@@ -102,7 +98,7 @@ declare namespace DocumentManagerModel {
 
     interface Response {
       result: {
-        documents: Document[]
+        documents: IDocument[]
       }
     }
   }
@@ -124,7 +120,7 @@ declare namespace DocumentManagerModel {
 
     interface Response {
       result: {
-        sets: DocumentSet[]
+        sets: IDocumentSet[]
       }
     }
   }
@@ -135,7 +131,7 @@ declare namespace DocumentManagerModel {
 
     interface Response {
       result: {
-        applications: Application[]
+        applications: IApplication[]
       }
     }
   }
@@ -148,7 +144,7 @@ declare namespace DocumentManagerModel {
 
     interface Response {
       result: {
-        applications: Application[]
+        applications: IApplication[]
         totalCount: number
       }
     }
@@ -166,7 +162,7 @@ declare namespace DocumentManagerModel {
 
     interface Response {
       result: {
-        applications: Application[]
+        applications: IApplication[]
       }
     }
   }

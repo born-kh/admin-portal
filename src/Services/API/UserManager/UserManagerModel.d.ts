@@ -1,5 +1,5 @@
 // #region Interface Imports
-import { ApodPayload, ApodResponse, HttpModel, SearchTypeParams, Account, SystemSettings } from '@Interfaces'
+import { ApodPayload, ApodResponse, HttpModel, IAccount, IAccountSystemSettings } from '@Interfaces'
 
 // #endregion Interface Imports
 
@@ -12,7 +12,7 @@ declare namespace UserManagerModel {
 
     interface Response {
       result: {
-        accounts: Account[]
+        accounts: IAccount[]
       }
     }
   }
@@ -22,41 +22,16 @@ declare namespace UserManagerModel {
       ts: string
       type: FilterType
     }
-
-    interface Response extends HttpModel.IRequestResponse {
-      result: {
-        accounts: Account[]
-      }
-    }
-  }
-  declare namespace GetAuthCodeList {
-    interface Params {
-      username: string
-      password: string
-      usernameType: UserNameType
+    enum FilterType {
+      exact = 'EXACT',
+      after = 'AFTER',
+      around = 'AROUND',
+      before = 'BEFORE',
     }
 
     interface Response extends HttpModel.IRequestResponse {
       result: {
-        token: string
-        accountID: string
-        refreshToken: string
-      }
-    }
-  }
-
-  declare namespace ResendCode {
-    interface Params {
-      username: string
-      password: string
-      usernameType: UserNameType
-    }
-
-    interface Response extends HttpModel.IRequestResponse {
-      result: {
-        token: string
-        accountID: string
-        refreshToken: string
+        accounts: IAccount[]
       }
     }
   }
@@ -77,7 +52,7 @@ declare namespace UserManagerModel {
   declare namespace SetAccountSettings {
     interface Params {
       accountID: string
-      settings: SystemSettings
+      settings: IAccountSystemSettings
     }
 
     interface Response extends HttpModel.IRequestResponse {
@@ -91,7 +66,7 @@ declare namespace UserManagerModel {
 
     interface Response extends HttpModel.IRequestResponse {
       result: {
-        settings: SystemSettings[]
+        settings: IAccountSystemSettings
       }
     }
   }

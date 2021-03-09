@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 //material ui components
 import { Button, CardHeader, CardActions, Paper, Grid, Card, CardContent, IconButton } from '@material-ui/core'
-//document-manager interfaces
-import { DocumentStatus, Document, PassportStepProps } from '@interfaces/document-manager'
+
 //Custom ImageComponent
 import ImageComponent from '@components/common/ImageComponent'
 //constants
@@ -14,11 +13,12 @@ import dynamic from 'next/dynamic'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
 
 import useStyles from './style'
+import { IPassportStepProps, IDocument, DocumentStatus } from '@Interfaces'
 
-export default function PassportStep(props: PassportStepProps) {
+export default function PassportStep(props: IPassportStepProps) {
   const classes = useStyles()
   const { document, handleDeleteDocument, handleSetMapPosition } = props
-  const [passport, setPassport] = useState<Document | null>(null)
+  const [passport, setPassport] = useState<IDocument | null>(null)
   const [docID, setDocID] = useState<string | undefined>(undefined)
 
   useEffect(() => {

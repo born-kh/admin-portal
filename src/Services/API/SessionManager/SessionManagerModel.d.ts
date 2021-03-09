@@ -1,13 +1,5 @@
 // #region Interface Imports
-import {
-  ApodPayload,
-  ApodResponse,
-  HttpModel,
-  SearchTypeParams,
-  Account,
-  SystemSettings,
-  AccountSessionsData,
-} from '@Interfaces'
+import { ApodPayload, ApodResponse, HttpModel, IAccountSessionsData } from '@Interfaces'
 
 // #endregion Interface Imports
 
@@ -19,7 +11,7 @@ declare namespace SesssionManagerModel {
 
     interface Response {
       result: {
-        sessions: AccountSessionsData[]
+        sessions: IAccountSessionsData[]
       }
     }
   }

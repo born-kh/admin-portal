@@ -1,35 +1,28 @@
-import { UserManagerModel } from '@Interfaces'
+import { UserManagerModel, IAccount } from '@Interfaces'
 import { APIConsts } from '@Definitions'
 import { Http } from '@Services'
 
 export const ServiceUserManager = {
-  searchAccount: async (params: UserManagerModel.SearchAccount.Params[]) => {
-    let response = await Http.Post<UserManagerModel.SearchAccount.Response>(APIConsts.Http, {
-      method: APIConsts.UserManager.SearchAccount,
-      params,
-    })
-    return response
+  searchAccount: async (paramsList: UserManagerModel.SearchAccount.Params[]) => {
+    let accounts: IAccount[] = []
+    await Promise.all(
+      paramsList.map(async (params) => {
+        let response = await Http.Post<UserManagerModel.SearchAccount.Response>(APIConsts.Http, {
+          method: APIConsts.UserManager.SearchAccount,
+          params,
+        })
+        if (response.result) {
+          accounts = accounts.concat(response.result.accounts)
+        }
+      })
+    )
+
+    return accounts
   },
 
   setPassword: async (params: UserManagerModel.SetPassword.Params) => {
     let response = await Http.Post<UserManagerModel.SetPassword.Response>(APIConsts.Http, {
       method: APIConsts.UserManager.SetPassword,
-      params,
-    })
-    return response
-  },
-
-  resendCode: async (params: UserManagerModel.ResendCode.Params) => {
-    let response = await Http.Post<UserManagerModel.ResendCode.Response>(APIConsts.Http, {
-      method: APIConsts.UserManager.ResendCode,
-      params,
-    })
-    return response
-  },
-
-  getAuthCodeList: async (params: UserManagerModel.GetAuthCodeList.Params) => {
-    let response = await Http.Post<UserManagerModel.GetAuthCodeList.Response>(APIConsts.Http, {
-      method: APIConsts.UserManager.GetAuthCodeList,
       params,
     })
     return response

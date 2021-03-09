@@ -1,40 +1,19 @@
 import React, { useState, useEffect, Fragment } from 'react'
 //material ui components
-import {
-  TextField,
-  Dialog,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  Button,
-  Select,
-  Paper,
-  FormControlLabel,
-  colors,
-} from '@material-ui/core'
+import { TextField, MenuItem, Select, Paper } from '@material-ui/core'
 //material table lib
 import MaterialTable from 'material-table'
-//useformik hook
-import { useFormik } from 'formik'
-//custom components
-import { CustomDialogTitle, CustomDialogContent, CustomDialogActions } from '@components/common/Modal'
-import Dashboard from '@components/Dashboard'
+
 import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
-//settings REST APIS
-import { settingsAPI } from 'service/api'
-//material ui icons
-import EditIcon from '@material-ui/icons/Edit'
-import DeleteIcon from '@material-ui/icons/Delete'
-//settings interfaces
-import { AuthSettings, PermissionType, Question, QuestionType, QuestionLanguage, Language } from '@interfaces/settings'
+
 //constants
 import { initialAlertData } from '@utils/constants'
-import AddIcon from '@material-ui/icons/Add'
 import useTranslation from 'hooks/useTranslation'
-type LangaugeStrings = keyof typeof Language
+import { IQuestion, IQuestionLanguage, Language, QuestionType } from '@Interfaces'
+import { ServiceSettingsManager } from '@Services'
 /* AUTH Component */
 export default function QuestionComponent() {
-  const [questions, setQuestions] = useState<Question[]>([])
+  const [questions, setQuestions] = useState<IQuestion[]>([])
 
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
     initialAlertData
@@ -47,12 +26,10 @@ export default function QuestionComponent() {
   }
   const { t } = useTranslation()
 
-  const handleCreateQuestion = async (data: Question) => {
-    console.log(data)
-    return settingsAPI
-      .createQuestion({ ...data, maxLen: Number(data.maxLen) })
-      .then((response) => {
-        setQuestions((prevQuestions) => [...prevQuestions, response.data.question])
+  const handleCreateQuestion = async (data: IQuestion) => {
+    return ServiceSettingsManager.questionCreate({ ...data, maxLen: Number(data.maxLen) })
+      .then((res) => {
+        setQuestions((prevQuestions) => [...prevQuestions, res.result.question])
         setAlertData({ message: `Question created`, type: AlertMessageType.sucess, open: true })
       })
       .catch((error) => {
@@ -60,10 +37,8 @@ export default function QuestionComponent() {
       })
   }
 
-  const handleUpdateQuestion = async (data: Question) => {
-    console.log(data)
-    return settingsAPI
-      .updateQuestion({ ...data })
+  const handleUpdateQuestion = async (data: IQuestion) => {
+    return ServiceSettingsManager.questionUpdate({ ...data })
       .then(() => {
         setQuestions(questions.map((item) => (item.id === data.id ? { ...data } : item)))
 
@@ -75,9 +50,7 @@ export default function QuestionComponent() {
   }
 
   const handleDeleteQuestion = async (id: string) => {
-    console.log(id)
-    return settingsAPI
-      .deleteQuestion({ id })
+    return ServiceSettingsManager.questionDelete({ id })
       .then(() => {
         setQuestions(questions.filter((item) => item.id !== id))
         setAlertData({ message: `Qestion deleted`, type: AlertMessageType.sucess, open: true })
@@ -89,13 +62,10 @@ export default function QuestionComponent() {
 
   useEffect(() => {
     setIsLoading(true)
-    settingsAPI
-      .getAllQuestions()
-      .then((response) => {
-        console.log(response)
-        if (response.status === 200) {
-          console.log(response.data.questions)
-          setQuestions(response.data.questions)
+    ServiceSettingsManager.questionGetAll({})
+      .then((res) => {
+        if (res.result) {
+          setQuestions(res.result.questions)
         }
         setIsLoading(false)
       })
@@ -211,18 +181,17 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
     initialAlertData
   )
   const { t } = useTranslation()
-  const [questionLanguages, setQuestionLanguages] = useState<QuestionLanguage[]>([])
+  const [questionLanguages, setQuestionLanguages] = useState<IQuestionLanguage[]>([])
   const [selectedLanguage, setSelectedLanguage] = useState<Language | null>(null)
   const handleCloseAlert = () => {
     setAlertData(initialAlertData)
   }
   useEffect(() => {
     setIsLoadingLanguages(true)
-    settingsAPI
-      .getAllQuestionLanguage({ questionId: props.questionId })
-      .then((response) => {
-        if (response.status === 200) {
-          setQuestionLanguages(response.data)
+    ServiceSettingsManager.questionLangGetByQuestionId({ questionId: props.questionId })
+      .then((res) => {
+        if (res.result) {
+          setQuestionLanguages(res.result)
         }
         setIsLoadingLanguages(false)
       })
@@ -231,12 +200,9 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
       })
   }, [props.questionId])
 
-  const handleCreateQuestionLanguage = async (data: QuestionLanguage) => {
-    const langData = { ...data, lang: selectedLanguage || data.lang }
-    console.log(data)
-    return settingsAPI
-      .createQuestionLanguage({ ...data })
-      .then((response) => {
+  const handleCreateQuestionLanguage = async (data: IQuestionLanguage) => {
+    return ServiceSettingsManager.questionLangCreate({ ...data })
+      .then(() => {
         setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
       })
       .catch((error) => {
@@ -244,9 +210,8 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
       })
   }
 
-  const handleUpdateQuestionLanguage = async (data: QuestionLanguage) => {
-    return settingsAPI
-      .updateQuestionLanguage({ ...data })
+  const handleUpdateQuestionLanguage = async (data: IQuestionLanguage) => {
+    return ServiceSettingsManager.questionLangUpdate({ ...data })
       .then(() => {
         setQuestionLanguages(questionLanguages.map((item) => (item.id === data.id ? { ...data } : item)))
 
@@ -258,8 +223,7 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
   }
 
   const handleDeleteQuestionLanguage = async (id: string) => {
-    return settingsAPI
-      .deleteQuestion({ id })
+    return ServiceSettingsManager.questionLangDelete({ id })
       .then(() => {
         setQuestionLanguages(questionLanguages.filter((item) => item.id !== id))
         setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })

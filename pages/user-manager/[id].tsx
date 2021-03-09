@@ -11,27 +11,26 @@ import AccountInfo from '@components/AccountInfo'
 import Title from '@components/common/Title'
 import ApplicationTable from '@components/DocumentManager/ApplicationTable'
 import Loader from '@components/common/Loader'
-//user-manager REST APIS
-import { userAPI, documentAPI, sessionAPI } from 'service/api'
-//user-manager interfaces
-import { SearchType, Account } from '@interfaces/user-manager'
-import { Application } from '@interfaces/document-manager'
+
 //styles
-import { useStylesUserManager, JsonViewerStyles } from 'styles/user-manager-styles'
+import { useStylesUserManager } from 'styles/user-manager-styles'
 import TabPanel from '@components/common/TabPanel'
 import useTranslation from 'hooks/useTranslation'
-import { SystemSettings } from '@interfaces/settings'
+
 import dynamic from 'next/dynamic'
+import { IApplication, IAccount, SearchType, IAccountSystemSettings } from '@Interfaces'
+import { ServiceUserManager, ServiceDocumentManager } from '@Services'
+
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 /* User Manager Detail Info Component */
 export default function UserManagerDetail() {
   const classes = useStylesUserManager()
-  const [account, setAcccount] = useState<Account | null>(null)
-  const [applications, setApplications] = useState<Application[]>([])
+  const [account, setAcccount] = useState<IAccount | null>(null)
+  const [applications, setApplications] = useState<IApplication[]>([])
   const [isLoadingApplications, setIsLoadingApplications] = useState(false)
   const [value, setValue] = useState(0)
-  const [systemSettingsAccount, setSystemSettingsAccount] = useState<SystemSettings>({ description: '' })
+  const [systemSettingsAccount, setSystemSettingsAccount] = useState<IAccountSystemSettings>({ description: '' })
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const { t } = useTranslation()
@@ -53,8 +52,7 @@ export default function UserManagerDetail() {
   }
   useEffect(() => {
     function loadData() {
-      userAPI
-        .searchUser([{ type: SearchType.accountID, search: router.query.id as string }])
+      ServiceUserManager.searchAccount([{ type: SearchType.accountID, search: router.query.id as string }])
         .then((accounts) => {
           if (accounts.length > 0) {
             setAcccount(accounts[0])
@@ -76,11 +74,11 @@ export default function UserManagerDetail() {
   }, [router])
   useEffect(() => {
     if (account) {
-      documentAPI
-        .fetchApplicationByAccount({ accountID: account.accountID })
-        .then((response) => {
-          if (response.status === 200) {
-            setApplications(response.data.applications)
+      ServiceDocumentManager.appplicationGetByAccount({ accountID: account.accountID })
+
+        .then((res) => {
+          if (res.result) {
+            setApplications(res.result.applications)
           }
           setIsLoadingApplications(false)
         })
@@ -88,11 +86,11 @@ export default function UserManagerDetail() {
           setIsLoadingApplications(false)
         })
 
-      userAPI
-        .systemGetAccountSettings({ accountID: account.accountID })
+      ServiceUserManager.getAccountSettings({ accountID: account.accountID })
         .then((res) => {
-          console.log(res.data)
-          setSystemSettingsAccount(res.data)
+          if (res.result) {
+            setSystemSettingsAccount(res.result.settings)
+          }
         })
         .catch((e) => {
           console.log(e)

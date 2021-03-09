@@ -10,8 +10,7 @@ export const APIConsts = {
   UserManager: {
     SearchAccount: 'gateway.system.search.account',
     AccountGetByDate: 'gateway.account.get.dated',
-    GetAuthCodeList: 'gateway.auth.code.list',
-    ResendCode: 'gateway.internal.resend.code',
+
     SetPassword: 'gateway.system.set.password',
     GetAccountSettings: 'gateway.system.account.settings.get',
     SetAccountSettings: 'gateway.system.account.settings.set',
@@ -57,10 +56,7 @@ export const APIConsts = {
     CallQualityDelete: 'gateway.callquality.delete',
     CallQualityGetById: 'gateway.callquality.get.byid',
     CallQualityGetAll: 'gateway.callquality.get.all',
-    CDRCallGet: 'gateway.call.get',
-    CDRCallGetByAccountId: 'gateway.call.get.accountId',
-    CDRCallGetByIds: '"gateway.call.get.byids',
-    CDRGetStars: 'gateway.quality.data.get.count.stars',
+
     QuestionCreate: 'gateway.question.create',
     QuestionDelete: 'gateway.question.delete',
     QuestionGetAll: 'gateway.question.get.all',
@@ -70,6 +66,14 @@ export const APIConsts = {
     QuestionLangDelete: 'gateway.question.lang.delete',
     QuestionLangGetByQuestionId: 'gateway.question.lang.get.byQuestionId',
     QuestionLangUpdate: 'gateway.question.lang.update',
+  },
+  StatisticsManager: {
+    CDRCallGet: 'gateway.call.get',
+    CDRCallGetByAccountId: 'gateway.call.get.accountId',
+    CDRCallGetByIds: '"gateway.call.get.byids',
+    CDRGetStars: 'gateway.quality.data.get.count.stars',
+    GetAuthCodeList: 'gateway.auth.code.list',
+    ResendCode: 'gateway.internal.resend.code',
   },
 
   Version: 1,

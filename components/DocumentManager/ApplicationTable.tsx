@@ -8,12 +8,12 @@ import moment from 'moment'
 import { Button, TablePagination, Paper } from '@material-ui/core'
 //next router
 import { useRouter } from 'next/router'
-//document-manager interfaces
-import { ApplicationTableProps } from '@interfaces/document-manager'
+
 import useTranslation from 'hooks/useTranslation'
 import { NAVIGATOR } from '@utils/constants'
+import { IApplicationTableProps } from '@Interfaces'
 
-export default function ApplicationTable(props: ApplicationTableProps) {
+export default function ApplicationTable(props: IApplicationTableProps) {
   const router = useRouter()
   const { t } = useTranslation()
   const { data, handleChangePage, handleChangePageSize } = props

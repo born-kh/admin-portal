@@ -1,6 +1,7 @@
 import { StepIconProps } from '@material-ui/core'
-import { GeoLocation } from './UserManager'
-export interface Application {
+import { IGeoLocation } from './UserManager'
+
+export interface IApplication {
   ID: string
   applicationID: string
   accountID: string
@@ -15,49 +16,57 @@ export interface Application {
   tableData?: any
 }
 
-export interface Document {
+export interface IDocument {
   ID: string
-  documenSet: DocumentSet
-  fileInfo: FileInfo
-  documentType: DocumentType
+  documenSet: IDocumentSet
+  fileInfo: IFileInfo
+  documentType: IDocumentType
   status: DocumentStatus
-  recognized?: Machine
-  fields?: Fields
+  recognized?: IMachine
+  fields?: IFields
   archiveData: string
   tags?: string[]
   note?: string
   reviewManagerID?: string
   fieldsUUID?: string
-  geo: GeoLocation
+  geo: IGeoLocation
   tableData: any
 }
 
-export interface DocumentSet {
+export interface IDocumentSet {
   ID: string
   setName: string
 }
 
-export interface DocumentType {
+// export interface IDocumentSet {
+//   ID: string
+//   ts: string
+//   name: string
+//   note?: string
+//   projectID?: string
+// }
+
+export interface IDocumentType {
   ID: string
   typeName: string
   typeNote?: string
 }
 
-interface FileInfo {
+export interface IFileInfo {
   size: number
   originalName: string
   uploadIP: string
 }
 
-export interface Fields {
-  passport?: Passport
+export interface IFields {
+  passport?: IPassport
 }
 
-export interface Machine {
-  mrz?: MachineReadbleZone
+export interface IMachine {
+  mrz?: IMachineReadbleZone
 }
 
-export interface Passport {
+export interface IPassport {
   type: string
   country: string
   number: string
@@ -73,12 +82,12 @@ export interface Passport {
   issuingAuth?: string
 }
 
-export interface MachineReadbleZone {
-  passport?: MRZTD3
-  idcard?: MRZTD1
+export interface IMachineReadbleZone {
+  passport?: IMRZTD3
+  idcard?: IMRZTD1
 }
 
-export interface MRZTD3 {
+export interface IMRZTD3 {
   valid_score: number
   type: string
   country: string
@@ -102,7 +111,7 @@ export interface MRZTD3 {
   valid_personal_number: boolean
 }
 
-export interface MRZTD1 {
+export interface IMRZTD1 {
   valid_score: number
   type: string
   country: string
@@ -154,7 +163,7 @@ export enum SexType {
   Unknown = 'Unknown',
 }
 
-export interface StepType {
+export interface IStepType {
   name: string
   status: DocumentStatus
   component: React.ReactElement
@@ -162,66 +171,66 @@ export interface StepType {
   typeID?: string
 }
 
-export interface DocumentTypes {
+export interface IDocumentTypes {
   ID: string
   name: string
   note?: string
   //  pageFields?: Array<string:string>
   mlProfile?: string
   projectID?: string
-  documents: Document[]
+  documents: IDocument[]
   status: DocumentStatus
 }
 
-export interface PositionMap {
+export interface IPositionMap {
   latitude: number
   longitude: number
 }
 
-export interface FilterDateRange {
+export interface IFilterDateRange {
   type: string
   from: string
   to: string
 }
 
-export interface FilterAnyApplication {
+export interface IFilterAnyApplication {
   status?: string
-  range?: FilterDateRange
+  range?: IFilterDateRange
 }
-export interface FilterApplicationParams {
-  filter?: FilterAnyApplication
+export interface IFilterApplicationParams {
+  filter?: IFilterAnyApplication
   start: number
   count: number
 }
 
-export interface EditStepProps {
-  documents: Document[]
-  fields: Fields
+export interface IEditStepProps {
+  documents: IDocument[]
+  fields: IFields
   handleOnChange: (e: React.ChangeEvent<any>) => void
   handleSumbit: () => void
   blocking: boolean
 }
 
-export interface SelfieStepProps {
-  document: DocumentTypes
-  passportDocuments: Document[]
+export interface ISelfieStepProps {
+  document: IDocumentTypes
+  passportDocuments: IDocument[]
   handleDeleteDocument: (ID: string) => void
   handleSetMapPosition: (position: number[]) => void
 }
 
-export interface PassportStepProps {
-  document: DocumentTypes
+export interface IPassportStepProps {
+  document: IDocumentTypes
   handleDeleteDocument: (ID: string) => void
   handleSetMapPosition: (position: number[]) => void
 }
 
-export interface ConfirmStepProps {
-  documents: Document[]
-  fields: Fields
+export interface IConfirmStepProps {
+  documents: IDocument[]
+  fields: IFields
 }
 
-export interface MultiStepProps {
-  steps: StepType[]
+export interface IMultiStepProps {
+  steps: IStepType[]
   handleRejectApplication: () => void
   handleRejectDocument: (value: string) => void
   handleSetActiveStep: (val: number) => void
@@ -235,25 +244,25 @@ export interface MultiStepProps {
   handleCheckPassportNumber: () => void
 }
 
-export interface ColorlibStepIconProps {
+export interface IColorlibStepIconProps {
   propsIcon: StepIconProps
-  step: StepType
+  step: IStepType
   activeStep: number
   count: number
 }
 
-export interface ApplicationTableProps {
-  data?: ApplicationState
+export interface IApplicationTableProps {
+  data?: IApplicationState
   isLoading: boolean
-  applications?: Application[]
+  applications?: IApplication[]
   type: string
   title?: string
   handleChangePage?: (value: number) => void
   handleChangePageSize?: (value: number) => void
 }
 
-export interface DocumentProcedureProps {
-  documents: Document[]
+export interface IDocumentProcedureProps {
+  documents: IDocument[]
   documentSetID: string
   applicationID: string
 
@@ -263,55 +272,15 @@ export interface DocumentProcedureProps {
   handleNextApplication: () => void
 }
 
-export interface SetGroupsProps {
-  documents: Document[]
+export interface ISetGroupsProps {
+  documents: IDocument[]
   isLoading: boolean
   handleSetID: (value: string) => void
 }
 
-export interface EmptyResponse {}
-
-export interface FetchApplicationsResponse {
-  applications: Application[]
-  totalCount: number
-}
-
-export interface ApplicationState extends FetchApplicationsResponse {
+export interface IApplicationState {
   page: number
   pageSize: number
-}
-export interface FetchDocumentsResponse {
-  documents: Document[]
-}
-export interface DocumentMessageResponse {
-  message: string
-}
-
-export interface FetchDocumentTypesResponse {
-  types: DocumentTypes[]
-}
-
-export interface SetApplicationStatusParams {
-  user: string
-  applicationID: string
-  status: ApplicationStatus
-  documentSetID: string
-  reason?: string
-}
-
-export interface SetDocumentStatusParams {
-  documentTypeID: string
-  documentSetID: string
-  user: string
-  status: DocumentStatus
-  applicationID: string
-  reason?: string
-}
-
-export interface DocumentSet {
-  ID: string
-  ts: string
-  name: string
-  note?: string
-  projectID?: string
+  applications: IApplication[]
+  totalCount: number
 }

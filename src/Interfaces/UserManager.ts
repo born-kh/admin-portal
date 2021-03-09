@@ -1,36 +1,36 @@
-export interface Account {
+export interface IAccount {
   accountID: string
   firstName?: string
   lastName?: string
   username?: string
   avatar?: string
   status: AccountStatus
-  phones: PhoneInfo[]
-  emails: EmailInfo[]
+  phones: IPhoneInfo[]
+  emails: IEmailInfo[]
   auth: AuthInfo
   createdAt: Date
 }
 
-export interface AccountSessionsData {
-  meta: Meta
+export interface IAccountSessionsData {
+  meta: IMeta
   isTracing: boolean
   blocklist: string[]
   isSuspended: boolean
   lastActive: Date
-  geo?: GeoLocation
-  firebase?: Push
-  ios?: Push
-  iosvoip?: Push
+  geo?: IGeoLocation
+  firebase?: IPush
+  ios?: IPush
+  iosvoip?: IPush
   isConnected: boolean
   tableData?: any
 }
 
-export interface PhoneInfo {
+export interface IPhoneInfo {
   number: string
   type: PhoneType
 }
 
-export interface EmailInfo {
+export interface IEmailInfo {
   email: string
   type: EmailType
 }
@@ -40,7 +40,7 @@ export interface AuthInfo {
   status?: AuthStatus
 }
 
-export interface Meta {
+export interface IMeta {
   id: number
   accountID: number
   sessionID: string
@@ -57,14 +57,14 @@ export interface Meta {
   updatedAt?: Date
 }
 
-export interface Push {
+export interface IPush {
   token: string
   devToken: boolean
   tokenType: PushTokenType
   createdAt: Date
 }
 
-export interface GeoLocation {
+export interface IGeoLocation {
   longitude: number
   latitude: number
   date: Date
@@ -78,6 +78,7 @@ export enum Platforms {
   web = 'web',
   bot = 'bot',
   unknown = 'unknown',
+  ALL = 'ALL',
 }
 export enum AuthStatus {
   ENABLED = 'ENABLED',
@@ -130,34 +131,10 @@ export enum PushTokenType {
   androidFCM = 3,
   web = 4,
 }
-export interface SearchTypeParams {
-  type: SearchType
-  search: string
-}
 
 export interface ItemType {
   name: string
   type?: string
-}
-
-export interface SearchUserResponse {
-  accounts: Account[]
-}
-
-export interface SetPasswordResponse {
-  message: string
-  success: boolean
-}
-export interface FetchSessionsResponse {
-  sessions: AccountSessionsData[]
-}
-
-export interface AccountGetByDateParams {
-  ts: string
-  type: FilterType
-}
-export interface AccountGetByDateResponse {
-  accounts: Account[]
 }
 
 export enum FilterType {
@@ -177,7 +154,7 @@ export interface IUserLog {
   tableData?: any
 }
 
-export interface UserSettings {
+export interface IUserSettings {
   autoDelete: AutoDelete
 }
 
@@ -186,19 +163,23 @@ export interface AutoDelete {
   days: number
 }
 
-export interface SystemSettings {
+export interface IAccountSystemSettings {
   id?: number
-  voip?: WebRTCSettings
-  network?: Network
-  user?: UserSettings
+  voip?: IWebRTCSettings
+  network?: INetwork
+  user?: IUserSettings
   description: String
   tableData?: any
 }
-export interface GetSystemSettingsResponse {
-  settings: SystemSettings[]
+export interface ISystemSettings {
+  id?: number
+  voip?: IWebRTCSettings
+  network?: INetwork
+  description: String
+  tableData?: any
 }
 
-export interface Network {
+export interface INetwork {
   socketURL: string
   contentServerURL: string
   apiURL: string
@@ -210,9 +191,9 @@ export interface Network {
   baseURL: string
 }
 
-export interface WebRTCSettings {
+export interface IWebRTCSettings {
   id: number
-  iceServers: [IceServer]
+  iceServers: [IIceServer]
   continualGatheringPolicy: number
   activeResetSrtpParams: boolean
   iceTransportPolicy: number
@@ -235,22 +216,9 @@ export interface WebRTCSettings {
   iceConnectionReceivingTimeout: number
   iceBackupCandidatePairPingInterval: number
 }
-export interface IceServer {
+export interface IIceServer {
   url: string[]
   username?: string
   credentials?: string
   tlsCERTPolicy?: number
-}
-export interface AccountSessionsData {
-  meta: Meta
-  isTracing: boolean
-  blocklist: string[]
-  isSuspended: boolean
-  lastActive: Date
-  geo?: GeoLocation
-  firebase?: Push
-  ios?: Push
-  iosvoip?: Push
-  isConnected: boolean
-  tableData?: any
 }

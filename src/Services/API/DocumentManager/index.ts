@@ -96,4 +96,11 @@ export const ServiceDocumentManager = {
     })
     return response
   },
+  applicationCheckPassport: async (params: DocumentManagerModel.ApplicationCheckPassport.Params) => {
+    let response = await Http.Post<DocumentManagerModel.ApplicationCheckPassport.Response>(APIConsts.Http, {
+      method: APIConsts.DocumentManager.ApplicationCheckPassport,
+      params,
+    })
+    return response
+  },
 }

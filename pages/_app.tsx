@@ -13,7 +13,7 @@ import Dashboard from '@components/DashboardLayout'
 import { AUTH_STATUS } from '@utils/constants'
 import Loader from '@components/common/Loader'
 import { checkAuth } from '@store/auth/actions'
-import { ServiceWebsocket } from '@Services/API/UserManager'
+
 import { HelpersUtils } from '@utils/helpers'
 
 const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
