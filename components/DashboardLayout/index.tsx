@@ -53,7 +53,7 @@ const DashboardLayout = (props: any) => {
   const router = useRouter()
 
   useEffect(() => {
-    if (!jsCookie.get(LocalConsts.LocalStorage.token) || !jsCookie.get(LocalConsts.LocalStorage.accountId)) {
+    if (!jsCookie.get(LocalConsts.LocalStorage.token) || !jsCookie.get(LocalConsts.LocalStorage.refreshToken)) {
       router
         .push('/login')
         .then(() => {

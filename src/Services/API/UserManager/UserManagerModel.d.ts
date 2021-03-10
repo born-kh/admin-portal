@@ -1,5 +1,5 @@
 // #region Interface Imports
-import { ApodPayload, ApodResponse, HttpModel, IAccount, IAccountSystemSettings } from '@Interfaces'
+import { HttpModel, IAccount, IAccountSystemSettings, IPermissions, IProfile } from '@Interfaces'
 
 // #endregion Interface Imports
 
@@ -20,13 +20,7 @@ declare namespace UserManagerModel {
   declare namespace AccountGetByDate {
     interface Params {
       ts: string
-      type: FilterType
-    }
-    enum FilterType {
-      exact = 'EXACT',
-      after = 'AFTER',
-      around = 'AROUND',
-      before = 'BEFORE',
+      type: AccountFilterType
     }
 
     interface Response extends HttpModel.IRequestResponse {
@@ -67,6 +61,28 @@ declare namespace UserManagerModel {
     interface Response extends HttpModel.IRequestResponse {
       result: {
         settings: IAccountSystemSettings
+      }
+    }
+  }
+
+  declare namespace GetUserPermissions {
+    interface Params {}
+
+    interface Response extends HttpModel.IRequestResponse {
+      result: {
+        permissions: string[]
+      }
+    }
+  }
+
+  declare namespace GetProfile {
+    interface Params {
+      accointIDs?: string[]
+    }
+
+    interface Response extends HttpModel.IRequestResponse {
+      result: {
+        profile: IProfile
       }
     }
   }

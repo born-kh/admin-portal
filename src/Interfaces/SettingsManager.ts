@@ -44,3 +44,6 @@ export enum QuestionType {
   checkbox = 'checkbox',
   inputline = 'inputline',
 }
+export interface IPermissions {
+  [key: string]: string[]
+}

@@ -9,14 +9,12 @@
           "@/components/*": ["components/*"],
           "@/store/*": ["store/*"],
           "@/interfaces/*": ["interfaces/*"],
-          "@Definitions/*": [".src/Definitions/*"],
-          "@Interfaces/*": [".src/Interfaces/*"],
-          "@Services/*": [".src/Services/*"],
-          "@Definitions": [".src/Definitions"],
-          "@Interfaces": [".src/Interfaces"],
-          "@Services": [".src/Services"],
-          "@Utils": [".src/Utils"],
-          "@Utils/*": [".src/Utils/*"],
+
+          "@Definitions": "./src/Definitions",
+          "@Interfaces": "./src/Interfaces",
+
+          "@Services": "./src/Services",
+          "@Utils": "./src/Utils"
         }
       }
     ]

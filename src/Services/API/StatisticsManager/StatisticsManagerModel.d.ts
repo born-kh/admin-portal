@@ -1,5 +1,5 @@
 // #region Interface Imports
-import { ApodPayload, ApodResponse, HttpModel, ICountStarts } from '@Interfaces'
+import { HttpModel, ICountStarts } from '@Interfaces'
 import { IFilterCDR, IAuthCode, ICall } from '@Interfaces/StatisticsManager'
 
 // #endregion Interface Imports

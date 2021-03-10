@@ -1,5 +1,5 @@
 // #region Interface Imports
-import { ApodPayload, ApodResponse, HttpModel } from '@Interfaces'
+import { HttpModel } from '@Interfaces'
 // #endregion Interface Imports
 
 declare namespace AuthModel {
@@ -22,11 +22,11 @@ declare namespace AuthModel {
       usernameType: UserNameType
     }
 
-    interface Response extends HttpModel.IRequestResponse{
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         token: string
-         accountID: string
-         refreshToken: string
+        accountID: string
+        refreshToken: string
       }
     }
   }

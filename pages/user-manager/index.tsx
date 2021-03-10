@@ -19,7 +19,7 @@ import { useRouter } from 'next/router'
 //styles
 import { useStylesUserManager } from 'styles/user-manager-styles'
 import useTranslation from 'hooks/useTranslation'
-import { SearchType, IAccount, UserManagerModel } from '@Interfaces'
+import { SearchType, IAccount, UserManagerModel, AccountFilterDateType } from '@Interfaces'
 import { ServiceUserManager } from '@Services/API/UserManager'
 
 /* User Manager Component */
@@ -30,7 +30,7 @@ export default function UserManager() {
   const [users, setUsers] = useState<IAccount[]>([])
   const [filterParams, setFilterParams] = useState<UserManagerModel.AccountGetByDate.Params>({
     ts: '2020-11-12',
-    type: UserManagerModel.AccountGetByDate.FilterType.around,
+    type: AccountFilterDateType.around,
   })
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
@@ -203,29 +203,17 @@ export default function UserManager() {
                 onChange={handleOnChangeFilterParams}
                 label={t('type')}
               >
-                <MenuItem
-                  key={UserManagerModel.AccountGetByDate.FilterType.after}
-                  value={UserManagerModel.AccountGetByDate.FilterType.after}
-                >
-                  {UserManagerModel.AccountGetByDate.FilterType.after}
+                <MenuItem key={AccountFilterDateType.after} value={AccountFilterDateType.after}>
+                  {AccountFilterDateType.after}
                 </MenuItem>
-                <MenuItem
-                  key={UserManagerModel.AccountGetByDate.FilterType.before}
-                  value={UserManagerModel.AccountGetByDate.FilterType.before}
-                >
-                  {UserManagerModel.AccountGetByDate.FilterType.before}
+                <MenuItem key={AccountFilterDateType.before} value={AccountFilterDateType.before}>
+                  {AccountFilterDateType.before}
                 </MenuItem>
-                <MenuItem
-                  key={UserManagerModel.AccountGetByDate.FilterType.exact}
-                  value={UserManagerModel.AccountGetByDate.FilterType.exact}
-                >
-                  {UserManagerModel.AccountGetByDate.FilterType.exact}
+                <MenuItem key={AccountFilterDateType.exact} value={AccountFilterDateType.exact}>
+                  {AccountFilterDateType.exact}
                 </MenuItem>
-                <MenuItem
-                  key={UserManagerModel.AccountGetByDate.FilterType.around}
-                  value={UserManagerModel.AccountGetByDate.FilterType.around}
-                >
-                  {UserManagerModel.AccountGetByDate.FilterType.around}
+                <MenuItem key={AccountFilterDateType.around} value={AccountFilterDateType.around}>
+                  {AccountFilterDateType.around}
                 </MenuItem>
               </Select>
             </FormControl>
@@ -274,7 +262,10 @@ export default function UserManager() {
               title: t('fullName'),
               field: 'firstName',
               align: 'center',
-              render: (rowData) => rowData && rowData.firstName + ' ' + rowData.lastName,
+              render: (rowData) =>
+                rowData && !rowData.firstName && !rowData.lastName
+                  ? '-'
+                  : `${rowData.firstName || ''}  ${rowData.lastName || ''}`,
             },
             { title: t('username'), field: 'username', align: 'center' },
             {

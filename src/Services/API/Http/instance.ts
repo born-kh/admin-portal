@@ -22,8 +22,7 @@ instance.interceptors.request.use(
     config.headers['X-App-Language'] = PlatformUtil.language()
     config.headers['Accept'] = 'application/json'
     config.headers['Content-Type'] = 'application/json'
-    if (accountId && token) {
-      config.headers['X-Account-ID'] = accountId
+    if (token) {
       config.headers['Authorization'] = `Bearer ${token}`
     }
     return config

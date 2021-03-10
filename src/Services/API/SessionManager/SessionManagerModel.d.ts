@@ -1,5 +1,5 @@
 // #region Interface Imports
-import { ApodPayload, ApodResponse, HttpModel, IAccountSessionsData } from '@Interfaces'
+import { HttpModel, IAccountSessionsData } from '@Interfaces'
 
 // #endregion Interface Imports
 

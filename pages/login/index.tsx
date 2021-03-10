@@ -26,7 +26,7 @@ import Head from 'next/head'
 //next router
 import { useRouter } from 'next/router'
 //constants
-import { AUTH_STATUS, ERROR_CODES } from '@utils/constants'
+import { AUTH_STATUS, ERROR_CODES, USER_PERMISSION, permissions } from '@utils/constants'
 //helpers functions
 import { getErrorMsgFromCode } from '@utils/helpers'
 //login actions
@@ -43,7 +43,7 @@ import { useStylesLogin } from 'styles/login-styles'
 import { UserNameType } from '@Interfaces/Utils'
 import jsCookie from 'js-cookie'
 import { LocalConsts } from '@Definitions'
-import { ServiceAuth } from '@Services'
+import { ServiceAuth, ServiceUserManager } from '@Services'
 /* Login Component */
 export default function Login() {
   const classes = useStylesLogin()
@@ -70,22 +70,21 @@ export default function Login() {
       password: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
     }),
     onSubmit: (values) => {
-      // handleSignIn()
-      setLoading(true)
-      setErrorCode('')
-      dispatch(login(values))
-        .then((response) => {
-          setLoading(false)
-        })
-        .catch((error: any) => {
-          if (error.response && error.response.status === 401) {
-            setErrorCode(ERROR_CODES.password.wrong)
-          } else {
-            setErrorCode(ERROR_CODES.unknown)
-          }
-
-          setLoading(false)
-        })
+      handleSignIn()
+      // setLoading(true)
+      // setErrorCode('')
+      // dispatch(login(values))
+      //   .then((response) => {
+      //     setLoading(false)
+      //   })
+      //   .catch((error: any) => {
+      //     if (error.response && error.response.status === 401) {
+      //       setErrorCode(ERROR_CODES.password.wrong)
+      //     } else {
+      //       setErrorCode(ERROR_CODES.unknown)
+      //     }
+      //     setLoading(false)
+      //   })
     },
   })
   const states = useSelector((state: RootState) => {
@@ -95,25 +94,39 @@ export default function Login() {
     }
   })
 
-  // useEffect(() => {
-  //   if (states.authStatus === AUTH_STATUS.loggedOn) {
-  //     router.push('/')
-  //   }
-  // }, [states.authStatus])
+  useEffect(() => {
+    if (states.authStatus === AUTH_STATUS.loggedOn) {
+      router.push('/')
+    }
+  }, [states.authStatus])
 
   const [isChecking, setIsChecking] = useState(false)
 
   useEffect(() => {
     if (jsCookie.get(LocalConsts.LocalStorage.token) && jsCookie.get(LocalConsts.LocalStorage.accountId)) {
       console.log(111)
-      router
-        .push('/')
-        .then(() => {
-          setIsChecking(true)
+      // router
+      //   .push('/')
+      //   .then(() => {
+      //     setIsChecking(true)
+      //   })
+      //   .catch(() => {
+      //     setIsChecking(true)
+      //   })
+      // ServiceUserManager.getProfile({})
+      //   .then((responseProfile) => {
+      //     console.log(responseProfile)
+      //     if (responseProfile.result) {
+
+      //     }
+      //   })
+      //   .catch(() => {})
+
+      ServiceUserManager.getUserPermissions({})
+        .then((responsePermissions) => {
+          console.log(responsePermissions)
         })
-        .catch(() => {
-          setIsChecking(true)
-        })
+        .catch((e) => {})
     } else {
       setTimeout(() => {
         setIsChecking(true)
@@ -129,15 +142,15 @@ export default function Login() {
       username: usernameType === UserNameType.PHONE ? '+' + formik.values.username : formik.values.username,
       usernameType,
     })
-      .then((response) => {
-        console.log(response)
-        if (response.result) {
+      .then((responseSignIn) => {
+        if (responseSignIn.result) {
           setErrorText(null)
-          jsCookie.set(LocalConsts.LocalStorage.accountId, response.result.accountID)
-          jsCookie.set(LocalConsts.LocalStorage.token, response.result.token)
-          jsCookie.set(LocalConsts.LocalStorage.refreshToken, response.result.refreshToken)
+
+          jsCookie.set(LocalConsts.LocalStorage.token, responseSignIn.result.token)
+          jsCookie.set(LocalConsts.LocalStorage.refreshToken, responseSignIn.result.refreshToken)
+          router.push('/')
         } else {
-          setErrorText(response.error.reason)
+          setErrorText(responseSignIn.error.reason)
         }
         setLoading(false)
       })

@@ -10,10 +10,11 @@ export const APIConsts = {
   UserManager: {
     SearchAccount: 'gateway.system.search.account',
     AccountGetByDate: 'gateway.account.get.dated',
-
+    GetUserPermissions: 'gateway.api-managing-management.call.2.get_permissions_by_account_id',
     SetPassword: 'gateway.system.set.password',
     GetAccountSettings: 'gateway.system.account.settings.get',
     SetAccountSettings: 'gateway.system.account.settings.set',
+    GetProfile: 'account.get.profile',
   },
   ApiKeyManager: {
     ApiKeyCreate: 'gateway.system.apikey.create',
@@ -77,6 +78,6 @@ export const APIConsts = {
   },
 
   Version: 1,
-  Http: '/http',
+  Http: '/request',
   Request: '/request',
 }

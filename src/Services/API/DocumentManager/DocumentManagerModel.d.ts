@@ -1,7 +1,5 @@
 // #region Interface Imports
 import {
-  ApodPayload,
-  ApodResponse,
   HttpModel,
   IAccount,
   IFields,

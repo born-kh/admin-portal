@@ -27,7 +27,7 @@ export const Http = {
       instance
         .post(url, { ...params, id: HelpersUtils.uuidv4(), version: APIConsts.Version })
         .then(async (response) => {
-          if (response.status === 200) {
+          if (response && response.status === 200) {
             return resolve(response.data)
           }
           return reject(response)

@@ -80,6 +80,13 @@ export enum Platforms {
   unknown = 'unknown',
   ALL = 'ALL',
 }
+export enum AccountFilterDateType {
+  exact = 'EXACT',
+  after = 'AFTER',
+  around = 'AROUND',
+  before = 'BEFORE',
+}
+
 export enum AuthStatus {
   ENABLED = 'ENABLED',
   DISABLED = 'DISABLED',
@@ -118,6 +125,28 @@ export enum SearchType {
   accountID = 'accountID',
   firstname = 'firstname',
   lastname = 'lastname',
+}
+
+export interface IProfile {
+  accountID: string
+  firstName?: string
+  lastName?: string
+  username?: string
+  avatar?: string
+  status: AccountStatus
+  phones: PhoneInfo[]
+  emails: EmailInfo[]
+  auth: AuthInfo
+}
+
+interface PhoneInfo {
+  number: string
+  type: PhoneType
+}
+
+interface EmailInfo {
+  email: string
+  type: EmailType
 }
 
 export enum AccountStatus {

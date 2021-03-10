@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react'
 //next AppProps Type
-import { AppProps, Container } from 'next/app'
+import { AppProps, Container, AppContext, AppInitialProps } from 'next/app'
 //storte
 import { wrapper } from 'store'
 //globale styles
@@ -13,8 +13,7 @@ import Dashboard from '@components/DashboardLayout'
 import { AUTH_STATUS } from '@utils/constants'
 import Loader from '@components/common/Loader'
 import { checkAuth } from '@store/auth/actions'
-
-import { HelpersUtils } from '@utils/helpers'
+import { ServiceApiKeyManager } from '@Services'
 
 const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
   const state = useSelector((state: RootState) => {
@@ -37,6 +36,10 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
       type: 'light',
     },
   })
+
+  // useEffect(() => {
+  //   ServiceApiKeyManager.apiKeyGet({})
+  // }, [])
   // useEffect(() => {
   //   ServiceWebsocket.start()
   //   ServiceWebsocket.subscribe(newMessagehandlerCreater)
@@ -61,15 +64,15 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
   //   }
   // }
 
-  useEffect(() => {
-    if (state.authStatus === AUTH_STATUS.loggedOut) {
-      router.push('/login')
-    }
-  }, [state.authStatus])
+  // useEffect(() => {
+  //   if (state.authStatus === AUTH_STATUS.loggedOut) {
+  //     router.push('/login')
+  //   }
+  // }, [state.authStatus])
 
   useEffect(() => {
     // if (!cleanUpFunction) {
-    dispatch(checkAuth())
+    // dispatch(checkAuth())
     // }
 
     const jssStyles = document.querySelector('#jss-server-side')
@@ -89,9 +92,9 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
       </React.StrictMode>
     )
   }
-  if (state.authStatus !== AUTH_STATUS.loggedOn) {
-    return <Loader size={70} />
-  }
+  // if (state.authStatus !== AUTH_STATUS.loggedOn) {
+  //   return <Loader size={70} />
+  // }
   return (
     <React.StrictMode>
       <MuiThemeProvider theme={state.theme ? lightTheme : darkTheme}>
@@ -105,13 +108,10 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
   )
 }
 
-// WrappedApp.getInitialProps = async ({ Component, ctx }) => {
-//   return {
-//     pageProps: {
-//       ...(Component.getInitialProps ? await Component.getInitialProps(ctx) : {}),
-//       pathname: ctx.pathname,
-//     },
-//   }
-// }
-
 export default wrapper.withRedux(WrappedApp)
+
+export async function getServerSideProps({ Component, ctx }: AppContext): Promise<AppInitialProps> {
+  const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {}
+
+  return { pageProps }
+}

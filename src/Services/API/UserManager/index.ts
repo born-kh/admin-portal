@@ -51,4 +51,20 @@ export const ServiceUserManager = {
     })
     return response
   },
+  getUserPermissions: async (params: UserManagerModel.GetUserPermissions.Params) => {
+    console.log(params)
+    let response = await Http.Post<UserManagerModel.GetUserPermissions.Response>(APIConsts.Http, {
+      method: APIConsts.UserManager.GetUserPermissions,
+      params,
+    })
+    return response
+  },
+
+  getProfile: async (params: UserManagerModel.GetProfile.Params) => {
+    let response = await Http.Post<UserManagerModel.GetProfile.Response>(APIConsts.Http, {
+      method: APIConsts.UserManager.GetProfile,
+      params,
+    })
+    return response
+  },
 }
