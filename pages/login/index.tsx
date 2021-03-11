@@ -56,13 +56,8 @@ export default function Login() {
   const [usernameType, setUsernameType] = useState<UserNameType>(UserNameType.USERNAME)
   const formik = useFormik({
     initialValues: {
-      app_uuid: '3dedf9e6-d08b-7cf6-c6e0-4b33e10d4197',
-      domain: 'mgr.nexustls.com',
-      force_session: false,
       password: '',
-      project_uuid: null,
-      user_headers: {},
-      user_ip: '1.2.3.4',
+
       username: '',
     },
     validationSchema: Yup.object().shape({
@@ -103,30 +98,16 @@ export default function Login() {
   const [isChecking, setIsChecking] = useState(false)
 
   useEffect(() => {
-    if (jsCookie.get(LocalConsts.LocalStorage.token) && jsCookie.get(LocalConsts.LocalStorage.accountId)) {
+    if (jsCookie.get(LocalConsts.LocalStorage.token) && jsCookie.get(LocalConsts.LocalStorage.refreshToken)) {
       console.log(111)
-      // router
-      //   .push('/')
-      //   .then(() => {
-      //     setIsChecking(true)
-      //   })
-      //   .catch(() => {
-      //     setIsChecking(true)
-      //   })
-      // ServiceUserManager.getProfile({})
-      //   .then((responseProfile) => {
-      //     console.log(responseProfile)
-      //     if (responseProfile.result) {
-
-      //     }
-      //   })
-      //   .catch(() => {})
-
-      ServiceUserManager.getUserPermissions({})
-        .then((responsePermissions) => {
-          console.log(responsePermissions)
+      router
+        .push('/')
+        .then(() => {
+          setIsChecking(true)
         })
-        .catch((e) => {})
+        .catch(() => {
+          setIsChecking(true)
+        })
     } else {
       setTimeout(() => {
         setIsChecking(true)
@@ -145,17 +126,28 @@ export default function Login() {
       .then((responseSignIn) => {
         if (responseSignIn.result) {
           setErrorText(null)
-
           jsCookie.set(LocalConsts.LocalStorage.token, responseSignIn.result.token)
           jsCookie.set(LocalConsts.LocalStorage.refreshToken, responseSignIn.result.refreshToken)
-          router.push('/')
+          ServiceUserManager.getUserPermissions({})
+            .then((responsePermissions) => {
+              if (responsePermissions.result) {
+                localStorage.setItem(
+                  LocalConsts.LocalStorage.userPermissions,
+                  JSON.stringify(responsePermissions.result.permissions)
+                )
+                router.push('/')
+              } else {
+                setErrorText('Get user permissions ' + responsePermissions.error.reason)
+              }
+            })
+            .catch((e) => {})
         } else {
           setErrorText(responseSignIn.error.reason)
         }
         setLoading(false)
       })
       .catch((e) => {
-        setErrorText(e.message)
+        setErrorText('')
         setLoading(false)
       })
   }

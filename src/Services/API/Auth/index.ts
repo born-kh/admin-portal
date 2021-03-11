@@ -11,14 +11,14 @@ import { HelpersUtils } from '@utils/helpers'
 
 export const ServiceAuth = {
   signIn: async (params: AuthModel.SignIn.Params) => {
-    let response = await Http.Post<AuthModel.SignIn.Response>(APIConsts.Http, {
+    let response = await Http.Post<AuthModel.SignIn.Response>(APIConsts.Request, {
       method: APIConsts.Auth.SignIn,
       params,
     })
     return response
   },
   refreshToken: async (params: AuthModel.RefreshToken.Params) => {
-    let response = await Http.Post<AuthModel.RefreshToken.Response>(APIConsts.Http, {
+    let response = await Http.Post<AuthModel.RefreshToken.Response>(APIConsts.Request, {
       method: APIConsts.Auth.RefreshToken,
       params,
     })

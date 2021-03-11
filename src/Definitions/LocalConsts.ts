@@ -3,6 +3,7 @@ export const LocalConsts = {
     sessionId: 'sessionId',
     accountId: 'accountId',
     token: 'token',
-    refreshToken: 'refresh_token'
+    refreshToken: 'refresh_token',
+    userPermissions: 'user_permissions',
   },
 }

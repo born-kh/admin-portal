@@ -11,7 +11,6 @@ const instance: AxiosInstance = axios.create(config)
 
 instance.interceptors.request.use(
   function (config) {
-    let accountId = jsCookie.get(LocalConsts.LocalStorage.accountId)
     let token = jsCookie.get(LocalConsts.LocalStorage.token)
 
     config.headers['X-Api-Key'] = process.env.NEXT_PUBLIC_API_KEY

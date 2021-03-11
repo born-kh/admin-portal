@@ -79,5 +79,5 @@ export const APIConsts = {
 
   Version: 1,
   Http: '/request',
-  Request: '/request',
+  Request: '/http',
 }
