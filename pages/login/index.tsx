@@ -136,11 +136,15 @@ export default function Login() {
                 )
                 router.push('/')
               } else {
+                jsCookie.remove(LocalConsts.LocalStorage.token)
+                jsCookie.remove(LocalConsts.LocalStorage.refreshToken)
                 setErrorText('Get user permissions ' + responsePermissions.error.reason)
               }
               setLoading(false)
             })
             .catch((e) => {
+              jsCookie.remove(LocalConsts.LocalStorage.token)
+              jsCookie.remove(LocalConsts.LocalStorage.refreshToken)
               setLoading(false)
             })
         } else {
