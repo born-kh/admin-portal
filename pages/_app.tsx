@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from 'react'
 //next AppProps Type
-import { AppProps, Container } from 'next/app'
+import { AppProps, Container, AppContext, AppInitialProps } from 'next/app'
 //storte
 import { wrapper } from 'store'
 //globale styles
@@ -10,9 +10,6 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState, AppDispatch } from '@store/reducers'
 import Dashboard from '@components/DashboardLayout'
-import { AUTH_STATUS } from '@utils/constants'
-import Loader from '@components/common/Loader'
-import { checkAuth } from '@store/auth/actions'
 
 const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
   const state = useSelector((state: RootState) => {
@@ -36,22 +33,47 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
     },
   })
 
-  useEffect(() => {
-    if (state.authStatus === AUTH_STATUS.loggedOut) {
-      router.push('/login')
-    }
-  }, [state.authStatus])
+  // useEffect(() => {
+  //   ServiceApiKeyManager.apiKeyGet({})
+  // }, [])
+  // useEffect(() => {
+  //   ServiceWebsocket.start()
+  //   ServiceWebsocket.subscribe(newMessagehandlerCreater)
+
+  //   return () => {
+  //     ServiceWebsocket.unsubscribe(newMessagehandlerCreater)
+  //     ServiceWebsocket.stop()
+  //   }
+  // }, [])
+
+  // const newMessagehandlerCreater = (messages: any) => {
+  //   console.log('messages', messages)
+
+  //   if (messages.method === 'client.authorization') {
+  //     const params = {
+  //       id: HelpersUtils.uuidv4(),
+  //       method: 'gateway.system.apikey.get',
+  //       params: {},
+  //       version: 1,
+  //     }
+  //     ServiceWebsocket.sendMessage(params)
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   if (state.authStatus === AUTH_STATUS.loggedOut) {
+  //     router.push('/login')
+  //   }
+  // }, [state.authStatus])
 
   useEffect(() => {
     // if (!cleanUpFunction) {
-    dispatch(checkAuth())
+    // dispatch(checkAuth())
     // }
-
-    const jssStyles = document.querySelector('#jss-server-side')
-    if (jssStyles && jssStyles.parentNode) {
-      jssStyles.parentNode.removeChild(jssStyles)
-    }
-
+    // const jssStyles = document.querySelector('#jss-server-side')
+    // if (jssStyles && jssStyles.parentNode) {
+    //   jssStyles.parentNode.removeChild(jssStyles)
+    // }
     // return (cleanUpFunction = true)
   }, [])
 
@@ -64,9 +86,9 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
       </React.StrictMode>
     )
   }
-  if (state.authStatus !== AUTH_STATUS.loggedOn) {
-    return <Loader size={70} />
-  }
+  // if (state.authStatus !== AUTH_STATUS.loggedOn) {
+  //   return <Loader size={70} />
+  // }
   return (
     <React.StrictMode>
       <MuiThemeProvider theme={state.theme ? lightTheme : darkTheme}>
@@ -80,13 +102,10 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
   )
 }
 
-// WrappedApp.getInitialProps = async ({ Component, ctx }) => {
-//   return {
-//     pageProps: {
-//       ...(Component.getInitialProps ? await Component.getInitialProps(ctx) : {}),
-//       pathname: ctx.pathname,
-//     },
-//   }
-// }
-
 export default wrapper.withRedux(WrappedApp)
+
+// export async function getServerSideProps({ Component, ctx }: AppContext): Promise<AppInitialProps> {
+//   const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {}
+
+//   return { pageProps }
+// }

@@ -21,22 +21,13 @@ import DateRangeIcon from '@material-ui/icons/DateRange'
 import ApplicationTable from '@components/DocumentManager/ApplicationTable'
 //moment js lib
 import moment from 'moment'
-//document-manager interfaces
-import {
-  Application,
-  FilterAnyApplication,
-  FilterDateRange,
-  FilterApplicationParams,
-  FetchApplicationsResponse,
-} from '@interfaces/document-manager'
+
 import { useRouter } from 'next/router'
 // next props-types
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 // constants
 import { applicationOptions, dateOptions } from '@utils/constants'
 import Autorenew from '@material-ui/icons/Autorenew'
-//document-managaer REST APIS
-import { documentAPI } from 'service/api'
 
 import useTranslation from 'hooks/useTranslation'
 import { fetchNewApplicationsAction, fetchAnyApplicationsAction } from '@store/document/actions'
@@ -46,6 +37,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { CHANGE_PAGE_NEW_APPLICATION } from '@store/document/types'
 import TabPanel from '@components/common/TabPanel'
 import { useStylesDocumentManger } from 'styles/document-manager-styles'
+import { IFilterApplicationParams, IFilterDateRange, IFilterAnyApplication } from '@Interfaces'
 
 export default function DocumentManger(props: any) {
   const classes = useStylesDocumentManger()
@@ -132,9 +124,9 @@ export default function DocumentManger(props: any) {
 
   const fetchAnyApplications = (start: number, count: number) => {
     setIsLoadingAny(true)
-    let filterParams: FilterApplicationParams = { start: start * count, count }
-    let filter: FilterAnyApplication = {}
-    let range: FilterDateRange = { type: '', from: '', to: '' }
+    let filterParams: IFilterApplicationParams = { start: start * count, count }
+    let filter: IFilterAnyApplication = {}
+    let range: IFilterDateRange = { type: '', from: '', to: '' }
     if (selectedApplication !== 'ALL') {
       filter.status = selectedApplication
     }

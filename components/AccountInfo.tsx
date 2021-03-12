@@ -18,9 +18,10 @@ import {
   FormControlLabel,
 } from '@material-ui/core'
 import useTranslation from 'hooks/useTranslation'
-import { userAPI } from 'service/api'
+
 import Title from './common/Title'
-import { SystemSettings } from '@interfaces/settings'
+import { IAccount, IAccountSystemSettings } from '@Interfaces'
+import { ServiceUserManager } from '@Services'
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -43,8 +44,8 @@ export default function AccountInfo({
   settings,
   handleChangeSetings,
 }: {
-  account: Account
-  settings: SystemSettings
+  account: IAccount
+  settings: IAccountSystemSettings
   handleChangeSetings: (e: React.ChangeEvent<HTMLInputElement>) => void
 }) {
   const classes = useStyles()
@@ -55,8 +56,7 @@ export default function AccountInfo({
   const [isLoadingSettigns, setIsLoadingSettings] = useState(false)
   const handleGeneratePassword = () => {
     setIsLoading(true)
-    userAPI
-      .setPassword({ accountID: account.accountID })
+    ServiceUserManager.setPassword({ accountID: account.accountID })
       .then(() => {
         setIsLoading(false)
       })
@@ -67,11 +67,10 @@ export default function AccountInfo({
   }
   const handleSetSettings = () => {
     setIsLoadingSettings(true)
-    userAPI
-      .systemSetAccountSettings({
-        accountID: account.accountID,
-        settings: { id: settings.id, description: settings.description, user: settings.user },
-      })
+    ServiceUserManager.setAccountSettings({
+      accountID: account.accountID,
+      settings: { id: settings.id, description: settings.description, user: settings.user },
+    })
       .then(() => {
         setIsLoading(false)
       })

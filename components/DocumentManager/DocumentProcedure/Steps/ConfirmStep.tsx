@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 //material ui components
 import { Paper, Grid, TableRow, TableContainer, TableCell, TableBody, Table } from '@material-ui/core'
-//document-manager interfaces
-import { ConfirmStepProps } from '@interfaces/document-manager'
+
 //custom components
 import ImageComponent from '@components/common/ImageComponent'
 import Title from '@components/common/Title'
@@ -13,8 +12,9 @@ import dynamic from 'next/dynamic'
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
 import useStyles from './style'
 import useTranslation from 'hooks/useTranslation'
+import { IConfirmStepProps } from '@Interfaces'
 
-export default function ConfirmStep(props: ConfirmStepProps) {
+export default function ConfirmStep(props: IConfirmStepProps) {
   const classes = useStyles()
   const { documents, fields } = props
   const [selectID, setSelectID] = useState('')

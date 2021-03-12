@@ -4,10 +4,9 @@ import { Dialog, Button, Paper } from '@material-ui/core'
 //matetrail table lib
 import MaterialTable from 'material-table'
 //settings REST APIS
-import { settingsAPI } from 'service/api'
+
 import EditIcon from '@material-ui/icons/Edit'
-//settings interfaces
-import { SystemSettings, WebRTCSettings } from '@interfaces/settings'
+
 //custom components
 import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
 import Dashboard from '@components/Dashboard'
@@ -18,12 +17,14 @@ import { initialAlertData } from '@utils/constants'
 //json-editor lib
 import dynamic from 'next/dynamic'
 import useTranslation from 'hooks/useTranslation'
+import { ISystemSettings, IWebRTCSettings } from '@Interfaces'
+import { ServiceSettingsManager } from '@Services'
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 /* SYSTEM SETTINGS */
 export default function SystemSettingsComponent() {
-  const [systemSettings, setSystemSettings] = useState<SystemSettings[]>([])
-  const [systemSettingsData, setSystemSettingsData] = useState<SystemSettings | null>(null)
+  const [systemSettings, setSystemSettings] = useState<ISystemSettings[]>([])
+  const [systemSettingsData, setSystemSettingsData] = useState<ISystemSettings | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
@@ -39,7 +40,7 @@ export default function SystemSettingsComponent() {
     setIsOpen(false)
   }
 
-  const openEditModal = (data: SystemSettings) => {
+  const openEditModal = (data: ISystemSettings) => {
     let settingsData = { ...data }
     delete settingsData.tableData
     setSystemSettingsData(settingsData)
@@ -47,8 +48,7 @@ export default function SystemSettingsComponent() {
   }
   const handleEdit = () => {
     if (systemSettingsData) {
-      settingsAPI
-        .setSystemSettings(systemSettingsData)
+      ServiceSettingsManager.systemSetSettings(systemSettingsData)
         .then(() => {
           setSystemSettings((prevSystemSettings) =>
             prevSystemSettings.map((item) => (item.id === systemSettingsData.id ? systemSettingsData : item))
@@ -65,11 +65,11 @@ export default function SystemSettingsComponent() {
 
   useEffect(() => {
     setIsLoading(true)
-    settingsAPI
-      .getSystemSettings()
-      .then((response) => {
-        if (response.status === 200) {
-          setSystemSettings(response.data.settings)
+
+    ServiceSettingsManager.systemGetSettings({})
+      .then((res) => {
+        if (res.result) {
+          setSystemSettings(res.result.settings)
         }
         setIsLoading(false)
       })
@@ -77,12 +77,12 @@ export default function SystemSettingsComponent() {
         setIsLoading(false)
       })
   }, [])
-  const onChangeSettingsData = (key: string, value: string, parent: SystemSettings, data: SystemSettings) => {
+  const onChangeSettingsData = (key: string, value: string, parent: ISystemSettings, data: ISystemSettings) => {
     console.log(key, value, parent, data)
     // setSystemSettingsData((prevSystemSettingsData: SystemSettings) => ({ ...prevSystemSettingsData, network: data }))
   }
 
-  const onChangeVoip = (key: string, value: string, parent: WebRTCSettings, data: WebRTCSettings) => {
+  const onChangeVoip = (key: string, value: string, parent: IWebRTCSettings, data: IWebRTCSettings) => {
     // setSystemSettingsData((prevSystemSettingsData: SystemSettings) => ({ ...prevSystemSettingsData, voip: data }))
   }
   const onEdit = (e: any) => {

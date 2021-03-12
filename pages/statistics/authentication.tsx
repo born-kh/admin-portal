@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { IAuthCode } from '@interfaces/statistics'
+
 import MaterialTable from 'material-table'
 import useTranslation from 'hooks/useTranslation'
-import { statisticsAPI } from 'service/api'
+
 import moment from 'moment'
 import { Paper, Button, TextField } from '@material-ui/core'
 import SendIcon from '@material-ui/icons/Send'
@@ -12,6 +12,9 @@ import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAler
 import { initialAlertData, LangType } from '@utils/constants'
 import { useStylesStatistics } from 'styles/statistics-styles'
 import { useFormik } from 'formik'
+import { IAuthCode } from '@Interfaces'
+import { ServiceStatisticsManager } from '@Services/API/StatisticsManager'
+
 export default function Authencation() {
   const classes = useStylesStatistics()
   const [authCodes, setAuthCodes] = useState<IAuthCode[]>([])
@@ -46,23 +49,21 @@ export default function Authencation() {
   const hanldeFetchData = (params: { identifier?: string }) => {
     setIsLoading(true)
     setAuthCodes([])
-    statisticsAPI
-      .getAuthCodes(params)
-      .then((response) => {
-        console.log('response', response)
-        setAuthCodes(response.data.authCodes)
+    ServiceStatisticsManager.getAuthCodeList(params)
+      .then((res) => {
+        if (res.result) {
+          setAuthCodes(res.result.authCodes)
+        }
         setIsLoading(false)
       })
       .catch((error) => {
-        console.log('error', error)
         setIsLoading(false)
       })
   }
 
   const handleSendResendSMS = (codeId: string, phoneNumber: string) => {
     setResendCodeId(codeId)
-    statisticsAPI
-      .resendCode({ lang: 'en', codeId, phoneNumber, sms: true })
+    ServiceStatisticsManager.resendCode({ lang: 'en', codeId, phoneNumber, sms: true })
       .then(() => {
         setAlertData({ message: `Resend SMS success`, type: AlertMessageType.sucess, open: true })
       })

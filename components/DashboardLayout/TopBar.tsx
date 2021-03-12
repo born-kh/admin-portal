@@ -15,7 +15,10 @@ import { OPEN_MENU, CLOSE_MENU, CHANGE_THEME } from '@store/settings/types'
 import { logout } from '@store/auth/actions'
 import DropDownLanguage from '@components/common/DropDownLanguage'
 import LogoIcon from '@components/common/LogoIcon'
-
+import { LocalConsts } from '@Definitions'
+import { useRouter } from 'next/router'
+import jsCookie from 'js-cookie'
+import { ServiceAuth } from '@Services'
 // import Logo from 'src/components/Logo'
 
 const useStyles = makeStyles(() => ({
@@ -42,6 +45,7 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }: PropsType) => {
       authStatus: state.auth.authStatus,
     }
   })
+  const router = useRouter()
 
   const iconTheme = !states.settings.theme ? <Brightness7Icon /> : <Brightness3Icon />
 
@@ -53,7 +57,14 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }: PropsType) => {
   }
 
   const handleLogout = () => {
-    dispatch(logout())
+    ServiceAuth.logout({}).then((res) => {
+      console.log(res)
+      jsCookie.remove(LocalConsts.LocalStorage.token)
+      jsCookie.remove(LocalConsts.LocalStorage.refreshToken)
+      setTimeout(() => {
+        router.push('/login')
+      }, 500)
+    })
   }
 
   return (

@@ -5,22 +5,22 @@ import DetailsIcon from '@material-ui/icons/Details'
 import DeleteIcon from '@material-ui/icons/Delete'
 import PersonPinCircleIcon from '@material-ui/icons/PersonPinCircle'
 import { useRouter } from 'next/router'
-import { AccountSessionsData } from '@interfaces/user-manager'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import SnackBarAlert, { AlertMessageType } from './common/SnackbarAlert'
-import { sessionAPI } from 'service/api'
 import { initialAlertData } from '@utils/constants'
 import OpenMap from './OpenMap'
 import useTranslation from 'hooks/useTranslation'
 import dynamic from 'next/dynamic'
+import { ServiceSessionManager } from '@Services'
+import { IAccountSessionsData } from '@Interfaces'
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 export default function AccountSessions() {
-  const [sessions, setSessions] = useState<AccountSessionsData[]>([])
+  const [sessions, setSessions] = useState<IAccountSessionsData[]>([])
   const [sessionsIsLoading, setSessionsIsLoading] = useState(false)
   const [sessionID, setSessionID] = useState<string | null>(null)
   const [mapPosition, setMapPosition] = useState<number[]>([])
@@ -28,7 +28,7 @@ export default function AccountSessions() {
     initialAlertData
   )
   const [open, setOpen] = useState(false)
-  const [sessionData, setSessionData] = useState<AccountSessionsData | null>(null)
+  const [sessionData, setSessionData] = useState<IAccountSessionsData | null>(null)
   const router = useRouter()
   const { t } = useTranslation()
   const handleCloseAlert = () => {
@@ -38,11 +38,11 @@ export default function AccountSessions() {
   useEffect(() => {
     function loadData() {
       setSessionsIsLoading(true)
-      sessionAPI
-        .fetchAccountSessions({ accountID: router.query.id as string })
-        .then((response) => {
-          if (response.status === 200) {
-            setSessions(response.data.sessions)
+      ServiceSessionManager.getSessions({ accountID: router.query.id as string })
+
+        .then((res) => {
+          if (res.result) {
+            setSessions(res.result.sessions)
           }
 
           setSessionsIsLoading(false)
@@ -79,8 +79,7 @@ export default function AccountSessions() {
   }
 
   const handleSetTracing = (params: { sessionID: string; isTracing: boolean }) => {
-    sessionAPI
-      .setTracer(params)
+    ServiceSessionManager.setTracing(params)
       .then(() => {
         setSessions((prevSessions) => {
           const sessions = prevSessions.map((session) => {
@@ -100,8 +99,7 @@ export default function AccountSessions() {
   }
 
   const handleSetSuspended = (params: { sessionID: string; isSuspended: boolean }) => {
-    sessionAPI
-      .suspendSession(params)
+    ServiceSessionManager.setSuspendSession(params)
       .then(() => {
         setSessions((prevSessions) => {
           const sessions = prevSessions.map((session) => {
@@ -123,8 +121,7 @@ export default function AccountSessions() {
 
   const handleDeleteSession = () => {
     if (sessionID) {
-      sessionAPI
-        .removeSession(sessionID)
+      ServiceSessionManager.sessionRemove({ sessionID })
         .then(() => {
           setSessions((prevSessions) => {
             const sessions = prevSessions.filter((session) => session.meta.sessionID !== sessionID)

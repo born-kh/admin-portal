@@ -14,19 +14,7 @@ import {
   DialogContentText,
   DialogActions,
 } from '@material-ui/core'
-//document-manager interfaces
-import {
-  DocumentTypes,
-  Document,
-  DocumentStatus,
-  Fields,
-  SexType,
-  StepType,
-  ApplicationStatus,
-  DocumentProcedureProps,
-  SetDocumentStatusParams,
-  SetApplicationStatusParams,
-} from '@interfaces/document-manager'
+
 //formik lib
 import { useFormik } from 'formik'
 //helpers
@@ -42,8 +30,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import DoneAllIcon from '@material-ui/icons/DoneAll'
 import Loader from '@components/common/Loader'
 import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
-//documnet-manager REST APIS
-import { documentAPI } from 'service/api'
+
 //OpenMap
 import OpenMap from '@components/OpenMap'
 //MultiStep Component and Step Components
@@ -55,12 +42,24 @@ import ConfirmStep from './Steps/ConfirmStep'
 import useTranslation from 'hooks/useTranslation'
 import { useSelector } from 'react-redux'
 import { RootState } from '@store/reducers'
+import {
+  IDocumentProcedureProps,
+  IDocumentTypes,
+  IFields,
+  SexType,
+  IDocument,
+  DocumentStatus,
+  DocumentManagerModel,
+  ApplicationStatus,
+  IStepType,
+} from '@Interfaces'
+import { ServiceDocumentManager } from '@Services'
 
-export default function DocumentProcedure(props: DocumentProcedureProps) {
+export default function DocumentProcedure(props: IDocumentProcedureProps) {
   const [rejectMessage, setRejectMessage] = useState('')
   const [rejectMessageIndex, setRejectMessageIndex] = useState<number | null>(0)
-  const [documentTypes, setDocumentTypes] = useState<DocumentTypes[]>([])
-  const [passportDocuments, setPassportDocuments] = useState<Document[]>([])
+  const [documentTypes, setDocumentTypes] = useState<IDocumentTypes[]>([])
+  const [passportDocuments, setPassportDocuments] = useState<IDocument[]>([])
   const [mapPosition, setMapPosition] = useState<number[]>([])
   const [isReject, setIsReject] = useState(false)
   const { t } = useTranslation()
@@ -110,7 +109,7 @@ export default function DocumentProcedure(props: DocumentProcedureProps) {
           address: undefined,
           issuingAuth: undefined,
         },
-      } as Fields,
+      } as IFields,
     },
 
     onSubmit: (values) => {},
@@ -140,7 +139,7 @@ export default function DocumentProcedure(props: DocumentProcedureProps) {
           return item.recognized
         })
 
-        var document: Document = filterPassport.length > 0 ? filterPassport[0] : passportDocuments[0]
+        var document: IDocument = filterPassport.length > 0 ? filterPassport[0] : passportDocuments[0]
 
         if (document.recognized && document.recognized.mrz?.passport) {
           const passport = document.recognized.mrz?.passport
@@ -190,7 +189,7 @@ export default function DocumentProcedure(props: DocumentProcedureProps) {
   }, [passportDocuments])
 
   useEffect(() => {
-    function setTypes(types: DocumentTypes[]) {
+    function setTypes(types: IDocumentTypes[]) {
       const newDocumentTypes = types.map((documentType) => {
         const docs = props.documents.filter(
           (doc) => doc.documentType.ID === documentType.ID && doc.documenSet.ID === props.documentSetID
@@ -235,11 +234,11 @@ export default function DocumentProcedure(props: DocumentProcedureProps) {
 
     async function loadTypes() {
       setIsLoadingTypes(true)
-      documentAPI
-        .fetchDocumentTypes({ setID: props.documentSetID })
-        .then((response) => {
-          if (response.status === 200) {
-            setTypes(response.data.types)
+      ServiceDocumentManager.documentGetTypesBySetId({ setID: props.documentSetID })
+
+        .then((res) => {
+          if (res.result) {
+            setTypes(res.result.types)
           }
         })
         .catch(() => {
@@ -255,7 +254,7 @@ export default function DocumentProcedure(props: DocumentProcedureProps) {
   }, [props.documentSetID, props.documents])
 
   const _saveDocumentData = () => {
-    let fields: Fields = formik.values.fields
+    let fields: IFields = formik.values.fields
     if (fields.passport) {
       fields = {
         passport: {
@@ -268,11 +267,13 @@ export default function DocumentProcedure(props: DocumentProcedureProps) {
     }
 
     setBlocking(true)
-    documentAPI
-      .setDocumentFields({ documentID: formik.values.documentID, fields })
-      .then((response) => {
+    ServiceDocumentManager.documentSetFields({ documentID: formik.values.documentID, fields })
+
+      .then((res) => {
         handleClose()
-        setAlertData({ message: response.data.message, type: AlertMessageType.sucess, open: true })
+        if (res.result) {
+          setAlertData({ message: res.result.message, type: AlertMessageType.sucess, open: true })
+        }
       })
       .catch((error) => {
         handleClose()
@@ -280,15 +281,16 @@ export default function DocumentProcedure(props: DocumentProcedureProps) {
       })
   }
   const _checkPassportNumber = () => {
-    const fields: Fields = formik.values.fields
+    const fields: IFields = formik.values.fields
 
     if (fields.passport) {
       setBlocking(true)
-      documentAPI
-        .checkPassportNumber({ passportNumber: fields.passport.number })
-        .then((response) => {
+      ServiceDocumentManager.applicationCheckPassport({ passportNumber: fields.passport.number })
+        .then((res) => {
           handleClose()
-          setAlertData({ message: response.data.availabe, type: AlertMessageType.sucess, open: true })
+          if (res.result) {
+            setAlertData({ message: res.result.availabe, type: AlertMessageType.sucess, open: true })
+          }
         })
         .catch((error) => {
           handleClose()
@@ -303,7 +305,7 @@ export default function DocumentProcedure(props: DocumentProcedureProps) {
 
   const _setDocumentStatus = (status: DocumentStatus, typeID: string) => {
     const { applicationID, documentSetID } = props
-    const params: SetDocumentStatusParams = {
+    const params: DocumentManagerModel.DocumentSetStatus.Params = {
       documentTypeID: typeID,
       documentSetID,
       user: state.username,
@@ -314,12 +316,12 @@ export default function DocumentProcedure(props: DocumentProcedureProps) {
       params.reason = rejectMessage
     }
     setBlocking(true)
-    documentAPI
-      .setDocumentStatus(params)
-      .then((response) => {
+    ServiceDocumentManager.documentSetStatus(params)
+
+      .then((res) => {
         props.handleUpdateDocument(typeID, documentSetID, status)
         handleClose()
-        setAlertData({ message: response.data.message, type: AlertMessageType.sucess, open: true })
+        setAlertData({ message: res.result.message, type: AlertMessageType.sucess, open: true })
         handleNext()
       })
       .catch((error) => {
@@ -330,7 +332,7 @@ export default function DocumentProcedure(props: DocumentProcedureProps) {
 
   const _setApplicationStatus = (status: ApplicationStatus) => {
     const { applicationID, documentSetID } = props
-    const params: SetApplicationStatusParams = {
+    const params: DocumentManagerModel.ApplicationSetStatus.Params = {
       user: state.username,
       applicationID,
       status,
@@ -341,12 +343,13 @@ export default function DocumentProcedure(props: DocumentProcedureProps) {
     }
     setBlocking(true)
     console.log(params)
+    ServiceDocumentManager.appplicationSetStatus(params)
 
-    documentAPI
-      .setApplicationStatus(params)
-      .then((response) => {
-        setAlertData({ message: response.data.message, type: AlertMessageType.sucess, open: true })
-        props.handleNextApplication()
+      .then((res) => {
+        if (res.result) {
+          setAlertData({ message: res.result.message, type: AlertMessageType.sucess, open: true })
+          props.handleNextApplication()
+        }
       })
       .catch((error) => {
         handleClose()
@@ -467,7 +470,7 @@ export default function DocumentProcedure(props: DocumentProcedureProps) {
   }
 
   const renderSteps = () => {
-    var stepsDocuments: StepType[] = documentTypes.map((documentType, index) => {
+    var stepsDocuments: IStepType[] = documentTypes.map((documentType, index) => {
       if (documentType.name === 'SELFIE') {
         return {
           name: documentType.note || '',

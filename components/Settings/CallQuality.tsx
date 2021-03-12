@@ -32,17 +32,17 @@ import { useFormik } from 'formik'
 import { CustomDialogTitle, CustomDialogContent, CustomDialogActions } from '@components/common/Modal'
 import Dashboard from '@components/Dashboard'
 import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
-//settings REST APIS
-import { settingsAPI } from 'service/api'
+
 //material ui icons
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
-//settings interfaces
-import { AuthSettings, PermissionType, CallQuality, Question } from '@interfaces/settings'
+
 //constants
 import { initialAlertData } from '@utils/constants'
 import AddIcon from '@material-ui/icons/AddBoxRounded'
 import useTranslation from 'hooks/useTranslation'
+import { IQuestion, ICallQuality } from '@Interfaces'
+import { ServiceSettingsManager } from '@Services'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,36 +60,36 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-function not(a: Question[], b: Question[]) {
+function not(a: IQuestion[], b: IQuestion[]) {
   return a.filter((value) => b.findIndex((item) => item.id === value.id) === -1)
 }
 
-function intersection(a: Question[], b: Question[]) {
+function intersection(a: IQuestion[], b: IQuestion[]) {
   return a.filter((value) => b.findIndex((item) => item.id === value.id) !== -1)
 }
 
 /* AUTH Component */
 export default function CallQualityComponent() {
-  const [callQualities, setCallQualities] = useState<CallQuality[]>([])
+  const [callQualities, setCallQualities] = useState<ICallQuality[]>([])
   const { t } = useTranslation()
   const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
     initialAlertData
   )
   const [questions, setQuestions] = useState<{ [key: string]: string[] }>({})
-  const [allQuestions, setAllQuestions] = useState<Question[]>([])
+  const [allQuestions, setAllQuestions] = useState<IQuestion[]>([])
   const classes = useStyles()
   const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [askIfLength, setAskIfLength] = useState(5)
   const [askIfArray, setAskIfArray] = useState([1, 2, 3, 4, 5])
-  const [checked, setChecked] = React.useState<Question[]>([])
-  const [left, setLeft] = React.useState<Question[]>([])
-  const [right, setRight] = React.useState<Question[]>([])
+  const [checked, setChecked] = React.useState<IQuestion[]>([])
+  const [left, setLeft] = React.useState<IQuestion[]>([])
+  const [right, setRight] = React.useState<IQuestion[]>([])
   const [activeQuestion, setActiveQuestion] = useState<string | null>(null)
   const leftChecked = intersection(checked, left)
   const rightChecked = intersection(checked, right)
 
-  const handleToggle = (value: Question) => () => {
+  const handleToggle = (value: IQuestion) => () => {
     const currentIndex = checked.indexOf(value)
     const newChecked = [...checked]
 
@@ -129,7 +129,7 @@ export default function CallQualityComponent() {
       askDuration: 1,
       askIf: {},
       questions: {},
-    } as CallQuality,
+    } as ICallQuality,
 
     onSubmit: (values) => {},
   })
@@ -141,8 +141,7 @@ export default function CallQualityComponent() {
     setIsOpen(false)
   }
   const handleDelete = (id: string) => {
-    settingsAPI
-      .deleteCallQulaity({ id })
+    ServiceSettingsManager.callQualityDelete({ id })
       .then(() => {
         setCallQualities(callQualities.filter((item) => item.id !== id))
 
@@ -153,7 +152,7 @@ export default function CallQualityComponent() {
       })
   }
 
-  const openEditModal = (data: CallQuality) => {
+  const openEditModal = (data: ICallQuality) => {
     formik.setValues(data)
     setQuestions({ ...data.questions })
     setIsOpen(true)
@@ -219,8 +218,7 @@ export default function CallQualityComponent() {
     console.log(askIf, questions)
 
     if (formik.values.id) {
-      settingsAPI
-        .updateCallQulaity({ ...formik.values, askIf, questions })
+      ServiceSettingsManager.callQualityUpdate({ ...formik.values, askIf, questions })
         .then(() => {
           setCallQualities(callQualities.map((item) => (item.id === formik.values.id ? formik.values : item)))
           handleClose()
@@ -231,11 +229,10 @@ export default function CallQualityComponent() {
           setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
         })
     } else {
-      settingsAPI
-        .createCallQulaity({ ...formik.values, askIf, questions })
-        .then((response) => {
+      ServiceSettingsManager.callQualityCreate({ ...formik.values, askIf, questions })
+        .then((res) => {
           handleClose()
-          setCallQualities([...callQualities, response.data.callQuality])
+          setCallQualities([...callQualities, res.result.callQuality])
           setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
         })
         .catch((error) => {
@@ -247,12 +244,10 @@ export default function CallQualityComponent() {
 
   useEffect(() => {
     setIsLoading(true)
-    settingsAPI
-      .getAllCallQulaity()
-      .then((response) => {
-        console.log(response)
-        if (response.status === 200) {
-          setCallQualities(response.data.callQualities)
+    ServiceSettingsManager.callQualityGetAll({})
+      .then((res) => {
+        if (res.result) {
+          setCallQualities(res.result.callQualities)
         }
         setIsLoading(false)
       })
@@ -260,12 +255,10 @@ export default function CallQualityComponent() {
         setIsLoading(false)
       })
 
-    settingsAPI
-      .getAllQuestions()
-      .then((response) => {
-        console.log(response)
-        if (response.status === 200) {
-          setAllQuestions(response.data.questions)
+    ServiceSettingsManager.questionGetAll({})
+      .then((res) => {
+        if (res.result) {
+          setAllQuestions(res.result.questions)
         }
         setIsLoading(false)
       })
@@ -278,7 +271,7 @@ export default function CallQualityComponent() {
     setAskIfLength(e.target.value)
   }
 
-  const customList = (items: Question[]) => (
+  const customList = (items: IQuestion[]) => (
     <Paper className={classes.paper}>
       <List dense component="div" role="list">
         {items.map((value) => {

@@ -11,6 +11,19 @@ export interface Account {
   createdAt: Date
 }
 
+export type AccountType = {
+  accountID: string
+  firstName?: string
+  lastName?: string
+  username?: string
+  avatar?: string
+  status: AccountStatus
+  phones: PhoneInfo[]
+  emails: EmailInfo[]
+  auth: AuthInfo
+  createdAt: Date
+}
+
 export interface AccountSessionsData {
   meta: Meta
   isTracing: boolean
@@ -185,3 +198,4 @@ export interface AutoDelete {
   enabled: boolean
   days: number
 }
+

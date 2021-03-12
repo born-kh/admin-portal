@@ -8,13 +8,11 @@ import SetGroups from '@components/DocumentManager/SetGroups'
 import DocumentProcedure from '@components/DocumentManager/DocumentProcedure'
 //material-ui components
 import { Button, Paper, Grid, TableRow, TableContainer, TableCell, TableBody, Table } from '@material-ui/core'
-//document-managaer interfaces
-import { Document, DocumentStatus, Application, ApplicationStatus } from '@interfaces/document-manager'
+
 //material-ui icons
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos'
-//document-managaer REST APIS
-import { documentAPI } from 'service/api'
+
 //document-managaer styles
 import useTranslation from 'hooks/useTranslation'
 import { AppDispatch, RootState } from '@store/reducers'
@@ -27,12 +25,14 @@ import {
 import { useStylesDocumentManger } from 'styles/document-manager-styles'
 import Title from '@components/common/Title'
 import { primaryText, approveStepColor, rejectStepColor } from '@utils/constants'
+import { IDocument, IApplication, DocumentStatus, ApplicationStatus } from '@Interfaces'
+import { ServiceDocumentManager } from '@Services'
 
 export default function DocumentMangerDetail() {
-  const [documents, setDocuments] = useState<Document[]>([])
+  const [documents, setDocuments] = useState<IDocument[]>([])
   const [documentSetID, setDocumentSetID] = useState<string | null>(null)
   const [applicationID, setApplicationID] = useState('')
-  const [applicationData, setApplicationData] = useState<Application | undefined>(undefined)
+  const [applicationData, setApplicationData] = useState<IApplication | undefined>(undefined)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const classes = useStylesDocumentManger()
@@ -48,11 +48,11 @@ export default function DocumentMangerDetail() {
 
   useEffect(() => {
     function loadData() {
-      documentAPI
-        .fetchDocuments({ applicationID })
-        .then((response) => {
-          if (response.status === 200) {
-            setDocuments(response.data.documents)
+      ServiceDocumentManager.documentGetByApplicationId({ applicationID })
+
+        .then((res) => {
+          if (res.result) {
+            setDocuments(res.result.documents)
           }
           setLoading(false)
         })
@@ -61,7 +61,6 @@ export default function DocumentMangerDetail() {
         })
     }
     if (applicationID) {
-      console.log(state)
       if (router.query.applications === 'any') {
         setApplicationData(state.anyApplication.applications.find((item) => item.applicationID === applicationID))
       } else {
@@ -73,10 +72,12 @@ export default function DocumentMangerDetail() {
   }, [applicationID])
 
   const deleteDocument = async (documentID: string) => {
-    documentAPI
-      .deleteDocument({ documentID })
-      .then((response) => {
-        setDocuments((prevDocumnet) => prevDocumnet.filter((item) => item.ID !== documentID))
+    ServiceDocumentManager.documentDelete({ documentID })
+
+      .then((res) => {
+        if (res.result) {
+          setDocuments((prevDocumnet) => prevDocumnet.filter((item) => item.ID !== documentID))
+        }
       })
       .catch((e) => {
         console.log(e)
@@ -105,20 +106,16 @@ export default function DocumentMangerDetail() {
         const start = (state.newApplication.page + 1) * state.newApplication.pageSize
         if (state.newApplication.totalCount > start) {
           setLoading(true)
+          ServiceDocumentManager.applicationGetNew({ start, count: state.newApplication.pageSize })
 
-          documentAPI
-            .fetchApplications({
-              start,
-              count: state.newApplication.pageSize,
-            })
-            .then((response) => {
-              if (response.status === 200) {
-                if (response.data.applications.length > 0) {
+            .then((res) => {
+              if (res.result) {
+                if (res.result.applications.length > 0) {
                   dispatch({
                     type: CHANGE_PAGE_NEW_APPLICATION,
                     payload: { page: state.newApplication.page + 1, pageSize: state.newApplication.pageSize },
                   })
-                  dispatch({ type: FETCH_NEW_APPLICATIONS, payload: { ...response.data } })
+                  dispatch({ type: FETCH_NEW_APPLICATIONS, payload: { ...res.result } })
                 } else {
                   router.push({
                     pathname: '/document-manager',

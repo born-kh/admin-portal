@@ -1,5 +1,5 @@
 import MaterialTable from 'material-table'
-import { Document, SetGroupsProps } from '@interfaces/document-manager'
+
 import VisibilityIcon from '@material-ui/icons/Visibility'
 import _ from 'lodash'
 import { Button } from '@material-ui/core'
@@ -8,9 +8,11 @@ import { useState } from 'react'
 import dynamic from 'next/dynamic'
 import ImageComponent from '@components/common/ImageComponent'
 import useTranslation from 'hooks/useTranslation'
+import { ISetGroupsProps, IDocument } from '@Interfaces'
+
 const Viewer = dynamic(() => import('react-viewer'), { ssr: false })
 
-export default function Setgroups(props: SetGroupsProps) {
+export default function Setgroups(props: ISetGroupsProps) {
   const { t } = useTranslation()
 
   let setGroups = _.values(_.groupBy(props.documents, 'documenSet.ID')).map((d) => {
@@ -83,7 +85,7 @@ export default function Setgroups(props: SetGroupsProps) {
   )
 }
 
-export const DetailPanel = ({ documents }: { documents: Document[] }) => {
+export const DetailPanel = ({ documents }: { documents: IDocument[] }) => {
   const [docID, setDocID] = useState<string | null>(null)
   const { t } = useTranslation()
   return (

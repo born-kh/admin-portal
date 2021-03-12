@@ -27,8 +27,6 @@ import DropDownLanguage from '@components/common/DropDownLanguage'
 import Brightness3Icon from '@material-ui/icons/Brightness3'
 import Brightness7Icon from '@material-ui/icons/Brightness7'
 import useTranslation from 'hooks/useTranslation'
-import { authAPI } from 'service/api'
-import { logout } from '@store/auth/actions'
 
 export default function Dashboard(props: any) {
   const classes = useStyles()
@@ -52,9 +50,7 @@ export default function Dashboard(props: any) {
     dispatch({ type: CLOSE_MENU })
   }
 
-  const handleLogout = () => {
-    dispatch(logout())
-  }
+  const handleLogout = () => {}
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight)
   resetServerContext()

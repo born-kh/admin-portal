@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { makeStyles, Container, Box, Theme, createStyles, Paper } from '@material-ui/core'
 import NavBar from './NavBar'
 import TopBar from './TopBar'
 import CopyRight from '@components/CopyRight'
-
+import { LocalConsts } from '@Definitions'
+import jsCookie from 'js-cookie'
+import { useRouter } from 'next/router'
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -47,6 +49,29 @@ const useStyles = makeStyles((theme: Theme) =>
 const DashboardLayout = (props: any) => {
   const classes = useStyles()
   const [isMobileNavOpen, setMobileNavOpen] = useState(false)
+  const [isChecking, setIsChecking] = useState(false)
+  const router = useRouter()
+
+  useEffect(() => {
+    if (!jsCookie.get(LocalConsts.LocalStorage.token) || !jsCookie.get(LocalConsts.LocalStorage.refreshToken)) {
+      router
+        .push('/login')
+        .then(() => {
+          setIsChecking(true)
+        })
+        .catch(() => {
+          setIsChecking(true)
+        })
+    } else {
+      setTimeout(() => {
+        setIsChecking(true)
+      }, 500)
+    }
+  }, [])
+
+  if (!isChecking) {
+    return <></>
+  }
 
   return (
     <div className={classes.root}>

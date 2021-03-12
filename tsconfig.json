@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["es6", "dom", "dom.iterable", "esnext"],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
+    "declaration": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -18,10 +19,17 @@
       "@components/*": ["./components/*"],
       "@utils/*": ["./utils/*"],
       "@store/*": ["./store/*"],
-      "@interfaces/*": ["interfaces/*"]
+      "@interfaces/*": ["interfaces/*"],
+      "@Definitions/*": ["/src/Definitions/*"],
+      "@Definitions": ["src/Definitions"],
+      "@Interfaces": ["src/Interfaces"],
+      "@Interfaces/*": ["src/Interfaces/*"],
+      "@Services": ["src/Services"],
+      "@Services/*": ["src/Services/*"],
+      "@Utils": ["src/Utils"],
+      "@Utils/*": ["src/Utils/*"]
     }
   },
-  "exclude": ["node_modules"],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
@@ -32,9 +40,7 @@
     "components/common/MaterialTable.jsx",
     "components/DocumentManager/DocumentProcedure/Steps",
     "components/OpenMap/index.jsx",
-    "components/OpenMap/index.jsx",
-    "components/OpenMap/index.jsx",
-    "nex-config.tjs",
     "i18.js"
-  ]
+  ],
+  "exclude": ["node_modules"]
 }
