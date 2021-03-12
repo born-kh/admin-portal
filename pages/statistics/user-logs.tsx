@@ -5,30 +5,22 @@ import { TextField, Paper, Button, Typography, Box, Badge, Tabs, Tab, Chip } fro
 import DatePicker from '@components/common/DatePicker'
 import Dashboard from '@components/Dashboard'
 import Title from '@components/common/Title'
-import TabPanel from '@components/common/TabPanel'
-import TracerTable from '@components/TracerTable'
+
 //material ui icons
 import DateRangeIcon from '@material-ui/icons/DateRange'
 //moment js
 import moment from 'moment'
-//tracer-manager REST APIS
-import { searchTracers } from 'service/tracerManagerAPI'
-import { TracerSearchParamsType, Tracer } from '@interfaces/tracer-manager'
-//useFormik hook
-import { useFormik } from 'formik'
-//Yup lib for validation
-import * as Yup from 'yup'
-//styles
 
 import useTranslation from 'hooks/useTranslation'
-import { IUserLog } from '@interfaces/user-manager'
-import { userAPI } from 'service/api'
+
 import MaterialTable from 'material-table'
 import { useStylesUserManager } from 'styles/user-manager-styles'
 import { checkGetAllUserLogs } from '@utils/helpers'
 import { useSelector } from 'react-redux'
 import { RootState } from '@store/reducers'
 import dynamic from 'next/dynamic'
+import { ServiceStatisticsManager } from '@Services/API/StatisticsManager'
+import { IUserLog } from '@Interfaces'
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 /* Tracer Manager Component */
@@ -66,20 +58,19 @@ export default function UserLogs() {
 
   const handeFetchUserLogs = () => {
     setIsLoading(true)
-    const params: TracerSearchParamsType = {
-      search: search || undefined,
-      fromTS: dateRange.startDate.toISOString().split('.')[0] + 'Z',
-      toTS: dateRange.endDate.toISOString().split('.')[0] + 'Z',
-    }
-    const checkPermission = checkGetAllUserLogs()
-    if (!checkPermission) {
-      params.accountID = state.username
+    const params = {
+      search: search,
+      fromTS: dateRange.startDate.getTime(),
+      toTS: dateRange.endDate.getTime(),
     }
 
-    userAPI
-      .getUserLogs(params)
-      .then((result) => {
-        setUserLogs(result.data)
+    ServiceStatisticsManager.getUserLogs(params)
+      .then((res) => {
+        console.log(res)
+        if (res.result) {
+          setUserLogs(res.result.userLogs)
+        }
+
         setIsLoading(false)
       })
       .catch(() => {

@@ -67,24 +67,24 @@ export class HelpersUtils {
   }
 }
 
-export function dateFormatter(
-  date: Date,
-  locale = 'en-US',
-  options = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    timeZone: 'UTC',
-  }
-) {
-  if (date) {
-    let new_date = new Intl.DateTimeFormat(locale, options)
-    return new_date.format(new Date(date))
-  }
-  return null
-}
+// export function dateFormatter(
+//   date: Date,
+//   locale = 'en-US',
+//   options = {
+//     year: 'numeric',
+//     month: 'long',
+//     day: 'numeric',
+//     hour: 'numeric',
+//     minute: 'numeric',
+//     timeZone: 'UTC',
+//   }
+// ) {
+//   if (date) {
+//     let new_date = new Intl.DateTimeFormat(locale, options)
+//     return new_date.format(new Date(date))
+//   }
+//   return null
+// }
 export function convertMRZDate(str: string, dateConvertType: DateConvertType) {
   try {
     if (str && str.length >= 6) {
@@ -153,11 +153,11 @@ export const getNavbarItems = () => {
   }
 
   if (checkPermission(USER_PERMISSIONS.TAP_MODIFY_TRACER_MANAGER)) {
-    statisticsItems.push({
-      href: tracerManager.path,
-      title: tracerManager.name,
-      icon: Assessment,
-    })
+    // statisticsItems.push({
+    //   href: tracerManager.path,
+    //   title: tracerManager.name,
+    //   icon: Assessment,
+    // })
   }
   if (checkPermission(USER_PERMISSIONS.TAP_MODIFY_API_KEY_MANAGER)) {
     managmentItems.push({
@@ -202,11 +202,11 @@ export const getNavbarItems = () => {
     navItems.push({ title: 'managment', items: managmentItems })
   }
 
-  if (managmentItems.length > 0) {
+  if (settingsItems.length > 0) {
     navItems.push({ title: 'settings', items: settingsItems })
   }
 
-  if (managmentItems.length > 0) {
+  if (statisticsItems.length > 0) {
     navItems.push({ title: 'statistics', items: statisticsItems })
   }
 

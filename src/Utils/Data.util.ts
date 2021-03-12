@@ -1,7 +1,7 @@
-import { CodeCountry } from '@Interfaces/Utils'
+import { ICodeCountry } from '@Interfaces/Utils'
 
 export class DataUtil {
-  public static countries: CodeCountry[] = [
+  public static countries: ICodeCountry[] = [
     {
       code: '93',
       iso: 'AF',

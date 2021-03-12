@@ -10,10 +10,6 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState, AppDispatch } from '@store/reducers'
 import Dashboard from '@components/DashboardLayout'
-import { AUTH_STATUS } from '@utils/constants'
-import Loader from '@components/common/Loader'
-import { checkAuth } from '@store/auth/actions'
-import { ServiceApiKeyManager } from '@Services'
 
 const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
   const state = useSelector((state: RootState) => {
@@ -74,12 +70,10 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
     // if (!cleanUpFunction) {
     // dispatch(checkAuth())
     // }
-
-    const jssStyles = document.querySelector('#jss-server-side')
-    if (jssStyles && jssStyles.parentNode) {
-      jssStyles.parentNode.removeChild(jssStyles)
-    }
-
+    // const jssStyles = document.querySelector('#jss-server-side')
+    // if (jssStyles && jssStyles.parentNode) {
+    //   jssStyles.parentNode.removeChild(jssStyles)
+    // }
     // return (cleanUpFunction = true)
   }, [])
 
@@ -110,8 +104,8 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
 
 export default wrapper.withRedux(WrappedApp)
 
-export async function getServerSideProps({ Component, ctx }: AppContext): Promise<AppInitialProps> {
-  const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {}
+// export async function getServerSideProps({ Component, ctx }: AppContext): Promise<AppInitialProps> {
+//   const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {}
 
-  return { pageProps }
-}
+//   return { pageProps }
+// }

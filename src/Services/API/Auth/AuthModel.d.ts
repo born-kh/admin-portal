@@ -30,6 +30,14 @@ declare namespace AuthModel {
       }
     }
   }
+
+  declare namespace Logout {
+    interface Params {}
+
+    interface Response extends HttpModel.IRequestResponse {
+      result: {}
+    }
+  }
 }
 
 export { AuthModel }

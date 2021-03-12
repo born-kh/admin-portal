@@ -120,7 +120,6 @@ export default function Login() {
     setLoading(true)
     ServiceAuth.signIn({
       ...formik.values,
-      username: usernameType === UserNameType.PHONE ? '+' + formik.values.username : formik.values.username,
       usernameType,
     })
       .then((responseSignIn) => {
@@ -139,12 +138,15 @@ export default function Login() {
               } else {
                 setErrorText('Get user permissions ' + responsePermissions.error.reason)
               }
+              setLoading(false)
             })
-            .catch((e) => {})
+            .catch((e) => {
+              setLoading(false)
+            })
         } else {
+          setLoading(false)
           setErrorText(responseSignIn.error.reason)
         }
-        setLoading(false)
       })
       .catch((e) => {
         setErrorText('')
@@ -200,7 +202,13 @@ export default function Login() {
             required
             fullWidth
             id="username"
-            label={t('username')}
+            label={
+              usernameType === UserNameType.USERNAME
+                ? t('username')
+                : usernameType === UserNameType.PHONE
+                ? t('phoneNumber')
+                : t('email')
+            }
             name="username"
             autoComplete="username"
             autoFocus

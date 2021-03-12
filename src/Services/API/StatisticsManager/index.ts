@@ -46,4 +46,12 @@ export const ServiceStatisticsManager = {
     })
     return response
   },
+  getUserLogs: async (params: StatisticsManagerModel.GetUserLogs.Params) => {
+    console.log(params)
+    let response = await Http.Post<StatisticsManagerModel.GetUserLogs.Response>(APIConsts.Http, {
+      method: APIConsts.StatisticsManager.GetUserLogs,
+      params,
+    })
+    return response
+  },
 }

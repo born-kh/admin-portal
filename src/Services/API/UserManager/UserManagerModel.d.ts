@@ -32,7 +32,7 @@ declare namespace UserManagerModel {
 
   declare namespace SetPassword {
     interface Params {
-      accountId: string
+      accountID: string
     }
 
     interface Response extends HttpModel.IRequestResponse {

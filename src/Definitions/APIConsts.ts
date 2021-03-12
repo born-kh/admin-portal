@@ -6,11 +6,12 @@ export const APIConsts = {
     SendCodeSMS: 'endpoint.send.code.sms',
     ResendCode: 'endpoint.resend.code',
     RefreshToken: 'endpoint.refresh.token',
+    Logout: 'session.logout',
   },
   UserManager: {
     SearchAccount: 'gateway.system.search.account',
     AccountGetByDate: 'gateway.account.get.dated',
-    GetUserPermissions: 'gateway.api-managing-management.call.2.get_permissions_by_account_id',
+    GetUserPermissions: 'gateway.get.permissions',
     SetPassword: 'gateway.system.set.password',
     GetAccountSettings: 'gateway.system.account.settings.get',
     SetAccountSettings: 'gateway.system.account.settings.set',
@@ -75,6 +76,7 @@ export const APIConsts = {
     CDRGetStars: 'gateway.quality.data.get.count.stars',
     GetAuthCodeList: 'gateway.auth.code.list',
     ResendCode: 'gateway.internal.resend.code',
+    GetUserLogs: 'gateway.user.logs.get',
   },
 
   Version: 1,

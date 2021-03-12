@@ -1,5 +1,5 @@
 // #region Interface Imports
-import { HttpModel, ICountStarts } from '@Interfaces'
+import { HttpModel, ICountStarts, IUserLog } from '@Interfaces'
 import { IFilterCDR, IAuthCode, ICall } from '@Interfaces/StatisticsManager'
 
 // #endregion Interface Imports
@@ -79,6 +79,20 @@ declare namespace StatisticsManagerModel {
 
     interface Response {
       result: {}
+    }
+  }
+
+  declare namespace GetUserLogs {
+    interface Params {
+      search: string
+      fromTS?: number
+      toTS?: number
+    }
+
+    interface Response {
+      result: {
+        userLogs: IUserLog[]
+      }
     }
   }
 }

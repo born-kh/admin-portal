@@ -130,7 +130,7 @@ export default function QuestionComponent() {
         }}
         editable={{
           onRowAdd: (newData) =>
-            new Promise((resolve, reject) => {
+            new Promise<void>((resolve, reject) => {
               setTimeout(() => {
                 handleCreateQuestion({ ...newData }).then(() => {
                   resolve()
@@ -138,7 +138,7 @@ export default function QuestionComponent() {
               }, 100)
             }),
           onRowUpdate: (newData, oldData) =>
-            new Promise((resolve, reject) => {
+            new Promise<void>((resolve, reject) => {
               setTimeout(() => {
                 handleUpdateQuestion({ ...newData }).then(() => {
                   resolve()
@@ -146,7 +146,7 @@ export default function QuestionComponent() {
               }, 100)
             }),
           onRowDelete: (oldData) =>
-            new Promise((resolve, reject) => {
+            new Promise<void>((resolve, reject) => {
               setTimeout(() => {
                 if (oldData.id) {
                   handleDeleteQuestion(oldData.id).then(() => {
@@ -287,7 +287,7 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
         ]}
         editable={{
           onRowAdd: (newData) =>
-            new Promise((resolve, reject) => {
+            new Promise<void>((resolve, reject) => {
               setTimeout(() => {
                 handleCreateQuestionLanguage({ ...newData, questionId: props.questionId }).then(() => {
                   resolve()
@@ -295,7 +295,7 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
               }, 100)
             }),
           onRowUpdate: (newData, oldData) =>
-            new Promise((resolve, reject) => {
+            new Promise<void>((resolve, reject) => {
               setTimeout(() => {
                 handleUpdateQuestionLanguage({ ...newData }).then(() => {
                   resolve()
@@ -303,7 +303,7 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
               }, 100)
             }),
           onRowDelete: (oldData) =>
-            new Promise((resolve, reject) => {
+            new Promise<void>((resolve, reject) => {
               setTimeout(() => {
                 if (oldData.id) {
                   handleDeleteQuestionLanguage(oldData.id).then(() => {

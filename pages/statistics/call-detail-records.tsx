@@ -35,7 +35,6 @@ import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import SearchIcon from '@material-ui/icons/Search'
 import useTranslation from 'hooks/useTranslation'
-import { statisticsAPI } from 'service/api'
 import MaterialTable from 'material-table'
 
 import DatePicker from '@components/common/DatePicker'
@@ -92,7 +91,7 @@ const theme = createMuiTheme({
   },
 })
 /* Tracer Manager Component */
-export default function UserLogs() {
+export default function CDRStatistics() {
   const [callData, setCallData] = useState<{
     items: ICall[]
     totalCount: number

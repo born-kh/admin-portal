@@ -1,4 +1,4 @@
-import { LangType } from '@Interfaces/Utils'
+import { LangType } from '@utils/constants'
 
 const LangStrings: Record<LangType, any> = {
   en: {

@@ -24,4 +24,11 @@ export const ServiceAuth = {
     })
     return response
   },
+  logout: async (params: AuthModel.Logout.Params) => {
+    let response = await Http.Post<AuthModel.Logout.Response>(APIConsts.Http, {
+      method: APIConsts.Auth.Logout,
+      params,
+    })
+    return response
+  },
 }

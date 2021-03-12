@@ -4,7 +4,7 @@ import { Dialog, Button, Paper } from '@material-ui/core'
 //matetrail table lib
 import MaterialTable from 'material-table'
 //settings REST APIS
-import { settingsAPI } from 'service/api'
+
 import EditIcon from '@material-ui/icons/Edit'
 
 //custom components

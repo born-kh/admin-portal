@@ -34,15 +34,18 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     return new Promise((resolve) => {
+      if (response.data.error) {
+        console.error(response)
+      } else {
+        console.log(response)
+      }
       setTimeout(() => {
         resolve(response)
       }, 500)
     })
   },
   (error) => {
-    console.log(error.response)
     if (error.response && error.response.status === 401) {
-      console.log('unAuth')
       let token = jsCookie.get(LocalConsts.LocalStorage.refreshToken)
       console.log(token)
       if (token) {

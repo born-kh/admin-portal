@@ -12,7 +12,6 @@ import DateRangeIcon from '@material-ui/icons/DateRange'
 //moment js
 import moment from 'moment'
 //tracer-manager REST APIS
-import { searchTracers } from 'service/tracerManagerAPI'
 import { TracerSearchParamsType, Tracer } from '@interfaces/tracer-manager'
 //useFormik hook
 import { useFormik } from 'formik'
@@ -54,22 +53,22 @@ export default function Tracermanager() {
       search: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
     }),
     onSubmit: (values) => {
-      setIsLoading(true)
+      // setIsLoading(true)
       const params: TracerSearchParamsType = {
         search: values.search,
         fromTS: dateRange.startDate.toISOString().split('.')[0] + 'Z',
         toTS: dateRange.endDate.toISOString().split('.')[0] + 'Z',
       }
 
-      searchTracers(params)
-        .then((result) => {
-          setMessages(result.messages)
-          setErrors(result.errors)
-          setIsLoading(false)
-        })
-        .catch(() => {
-          setIsLoading(false)
-        })
+      // searchTracers(params)
+      //   .then((result) => {
+      //     setMessages(result.messages)
+      //     setErrors(result.errors)
+      //     setIsLoading(false)
+      //   })
+      //   .catch(() => {
+      //     setIsLoading(false)
+      //   })
     },
   })
 

@@ -96,7 +96,6 @@ export default function UserManager() {
     return <Loader />
   }
 
-  console.log(users)
   return (
     <>
       <div className={classes.root}>
