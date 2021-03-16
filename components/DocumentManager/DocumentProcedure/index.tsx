@@ -239,6 +239,8 @@ export default function DocumentProcedure(props: IDocumentProcedureProps) {
         .then((res) => {
           if (res.result) {
             setTypes(res.result.types)
+          } else {
+            setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
           }
         })
         .catch(() => {
@@ -273,6 +275,8 @@ export default function DocumentProcedure(props: IDocumentProcedureProps) {
         handleClose()
         if (res.result) {
           setAlertData({ message: res.result.message, type: AlertMessageType.sucess, open: true })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
         }
       })
       .catch((error) => {
@@ -290,6 +294,8 @@ export default function DocumentProcedure(props: IDocumentProcedureProps) {
           handleClose()
           if (res.result) {
             setAlertData({ message: res.result.availabe, type: AlertMessageType.sucess, open: true })
+          } else {
+            setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
           }
         })
         .catch((error) => {
@@ -317,12 +323,15 @@ export default function DocumentProcedure(props: IDocumentProcedureProps) {
     }
     setBlocking(true)
     ServiceDocumentManager.documentSetStatus(params)
-
       .then((res) => {
-        props.handleUpdateDocument(typeID, documentSetID, status)
-        handleClose()
-        setAlertData({ message: res.result.message, type: AlertMessageType.sucess, open: true })
-        handleNext()
+        if (res.result) {
+          props.handleUpdateDocument(typeID, documentSetID, status)
+          handleClose()
+          setAlertData({ message: res.result.message, type: AlertMessageType.sucess, open: true })
+          handleNext()
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
       })
       .catch((error) => {
         handleClose()
@@ -349,6 +358,8 @@ export default function DocumentProcedure(props: IDocumentProcedureProps) {
         if (res.result) {
           setAlertData({ message: res.result.message, type: AlertMessageType.sucess, open: true })
           props.handleNextApplication()
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
         }
       })
       .catch((error) => {

@@ -21,6 +21,7 @@ import { RootState } from '@store/reducers'
 import dynamic from 'next/dynamic'
 import { ServiceStatisticsManager } from '@Services/API/StatisticsManager'
 import { IUserLog } from '@Interfaces'
+
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 /* Tracer Manager Component */
@@ -124,10 +125,8 @@ export default function UserLogs() {
         localization={{ body: { emptyDataSourceMessage: '' } }}
         columns={[
           { title: '№', field: '', render: (rowData) => rowData && rowData.tableData.id + 1, width: 75 },
-          { title: t('username'), field: 'account_id' },
+          { title: t('accountId'), field: 'account_id' },
           { title: t('method'), field: 'method' },
-
-          { title: t('ip'), field: 'ip' },
 
           {
             title: t('dateTime'),
@@ -155,6 +154,7 @@ export default function UserLogs() {
           sorting: false,
           pageSize: 10,
           exportButton: true,
+          rowStyle: { fontFamily: 'Roboto', color: 'rgba(0, 0, 0, 0.87)', fontSize: '0.875rem', fontWeight: 400 },
         }}
       />
       <DatePicker

@@ -12,7 +12,7 @@ declare namespace StatisticsManagerModel {
       limit: number
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         items: ICall[]
         metadata: {
@@ -29,7 +29,7 @@ declare namespace StatisticsManagerModel {
       accountId: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         calls: ICall[]
       }
@@ -41,7 +41,7 @@ declare namespace StatisticsManagerModel {
       ids: string[]
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         calls: ICall
       }
@@ -50,11 +50,11 @@ declare namespace StatisticsManagerModel {
 
   declare namespace CDRGetStars {
     interface Params {
-      from: string
-      to: string
+      from: number
+      to: number
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         counts: ICountStarts
       }
@@ -65,7 +65,7 @@ declare namespace StatisticsManagerModel {
       identifier?: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: { authCodes: IAuthCode[] }
     }
   }
@@ -77,7 +77,7 @@ declare namespace StatisticsManagerModel {
       sms: boolean
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {}
     }
   }
@@ -89,7 +89,7 @@ declare namespace StatisticsManagerModel {
       toTS?: number
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         userLogs: IUserLog[]
       }

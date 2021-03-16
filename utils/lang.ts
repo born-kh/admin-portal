@@ -201,8 +201,12 @@ const LangStrings: Record<LangType, any> = {
     date: 'Date',
     result: 'Result',
     connectedAt: 'Connected At',
+    agree: 'Yes',
+    disagree: 'No',
   },
   ru: {
+    disagree: 'Нет',
+    agree: 'Да',
     loginWithLogin: 'Вход с помощью логина и пароля',
     loginWithEmail: 'Вход с помощью E-mail и пароля',
     loginWithPhoneNumber: 'Вход по номеру телефона',

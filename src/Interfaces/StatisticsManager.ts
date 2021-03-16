@@ -113,8 +113,8 @@ export interface IFilterCDR {
 }
 
 export interface IFilterDateRangeCDR {
-  from: string
-  to: string
+  from: number
+  to: number
 }
 export interface IFiltertTextCDR {
   text: string

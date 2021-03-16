@@ -26,7 +26,7 @@ import { useRouter } from 'next/router'
 // next props-types
 import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 // constants
-import { applicationOptions, dateOptions } from '@utils/constants'
+import { applicationOptions, dateOptions, initialAlertData } from '@utils/constants'
 import Autorenew from '@material-ui/icons/Autorenew'
 
 import useTranslation from 'hooks/useTranslation'
@@ -38,6 +38,7 @@ import { CHANGE_PAGE_NEW_APPLICATION } from '@store/document/types'
 import TabPanel from '@components/common/TabPanel'
 import { useStylesDocumentManger } from 'styles/document-manager-styles'
 import { IFilterApplicationParams, IFilterDateRange, IFilterAnyApplication } from '@Interfaces'
+import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
 
 export default function DocumentManger(props: any) {
   const classes = useStylesDocumentManger()
@@ -53,7 +54,12 @@ export default function DocumentManger(props: any) {
   })
   const router = useRouter()
   const [valueTab, setValueTab] = useState(props.tabValue)
-
+  const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
+    initialAlertData
+  )
+  const handleCloseAlert = () => {
+    setAlertData(initialAlertData)
+  }
   const [anyApplication, setAnyApplication] = useState<{ page: number; pageSize: number }>({
     page: 0,
     pageSize: 5,
@@ -113,8 +119,12 @@ export default function DocumentManger(props: any) {
     setIsLoadingNew(true)
 
     dispatch(fetchNewApplicationsAction({ start: start * count, count }))
-      .then(() => {
-        dispatch({ type: CHANGE_PAGE_NEW_APPLICATION, payload: { page: start, pageSize: count } })
+      .then((res) => {
+        if (res.result) {
+          dispatch({ type: CHANGE_PAGE_NEW_APPLICATION, payload: { page: start, pageSize: count } })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
         setIsLoadingNew(false)
       })
       .catch(() => {
@@ -139,8 +149,13 @@ export default function DocumentManger(props: any) {
     filterParams.filter = filter
     console.log(filterParams)
     dispatch(fetchAnyApplicationsAction(filterParams))
-      .then(() => {
-        setAnyApplication({ page: start, pageSize: count })
+      .then((res) => {
+        if (res.result) {
+          setAnyApplication({ page: start, pageSize: count })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
+
         setIsLoadingAny(false)
       })
       .catch(() => {
@@ -266,6 +281,7 @@ export default function DocumentManger(props: any) {
         onClose={() => setOpenDateRange(false)}
         onChange={(e) => setDateRange(e.selection)}
       />
+      <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
     </>
   )
 }

@@ -35,9 +35,9 @@ instance.interceptors.response.use(
   (response) => {
     return new Promise((resolve) => {
       if (response.data.error) {
-        console.error(response)
+        console.error('response error', response)
       } else {
-        console.log(response)
+        console.log('response', response)
       }
       setTimeout(() => {
         resolve(response)

@@ -19,7 +19,7 @@ declare namespace DocumentManagerModel {
       tags: string[]
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         message: string
       }
@@ -31,7 +31,7 @@ declare namespace DocumentManagerModel {
       note: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         message: string
       }
@@ -43,7 +43,7 @@ declare namespace DocumentManagerModel {
       fields: IFields
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         message: string
       }
@@ -55,7 +55,7 @@ declare namespace DocumentManagerModel {
       count: number
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         applications: IApplication[]
         totalCount: number
@@ -72,7 +72,7 @@ declare namespace DocumentManagerModel {
       reason?: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         message: string
       }
@@ -83,7 +83,7 @@ declare namespace DocumentManagerModel {
       setID: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         types: DocumentTypes
       }
@@ -94,7 +94,7 @@ declare namespace DocumentManagerModel {
       applicationID: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         documents: IDocument[]
       }
@@ -105,7 +105,7 @@ declare namespace DocumentManagerModel {
       documentID: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         message: string
       }
@@ -116,7 +116,7 @@ declare namespace DocumentManagerModel {
       countryISOCode: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         sets: IDocumentSet[]
       }
@@ -127,7 +127,7 @@ declare namespace DocumentManagerModel {
       accountID: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         applications: IApplication[]
       }
@@ -140,7 +140,7 @@ declare namespace DocumentManagerModel {
       filter: any
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         applications: IApplication[]
         totalCount: number
@@ -153,12 +153,12 @@ declare namespace DocumentManagerModel {
       firstName: string
       lastName: string
     }
-    interface Params {
+    interface Params extends HttpModel.IRequestResponse {
       name?: Name
       phone?: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         applications: IApplication[]
       }
@@ -173,7 +173,7 @@ declare namespace DocumentManagerModel {
       reason?: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         message: string
       }
@@ -184,7 +184,7 @@ declare namespace DocumentManagerModel {
       passportNumber: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: { availabe: string }
     }
   }

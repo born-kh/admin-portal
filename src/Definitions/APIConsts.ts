@@ -42,8 +42,8 @@ export const APIConsts = {
     GetSessions: 'gateway.session.get',
     GetPesenceInfo: 'gateway.get.presence.info',
     SessionRemove: 'gateway.session.remove',
-    SetTracing: 'gateway.session.setTracing',
-    SetSuspendSession: 'gateway.session.setSuspension',
+    SetTracing: 'gateway.session.tracing.set',
+    SetSuspendSession: 'gateway.session.suspend.set',
   },
   SettingsManager: {
     SettingsCreate: 'gateway.settings.create',
@@ -70,7 +70,7 @@ export const APIConsts = {
     QuestionLangUpdate: 'gateway.question.lang.update',
   },
   StatisticsManager: {
-    CDRCallGet: 'gateway.call.get',
+    CDRCallGet: 'gateway.cdr.get',
     CDRCallGetByAccountId: 'gateway.call.get.accountId',
     CDRCallGetByIds: '"gateway.call.get.byids',
     CDRGetStars: 'gateway.quality.data.get.count.stars',

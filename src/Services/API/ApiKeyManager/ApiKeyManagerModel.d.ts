@@ -5,7 +5,7 @@ declare namespace ApiKeyManagerModel {
   declare namespace ApiKeyCreate {
     interface Params extends IApiKeyCreateParams {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         apiKey: IApiKey
         message: string
@@ -15,7 +15,7 @@ declare namespace ApiKeyManagerModel {
   declare namespace ApiKeyGet {
     interface Params {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         apiKeys: IApiKey[]
       }
@@ -24,7 +24,7 @@ declare namespace ApiKeyManagerModel {
   declare namespace ApiKeyUpdate {
     interface Params extends IApiKeyUpdateParams {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         apiKey: IApiKey
         message: string

@@ -47,12 +47,14 @@ export default function AuthSettingsComponent() {
   }
   const handleDelete = (id: string) => {
     ServiceSettingsManager.authSettingsDelete({ id })
-
-      .then(() => {
+      .then((res) => {
+        if (res.result) {
+          setAllAuthSettings(allAuthSeetings.filter((item: IAuthSettings) => item.id !== id))
+          setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
         handleClose()
-
-        setAllAuthSettings(allAuthSeetings.filter((item: IAuthSettings) => item.id !== id))
-        setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
       })
       .catch((error) => {
         handleClose()
@@ -67,12 +69,17 @@ export default function AuthSettingsComponent() {
   const handleCraete = () => {
     if (formik.values.id) {
       ServiceSettingsManager.authSettingsUpdate(formik.values)
-        .then(() => {
-          setAllAuthSettings(
-            allAuthSeetings.map((item: IAuthSettings) => (item.id === formik.values.id ? formik.values : item))
-          )
+        .then((res) => {
+          if (res.result) {
+            setAllAuthSettings(
+              allAuthSeetings.map((item: IAuthSettings) => (item.id === formik.values.id ? formik.values : item))
+            )
+            setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
+          } else {
+            setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+          }
+
           handleClose()
-          setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
         })
         .catch((error) => {
           handleClose()
@@ -80,9 +87,14 @@ export default function AuthSettingsComponent() {
         })
     } else {
       ServiceSettingsManager.authSettingsCreate(formik.values)
-        .then((response) => {
-          setAllAuthSettings([...allAuthSeetings, { ...formik.values }])
-          setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
+        .then((res) => {
+          if (res.result) {
+            setAllAuthSettings([...allAuthSeetings, { ...formik.values }])
+            setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
+          } else {
+            setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+          }
+          handleClose()
         })
         .catch((error) => {
           handleClose()
@@ -97,6 +109,8 @@ export default function AuthSettingsComponent() {
       .then((res) => {
         if (res.result) {
           setAllAuthSettings(res.result.allSettings)
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
         }
         setIsLoading(false)
       })
@@ -168,6 +182,7 @@ export default function AuthSettingsComponent() {
         options={{
           sorting: false,
           search: false,
+          rowStyle: { fontFamily: 'Roboto', color: 'rgba(0, 0, 0, 0.87)', fontSize: '0.875rem', fontWeight: 400 },
         }}
       />
 

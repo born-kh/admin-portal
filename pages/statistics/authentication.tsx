@@ -53,6 +53,8 @@ export default function Authencation() {
       .then((res) => {
         if (res.result) {
           setAuthCodes(res.result.authCodes)
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
         }
         setIsLoading(false)
       })
@@ -64,8 +66,12 @@ export default function Authencation() {
   const handleSendResendSMS = (codeId: string, phoneNumber: string) => {
     setResendCodeId(codeId)
     ServiceStatisticsManager.resendCode({ lang: 'en', codeId, phoneNumber, sms: true })
-      .then(() => {
-        setAlertData({ message: `Resend SMS success`, type: AlertMessageType.sucess, open: true })
+      .then((res) => {
+        if (res.result) {
+          setAlertData({ message: `Resend SMS success`, type: AlertMessageType.sucess, open: true })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
       })
       .catch((e) => {
         console.log(e.message)
@@ -149,6 +155,7 @@ export default function Authencation() {
           pageSize: 10,
           sorting: false,
           exportButton: true,
+          rowStyle: { fontFamily: 'Roboto', color: 'rgba(0, 0, 0, 0.87)', fontSize: '0.875rem', fontWeight: 400 },
         }}
       />
     </>

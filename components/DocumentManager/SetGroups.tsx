@@ -123,6 +123,7 @@ export const DetailPanel = ({ documents }: { documents: IDocument[] }) => {
           top: 0,
           zIndex: 0,
         },
+        rowStyle: { fontFamily: 'Roboto', color: 'rgba(0, 0, 0, 0.87)', fontSize: '0.875rem', fontWeight: 400 },
       }}
     />
   )

@@ -70,10 +70,10 @@ const WrappedApp: FC<AppProps> = ({ Component, pageProps, router }) => {
     // if (!cleanUpFunction) {
     // dispatch(checkAuth())
     // }
-    // const jssStyles = document.querySelector('#jss-server-side')
-    // if (jssStyles && jssStyles.parentNode) {
-    //   jssStyles.parentNode.removeChild(jssStyles)
-    // }
+    const jssStyles = document.querySelector('#jss-server-side')
+    if (jssStyles && jssStyles.parentNode) {
+      jssStyles.parentNode.removeChild(jssStyles)
+    }
     // return (cleanUpFunction = true)
   }, [])
 
