@@ -57,8 +57,8 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }: PropsType) => {
   }
 
   const handleLogout = () => {
+    console.log('logout')
     ServiceAuth.logout({}).then((res) => {
-      console.log(res)
       jsCookie.remove(LocalConsts.LocalStorage.token)
       jsCookie.remove(LocalConsts.LocalStorage.refreshToken)
       setTimeout(() => {

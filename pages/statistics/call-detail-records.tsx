@@ -842,7 +842,7 @@ export default function CDRStatistics() {
               sorting: false,
               pageSize: formik.values.limit,
               exportButton: true,
-              // rowStyle: { fontFamily: 'Roboto', color: 'rgba(0, 0, 0, 0.87)', fontSize: '0.875rem', fontWeight: 400 },
+              rowStyle: { fontFamily: 'Roboto', color: 'rgba(0, 0, 0, 0.87)', fontSize: '0.875rem', fontWeight: 400 },
             }}
             components={{
               Pagination: (props) => {
@@ -886,8 +886,12 @@ export default function CDRStatistics() {
                             <TableCell>
                               {d.participantState && d.participantState.map((text) => <p>{text}</p>)}
                             </TableCell>
-                            <TableCell>{d.lastActives && d.lastActives.map((text) => <p>{text}</p>)}</TableCell>
                             <TableCell>{d.direction && d.direction.map((text) => <p>{text}</p>)}</TableCell>
+                            <TableCell>
+                              {d.lastActives &&
+                                d.lastActives.map((text) => <p>{moment(text).format('DD MMM YYYY HH:mm')}</p>)}
+                            </TableCell>
+
                             <TableCell>{d.audio && d.audio.map((text) => <p>{text}</p>)}</TableCell>
                             <TableCell>{d.video && d.video.map((text) => <p>{text}</p>)}</TableCell>
                             <TableCell>{d.screen && d.screen.map((text) => <p>{text}</p>)}</TableCell>
