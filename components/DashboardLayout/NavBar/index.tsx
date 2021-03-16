@@ -71,6 +71,7 @@ const NavBar = ({ onMobileClose = () => {}, openMobile = false }: PropsType) => 
       <Box p={2}>
         {navItems.map((item: NavItemsType) => (
           <List
+            key={item.title}
             subheader={
               <ListSubheader component="div" id="nested-list-subheader">
                 {t(item.title)}

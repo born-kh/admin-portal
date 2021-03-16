@@ -17,6 +17,7 @@ import useTranslation from 'hooks/useTranslation'
 import dynamic from 'next/dynamic'
 import { ServiceSessionManager } from '@Services'
 import { IAccountSessionsData } from '@Interfaces'
+import CircularProgress from '@material-ui/core/CircularProgress'
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
 export default function AccountSessions() {
@@ -28,17 +29,21 @@ export default function AccountSessions() {
     initialAlertData
   )
   const [open, setOpen] = useState(false)
+  const [isLoadingDelete, setIsLoadingDelete] = useState(false)
+  const [tracingSessionID, setTracingSessionID] = useState<string | null>(null)
+  const [suspendSessionID, setSuspendSessionID] = useState<string | null>(null)
   const [sessionData, setSessionData] = useState<IAccountSessionsData | null>(null)
   const router = useRouter()
   const { t } = useTranslation()
   const handleCloseAlert = () => {
     setAlertData(initialAlertData)
   }
+  const [accountID, setAccountID] = useState<string | null>(null)
 
   useEffect(() => {
     function loadData() {
       setSessionsIsLoading(true)
-      ServiceSessionManager.getSessions({ accountID: router.query.id as string })
+      ServiceSessionManager.getSessions({ accountID })
 
         .then((res) => {
           if (res.result) {
@@ -51,8 +56,10 @@ export default function AccountSessions() {
           setSessionsIsLoading(false)
         })
     }
-    if (router.query.id) {
+    if (accountID) {
       loadData()
+    } else {
+      setAccountID(router.query.id as string)
     }
   }, [router])
 
@@ -79,60 +86,84 @@ export default function AccountSessions() {
   }
 
   const handleSetTracing = (params: { sessionID: string; isTracing: boolean }) => {
-    ServiceSessionManager.setTracing(params)
-      .then(() => {
-        setSessions((prevSessions) => {
-          const sessions = prevSessions.map((session) => {
-            if (session.meta.sessionID === params.sessionID) {
-              return { ...session, isTracing: params.isTracing }
-            } else {
-              return session
-            }
+    setTracingSessionID(params.sessionID)
+    ServiceSessionManager.setTracing({ ...params, accountID })
+      .then((res) => {
+        if (res.result) {
+          setSessions((prevSessions) => {
+            const sessions = prevSessions.map((session) => {
+              if (session.meta.sessionID === params.sessionID) {
+                return { ...session, isTracing: params.isTracing }
+              } else {
+                return session
+              }
+            })
+            return sessions
           })
-          return sessions
-        })
-        setAlertData({ message: 'Set Tracer is updated', type: AlertMessageType.sucess, open: true })
+          setAlertData({ message: 'Set Tracer is updated', type: AlertMessageType.sucess, open: true })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
+        setTracingSessionID(null)
       })
       .catch(() => {
         setAlertData({ message: 'Set Tracer is not updated', type: AlertMessageType.error, open: true })
+        setTracingSessionID(null)
       })
   }
 
   const handleSetSuspended = (params: { sessionID: string; isSuspended: boolean }) => {
-    ServiceSessionManager.setSuspendSession(params)
-      .then(() => {
-        setSessions((prevSessions) => {
-          const sessions = prevSessions.map((session) => {
-            if (session.meta.sessionID === params.sessionID) {
-              return { ...session, isSuspended: params.isSuspended }
-            } else {
-              return session
-            }
+    setSuspendSessionID(params.sessionID)
+    ServiceSessionManager.setSuspendSession({ ...params, accountID })
+      .then((res) => {
+        if (res.result) {
+          setSessions((prevSessions) => {
+            const sessions = prevSessions.map((session) => {
+              if (session.meta.sessionID === params.sessionID) {
+                return { ...session, isSuspended: params.isSuspended }
+              } else {
+                return session
+              }
+            })
+            return sessions
           })
-          return sessions
-        })
 
-        setAlertData({ message: 'Set Suspend is updated', type: AlertMessageType.sucess, open: true })
+          setAlertData({ message: 'Set Suspend is updated', type: AlertMessageType.sucess, open: true })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
+        setSuspendSessionID(null)
       })
       .catch(() => {
         setAlertData({ message: 'Set Suspendis not updated', type: AlertMessageType.error, open: true })
+        setSuspendSessionID(null)
       })
   }
 
   const handleDeleteSession = () => {
+    setIsLoadingDelete(true)
     if (sessionID) {
-      ServiceSessionManager.sessionRemove({ sessionID })
-        .then(() => {
-          setSessions((prevSessions) => {
-            const sessions = prevSessions.filter((session) => session.meta.sessionID !== sessionID)
-            return sessions
-          })
+      ServiceSessionManager.sessionRemove({ sessionID, accountID })
+        .then((response) => {
+          if (response.result) {
+            setSessions((prevSessions) => {
+              const sessions = prevSessions.filter((session) => session.meta.sessionID !== sessionID)
+              return sessions
+            })
+            setAlertData({ message: 'Removed session', type: AlertMessageType.sucess, open: true })
+          } else {
+            setAlertData({ message: response.error.reason, type: AlertMessageType.error, open: true })
+          }
+
           setOpen(false)
-          setAlertData({ message: 'Removed session', type: AlertMessageType.sucess, open: true })
+          setSessionID(null)
+          setIsLoadingDelete(false)
         })
         .catch(() => {
           setOpen(false)
           setAlertData({ message: 'Not removed sesssion', type: AlertMessageType.error, open: true })
+          setSessionID(null)
+          setIsLoadingDelete(false)
         })
     }
   }
@@ -163,9 +194,12 @@ export default function AccountSessions() {
           {
             title: t('setTracing'),
             field: '',
-
+            align: 'center',
             render: (rowData) =>
-              rowData && (
+              rowData &&
+              (tracingSessionID && tracingSessionID === rowData.meta.sessionID ? (
+                <CircularProgress size={28} />
+              ) : (
                 <Switch
                   checked={rowData.isTracing}
                   onChange={() =>
@@ -174,14 +208,17 @@ export default function AccountSessions() {
                   name="checkedA"
                   inputProps={{ 'aria-label': 'primary checkbox' }}
                 />
-              ),
+              )),
           },
           {
             title: t('suspendSession'),
             field: '',
-
+            align: 'center',
             render: (rowData) =>
-              rowData && (
+              rowData &&
+              (suspendSessionID && suspendSessionID === rowData.meta.sessionID ? (
+                <CircularProgress size={28} />
+              ) : (
                 <Switch
                   checked={rowData.isSuspended}
                   onChange={() =>
@@ -190,7 +227,7 @@ export default function AccountSessions() {
                   name="checkedA"
                   inputProps={{ 'aria-label': 'primary checkbox' }}
                 />
-              ),
+              )),
           },
           {
             title: t('detailInfo'),
@@ -250,6 +287,12 @@ export default function AccountSessions() {
         data={sessions}
         options={{
           search: false,
+          rowStyle: {
+            fontFamily: 'Roboto',
+            color: 'rgba(0, 0, 0, 0.87)',
+            fontSize: '0.875rem',
+            fontWeight: 400,
+          },
         }}
       />
       <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
@@ -264,14 +307,20 @@ export default function AccountSessions() {
         <DialogContent>
           <DialogContentText id="alert-dialog-description"></DialogContentText>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDeleteSession} color="primary" autoFocus>
-            {t('agree')}
-          </Button>
-          <Button onClick={handleClose} color="primary">
-            {t('disagree')}
-          </Button>
-        </DialogActions>
+        {isLoadingDelete ? (
+          <DialogActions>
+            <CircularProgress size={28} />
+          </DialogActions>
+        ) : (
+          <DialogActions>
+            <Button onClick={handleClose} color="primary" autoFocus>
+              {t('disagree')}
+            </Button>
+            <Button onClick={handleDeleteSession} color="primary">
+              {t('agree')}
+            </Button>
+          </DialogActions>
+        )}
       </Dialog>
 
       <Dialog

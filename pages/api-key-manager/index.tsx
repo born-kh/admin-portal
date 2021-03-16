@@ -24,14 +24,23 @@ import useTranslation from 'hooks/useTranslation'
 import moment from 'moment'
 import { IApiKey, Platforms, IApiKeyCreateParams, IApiKeyUpdateParams } from '@Interfaces'
 import { ServiceApiKeyManager } from '@Services'
+import { initialAlertData } from '@utils/constants'
+import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
 ///api-key-manager component
 export default function ApiKeyManager() {
   const [apiKeys, setApiKeys] = useState<IApiKey[]>([])
   const [filterApiKeys, setFilterApiKeys] = useState<IApiKey[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [selectedPlatform, setSelectedPlatform] = useState<Platforms>(Platforms.ALL)
+
   const [isOpen, setIsOpen] = useState(false)
   const { t } = useTranslation()
+  const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
+    initialAlertData
+  )
+  const handleCloseAlert = () => {
+    setAlertData(initialAlertData)
+  }
   const formik = useFormik({
     initialValues: {
       validFrom: '',
@@ -61,15 +70,20 @@ export default function ApiKeyManager() {
         cacheExpiration: apiKey.cacheExpiration,
       }
       ServiceApiKeyManager.apiKeyUpdate(params)
-        .then(() => {
-          setApiKeys((prevApiKeys) => {
-            return prevApiKeys.map((item) => {
-              if (item.id === id) {
-                return { ...item, ...apiKey }
-              }
-              return item
+        .then((res) => {
+          if (res.result) {
+            setApiKeys((prevApiKeys) => {
+              return prevApiKeys.map((item) => {
+                if (item.id === id) {
+                  return { ...item, ...apiKey }
+                }
+                return item
+              })
             })
-          })
+            setAlertData({ message: res.result.message, type: AlertMessageType.sucess, open: true })
+          } else {
+            setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+          }
         })
         .catch((e) => {
           console.log(e)
@@ -97,6 +111,13 @@ export default function ApiKeyManager() {
           setApiKeys((prevApiKeys) => {
             return [...prevApiKeys, res.result.apiKey]
           })
+          setAlertData({
+            message: res.result.message,
+            type: AlertMessageType.sucess,
+            open: true,
+          })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
         }
 
         setIsOpen(false)
@@ -112,6 +133,8 @@ export default function ApiKeyManager() {
       .then((res) => {
         if (res.result) {
           setApiKeys(res.result.apiKeys.sort((x, y) => +new Date(y.createdAt) - +new Date(x.createdAt)))
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
         }
         setIsLoading(false)
       })
@@ -214,6 +237,7 @@ export default function ApiKeyManager() {
           sorting: false,
           search: false,
           pageSize: 10,
+          rowStyle: { fontFamily: 'Roboto', color: 'rgba(0, 0, 0, 0.87)', fontSize: '0.875rem', fontWeight: 400 },
         }}
       />
 
@@ -293,8 +317,7 @@ export default function ApiKeyManager() {
           </Button>
         </CustomDialogActions>
       </Dialog>
-
-      {/* <SnackBarAlert onClose={handleClose} message={"success message"} type={AlertMessageType.sucess} open={open} /> */}
+      <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
     </>
   )
 }

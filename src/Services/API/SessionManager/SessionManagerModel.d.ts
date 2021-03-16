@@ -9,7 +9,7 @@ declare namespace SesssionManagerModel {
       accountID
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         sessions: IAccountSessionsData[]
       }
@@ -20,36 +20,39 @@ declare namespace SesssionManagerModel {
       accountID: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {}
     }
   }
   declare namespace SessionRemove {
     interface Params {
       sessionID: string
+      accountID: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {}
     }
   }
   declare namespace SetTracing {
     interface Params {
+      accountID: string
       sessionID: string
       isTracing: boolean
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {}
     }
   }
   declare namespace SetSuspendSession {
     interface Params {
+      accountID: string
       sessionID: string
       isSuspended: boolean
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {}
     }
   }

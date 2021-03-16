@@ -36,6 +36,12 @@ export default function TracerTable(props: TracerTableProps) {
       options={{
         showTitle: false,
         exportButton: true,
+        rowStyle: {
+          fontFamily: 'Roboto',
+          color: 'rgba(0, 0, 0, 0.87)',
+          fontSize: '0.875rem',
+          fontWeight: 400,
+        },
       }}
       detailPanel={[
         {

@@ -142,10 +142,14 @@ export default function CallQualityComponent() {
   }
   const handleDelete = (id: string) => {
     ServiceSettingsManager.callQualityDelete({ id })
-      .then(() => {
-        setCallQualities(callQualities.filter((item) => item.id !== id))
+      .then((res) => {
+        if (res.result) {
+          setCallQualities(callQualities.filter((item) => item.id !== id))
 
-        setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
+          setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
       })
       .catch((error) => {
         setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
@@ -219,10 +223,15 @@ export default function CallQualityComponent() {
 
     if (formik.values.id) {
       ServiceSettingsManager.callQualityUpdate({ ...formik.values, askIf, questions })
-        .then(() => {
-          setCallQualities(callQualities.map((item) => (item.id === formik.values.id ? formik.values : item)))
+        .then((res) => {
+          if (res) {
+            setCallQualities(callQualities.map((item) => (item.id === formik.values.id ? formik.values : item)))
+            setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
+          } else {
+            setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+          }
+
           handleClose()
-          setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
         })
         .catch((error) => {
           handleClose()
@@ -231,9 +240,13 @@ export default function CallQualityComponent() {
     } else {
       ServiceSettingsManager.callQualityCreate({ ...formik.values, askIf, questions })
         .then((res) => {
+          if (res) {
+            setCallQualities([...callQualities, res.result.callQuality])
+            setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
+          } else {
+            setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+          }
           handleClose()
-          setCallQualities([...callQualities, res.result.callQuality])
-          setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
         })
         .catch((error) => {
           handleClose()
@@ -248,7 +261,10 @@ export default function CallQualityComponent() {
       .then((res) => {
         if (res.result) {
           setCallQualities(res.result.callQualities)
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
         }
+
         setIsLoading(false)
       })
       .catch(() => {
@@ -259,7 +275,10 @@ export default function CallQualityComponent() {
       .then((res) => {
         if (res.result) {
           setAllQuestions(res.result.questions)
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
         }
+
         setIsLoading(false)
       })
       .catch(() => {
@@ -364,6 +383,7 @@ export default function CallQualityComponent() {
         options={{
           sorting: false,
           search: false,
+          rowStyle: { fontFamily: 'Roboto', color: 'rgba(0, 0, 0, 0.87)', fontSize: '0.875rem', fontWeight: 400 },
         }}
       />
 

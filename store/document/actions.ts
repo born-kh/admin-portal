@@ -9,6 +9,7 @@ export const fetchAnyApplicationsAction = (params: any) => {
     if (res.result) {
       dispatch({ type: FETCH_ANY_APPLICATIONS, payload: { ...res.result } })
     }
+    return res
   }
 }
 
@@ -19,5 +20,6 @@ export const fetchNewApplicationsAction = (params: { start: number; count: numbe
     if (res.result) {
       dispatch({ type: FETCH_NEW_APPLICATIONS, payload: { ...res.result } })
     }
+    return res
   }
 }

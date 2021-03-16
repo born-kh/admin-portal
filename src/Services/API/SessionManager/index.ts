@@ -25,6 +25,7 @@ export const ServiceSessionManager = {
     return response
   },
   setSuspendSession: async (params: SesssionManagerModel.SetSuspendSession.Params) => {
+    console.log(params)
     let response = await Http.Post<SesssionManagerModel.SetSuspendSession.Response>(APIConsts.Http, {
       method: APIConsts.SessionManager.SetSuspendSession,
       params,

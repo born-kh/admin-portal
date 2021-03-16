@@ -131,6 +131,12 @@ export default function SystemSettingsComponent() {
         options={{
           sorting: false,
           search: false,
+          rowStyle: {
+            fontFamily: 'Roboto',
+            color: 'rgba(0, 0, 0, 0.87)',
+            fontSize: '0.875rem',
+            fontWeight: 400,
+          },
         }}
       />
 

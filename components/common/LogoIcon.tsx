@@ -36,14 +36,14 @@ export default function LogoIcon() {
           </feMerge>
         </filter>
       </defs>
-      <g id="Landing" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+      <g id="Landing" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="Landing-page" transform="translate(-31.000000, -11.000000)">
           <g id="topbar">
             <g id="left" transform="translate(32.000000, 12.000000)">
               <g id="Logo">
                 <g id="Oval">
-                  <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlinkHref="#path-1"></use>
-                  <use fill="#FFFFFF" fill-rule="evenodd" xlinkHref="#path-1"></use>
+                  <use fill="black" fillOpacity="1" filter="url(#filter-2)" xlinkHref="#path-1"></use>
+                  <use fill="#FFFFFF" fillRule="evenodd" xlinkHref="#path-1"></use>
                 </g>
                 <polygon
                   id="Path"

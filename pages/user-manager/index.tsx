@@ -292,16 +292,19 @@ export default function UserManager() {
                   </Button>
                 ),
             },
+
             {
               title: t('createdAt'),
               field: 'createdAt',
               render: (rowData) => rowData.createdAt && moment(rowData.createdAt).format('DD MMM YYYY HH:mm'),
             },
           ]}
+          onRowClick={(event, rowData) => router.push('/user-manager/' + rowData.accountID)}
           data={users}
           options={{
             sorting: false,
             search: false,
+            rowStyle: { fontFamily: 'Roboto', color: 'rgba(0, 0, 0, 0.87)', fontSize: '0.875rem', fontWeight: 400 },
           }}
         />
 

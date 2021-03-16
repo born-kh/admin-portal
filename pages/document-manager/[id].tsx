@@ -24,9 +24,10 @@ import {
 } from '@store/document/types'
 import { useStylesDocumentManger } from 'styles/document-manager-styles'
 import Title from '@components/common/Title'
-import { primaryText, approveStepColor, rejectStepColor } from '@utils/constants'
+import { primaryText, approveStepColor, rejectStepColor, initialAlertData } from '@utils/constants'
 import { IDocument, IApplication, DocumentStatus, ApplicationStatus } from '@Interfaces'
 import { ServiceDocumentManager } from '@Services'
+import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
 
 export default function DocumentMangerDetail() {
   const [documents, setDocuments] = useState<IDocument[]>([])
@@ -37,7 +38,12 @@ export default function DocumentMangerDetail() {
   const router = useRouter()
   const classes = useStylesDocumentManger()
   const { t } = useTranslation()
-
+  const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
+    initialAlertData
+  )
+  const handleCloseAlert = () => {
+    setAlertData(initialAlertData)
+  }
   const dispatch: AppDispatch = useDispatch()
   const state = useSelector((state: RootState) => {
     return {
@@ -49,10 +55,11 @@ export default function DocumentMangerDetail() {
   useEffect(() => {
     function loadData() {
       ServiceDocumentManager.documentGetByApplicationId({ applicationID })
-
         .then((res) => {
           if (res.result) {
             setDocuments(res.result.documents)
+          } else {
+            setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
           }
           setLoading(false)
         })
@@ -73,10 +80,11 @@ export default function DocumentMangerDetail() {
 
   const deleteDocument = async (documentID: string) => {
     ServiceDocumentManager.documentDelete({ documentID })
-
       .then((res) => {
         if (res.result) {
           setDocuments((prevDocumnet) => prevDocumnet.filter((item) => item.ID !== documentID))
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
         }
       })
       .catch((e) => {
@@ -107,7 +115,6 @@ export default function DocumentMangerDetail() {
         if (state.newApplication.totalCount > start) {
           setLoading(true)
           ServiceDocumentManager.applicationGetNew({ start, count: state.newApplication.pageSize })
-
             .then((res) => {
               if (res.result) {
                 if (res.result.applications.length > 0) {
@@ -122,6 +129,8 @@ export default function DocumentMangerDetail() {
                     query: { applications: router.query.applications },
                   })
                 }
+              } else {
+                setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
               }
               setLoading(false)
             })
@@ -269,6 +278,7 @@ export default function DocumentMangerDetail() {
           documentSetID={documentSetID}
         />
       )}
+      <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
     </>
   )
 }

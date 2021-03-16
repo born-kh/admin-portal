@@ -7,7 +7,7 @@ declare namespace SettingsManagerModel {
   declare namespace AuthSettingsCreate {
     interface Params extends IAuthSettings {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: { settings: IAuthSettings }
     }
   }
@@ -16,14 +16,14 @@ declare namespace SettingsManagerModel {
       id: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {}
     }
   }
   declare namespace AuthSettingsUpdate {
     interface Params extends IAuthSettings {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         settings: IAuthSettings
       }
@@ -32,7 +32,7 @@ declare namespace SettingsManagerModel {
   declare namespace AuthSettingsGetAll {
     interface Params {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         allSettings: IAuthSettings[]
       }
@@ -43,28 +43,28 @@ declare namespace SettingsManagerModel {
       id: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: { settings: IAuthSettings[] }
     }
   }
   declare namespace SystemGetSettings {
     interface Params {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: { settings: ISystemSettings[] }
     }
   }
   declare namespace SystemSetSettings {
     interface Params extends ISystemSettings {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {}
     }
   }
   declare namespace CallQualityCreate {
     interface Params extends ICallQuality {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         callQuality: ICallQuality
       }
@@ -73,7 +73,7 @@ declare namespace SettingsManagerModel {
   declare namespace CallQualityUpdate {
     interface Params extends ICallQuality {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {}
     }
   }
@@ -82,7 +82,7 @@ declare namespace SettingsManagerModel {
       id: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {}
     }
   }
@@ -92,7 +92,7 @@ declare namespace SettingsManagerModel {
       id: string[]
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         callQualities: ICallQuality[]
       }
@@ -101,7 +101,7 @@ declare namespace SettingsManagerModel {
   declare namespace CallQualityGetAll {
     interface Params {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         callQualities: ICallQuality[]
       }
@@ -111,7 +111,7 @@ declare namespace SettingsManagerModel {
   declare namespace QuestionCreate {
     interface Params extends IQuestion {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {
         question: IQuestion
       }
@@ -122,14 +122,14 @@ declare namespace SettingsManagerModel {
       id: string
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {}
     }
   }
   declare namespace QuestionGetAll {
     interface Params {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: { questions: IQuestion[] }
     }
   }
@@ -138,28 +138,28 @@ declare namespace SettingsManagerModel {
       ids: string[]
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: { questions: IQuestion[] }
     }
   }
   declare namespace QuestionUpdate {
     interface Params extends IQuestion {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {}
     }
   }
   declare namespace QuestionLangCreate {
     interface Params extends IQuestionLanguage {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {}
     }
   }
   declare namespace QuestionLangDelete {
     interface Params {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {}
     }
   }
@@ -168,14 +168,14 @@ declare namespace SettingsManagerModel {
       questionId
     }
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: IQuestionLanguage[]
     }
   }
   declare namespace QuestionLangUpdate {
     interface Params extends IQuestionLanguage {}
 
-    interface Response {
+    interface Response extends HttpModel.IRequestResponse {
       result: {}
     }
   }

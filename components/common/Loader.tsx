@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-export default function Loader({ size = 100 }: { size?: number }) {
+export default function Loader({ size = 50 }: { size?: number }) {
   const classes = useStyles()
 
   return (

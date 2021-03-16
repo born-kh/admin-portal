@@ -35,9 +35,9 @@ instance.interceptors.response.use(
   (response) => {
     return new Promise((resolve) => {
       if (response.data.error) {
-        console.error(response)
+        console.error('response error', response)
       } else {
-        console.log(response)
+        console.log('response', response)
       }
       setTimeout(() => {
         resolve(response)
@@ -46,10 +46,10 @@ instance.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
-      let token = jsCookie.get(LocalConsts.LocalStorage.refreshToken)
-      console.log(token)
-      if (token) {
-        ServiceAuth.refreshToken({ token })
+      let refreshToken = jsCookie.get(LocalConsts.LocalStorage.refreshToken)
+
+      if (refreshToken) {
+        ServiceAuth.refreshToken({ token: refreshToken })
           .then((response) => {
             console.log('refreshToken')
             console.log(response)
@@ -65,7 +65,9 @@ instance.interceptors.response.use(
               jsCookie.remove(LocalConsts.LocalStorage.refreshToken)
             }
 
-            // window.location.reload()
+            setTimeout(() => {
+              window.location.reload()
+            }, 500)
           })
           .catch((e) => {
             console.log('logout')
@@ -73,17 +75,17 @@ instance.interceptors.response.use(
             jsCookie.remove(LocalConsts.LocalStorage.token)
             jsCookie.remove(LocalConsts.LocalStorage.accountId)
             jsCookie.remove(LocalConsts.LocalStorage.refreshToken)
-            // setTimeout(() => {
-            //   window.location.reload()
-            // }, 500)
+            setTimeout(() => {
+              window.location.reload()
+            }, 500)
           })
       } else {
         jsCookie.remove(LocalConsts.LocalStorage.token)
         jsCookie.remove(LocalConsts.LocalStorage.accountId)
         jsCookie.remove(LocalConsts.LocalStorage.refreshToken)
-        // setTimeout(() => {
-        //   window.location.reload()
-        // }, 500)
+        setTimeout(() => {
+          window.location.reload()
+        }, 500)
       }
       return Promise.reject(error)
     }

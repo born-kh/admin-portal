@@ -29,8 +29,12 @@ export default function QuestionComponent() {
   const handleCreateQuestion = async (data: IQuestion) => {
     return ServiceSettingsManager.questionCreate({ ...data, maxLen: Number(data.maxLen) })
       .then((res) => {
-        setQuestions((prevQuestions) => [...prevQuestions, res.result.question])
-        setAlertData({ message: `Question created`, type: AlertMessageType.sucess, open: true })
+        if (res.result) {
+          setQuestions((prevQuestions) => [...prevQuestions, res.result.question])
+          setAlertData({ message: `Question created`, type: AlertMessageType.sucess, open: true })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
       })
       .catch((error) => {
         setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
@@ -39,10 +43,14 @@ export default function QuestionComponent() {
 
   const handleUpdateQuestion = async (data: IQuestion) => {
     return ServiceSettingsManager.questionUpdate({ ...data })
-      .then(() => {
-        setQuestions(questions.map((item) => (item.id === data.id ? { ...data } : item)))
+      .then((res) => {
+        if (res.result) {
+          setQuestions(questions.map((item) => (item.id === data.id ? { ...data } : item)))
 
-        setAlertData({ message: `Question updated.`, type: AlertMessageType.sucess, open: true })
+          setAlertData({ message: `Question updated.`, type: AlertMessageType.sucess, open: true })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
       })
       .catch((error) => {
         setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
@@ -51,9 +59,13 @@ export default function QuestionComponent() {
 
   const handleDeleteQuestion = async (id: string) => {
     return ServiceSettingsManager.questionDelete({ id })
-      .then(() => {
-        setQuestions(questions.filter((item) => item.id !== id))
-        setAlertData({ message: `Qestion deleted`, type: AlertMessageType.sucess, open: true })
+      .then((res) => {
+        if (res.result) {
+          setQuestions(questions.filter((item) => item.id !== id))
+          setAlertData({ message: `Qestion deleted`, type: AlertMessageType.sucess, open: true })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
       })
       .catch((error) => {
         setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
@@ -66,6 +78,8 @@ export default function QuestionComponent() {
       .then((res) => {
         if (res.result) {
           setQuestions(res.result.questions)
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
         }
         setIsLoading(false)
       })
@@ -192,6 +206,8 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
       .then((res) => {
         if (res.result) {
           setQuestionLanguages(res.result)
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
         }
         setIsLoadingLanguages(false)
       })
@@ -202,8 +218,12 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
 
   const handleCreateQuestionLanguage = async (data: IQuestionLanguage) => {
     return ServiceSettingsManager.questionLangCreate({ ...data })
-      .then(() => {
-        setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
+      .then((res) => {
+        if (res.result) {
+          setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
       })
       .catch((error) => {
         setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
@@ -212,10 +232,14 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
 
   const handleUpdateQuestionLanguage = async (data: IQuestionLanguage) => {
     return ServiceSettingsManager.questionLangUpdate({ ...data })
-      .then(() => {
-        setQuestionLanguages(questionLanguages.map((item) => (item.id === data.id ? { ...data } : item)))
+      .then((res) => {
+        if (res.result) {
+          setQuestionLanguages(questionLanguages.map((item) => (item.id === data.id ? { ...data } : item)))
 
-        setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
+          setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
       })
       .catch((error) => {
         setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
@@ -224,9 +248,13 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
 
   const handleDeleteQuestionLanguage = async (id: string) => {
     return ServiceSettingsManager.questionLangDelete({ id })
-      .then(() => {
-        setQuestionLanguages(questionLanguages.filter((item) => item.id !== id))
-        setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
+      .then((res) => {
+        if (res.result) {
+          setQuestionLanguages(questionLanguages.filter((item) => item.id !== id))
+          setAlertData({ message: `Success`, type: AlertMessageType.sucess, open: true })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
       })
       .catch((error) => {
         setAlertData({ message: `${error.message}`, type: AlertMessageType.error, open: true })
@@ -322,6 +350,10 @@ const QuestioLaguageComponent = (props: { questionId: string }) => {
         options={{
           rowStyle: {
             backgroundColor: '#EEE',
+            fontFamily: 'Roboto',
+            color: 'rgba(0, 0, 0, 0.87)',
+            fontSize: '0.875rem',
+            fontWeight: 400,
           },
           sorting: false,
           search: false,

@@ -19,6 +19,7 @@ import { LocalConsts } from '@Definitions'
 import { useRouter } from 'next/router'
 import jsCookie from 'js-cookie'
 import { ServiceAuth } from '@Services'
+import Loader from '@components/common/Loader'
 // import Logo from 'src/components/Logo'
 
 const useStyles = makeStyles(() => ({
@@ -36,7 +37,7 @@ type PropsType = {
 const TopBar = ({ className, onMobileNavOpen, ...rest }: PropsType) => {
   const classes = useStyles()
   const { t } = useTranslation()
-
+  const [isLoading, setIsLoading] = useState(false)
   const dispatch: AppDispatch = useDispatch()
 
   const states = useSelector((state: RootState) => {
@@ -57,16 +58,25 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }: PropsType) => {
   }
 
   const handleLogout = () => {
-    ServiceAuth.logout({}).then((res) => {
-      console.log(res)
-      jsCookie.remove(LocalConsts.LocalStorage.token)
-      jsCookie.remove(LocalConsts.LocalStorage.refreshToken)
-      setTimeout(() => {
-        router.push('/login')
-      }, 500)
-    })
+    setIsLoading(true)
+    console.log('logout')
+    ServiceAuth.logout({})
+      .then((res) => {
+        jsCookie.remove(LocalConsts.LocalStorage.token)
+        jsCookie.remove(LocalConsts.LocalStorage.refreshToken)
+        setTimeout(() => {
+          router.push('/login')
+          setIsLoading(false)
+        }, 500)
+      })
+      .catch(() => {
+        setIsLoading(false)
+      })
   }
 
+  if (isLoading) {
+    return <Loader />
+  }
   return (
     <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}>
       <Toolbar>

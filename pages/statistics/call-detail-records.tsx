@@ -55,6 +55,8 @@ import {
   StatisticsManagerModel,
 } from '@Interfaces'
 import { ServiceStatisticsManager } from '@Services/API/StatisticsManager'
+import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
+import { initialAlertData } from '@utils/constants'
 
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
@@ -111,6 +113,14 @@ export default function CDRStatistics() {
       key: 'selection',
     }
   })
+
+  const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
+    initialAlertData
+  )
+
+  const handleCloseAlert = () => {
+    setAlertData(initialAlertData)
+  }
 
   const router = useRouter()
   const [withDateRange, setWithDateRange] = useState(false)
@@ -192,8 +202,8 @@ export default function CDRStatistics() {
 
       if (withDateRange) {
         params.filter.range = {
-          from: dateRange.startDate.toISOString().split('.')[0] + 'Z',
-          to: dateRange.endDate.toISOString().split('.')[0] + 'Z',
+          from: dateRange.startDate.getTime(),
+          to: dateRange.endDate.getTime(),
         }
       }
 
@@ -234,6 +244,8 @@ export default function CDRStatistics() {
         .then((res) => {
           if (res.result) {
             setCallData({ items: res.result.items, totalCount: res.result.metadata.total })
+          } else {
+            setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
           }
           setIsLoading(false)
         })
@@ -242,12 +254,14 @@ export default function CDRStatistics() {
         })
       setIsLoadingStars(true)
       ServiceStatisticsManager.cdrGetStars({
-        from: dateRange.startDate.toISOString().split('.')[0] + 'Z',
-        to: dateRange.endDate.toISOString().split('.')[0] + 'Z',
+        from: dateRange.startDate.getTime(),
+        to: dateRange.endDate.getTime(),
       })
         .then((res) => {
           if (res.result) {
             setCountStars(res.result.counts)
+          } else {
+            setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
           }
           setIsLoadingStars(false)
         })
@@ -256,7 +270,7 @@ export default function CDRStatistics() {
         })
     }
   }
-  console.log(countStars)
+
   return (
     <MuiThemeProvider theme={theme}>
       <Grid container spacing={3}>
@@ -743,7 +757,7 @@ export default function CDRStatistics() {
                       type="submit"
                       disabled={isLoading}
                       startIcon={<SearchIcon />}
-                      // onClick={handleOnSubmit}
+                      onClick={handleOnSubmit}
                     >
                       {t('search')}
                     </Button>
@@ -779,31 +793,30 @@ export default function CDRStatistics() {
             />
           </Card>
         </Grid>
-
         <Grid item lg={12}>
           <MaterialTable
             title={t('callLogs')}
             isLoading={isLoading}
             localization={{ body: { emptyDataSourceMessage: '' } }}
             columns={[
-              { title: '№', field: '', render: (rowData) => rowData && rowData.tableData.id + 1, width: 75 },
+              { title: '№', field: '', render: (rowData) => rowData && rowData.tableData.id + 1 },
               { title: t('callID'), field: 'id' },
               {
                 title: t('originationNumber'),
                 field: '',
                 render: (rowData) => (rowData && rowData.originationNumber) || '-',
-                width: 150,
+
                 align: 'center',
               },
               {
                 title: t('destinationNumber'),
                 field: '',
                 render: (rowData) => (rowData && rowData.destinationNumber) || '-',
-                width: 150,
+
                 align: 'center',
               },
-              { title: t('callType'), field: 'type', width: 150 },
-              { title: t('callState'), field: 'callState', width: 150 },
+              { title: t('callType'), field: 'type' },
+              { title: t('callState'), field: 'callState' },
               { title: t('duration'), field: '', render: (rowData) => rowData && rowData.connectedAt && 0 },
               { title: t('accountId'), field: 'accountID' },
               { title: t('connectedAt'), field: 'connectedAt' },
@@ -829,6 +842,7 @@ export default function CDRStatistics() {
               sorting: false,
               pageSize: formik.values.limit,
               exportButton: true,
+              rowStyle: { fontFamily: 'Roboto', color: 'rgba(0, 0, 0, 0.87)', fontSize: '0.875rem', fontWeight: 400 },
             }}
             components={{
               Pagination: (props) => {
@@ -872,8 +886,12 @@ export default function CDRStatistics() {
                             <TableCell>
                               {d.participantState && d.participantState.map((text) => <p>{text}</p>)}
                             </TableCell>
-                            <TableCell>{d.lastActives && d.lastActives.map((text) => <p>{text}</p>)}</TableCell>
                             <TableCell>{d.direction && d.direction.map((text) => <p>{text}</p>)}</TableCell>
+                            <TableCell>
+                              {d.lastActives &&
+                                d.lastActives.map((text) => <p>{moment(text).format('DD MMM YYYY HH:mm')}</p>)}
+                            </TableCell>
+
                             <TableCell>{d.audio && d.audio.map((text) => <p>{text}</p>)}</TableCell>
                             <TableCell>{d.video && d.video.map((text) => <p>{text}</p>)}</TableCell>
                             <TableCell>{d.screen && d.screen.map((text) => <p>{text}</p>)}</TableCell>
@@ -888,13 +906,14 @@ export default function CDRStatistics() {
             ]}
           />
         </Grid>
+        <DatePicker
+          ranges={dateRange}
+          open={openDateRange}
+          onClose={() => setOpenDateRange(false)}
+          onChange={(e) => setDateRange(e.selection)}
+        />
+        <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
       </Grid>
-      <DatePicker
-        ranges={dateRange}
-        open={openDateRange}
-        onClose={() => setOpenDateRange(false)}
-        onChange={(e) => setDateRange(e.selection)}
-      />
     </MuiThemeProvider>
   )
 }
