@@ -57,6 +57,7 @@ import {
 import { ServiceStatisticsManager } from '@Services/API/StatisticsManager'
 import SnackBarAlert, { AlertMessageType } from '@components/common/SnackbarAlert'
 import { initialAlertData } from '@utils/constants'
+import Loader from '@components/common/Loader'
 
 const ReactJson = dynamic(() => import('react-json-view'), { ssr: false })
 
@@ -125,7 +126,7 @@ export default function CDRStatistics() {
   const router = useRouter()
   const [withDateRange, setWithDateRange] = useState(false)
   const dataHorBar = {
-    labels: ['5', '4', '3', '2', '1'],
+    labels: [],
     datasets: [
       {
         label: 'Call Stars',
@@ -133,7 +134,7 @@ export default function CDRStatistics() {
         borderWidth: 1,
         borderColor: colors.common.white,
         hoverBorderColor: colors.common.white,
-        data: [65, 59, 80, 81, 100],
+        data: [],
       },
     ],
   }
@@ -260,6 +261,10 @@ export default function CDRStatistics() {
         .then((res) => {
           if (res.result) {
             setCountStars(res.result.counts)
+            for (var key in res.result.counts) {
+              dataHorBar.labels.push(key)
+              dataHorBar.datasets[0].data.push(res.result.counts[key])
+            }
           } else {
             setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
           }
@@ -769,28 +774,34 @@ export default function CDRStatistics() {
         </Grid>
         <Grid item lg={4} md={4}>
           <Card>
-            <HorizontalBar
-              data={dataHorBar}
-              options={{
-                scales: {
-                  xAxes: [
-                    {
-                      display: false,
-                      gridLines: {
+            {isLoadingStars ? (
+              <div style={{ height: 500, alignItems: 'center', display: 'flex', justifyContent: 'center' }}>
+                <Loader height="auto" />
+              </div>
+            ) : (
+              <HorizontalBar
+                data={dataHorBar}
+                options={{
+                  scales: {
+                    xAxes: [
+                      {
                         display: false,
+                        gridLines: {
+                          display: false,
+                        },
                       },
-                    },
-                  ],
-                  yAxes: [
-                    {
-                      gridLines: {
-                        display: false,
+                    ],
+                    yAxes: [
+                      {
+                        gridLines: {
+                          display: false,
+                        },
                       },
-                    },
-                  ],
-                },
-              }}
-            />
+                    ],
+                  },
+                }}
+              />
+            )}
           </Card>
         </Grid>
         <Grid item lg={12}>

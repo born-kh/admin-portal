@@ -203,8 +203,10 @@ const LangStrings: Record<LangType, any> = {
     connectedAt: 'Connected At',
     agree: 'Yes',
     disagree: 'No',
+    lastActive: 'Last Active',
   },
   ru: {
+    lastActive: 'Последнее посещение',
     disagree: 'Нет',
     agree: 'Да',
     loginWithLogin: 'Вход с помощью логина и пароля',

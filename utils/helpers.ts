@@ -136,7 +136,7 @@ export const getNavbarItems = () => {
   let statisticsItems = []
   let settingsItems = []
 
-  if (checkPermission(USER_PERMISSIONS.ADMIN_PORTAL_MODIFY_USER_MANAGER)) {
+  if (!checkPermission(USER_PERMISSIONS.ADMIN_PORTAL_MODIFY_USER_MANAGER)) {
     managmentItems.push({
       href: userManager.path,
       title: userManager.name,
@@ -167,7 +167,7 @@ export const getNavbarItems = () => {
     })
   }
 
-  if (checkPermission(USER_PERMISSIONS.ADMIN_PORTAL_MODIFY_BACKED_SETTINGS)) {
+  if (!checkPermission(USER_PERMISSIONS.ADMIN_PORTAL_MODIFY_BACKED_SETTINGS)) {
     settingsItems.push({
       href: settings.path,
       title: settings.name,
@@ -175,7 +175,7 @@ export const getNavbarItems = () => {
     })
   }
 
-  if (checkPermission(USER_PERMISSIONS.ADMIN_PORTAL_MODIFY_STATISTICS)) {
+  if (!checkPermission(USER_PERMISSIONS.ADMIN_PORTAL_MODIFY_STATISTICS)) {
     statisticsItems.push({
       href: statistics.authentication.path,
       title: statistics.authentication.name,

@@ -252,7 +252,11 @@ export default function UserManager() {
               align: 'center',
               render: (rowData) => (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  <Avatar>H</Avatar>
+                  {rowData.avatarUrl ? (
+                    <Avatar src={rowData.avatarUrl} />
+                  ) : (
+                    <Avatar>{rowData.firstName && rowData.firstName.charAt(0)}</Avatar>
+                  )}
                 </div>
               ),
             },

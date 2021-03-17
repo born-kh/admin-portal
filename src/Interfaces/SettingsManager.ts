@@ -21,7 +21,7 @@ export interface ICallQuality {
 }
 
 export interface ICountStarts {
-  [key: number]: number[]
+  [key: number]: number
 }
 
 export interface IQuestion {

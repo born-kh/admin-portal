@@ -15,6 +15,7 @@ import { initialAlertData } from '@utils/constants'
 import OpenMap from './OpenMap'
 import useTranslation from 'hooks/useTranslation'
 import dynamic from 'next/dynamic'
+import moment from 'moment'
 import { ServiceSessionManager } from '@Services'
 import { IAccountSessionsData } from '@Interfaces'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -48,6 +49,8 @@ export default function AccountSessions() {
         .then((res) => {
           if (res.result) {
             setSessions(res.result.sessions)
+          } else {
+            setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
           }
 
           setSessionsIsLoading(false)
@@ -190,6 +193,11 @@ export default function AccountSessions() {
           { title: t('deviceName'), field: 'meta.deviceName' },
           { title: t('platform'), field: 'meta.platform' },
           { title: t('ip'), field: 'meta.ip' },
+          {
+            title: t('lastActive'),
+            field: 'lastActive',
+            render: (rowData) => rowData.lastActive && moment(rowData.lastActive).format('DD MMM YYYY HH:mm'),
+          },
 
           {
             title: t('setTracing'),

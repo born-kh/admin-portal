@@ -9,6 +9,7 @@ export interface IAccount {
   emails: IEmailInfo[]
   auth: AuthInfo
   createdAt: Date
+  avatarUrl?: string
 }
 
 export interface IAccountSessionsData {

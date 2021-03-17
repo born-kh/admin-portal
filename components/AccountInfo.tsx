@@ -1,5 +1,5 @@
 import { Account, ItemType } from '@interfaces/user-manager'
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import MaterialList from './common/MaterialList'
 import {
   Avatar,
@@ -22,6 +22,8 @@ import useTranslation from 'hooks/useTranslation'
 import Title from './common/Title'
 import { IAccount, IAccountSystemSettings } from '@Interfaces'
 import { ServiceUserManager } from '@Services'
+import { initialAlertData } from '@utils/constants'
+import SnackBarAlert, { AlertMessageType } from './common/SnackbarAlert'
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -52,32 +54,61 @@ export default function AccountInfo({
   const { t } = useTranslation()
   const phones: ItemType[] = account.phones.map((phone) => ({ name: phone.number, type: phone.type }))
   const emails: ItemType[] = account.emails.map((email) => ({ name: email.email, type: email.type }))
+  const [avatar, setAvatar] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingSettigns, setIsLoadingSettings] = useState(false)
+  const [alertData, setAlertData] = useState<{ type: AlertMessageType; message: string; open: boolean }>(
+    initialAlertData
+  )
+  const handleCloseAlert = () => {
+    setAlertData(initialAlertData)
+  }
+
   const handleGeneratePassword = () => {
     setIsLoading(true)
     ServiceUserManager.setPassword({ accountID: account.accountID })
-      .then(() => {
+      .then((res) => {
+        if (res.result) {
+          setAlertData({ message: res.result.message, type: AlertMessageType.error, open: true })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
         setIsLoading(false)
       })
-      .catch(() => {
+      .catch((e) => {
+        setAlertData({ message: e.message, type: AlertMessageType.error, open: true })
         setIsLoading(false)
       })
-      .catch(() => {})
   }
+  useEffect(() => {
+    if (account.avatar) {
+      ServiceUserManager.getProfileAvatar(account.avatar)
+        .then((response) => {
+          setAvatar(response.data)
+        })
+        .catch((e) => {
+          console.log(e)
+        })
+    }
+  }, [])
   const handleSetSettings = () => {
     setIsLoadingSettings(true)
     ServiceUserManager.setAccountSettings({
       accountID: account.accountID,
       settings: { id: settings.id, description: settings.description, user: settings.user },
     })
-      .then(() => {
+      .then((res) => {
+        if (res.result) {
+          setAlertData({ message: 'Success', type: AlertMessageType.error, open: true })
+        } else {
+          setAlertData({ message: res.error.reason, type: AlertMessageType.error, open: true })
+        }
         setIsLoading(false)
       })
-      .catch(() => {
+      .catch((e) => {
+        setAlertData({ message: e.message, type: AlertMessageType.error, open: true })
         setIsLoading(false)
       })
-      .catch(() => {})
   }
 
   return (
@@ -85,7 +116,7 @@ export default function AccountInfo({
       <Card className={classes.cardProfile}>
         <CardContent>
           <Box alignItems="center" display="flex" flexDirection="column">
-            <Avatar className={classes.avatar} src={account.avatar} />
+            <Avatar className={classes.avatar} src={avatar ? URL.createObjectURL(avatar) : avatar} />
             <Typography color="textPrimary" gutterBottom variant="h5">
               {account.username}
             </Typography>
@@ -177,6 +208,7 @@ export default function AccountInfo({
           </Button>
         </CardContent>
       </Card>
+      <SnackBarAlert {...alertData} onClose={handleCloseAlert} />
     </Fragment>
   )
 }

@@ -15,8 +15,11 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 )
 
-export default function Loader({ size = 50 }: { size?: number }) {
+export default function Loader({ size = 50, height }: { size?: number; height?: string }) {
   const classes = useStyles()
+  if (height) {
+    return <CircularProgress size={size} />
+  }
 
   return (
     <div className={classes.root}>
