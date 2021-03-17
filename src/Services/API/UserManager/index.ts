@@ -88,7 +88,7 @@ export const ServiceUserManager = {
 
   getProfileAvatar: async (avatarID: string) => {
     let token = jsCookie.get(LocalConsts.LocalStorage.token)
-    let response = await axios.get(process.env.NEXT_PUBLIC_API_GET_FILE + `/${avatarID}/small`, {
+    let response = await axios.get(`${process.env.NEXT_PUBLIC_API_NEXSUS_URL}/files/file/${avatarID}/small`, {
       headers: {
         'X-Api-Key': process.env.NEXT_PUBLIC_API_KEY,
         Authorization: `Bearer ${token}`,
