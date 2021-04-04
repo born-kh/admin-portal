@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "baseUrl": "./",
+    "paths": {
+      "@components/*": ["./components/*"],
+      "@utils/*": ["./utils/*"],
+      "@store/*": ["./store/*"],
+      "@interfaces/*": ["interfaces/*"],
+      "@Definitions/*": ["/src/Definitions/*"],
+      "@Definitions": ["src/Definitions"],
+      "@Interfaces": ["src/Interfaces"],
+      "@Interfaces/*": ["src/Interfaces/*"],
+      "@Services": ["src/Services"],
+      "@Services/*": ["src/Services/*"],
+      "@Utils": ["src/Utils"],
+      "@Utils/*": ["src/Utils/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "next.config.js",
+    "utils/useFetcher.js",
+    "utils/useFetcherjs",
+    "components/common/MaterialTable.jsx",
+    "components/DocumentManager/DocumentProcedure/Steps",
+    "components/OpenMap/index.jsx",
+    "i18.js"
+  ],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,22 @@
+{
+  "presets": [["next/babel"]],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": ["./"],
+        "alias": {
+          "@/components/*": ["components/*"],
+          "@/store/*": ["store/*"],
+          "@/interfaces/*": ["interfaces/*"],
+
+          "@Definitions": "./src/Definitions",
+          "@Interfaces": "./src/Interfaces",
+
+          "@Services": "./src/Services",
+          "@Utils": "./src/Utils"
+        }
+      }
+    ]
+  ]
+}
